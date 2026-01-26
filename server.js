@@ -2,6 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
+//Payment Part (26/01/2025)
+import axios from 'axios';
+import crypto from 'crypto';
+import 'dotenv/config'; // Loads .env file
+
 const app = express();
 
 app.use(cors({
@@ -138,9 +143,76 @@ app.get('/users', (req, res) => {
 });
 
 // --------------------------------------
+// 💸 MOMO PAYMENT ENDPOINT
+// --------------------------------------
+app.post('/create-payment', async (req, res) => {
+    const { amount } = req.body; 
+    
+    // 1. Get Config from .env
+    const partnerCode = process.env.MOMO_PARTNER_CODE;
+    const accessKey = process.env.MOMO_ACCESS_KEY;
+    const secretKey = process.env.MOMO_SECRET_KEY;
+    const apiEndpoint = process.env.MOMO_API_ENDPOINT;
+    
+    // 2. Prepare Unique IDs
+    const requestId = partnerCode + new Date().getTime();
+    const orderId = requestId; // In a real app, use your database Order ID
+    const orderInfo = "Pay for Product";
+    const redirectUrl = process.env.MOMO_REDIRECT_URL;
+    const ipnUrl = process.env.MOMO_IPN_URL;
+    const requestType = "captureWallet";
+    const extraData = ""; 
+
+    // 3. Create Raw Signature
+    // ⚠️ IMPORTANT: Fields must be alphabetical
+    const rawSignature = `accessKey=${accessKey}&amount=${amount}&extraData=${extraData}&ipnUrl=${ipnUrl}&orderId=${orderId}&orderInfo=${orderInfo}&partnerCode=${partnerCode}&redirectUrl=${redirectUrl}&requestId=${requestId}&requestType=${requestType}`;
+
+    // 4. Hash the signature (HMAC SHA256)
+    const signature = crypto
+        .createHmac('sha256', secretKey)
+        .update(rawSignature)
+        .digest('hex');
+
+    // 5. Build the Body
+    const requestBody = {
+        partnerCode,
+        partnerName: "Test Store",
+        storeId: "MomoTestStore",
+        requestId,
+        amount,
+        orderId,
+        orderInfo,
+        redirectUrl,
+        ipnUrl,
+        lang: 'vi',
+        requestType,
+        autoCapture: true,
+        extraData,
+        signature
+    };
+
+    // 6. Send to MoMo
+    try {
+        const response = await axios.post(apiEndpoint, requestBody);
+        console.log("✅ MoMo URL created:", response.data.payUrl);
+        
+        // Return the payment URL to React
+        res.status(200).json({ payUrl: response.data.payUrl });
+
+    } catch (error) {
+        console.error("❌ MoMo Error:", error.response ? error.response.data : error.message);
+        res.status(500).json({ message: "Payment creation failed" });
+    }
+});
+
+
+// --------------------------------------
 // START SERVER
 // --------------------------------------
 app.listen(3500, () => 
     console.log('🚀 Server : http://localhost:3500'),
     console.log('Server API on http://localhost:3500/auth')
 );
+
+
+
