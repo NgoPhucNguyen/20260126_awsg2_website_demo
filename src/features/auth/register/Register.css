@@ -1,0 +1,115 @@
+/* src/components/Register.css */
+
+/* The Main Card */
+.register-container {
+    background-color: #ffffff;
+    padding: 3rem;
+    width: 100%;
+    max-width: 450px;
+    margin: 4rem auto;
+    border: 1px solid #e7e5e4; /* Light grey border */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05); /* Soft shadow */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Typography */
+.register-container h1 {
+    font-family: var(--font-accent);
+    text-align: center;
+    font-size: 3rem;
+    color: #1c1917;
+    font-weight:bolder;
+    margin-bottom: 0.5rem;
+}
+
+.register-subtitle {
+    text-align: center;
+    color: #57534e;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 2rem;
+}
+
+/* Inputs & Labels */
+.register-container label {
+    font-family: var(--font-accent);
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #57534e;
+}
+
+.register-container input {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #e7e5e4;
+    background-color: #fafafa;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.register-container input:focus {
+    outline: none;
+    background-color: #fff;
+    border-color: #1c1917; /* Focus turns border black */
+}
+
+/* The Button */
+.register-container button {
+    width: 100%;
+    padding: 1rem;
+    background-color: #1c1917; /* Black */
+    color: #fff;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 2px solid #1c1917;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+}
+
+.register-container button:hover {
+    background-color: #fde047; /* Yellow */
+    border-color: #fde047;
+    color: #1c1917; /* Black Text */
+    transform: translateY(-2px);
+}
+
+/* Links */
+.register-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #57534e;
+}
+
+.register-footer a {
+    color: #1c1917;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* Error Messages */
+.errmsg {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    padding: 0.75rem;
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid #fecaca;
+}
+
+.offscreen {
+    position: absolute;
+    left: -9999px;
+}

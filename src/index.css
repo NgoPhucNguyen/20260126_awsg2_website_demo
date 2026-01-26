@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
+
+:root {
+  /* COLORS */
+  --bg-primary: #ffffff;
+  --bg-secondary: #fffdf5;
+  --text-primary: #1c1917;
+  --text-secondary: #57534e;
+  --accent-yellow: #E6C27A;
+  --border-color: #e7e5e4;
+
+  /* 🟢 NEW: FONT VARIABLES */
+  /* Used for body text (clean, easy to read) */
+  --font-body: 'Lato', sans-serif; 
+  
+  /* Used for elegant headings */
+  --font-heading: 'Playfair Display', serif; 
+  
+  /* Used for ultra-luxury accents or italics */
+  --font-accent: 'Cormorant Garamond', serif; 
+}
+
+/* Apply the default body font globally */
+body {
+  font-family: var(--font-body); /* Using the variable */
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+/* Apply the heading font globally */
+h1, h2, h3, h4 {
+  font-family: var(--font-heading); /* Using the variable */
+  font-weight: 600;
+  color: var(--text-primary);
+}
