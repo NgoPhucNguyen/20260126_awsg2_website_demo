@@ -1,0 +1,212 @@
+/* ========================================= */
+/* 1. SHARED OVERLAY (The Dimmed Background) */
+/* ========================================= */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px); /* Increased blur slightly for luxury feel */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+    padding: 1rem; /* Prevents card touching edges on mobile */
+}
+
+/* ========================================= */
+/* 2. MAIN CARD (Optimized for Both)         */
+/* ========================================= */
+/* This targets both Login AND Register containers */
+.login-container, 
+.register-container {
+    background-color: #ffffff;
+    padding: 3rem;
+    width: 100%;
+    max-width: 450px;
+    height: auto;
+    
+    /* Layout */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    
+    /* Aesthetics */
+    border: 1px solid #e7e5e4;
+    border-radius: 8px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* Smoother bounce */
+}
+
+/* ========================================= */
+/* 3. TYPOGRAPHY                             */
+/* ========================================= */
+.login-container h1, 
+.register-container h1 {
+    font-family: var(--font-accent, serif);
+    font-size: 2.5rem;
+    color: #1c1917;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    line-height: 1.1;
+}
+
+.login-subtitle, 
+.register-subtitle {
+    color: #57534e;
+    font-size: 0.85rem;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: center;
+}
+
+/* ========================================= */
+/* 4. FORM ELEMENTS                          */
+/* ========================================= */
+.login-container form, 
+.register-container form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-container label, 
+.register-container label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #57534e;
+    margin-bottom: 6px;
+}
+
+.login-container input, 
+.register-container input {
+    padding: 12px 14px;
+    border: 1px solid #e7e5e4;
+    border-radius: 4px; /* Slight rounding matches container */
+    margin-bottom: 1.25rem;
+    background: #fafafa;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.login-container input:focus, 
+.register-container input:focus {
+    outline: none;
+    border-color: #1c1917;
+    background: white;
+    box-shadow: 0 0 0 1px #1c1917;
+}
+
+/* ========================================= */
+/* 5. BUTTONS                                */
+/* ========================================= */
+/* Main Submit Buttons */
+.login-container button, 
+.register-container button {
+    padding: 14px;
+    background-color: #1c1917; /* Black */
+    color: white;
+    font-weight: 700;
+    border: 1px solid #1c1917;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: all 0.2s ease;
+    margin-top: 0.5rem;
+    width: 100%;
+    font-size: 0.9rem;
+}
+
+.login-container button:hover, 
+.register-container button:hover {
+    background-color: #fde047; /* Yellow */
+    color: #1c1917;
+    border-color: #fde047;
+    transform: translateY(-2px);
+}
+
+/* Close Button (The 'X') - Specific Overrides */
+.close-modal-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent !important;
+    border: none !important;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #a8a29e !important;
+    padding: 5px !important;
+    width: auto !important; /* Overrides the 100% width above */
+    margin: 0 !important;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.close-modal-btn:hover {
+    color: #1c1917 !important;
+    transform: none !important;
+    background: transparent !important;
+}
+
+/* ========================================= */
+/* 6. UTILITIES (Footer & Errors)            */
+/* ========================================= */
+.login-footer, 
+.register-footer {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #57534e;
+    text-align: center;
+}
+
+/* Link styling inside text */
+.line button, .line a, .register-footer a {
+    color: #1c1917;
+    font-weight: 700;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+}
+
+.errmsg, .error_message {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    text-align: center;
+    border: 1px solid #fecaca;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.offscreen {
+    position: absolute;
+    left: -9999px;
+}
+
+/* ========================================= */
+/* 7. ANIMATIONS                             */
+/* ========================================= */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}

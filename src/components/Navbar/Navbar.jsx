@@ -3,22 +3,20 @@ import { NavLink, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import useLogout from "../../hooks/useLogout";
 import "./Navbar.css"; 
-
+import Login from '../../features/auth/login/Login'; 
+import Register from '../../features/auth/register/Register';
 // 1. IMPORT ICONS
 import { 
     FiUser,         // For Account/Login
     FiLogOut,       // For Logout
     FiShoppingCart, // For Cart
     FiGlobe,        // For Language
-    FiBox,          // For Products
     FiSettings      // For Admin
 } from "react-icons/fi";
 
 // 2. ADD ICONS TO YOUR CONFIG
 const NAV_ITEMS = [
     { label: "Aphrodite", path: "/", className: "brand-link", public: true }, 
-    // { label: "Home", path: "/", public: true, icon: <FiHome /> }, // 👈 Added Icon
-    { label: "", path: "/", public: true, icon: <FiBox /> }, // 👈 Added Icon
     { label: "", path: "/admin", adminOnly: true, icon: <FiSettings /> }
 ];
 
@@ -41,6 +39,19 @@ const Navbar = () => {
 
     const toggleLanguage = () => {
         setLanguage(prev => (prev === 'EN' ? 'VI' : 'EN'));
+    };
+    // State for Modals
+    const [showRegister, setShowRegister] = useState(false);
+    const [showLogin, setShowLogin] = useState(false);
+
+    // Helpers to switch between modals
+    const openLogin = () => {
+        setShowRegister(false);
+        setShowLogin(true);
+    };
+    const openRegister = () => {
+        setShowLogin(false);
+        setShowRegister(true);
     };
 
     return (
@@ -77,16 +88,16 @@ const Navbar = () => {
                     <button className="lang-btn" onClick={toggleLanguage}>
                         <FiGlobe style={{ marginRight: '5px' }}/> {language}
                     </button>
-                    
+                    {/* Cart Button */}
                     <NavLink to="/cart" className="nav-btn">
                         <FiShoppingCart /> Cart (0)
                     </NavLink>
 
-                    {/* 👤 GUEST VIEW: Login with Icon */}
+                    {/* 👤 GUEST VIEW: Login Button */}
                     {!isLoggedIn ? (
-                        <NavLink to="/login" className="login-btn-link">
-                            <FiUser /> Login
-                        </NavLink>
+                        <button to="/login" className="nav-btn" onClick={openLogin}>
+                            <FiUser />
+                        </button>
                     ) : (
                         /* 👤 LOGGED IN VIEW */
                         <>
@@ -122,11 +133,26 @@ const Navbar = () => {
                     )}
                 </div>
             </nav>
-
-            {/* CONTACT MODAL (Same as before) */}
+            
+            {/* LOGIN MODAL*/}
+            {showLogin && (
+                /* Assuming you update Login.js similar to Register.js */
+                <Login 
+                    onClose={() => setShowLogin(false)} 
+                    onSwitchToRegister={openRegister}
+                />
+            )}
+            {/* REGISTER MODAL */}
+            {showRegister && (
+                <Register 
+                    onClose={() => setShowRegister(false)} 
+                    onSwitchToLogin={openLogin}
+                />
+            )}
+            {/* CONTACT MODAL */}
             {isContactOpen && (
-                <div className="modal-overlay" onClick={() => setIsContactOpen(false)}>
-                    <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+                <div className="contact-modal-overlay" onClick={() => setIsContactOpen(false)}>
+                    <div className="contact-modal-box" onClick={(e) => e.stopPropagation()}>
                         <h3>Contact Us</h3>
                         <p>Email: support@aphrodite.com</p>
                         <textarea placeholder="How can we help?"></textarea>

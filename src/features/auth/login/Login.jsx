@@ -2,18 +2,18 @@ import { useRef, useState, useEffect } from 'react';
 import useAuth from '../../../hooks/useAuth';
 import axios from '../../../api/axios';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import './Login.css'; // 👈 Import the new Luxury Styles
+import { FiX } from "react-icons/fi"; // 1. Import Close Icon
+import '../auth.css'; 
 
 const LOGIN_URL = '/auth';
 
-const Login = () => {
+// 2. Accept Props for Modal Control
+const Login = ({ onClose, onSwitchToRegister }) => {
     const { setAuth } = useAuth();
 
     const navigate = useNavigate();
     const location = useLocation();
-    // We are ignoring 'from' for now to fix the loop issue
-    // const from = location.state?.from?.pathname || "/"; 
+    const from = location.state?.from?.pathname || "/"; 
 
     const userRef = useRef();
     const errRef = useRef();
@@ -21,15 +21,15 @@ const Login = () => {
     const [user, setUser] = useState('');
     const [pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
-
+    // Focus on username input when component mounts
     useEffect(() => {
         userRef.current.focus();
     }, [])
-
+    // Clear error message when user or pwd changes
     useEffect(() => {
         setErrMsg('');
     }, [user, pwd])
-
+    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -44,16 +44,19 @@ const Login = () => {
 
             const accessToken = response?.data?.accessToken;
             const roles = response?.data?.roles;
-            console.log("LOGIN ROLES:", roles);
-            console.log("✅ LOGIN SUCCESS! Token:", accessToken);
-
-            setAuth({ user, roles, accessToken });  // Update auth context delete pwd 
-
+            
+            setAuth({ user, roles, accessToken });
             setUser('');
             setPwd('');
             
-            console.log("🚀 Navigating to Dashboard...");
-            navigate('/', { replace: true }); 
+            // 3. SUCCESS BEHAVIOR:
+            // Instead of navigating away, we just close the modal.
+            // The Navbar will detect the change and update the UI automatically.
+            if (onClose) {
+                onClose();
+            } else {
+                navigate(from, { replace: true }); // Fallback if used as a standalone page
+            }
             
         } catch (err) {
             if (!err?.response) {
@@ -61,7 +64,7 @@ const Login = () => {
             } else if (err.response?.status === 400) {
                 setErrMsg('Missing Username or Password');
             } else if (err.response?.status === 401) {
-                setErrMsg('Wrong username or password / You are not having account yet');
+                setErrMsg('Invalid Username or Password');
             } else {
                 setErrMsg('Login Failed');
             }
@@ -70,46 +73,68 @@ const Login = () => {
     }
 
     return (
-        /* 1. Changed section to login-container */
-        <section className="login-container">
+        /* 4. OVERLAY WRAPPER */
+        <div className="modal-overlay" onClick={onClose}>
             
-            <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
-            
-            {/* 2. Added Luxury Typography */}
-            <h1>Welcome Back</h1>
-            <p className="login-subtitle">Please sign in to continue</p>
-            
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="username">Username:</label>
-                <input
-                    type="text"
-                    id="username"
-                    ref={userRef}
-                    autoComplete="off"
-                    onChange={(e) => setUser(e.target.value)}
-                    value={user}
-                    required
-                />
+            {/* Prevent click bubbling */}
+            <div className="login-container" onClick={(e) => e.stopPropagation()}>
+                
+                {/* 5. CLOSE BUTTON */}
+                <button className="close-modal-btn" onClick={onClose}>
+                    <FiX />
+                </button>
 
-                <label htmlFor="password">Password:</label>
-                <input
-                    type="password"
-                    id="password"
-                    onChange={(e) => setPwd(e.target.value)}
-                    value={pwd}
-                    required
-                />
-                <button>Sign In</button>
-            </form>
-            
-            {/* 3. Styled Footer */}
-            <p className="login-footer">
-                Need an Account?<br />
-                <span className="line">
-                    <Link to="/register">Sign Up</Link>
-                </span>
-            </p>
-        </section>
+                <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
+                
+                <h1>Welcome Back</h1>
+                <p className="login-subtitle">Please sign in to continue</p>
+                
+                <form onSubmit={handleSubmit}>
+                    <label htmlFor="username">Username:</label>
+                    <input
+                        type="text"
+                        id="username"
+                        ref={userRef}
+                        autoComplete="off"
+                        onChange={(e) => setUser(e.target.value)}
+                        value={user}
+                        required
+                    />
+
+                    <label htmlFor="password">Password:</label>
+                    <input
+                        type="password"
+                        id="password"
+                        onChange={(e) => setPwd(e.target.value)}
+                        value={pwd}
+                        required
+                    />
+                    <button>Sign In</button>
+                </form>
+                
+                {/* 6. SWITCHER LOGIC */}
+                <p className="login-footer">
+                    Need an Account?<br />
+                    <span className="line">
+                        {/* Use button logic to switch modals */}
+                        <button 
+                            onClick={onSwitchToRegister}
+                            style={{
+                                background: 'none', 
+                                border: 'none', 
+                                color: 'black', 
+                                textDecoration: 'underline', 
+                                cursor: 'pointer',
+                                fontWeight: 'bold',
+                                fontSize: '1rem'
+                            }}
+                        >
+                            Sign Up
+                        </button>
+                    </span>
+                </p>
+            </div>
+        </div>
     )
 }
 

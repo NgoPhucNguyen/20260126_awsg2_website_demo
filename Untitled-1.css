@@ -1,0 +1,70 @@
+/* 1. THE OVERLAY (The Faded Background) */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Black with 60% opacity */
+    backdrop-filter: blur(3px); /* Optional: adds a nice blur effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Sit on top of everything */
+    animation: fadeIn 0.3s ease; /* Smooth entrance */
+}
+
+/* 2. THE CARD (Updated to float in the center) */
+.register-container {
+    background-color: #ffffff;
+    padding: 3rem;
+    width: 100%;
+    max-width: 450px;
+    /* ❌ Removed: height: 80vh; -> We want it to fit the content */
+    height: auto; 
+    /* ❌ Removed: margin: 4rem auto; -> The overlay centers it now */
+    border: 1px solid #e7e5e4;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* Stronger shadow for pop-up depth */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* Needed for the close button */
+    border-radius: 8px; /* Rounded corners look better on modals */
+    animation: slideUp 0.3s ease;
+}
+
+/* 3. CLOSE BUTTON (The 'X') */
+.close-modal-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #57534e;
+    width: auto !important; /* Override the 100% width from general button rule */
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.close-modal-btn:hover {
+    color: black;
+    background: transparent !important;
+    transform: none !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* ... Keep your existing Typography, Inputs, and other styles below ... */
+/* ... existing h1, input, button styles remain the same ... */

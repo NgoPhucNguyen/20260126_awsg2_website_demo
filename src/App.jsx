@@ -1,7 +1,8 @@
 import './index.css';
 import { Routes, Route } from 'react-router-dom';
-import Login from './features/auth/login/Login'; 
-import Register from './features/auth/register/Register';
+
+
+
 import Product from './pages/Product';  
 import Admin from './pages/Admin';
 import Profile from './pages/Profile';
@@ -28,8 +29,6 @@ function App() {
       <Route path="/" element={<Layout />}>
         
         {/* 🌍 PUBLIC ROUTES (No Login Required) */}
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
         <Route path="unauthorized" element={<Unauthorized />} />
 
         {/* 🔐 PERSIST LOGIN: Keeps user logged in upon refresh/return */}

@@ -8,7 +8,8 @@ const Layout = () => {
             <div className="content">
                 <Outlet /> {/* This is where Home, Admin, or Login will appear */}
             </div>
-            <AnalyzeSkinBtn />
+            <AnalyzeSkinBtn /> 
+            {/* <Footer/> */} 
         </main>
     )
 }
