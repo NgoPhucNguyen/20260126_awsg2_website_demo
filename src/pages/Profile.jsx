@@ -1,9 +1,8 @@
-import React from 'react';
 import useAuth from '../hooks/useAuth'; // Import your auth hook
 import './Profile.css'; // Import the separate CSS file
 
 const Profile = () => {
-    const { auth } = useAuth();
+    const { auth } = useAuth(); // Get auth data from context
 
     // Helper to determine role name based on ID
     const getRoleName = (roles) => {
@@ -20,7 +19,7 @@ const Profile = () => {
                 
                 <div className="profile-avatar">
                     {/* Display first letter of username as avatar */}
-                    {auth?.user ? auth.user.charAt(0).toUpperCase() : "U"}
+                    {auth?.username ? auth.username.charAt(0).toUpperCase() : "U"}
                 </div>
 
                 <div className="profile-info">

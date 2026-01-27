@@ -10,7 +10,7 @@ import 'dotenv/config'; // Loads .env file
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: true,
     credentials: true
 }));
 
@@ -151,14 +151,17 @@ app.post('/create-payment', async (req, res) => {
     const { amount = '5000' } = req.body; 
 
     // 2. Load Config from .env (SECURE)
-    const partnerCode = process.env.MOMO_PARTNER_CODE;
+    const partnerCode = process.env.MOMO_PARTNER_CODE; // e.g., MOMO_PARTNER_CODE=test
     const accessKey = process.env.MOMO_ACCESS_KEY;
     const secretKey = process.env.MOMO_SECRET_KEY;
-    const apiEndpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
+    const apiEndpoint = "https://test-payment.momo.vn/v2/gateway/api/create"; // MoMo Test Endpoint
     
+
     // 3. Define URLs
     // ⚠️ Redirect User back to your React App
-    const redirectUrl = "http://localhost:5173/payment-result"; 
+    const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+    // Redirect URL after payment
+    const redirectUrl = `${CLIENT_URL}/payment-result`;
     // ⚠️ Send silent notification to Webhook.site (for you to debug)
     const ipnUrl = "https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b"; 
 

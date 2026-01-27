@@ -5,7 +5,7 @@ import Register from './features/auth/register/Register';
 import Home from './pages/Home';
 import Product from './pages/Product';  
 import Admin from './pages/Admin';
-import Profile from './pages/profile';
+import Profile from './pages/Profile';
 
 import Unauthorized from './features/auth/Unauthorized';
 import RequireAuth from './features/auth/RequireAuth';
