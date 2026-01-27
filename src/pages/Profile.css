@@ -1,0 +1,95 @@
+/* Import the font if not already in index.css */
+@import url('https://fonts.googleapis.com/css2?family=Berkshire+Swash&display=swap');
+
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    background-color: #f8f9fa; /* Light background to make the card pop */
+    padding: 20px;
+}
+
+.profile-card {
+    background: white;
+    width: 100%;
+    max-width: 500px;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    text-align: center;
+    border: 1px solid #e1e1e1;
+}
+
+/* 🌟 Your Brand Style */
+.profile-title {
+    font-family: 'Berkshire Swash', serif;
+    color: #E6C27A;
+    font-size: 3rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #E6C27A 0%, #C6934B 100%);
+    color: white;
+    font-size: 48px;
+    font-family: 'Berkshire Swash', serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto 30px auto;
+    box-shadow: 0 4px 10px rgba(230, 194, 122, 0.5);
+}
+
+.info-group {
+    margin-bottom: 20px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.info-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+.info-group p {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #333;
+    margin: 0;
+}
+
+.role-badge {
+    background-color: #E6C27A;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem !important;
+    display: inline-block;
+}
+
+.edit-profile-btn {
+    margin-top: 20px;
+    padding: 12px 30px;
+    background-color: #333;
+    color: #E6C27A;
+    border: 2px solid #E6C27A;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.edit-profile-btn:hover {
+    background-color: #E6C27A;
+    color: white;
+}

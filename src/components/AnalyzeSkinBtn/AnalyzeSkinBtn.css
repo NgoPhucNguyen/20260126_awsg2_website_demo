@@ -1,0 +1,45 @@
+/* AnalyzeSkinBtn.css */
+
+.floating-skin-btn {
+  /* 1. FIXED BUTTON SIZE (The Circle) */
+  width: 70px;         /* Change this to make the BUTTON bigger/smaller */
+  height: 70px;        /* Keep this same as width for a perfect circle */
+  
+  /* 2. POSITIONING */
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  
+  /* 3. CENTER THE IMAGE PERFECTLY */
+  display: flex;       /* This activates the centering magic */
+  justify-content: center; /* Centers horizontally (Left/Right) */
+  align-items: center;     /* Centers vertically (Up/Down) */
+  
+  /* 4. VISUAL STYLE */
+  border-radius: 50%;
+  background: var(--accent-yellow);   /* Or your gradient */
+  border: none;
+  padding: 0;          /* Remove padding to let Flexbox handle spacing */
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  overflow: hidden;    /* Keeps image inside the circle */
+  transition: transform 0.3s ease;
+}
+
+/* 🖼️ IMAGE SIZING (The Icon inside) */
+.btn-icon {
+  /* Change this % to scale the image inside the bubble */
+  width: 65%;          /* 50% = small icon, 100% = touches edges */
+  height: auto;        /* Auto keeps the image aspect ratio correct */
+  
+  object-fit: contain; /* Ensures the whole icon is visible */
+  display: block;      /* Removes accidental text spacing */
+  pointer-events: none;
+}
+
+/* HOVER EFFECT */
+.floating-skin-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}

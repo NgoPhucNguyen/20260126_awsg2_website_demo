@@ -102,9 +102,10 @@ app.get('/refresh', (req, res) => {
     // 🟢 NOW WE USE THE REAL ROLES (Not hardcoded!)
     // Get roles from found user
     const roles = foundUser.roles; 
+    const username = foundUser.username;
     // Generate new access token
     const accessToken = "fake_new_access_token_" + Date.now();
-    res.json({ accessToken, roles });
+    res.json({ accessToken, roles, username });
 });
 
 
@@ -142,41 +143,51 @@ app.get('/users', (req, res) => {
     ]);
 });
 
-// --------------------------------------
-// 💸 MOMO PAYMENT ENDPOINT
-// --------------------------------------
+// ----------------------------------------------------------------
+// PayMent with MoMo 
+// ----------------------------------------------------------------
 app.post('/create-payment', async (req, res) => {
-    const { amount } = req.body; 
-    
-    // 1. Get Config from .env
+    // 1. Get amount from Frontend (or default to 1000 for test)
+    const { amount = '5000' } = req.body; 
+
+    // 2. Load Config from .env (SECURE)
     const partnerCode = process.env.MOMO_PARTNER_CODE;
     const accessKey = process.env.MOMO_ACCESS_KEY;
     const secretKey = process.env.MOMO_SECRET_KEY;
-    const apiEndpoint = process.env.MOMO_API_ENDPOINT;
+    const apiEndpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
     
-    // 2. Prepare Unique IDs
+    // 3. Define URLs
+    // ⚠️ Redirect User back to your React App
+    const redirectUrl = "http://localhost:5173/payment-result"; 
+    // ⚠️ Send silent notification to Webhook.site (for you to debug)
+    const ipnUrl = "https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b"; 
+
+    // 4. Generate IDs
     const requestId = partnerCode + new Date().getTime();
-    const orderId = requestId; // In a real app, use your database Order ID
-    const orderInfo = "Pay for Product";
-    const redirectUrl = process.env.MOMO_REDIRECT_URL;
-    const ipnUrl = process.env.MOMO_IPN_URL;
-    const requestType = "captureWallet";
+    const orderId = requestId;
+    const orderInfo = "Pay with MoMo";
+    
+    // ⚠️ 'captureWallet' is the standard "Scan QR" method. 
+    // 'payWithMethod' is often for specific tokenized flows.
+    const requestType = "captureWallet"; 
     const extraData = ""; 
 
-    // 3. Create Raw Signature
-    // ⚠️ IMPORTANT: Fields must be alphabetical
+    // 5. Create Signature (Alphabetical Sort Required!)
     const rawSignature = `accessKey=${accessKey}&amount=${amount}&extraData=${extraData}&ipnUrl=${ipnUrl}&orderId=${orderId}&orderInfo=${orderInfo}&partnerCode=${partnerCode}&redirectUrl=${redirectUrl}&requestId=${requestId}&requestType=${requestType}`;
 
-    // 4. Hash the signature (HMAC SHA256)
+    console.log("--------------------RAW SIGNATURE----------------");
+    console.log(rawSignature);
+
+    // 6. Hash Signature
     const signature = crypto
         .createHmac('sha256', secretKey)
         .update(rawSignature)
         .digest('hex');
 
-    // 5. Build the Body
+    // 7. Send Request to MoMo
     const requestBody = {
         partnerCode,
-        partnerName: "Test Store",
+        partnerName: "Test",
         storeId: "MomoTestStore",
         requestId,
         amount,
@@ -191,28 +202,47 @@ app.post('/create-payment', async (req, res) => {
         signature
     };
 
-    // 6. Send to MoMo
     try {
         const response = await axios.post(apiEndpoint, requestBody);
-        console.log("✅ MoMo URL created:", response.data.payUrl);
         
-        // Return the payment URL to React
-        res.status(200).json({ payUrl: response.data.payUrl });
+        console.log("✅ MoMo Response:", response.data);
+        return res.status(200).json(response.data);
 
     } catch (error) {
         console.error("❌ MoMo Error:", error.response ? error.response.data : error.message);
-        res.status(500).json({ message: "Payment creation failed" });
+        return res.status(500).json({ error: 'Error processing payment' });
     }
 });
+
+
+// --------------------------------------
+/// 2026 01 26 Basic Product Route
+//
+
+app.get('/product', (req, res) => {
+    res.json({ message: 'Server is running' });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // --------------------------------------
 // START SERVER
 // --------------------------------------
 app.listen(3500, () => 
-    console.log('🚀 Server : http://localhost:3500'),
-    console.log('Server API on http://localhost:3500/auth')
+    console.log('🚀 Server : http://localhost:3500')
 );
-
-
-

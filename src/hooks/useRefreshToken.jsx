@@ -9,16 +9,17 @@ const useRefreshToken = () => {
         const response = await axios.get('/refresh', {
             withCredentials: true
         });
-
+        // Update auth state with new access token and roles
         setAuth(prev => {
-            console.log("OLD AUTH STATE:", JSON.stringify(prev));
-            console.log("NEW ACCESS TOKEN:", response.data.accessToken);
-            console.log("NEW ROLES:", response.data.roles); // 👈 Check this log!
+            console.log("OLD AUTH STATE:", JSON.stringify(prev)); // Log previous auth state
+            console.log("NEW ACCESS TOKEN:", response.data.accessToken); // Log new access token
+            console.log("NEW ROLES:", response.data.roles); // Log new roles
 
             return { 
                 ...prev, 
-                roles: response.data.roles, // 👈 CRITICAL FIX: Save the roles!
-                accessToken: response.data.accessToken 
+                roles: response.data.roles, // Save the roles!
+                username: response.data.username, // Save the username!
+                accessToken: response.data.accessToken // Update access token
             }
         });
         

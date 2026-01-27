@@ -35,7 +35,7 @@ const Navbar = () => {
                 {/* 👈 LEFT SIDE: Logo & Main Navigation */}
                 <div className="nav-links-left">
                     <NavLink className="brand-link" to="/"> 
-                        NAME_HERE 
+                        Aphrodite
                     </NavLink>  
                     
                     {/* Only show these if logged in */}

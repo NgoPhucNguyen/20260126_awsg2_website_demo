@@ -31,11 +31,12 @@
 /* 1. BRAND LOGO STYLING (No Underline)             */
 /* ------------------------------------------------ */
 .brand-link {
+  font-family: var(--font-heading); /* Elegant Heading Font */
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 100;
   letter-spacing: -0.03em;
   text-transform: none; 
-  color: var(--text-primary);
+  color: var(--accent-yellow);
   text-decoration: none;
   position: static; 
 }
