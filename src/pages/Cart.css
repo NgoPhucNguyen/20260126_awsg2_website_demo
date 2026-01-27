@@ -1,0 +1,118 @@
+.cart-page {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.cart-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Items take 2 parts, Summary takes 1 part */
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+/* LIST STYLES */
+.cart-items-list {
+    list-style: none;
+    padding: 0;
+}
+
+.cart-item {
+    display: flex;
+    gap: 1.5rem;
+    border-bottom: 1px solid #eee;
+    padding: 1.5rem 0;
+    align-items: center;
+}
+
+/* IMAGE */
+.item-image img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+}
+
+/* TEXT */
+.item-details {
+    flex: 1; /* Pushes actions to the right */
+}
+
+.item-details h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.item-price {
+    font-weight: bold;
+    color: #555;
+}
+
+/* ACTIONS */
+.item-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #f9f9f9;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.quantity-controls button {
+    border: none;
+    background: white;
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-btn {
+    background: none;
+    border: none;
+    color: #ff4d4d;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+/* SUMMARY BOX */
+.cart-summary {
+    background: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 10px;
+    height: fit-content;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.summary-row.total {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.checkout-btn {
+    width: 100%;
+    padding: 1rem;
+    background: black;
+    color: white;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 1rem;
+}

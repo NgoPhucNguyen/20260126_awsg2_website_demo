@@ -14,11 +14,21 @@ const Admin = () => {
         const getUsers = async () => {
             try {
                 const response = await axiosPrivate.get('/users', {
-                    signal: controller.signal
+                    signal: controller.signal // 2. Connects request to controller
                 });
-                isMounted && setUsers(response.data);
-            } catch (err) {
-                console.error(err);
+                if (isMounted) {
+                    setUsers(response.data);
+                }
+                } catch (err) {
+                // ✅ ADD THIS CHECK: 
+                // If the error is just "Canceled", ignore it.
+                if (err.name === 'CanceledError' || err.code === "ERR_CANCELED") {
+                    console.log("Request canceled successfully (Cleanup)");
+                } else {
+                    // Only log REAL errors
+                    console.error(err);
+                    navigate('/login', { state: { from: location }, replace: true });
+                }
             }
         }
         

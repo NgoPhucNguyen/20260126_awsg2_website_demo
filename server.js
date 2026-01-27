@@ -1,3 +1,4 @@
+// server.js
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -7,13 +8,25 @@ import axios from 'axios';
 import crypto from 'crypto';
 import 'dotenv/config'; // Loads .env file
 
+// --------------------------------------
+// EXPRESS APP SETUP
+// --------------------------------------
 const app = express();
 
+// Allow BOTH localhost (for you) AND the EC2 IP (for the public)
+const allowedOrigins = [
+  'http://localhost:5173', 
+//   'http://44.249.179.198:5173',
+  'http://127.0.0.1:5173'
+];
+
+// CORS Middleware
 app.use(cors({
-    origin: true,
+    origin: allowedOrigins, 
     credentials: true
 }));
 
+// Middleware
 app.use(express.json());
 app.use(cookieParser());
 
@@ -133,7 +146,7 @@ app.get('/logout', (req, res) => {
 // 📊 DASHBOARD
 // --------------------------------------
 app.get('/users', (req, res) => {
-    const authHeader = req.headers['authorization'];
+    const authHeader = req.headers['authorization']; // Bearer token
     if (!authHeader) return res.status(403).json({ message: 'Forbidden' });
 
     res.json([

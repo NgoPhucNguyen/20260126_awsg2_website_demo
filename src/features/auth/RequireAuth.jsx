@@ -8,13 +8,14 @@ const RequireAuth = ({ allowedRoles }) => {
     // 1. Does the user have roles?
     // 2. Do any of their roles match the "allowedRoles" for this page?
     const hasRole = auth?.roles?.find(role => allowedRoles?.includes(role));
-
+    // 🚪 DECIDE ACCESS
     return (
         hasRole
             ? <Outlet /> // ✅ Yes, enter.
             : auth?.accessToken // 🔐 Logged in, but wrong role?
                 ? <Navigate to="/unauthorized" state={{ from: location }} replace />
-                : <Navigate to="/login" state={{ from: location }} replace /> // ❌ Not logged in.
+                : <Navigate to="/" state={{ from: location }} replace />
+                // 🚪 Not logged in, go to home page.
     );
 }
 
