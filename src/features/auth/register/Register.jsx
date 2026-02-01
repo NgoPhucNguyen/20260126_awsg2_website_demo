@@ -2,6 +2,7 @@ import '../auth.css';
 
 import { useRef, useState, useEffect } from "react";
 import axios from '../../../api/axios';
+// Icons
 import { FiX } from 'react-icons/fi';
 // API endpoint for registration
 const REGISTER_URL = '/register';

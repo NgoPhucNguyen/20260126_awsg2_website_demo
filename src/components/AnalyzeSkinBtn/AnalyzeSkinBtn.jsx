@@ -13,7 +13,7 @@ const AnalyzeSkinBtn = () => {
     <button className="floating-skin-btn" onClick={() => navigate('/analyze-skin')}>
       {/* 2. USE THE IMAGE TAG */}
       {/* 'alt' is important for screen readers */}
-      <img src={skinIcon} alt="Analyze Skin" className="btn-icon" />
+      <img src={skinIcon} alt="" className="btn-icon" />
     </button>
   );
 };

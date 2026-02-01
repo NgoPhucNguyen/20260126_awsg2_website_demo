@@ -18,7 +18,7 @@
   
   /* 4. VISUAL STYLE */
   border-radius: 50%;
-  background: var(--accent-yellow);   /* Or your gradient */
+  background: var(--accent-yellow);
   border: none;
   padding: 0;          /* Remove padding to let Flexbox handle spacing */
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
@@ -41,5 +41,6 @@
 /* HOVER EFFECT */
 .floating-skin-btn:hover {
   transform: scale(1.1);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); 
+  
 }

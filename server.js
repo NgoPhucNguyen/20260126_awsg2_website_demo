@@ -3,6 +3,10 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+
 //Payment Part (26/01/2025)
 import axios from 'axios';
 import crypto from 'crypto';
@@ -44,6 +48,27 @@ const usersDB = {
 
 // 🧠 NEW: SESSION STORAGE (Tracks who owns which token)
 const sessions = {}; 
+// --------------------------------------
+// MULTER SETUP FOR FILE UPLOADS
+// --------------------------------------
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const dir = './uploads';
+    // Create uploads folder if it doesn't exist
+    if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+    }
+    cb(null, dir);
+  },
+  filename: function (req, file, cb) {
+    // Save as "timestamp-name.jpg" to avoid overwriting
+    cb(null, Date.now() + path.extname(file.originalname)); 
+  }
+});
+
+const upload = multer({ storage: storage });
+
+
 
 // --------------------------------------
 // 📝 REGISTER
@@ -108,7 +133,7 @@ app.get('/refresh', (req, res) => {
     const foundUser = sessions[refreshToken];
     // If token not found in sessions
     if (!foundUser) {
-        console.log("⚠️ Refresh Token not found in active sessions");
+        console.log("(You are not a User yet) ⚠️ Refresh Token not found in active sessions");
         return res.status(403).json({ message: 'Forbidden' });
     }
     console.log(`♻️ Refreshing Token for: ${foundUser.username}`);
@@ -239,6 +264,26 @@ app.get('/product', (req, res) => {
     res.json({ message: 'Server is running' });
 });
 
+// POST ROUTE TO UPLOAD SKIN IMAGE
+
+app.post('/upload-skin', upload.single('skinImage'), (req, res) => {
+    // Debugging logs
+    console.log("--------------------------------");
+    console.log("📷 File Received!");
+    console.log("File Info:", req.file); // Gives size, path, mimetype
+    
+    if (!req.file) {
+        return res.status(400).send({ message: "No file received" });
+    }
+
+    // TODO: FUTURE AI INTEGRATION HERE
+    // const result = await runAIModel(req.file.path);
+
+    res.json({ 
+        message: "Image received successfully", 
+        filePath: req.file.path 
+    });
+});
 
 
 
