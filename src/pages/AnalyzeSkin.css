@@ -1,13 +1,13 @@
 /* AnalyzeSkin.css */
 
-/* The main card container */
+/* 1. Main Card Container */
 .analyze-container {
   max-width: 500px;
-  margin: 50px auto; /* Centers the card horizontally */
+  margin: 50px auto;
   padding: 30px;
   background-color: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-align: center;
 }
@@ -15,40 +15,33 @@
 .analyze-container h2 {
   margin-bottom: 25px;
   color: #333;
+  font-size: 24px;
 }
 
-/* The Box where Camera or Preview appears */
+/* 2. The Media Box (Camera or Image Preview) */
 .media-box {
   width: 100%;
-  height: 350px; /* Fixed height for consistency */
-  background-color: #f0f2f5;
-  border: 2px dashed #ccc;
+  height: 350px;
+  background-color: #f8f9fa; /* Light gray background */
+  border: 2px dashed #dee2e6; /* Dashed border for "dropzone" feel */
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   position: relative;
 }
 
-/* The actual image or webcam video inside the box */
 .media-box img,
 .media-box video {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ensures it fills the box without stretching */
+  object-fit: cover;
+  border-radius: 10px;
 }
 
-/* Button Container */
-.action-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 15px; /* Space between buttons */
-  margin-top: 20px;
-}
-
-/* General Button Styles */
+/* 3. Button Styles - GENERAL */
 button {
   padding: 12px 24px;
   border: none;
@@ -56,50 +49,95 @@ button {
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* Space between icon and text */
 }
 
-/* Primary Action (Analyze / Open Camera) */
+/* 4. Specific Button Colors */
+
+/* Blue (Primary) */
 .btn-primary {
-  background-color: #007bff; /* Blue */
+  background-color: #007bff;
   color: white;
 }
-
 .btn-primary:hover {
   background-color: #0056b3;
+  transform: translateY(-1px);
 }
 
-/* Secondary Action (Cancel / Retake) */
+/* Gray (Secondary/Cancel) */
 .btn-secondary {
-  background-color: #e4e6eb; /* Light Gray */
+  background-color: #e4e6eb;
   color: #333;
 }
-
 .btn-secondary:hover {
   background-color: #d8dadf;
 }
 
-/* Success Action (Upload / Submit) */
+/* Green (Success/Analyze) */
 .btn-success {
-  background-color: #28a745; /* Green */
+  background-color: #28a745;
   color: white;
 }
-
 .btn-success:hover {
   background-color: #218838;
+  transform: translateY(-1px);
 }
 
-/* File Input Styling */
-.file-upload-wrapper {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid #eee;
+/* Outline Blue (Upload Button) - NEW */
+.btn-upload {
+  background-color: transparent;
+  border: 2px solid #007bff;
+  color: #007bff;
+}
+.btn-upload:hover {
+  background-color: #f0f8ff; /* Very light blue */
 }
 
-/* Or text separator */
+/* 5. Layout for Buttons */
+
+/* Horizontal Row (Used for Cancel/Snap and Retake/Analyze) */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* Vertical Stack (Used for the Start Menu) - NEW */
+.action-buttons-stacked {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+}
+
+/* Make the stacked buttons consistent in width */
+.action-buttons-stacked button {
+  width: 80%; /* Takes up 80% of the card width */
+  max-width: 300px;
+}
+
+/* 6. The "OR" Separator */
 .separator {
-  margin: 15px 0;
+  display: flex;
+  align-items: center;
+  width: 80%;
+  margin: 10px auto;
   color: #888;
   font-size: 14px;
   font-weight: bold;
+}
+
+/* Adds lines on left and right of "OR" */
+.separator::before,
+.separator::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #eee;
+  margin: 0 10px;
 }

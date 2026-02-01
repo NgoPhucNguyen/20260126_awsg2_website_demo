@@ -4,9 +4,9 @@ import './AnalyzeSkin.css';
 
 const AnalyzeSkin = () => {
     const webcamRef = useRef(null);
+    const fileInputRef = useRef(null);
     const [image, setImage] = useState(null);
     const [isCameraOpen, setIsCameraOpen] = useState(false);
-
     // 1. CAPTURE FROM WEBCAM
     const capture = useCallback(() => {
         if (webcamRef.current) {
@@ -24,6 +24,11 @@ const AnalyzeSkin = () => {
         setImage(previewUrl);
         }
     };
+    const triggerFileSelect = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    }
 
     // 3. SEND TO BACKEND (This was missing!)
     const submitImage = async () => {
@@ -90,17 +95,28 @@ const AnalyzeSkin = () => {
                     <p style={{ color: '#aaa' }}>No image selected</p>
                 </div>
                 
-                <div className="action-buttons">
+                <div className="action-buttons-stacked">
                     <button className="btn-primary" onClick={() => setIsCameraOpen(true)}>
                     Open Camera
                     </button>
+                
+                    <div className="separator">OR</div>
+
+                    <button className="btn-upload" onClick={triggerFileSelect}>
+                        📂 Upload from Computer
+                    </button>
+
+                    {/* HIDDEN INPUT: The actual worker */}
+                    <input 
+                        type="file" 
+                        accept="image/*" 
+                        ref={fileInputRef} 
+                        onChange={handleFileUpload} 
+                        style={{ display: "none" }} // Hide it!
+                    />
                 </div>
 
-                <div className="separator">OR</div>
-
-                <div className="file-upload-wrapper">
-                    <input type="file" accept="image/*" onChange={handleFileUpload} />
-                </div>
+                
                 </div>
             )}
             </div>
