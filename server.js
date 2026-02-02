@@ -1,309 +1,223 @@
 // server.js
+import 'dotenv/config'; // Loads .env file immediately
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-
-//Payment Part (26/01/2025)
 import axios from 'axios';
 import crypto from 'crypto';
-import 'dotenv/config'; // Loads .env file
+
+// AWS & DB Imports
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import pkg from 'pg';
+const { Pool } = pkg; // Fix for 'pg' in ES Modules
 
 // --------------------------------------
-// EXPRESS APP SETUP
+// 1. CONFIGURATION & DATABASE
 // --------------------------------------
 const app = express();
+const PORT = process.env.PORT || 3500;
 
-// Allow BOTH localhost (for you) AND the EC2 IP (for the public)
+// PostgreSQL Connection Pool (RDS/Aurora)
+const pool = new Pool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: 5432,
+  ssl: { rejectUnauthorized: false } // Required for AWS RDS connections usually
+});
+
+// AWS S3 Client
+const s3 = new S3Client({
+    region: process.env.AWS_REGION, // e.g., 'ap-southeast-1'
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    }
+});
+
+// --------------------------------------
+// 2. MIDDLEWARE SETUP
+// --------------------------------------
 const allowedOrigins = [
-  'http://localhost:5173', 
-//   'http://44.249.179.198:5173',
-  'http://127.0.0.1:5173'
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+  // Add your EC2 Public IP or Domain here later
 ];
 
-// CORS Middleware
 app.use(cors({
-    origin: allowedOrigins, 
+    origin: allowedOrigins,
     credentials: true
 }));
 
-// Middleware
 app.use(express.json());
 app.use(cookieParser());
 
-const ROLES_LIST = {
-    "Admin": 5150,
-    "User": 2001
-}
-
-const usersDB = {
-    users: [
-        { username: "admin", password: "admin", roles: [ROLES_LIST.Admin, ROLES_LIST.User] }
-    ],
-    setUsers: function (data) { this.users = data }
-}
-
-// 🧠 NEW: SESSION STORAGE (Tracks who owns which token)
-const sessions = {}; 
 // --------------------------------------
-// MULTER SETUP FOR FILE UPLOADS
+// 3. MULTER (FILE UPLOAD) SETUP
 // --------------------------------------
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const dir = './uploads';
-    // Create uploads folder if it doesn't exist
-    if (!fs.existsSync(dir)){
-        fs.mkdirSync(dir);
+// Option A: Memory Storage (Best for S3 Uploads)
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+// --------------------------------------
+// 4. API ROUTES
+// --------------------------------------
+
+// ➤ PRODUCT IMPORT (JSON -> RDS)
+app.post('/api/products/import', async (req, res) => {
+  const { products } = req.body; // Expecting your JSON structure
+  if (!products) return res.status(400).json({ message: "No products provided" });
+
+  try {
+    for (const item of products) {
+      // Logic: Extract key fields, keep the rest in JSONB
+      const query = `
+        INSERT INTO products 
+        (sku, name, price, market_price, image_url, brand_name, details)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        ON CONFLICT (sku) DO NOTHING
+      `;
+
+      const values = [
+        item.sku,
+        item.name,
+        item.price,
+        item.market_price,
+        item.image,
+        item.brand?.name || 'Unknown',
+        JSON.stringify(item) // Save full object for flexibility
+      ];
+
+      await pool.query(query, values);
     }
-    cb(null, dir);
-  },
-  filename: function (req, file, cb) {
-    // Save as "timestamp-name.jpg" to avoid overwriting
-    cb(null, Date.now() + path.extname(file.originalname)); 
+    res.status(200).json({ message: "Data imported successfully!" });
+  } catch (err) {
+    console.error("❌ DB Error:", err);
+    res.status(500).json({ error: err.message });
   }
 });
 
-const upload = multer({ storage: storage });
+// ➤ IMAGE UPLOAD (Direct to S3)
+app.post('/api/upload', upload.single('image'), async (req, res) => {
+  const file = req.file;
+  if (!file) return res.status(400).send('No file uploaded.');
 
+  try {
+    // Unique filename: timestamp-originalName
+    const fileName = `uploads/${Date.now()}-${file.originalname}`;
 
+    const command = new PutObjectCommand({
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: fileName,
+      Body: file.buffer,
+      ContentType: file.mimetype
+    });
 
-// --------------------------------------
-// 📝 REGISTER
-// --------------------------------------
+    await s3.send(command);
+
+    // Construct the Public URL (assuming Bucket is public or using CloudFront)
+    const fileUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+
+    console.log(`✅ Uploaded to S3: ${fileUrl}`);
+    res.json({ message: "Upload successful!", url: fileUrl });
+  } catch (err) {
+    console.error("❌ S3 Upload Error:", err);
+    res.status(500).send("Error uploading to S3");
+  }
+});
+
+// ➤ AUTH ROUTES (Your existing logic)
+const ROLES_LIST = { "Admin": 5150, "User": 2001 };
+// Ideally, move 'usersDB' and 'sessions' to Redis/Database later
+const usersDB = {
+    users: [{ username: "admin", password: "admin", roles: [ROLES_LIST.Admin, ROLES_LIST.User] }],
+    setUsers: function (data) { this.users = data }
+};
+const sessions = {}; 
+
 app.post('/register', (req, res) => {
     const { user, pwd } = req.body;
-    if (!user || !pwd) return res.status(400).json({ 'message': 'Username and password are required.' });
-
+    if (!user || !pwd) return res.status(400).json({ 'message': 'Username/Password required.' });
     const duplicate = usersDB.users.find(person => person.username === user);
     if (duplicate) return res.status(409).json({ 'message': 'Username taken' });
 
-    const newUser = { 
-        "username": user, 
-        "password": pwd,
-        "roles": [ROLES_LIST.User] 
-    };
-    
-    usersDB.setUsers([...usersDB.users, newUser]);
-    console.log(`✅ New User Registered: ${user}`);
-    res.status(201).json({ 'success': `New user ${user} created!` });
+    usersDB.setUsers([...usersDB.users, { "username": user, "password": pwd, "roles": [ROLES_LIST.User] }]);
+    console.log(`✅ New User: ${user}`);
+    res.status(201).json({ 'success': `User ${user} created!` });
 });
 
-// --------------------------------------
-// 🔐 LOGIN (Updated to save session)
-// --------------------------------------
 app.post('/auth', (req, res) => {
     const { user, pwd } = req.body;
-    const foundUser = usersDB.users.find(person => person.username === user && person.password === pwd); // finding user
-    
-    // If not find user -> unauthorized
+    const foundUser = usersDB.users.find(person => person.username === user && person.password === pwd);
     if (!foundUser) return res.status(401).json({ 'message': 'Invalid Credentials' });
 
-    const roles = foundUser.roles;
     const accessToken = "fake_access_token_" + Date.now();
     const refreshToken = "fake_refresh_token_" + Date.now();
-
-    // 🧠 NEW: Link the token to the user's data in our memory
     sessions[refreshToken] = foundUser; 
 
-    // Set refresh token as HttpOnly cookie
-    res.cookie('jwt', refreshToken, {
-        httpOnly: true,
-        secure: false, 
-        sameSite: 'lax',
-        maxAge: 24 * 60 * 60 * 1000 * 30
-    });
-
-    res.json({ accessToken, roles }); 
+    res.cookie('jwt', refreshToken, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 24 * 60 * 60 * 1000 });
+    res.json({ accessToken, roles: foundUser.roles }); 
 });
 
-// --------------------------------------
-// ♻️ REFRESH (Updated to lookup user)
-// --------------------------------------
 app.get('/refresh', (req, res) => {
-    // Grab refresh token from cookies
     const cookies = req.cookies; 
-    // Check if cookie with jwt exists
     if (!cookies?.jwt) return res.status(401).json({ message: 'Unauthorized' });
-    // Extract the refresh token
     const refreshToken = cookies.jwt;
-    // Look up the user by their token
     const foundUser = sessions[refreshToken];
-    // If token not found in sessions
-    if (!foundUser) {
-        console.log("(You are not a User yet) ⚠️ Refresh Token not found in active sessions");
-        return res.status(403).json({ message: 'Forbidden' });
-    }
-    console.log(`♻️ Refreshing Token for: ${foundUser.username}`);
-    // 🟢 NOW WE USE THE REAL ROLES (Not hardcoded!)
-    // Get roles from found user
-    const roles = foundUser.roles; 
-    const username = foundUser.username;
-    // Generate new access token
-    const accessToken = "fake_new_access_token_" + Date.now();
-    res.json({ accessToken, roles, username });
+    if (!foundUser) return res.status(403).json({ message: 'Forbidden' });
+
+    res.json({ accessToken: "new_fake_token_" + Date.now(), roles: foundUser.roles, username: foundUser.username });
 });
 
-
-// --------------------------------------
-// 🚪 LOGOUT ROUTE
-// --------------------------------------
 app.get('/logout', (req, res) => {
-    // On logout, we delete the refresh token from memory
     const cookies = req.cookies;
-    if (!cookies?.jwt) return res.sendStatus(204); // No content
-    // Extract refresh token from cookies
-    const refreshToken = cookies.jwt;
-
-    // Is refreshToken in our session?
-    if (sessions[refreshToken]) {
-        delete sessions[refreshToken]; // Remove from memory
-    }
-    // Clear the cookie
+    if (!cookies?.jwt) return res.sendStatus(204);
+    delete sessions[cookies.jwt];
     res.clearCookie('jwt', { httpOnly: true, sameSite: 'lax', secure: false });
     res.sendStatus(204);
-
 });
 
-// --------------------------------------
-// 📊 DASHBOARD
-// --------------------------------------
-app.get('/users', (req, res) => {
-    const authHeader = req.headers['authorization']; // Bearer token
-    if (!authHeader) return res.status(403).json({ message: 'Forbidden' });
-
-    res.json([
-        { username: "TestUser_1" },
-        { username: "TestUser_2" },
-        { username: "You_Are_Logged_In" }
-    ]);
-});
-
-// ----------------------------------------------------------------
-// PayMent with MoMo 
-// ----------------------------------------------------------------
+// ➤ PAYMENT ROUTE (MoMo)
 app.post('/create-payment', async (req, res) => {
-    // 1. Get amount from Frontend (or default to 1000 for test)
     const { amount = '5000' } = req.body; 
-
-    // 2. Load Config from .env (SECURE)
-    const partnerCode = process.env.MOMO_PARTNER_CODE; // e.g., MOMO_PARTNER_CODE=test
+    const partnerCode = process.env.MOMO_PARTNER_CODE;
     const accessKey = process.env.MOMO_ACCESS_KEY;
     const secretKey = process.env.MOMO_SECRET_KEY;
-    const apiEndpoint = "https://test-payment.momo.vn/v2/gateway/api/create"; // MoMo Test Endpoint
     
+    // Safety check
+    if (!partnerCode || !accessKey || !secretKey) {
+        return res.status(500).json({ error: "MoMo configs missing in .env" });
+    }
 
-    // 3. Define URLs
-    // ⚠️ Redirect User back to your React App
-    const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
-    // Redirect URL after payment
-    const redirectUrl = `${CLIENT_URL}/payment-result`;
-    // ⚠️ Send silent notification to Webhook.site (for you to debug)
-    const ipnUrl = "https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b"; 
-
-    // 4. Generate IDs
     const requestId = partnerCode + new Date().getTime();
     const orderId = requestId;
-    const orderInfo = "Pay with MoMo";
+    const redirectUrl = "http://localhost:5173/payment-result";
+    const ipnUrl = "https://webhook.site/YOUR-WEBHOOK-ID"; 
+    const rawSignature = `accessKey=${accessKey}&amount=${amount}&extraData=&ipnUrl=${ipnUrl}&orderId=${orderId}&orderInfo=Pay with MoMo&partnerCode=${partnerCode}&redirectUrl=${redirectUrl}&requestId=${requestId}&requestType=captureWallet`;
     
-    // ⚠️ 'captureWallet' is the standard "Scan QR" method. 
-    // 'payWithMethod' is often for specific tokenized flows.
-    const requestType = "captureWallet"; 
-    const extraData = ""; 
-
-    // 5. Create Signature (Alphabetical Sort Required!)
-    const rawSignature = `accessKey=${accessKey}&amount=${amount}&extraData=${extraData}&ipnUrl=${ipnUrl}&orderId=${orderId}&orderInfo=${orderInfo}&partnerCode=${partnerCode}&redirectUrl=${redirectUrl}&requestId=${requestId}&requestType=${requestType}`;
-
-    console.log("--------------------RAW SIGNATURE----------------");
-    console.log(rawSignature);
-
-    // 6. Hash Signature
-    const signature = crypto
-        .createHmac('sha256', secretKey)
-        .update(rawSignature)
-        .digest('hex');
-
-    // 7. Send Request to MoMo
-    const requestBody = {
-        partnerCode,
-        partnerName: "Test",
-        storeId: "MomoTestStore",
-        requestId,
-        amount,
-        orderId,
-        orderInfo,
-        redirectUrl,
-        ipnUrl,
-        lang: 'vi',
-        requestType,
-        autoCapture: true,
-        extraData,
-        signature
-    };
+    const signature = crypto.createHmac('sha256', secretKey).update(rawSignature).digest('hex');
 
     try {
-        const response = await axios.post(apiEndpoint, requestBody);
-        
-        console.log("✅ MoMo Response:", response.data);
-        return res.status(200).json(response.data);
-
+        const response = await axios.post("https://test-payment.momo.vn/v2/gateway/api/create", {
+            partnerCode, partnerName: "Test", storeId: "MomoTestStore", requestId, amount, orderId,
+            orderInfo: "Pay with MoMo", redirectUrl, ipnUrl, lang: 'vi', requestType: "captureWallet",
+            autoCapture: true, extraData: "", signature
+        });
+        res.status(200).json(response.data);
     } catch (error) {
-        console.error("❌ MoMo Error:", error.response ? error.response.data : error.message);
-        return res.status(500).json({ error: 'Error processing payment' });
+        console.error("❌ MoMo Error:", error.response?.data || error.message);
+        res.status(500).json({ error: 'Payment Error' });
     }
 });
 
-
 // --------------------------------------
-/// 2026 01 26 Basic Product Route
-//
-
-app.get('/product', (req, res) => {
-    res.json({ message: 'Server is running' });
+// 5. START SERVER
+// --------------------------------------
+app.listen(PORT, () => {
+    console.log(`🚀 Server running at http://localhost:${PORT}`);
+    console.log(`📡 Connected to AWS Region: ${process.env.AWS_REGION}`);
 });
-
-// POST ROUTE TO UPLOAD SKIN IMAGE
-
-app.post('/upload-skin', upload.single('skinImage'), (req, res) => {
-    // Debugging logs
-    console.log("--------------------------------");
-    console.log("📷 File Received!");
-    console.log("File Info:", req.file); // Gives size, path, mimetype
-    
-    if (!req.file) {
-        return res.status(400).send({ message: "No file received" });
-    }
-
-    // TODO: FUTURE AI INTEGRATION HERE
-    // const result = await runAIModel(req.file.path);
-
-    res.json({ 
-        message: "Image received successfully", 
-        filePath: req.file.path 
-    });
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// --------------------------------------
-// START SERVER
-// --------------------------------------
-app.listen(3500, () => 
-    console.log('🚀 Server : http://localhost:3500')
-);
