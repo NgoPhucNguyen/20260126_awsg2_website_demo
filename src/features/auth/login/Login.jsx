@@ -90,7 +90,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
                 <p className="login-subtitle">Please sign in to continue</p>
                 
                 <form onSubmit={handleSubmit}>
-                    <label htmlFor="username">Username:</label>
+                    <label htmlFor="username">Email or Account Name</label>
                     <input
                         type="text"
                         id="username"

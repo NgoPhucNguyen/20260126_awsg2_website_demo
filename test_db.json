@@ -1,0 +1,54 @@
+{
+  "products": [
+            {
+                "id": 106417,
+                "sku": "422211115",
+                "name": "Son Bóng Maybelline 125 Keen - Hồng Đào Đất 4.2ml",
+                "short_desc": "",
+                "product_url": "https://hasaki.vn/san-pham/son-bong-maybelline-125-keen-hong-dao-dat-4-2ml-106417.html",
+                "english_name": "Superstay Vinyl Ink",
+                "brand": {
+                    "name": "Maybelline",
+                    "off_online": false,
+                    "off_online_url": null,
+                    "url": "https://hasaki.vn/thuong-hieu/maybelline.html",
+                    "image": "https://media.hcdn.vn//hsk/brandMaybelline-logo1694760363.jpg",
+                    "id": 15,
+                    "followed": false,
+                    "following": null
+                },
+                "image": "https://media.hcdn.vn/catalog/product/p/r/special-deal-son-bong-maybelline-125-keen-hong-dao-dat-4-2ml_xiH13hmAq8WASDMU.png",
+                "market_price": 298000,
+                "price": 170000,
+                "discount_percent": 43,
+                "promotion_text": "Bill 249K Maybelline tặng Nước Tẩy Trang Mắt Môi - 40ml (SL có hạn)",
+                "promotion_badge": null,
+                "quantity": 2822,
+                "out_stock_text": null,
+                "bought_count": 65,
+                "gift": null,
+                "deal": {
+                    "deal_id": 11902,
+                    "quantity": 3,
+                    "bought_percent": 3,
+                    "start": 1768446000,
+                    "expired": 1768453199,
+                    "time_remain": 2965
+                },
+                "icon_delivery": null,
+                "spa": null,
+                "is_ongoing_deal": false,
+                "cover_price": "1?0.000",
+                "rating": {
+                    "avg_rate": 0,
+                    "total": 27,
+                    "average": 5
+                },
+                "category_name_level": "Trang Điểm / Trang Điểm Môi / Son Bóng",
+                "category_id": 107,
+                "order_count_30": 10930000,
+                "sub_stamp": "https://media.hcdn.vn/catalog/product/t/e/tem-phu-son-bong-maybelline-125-keen-hong-dao-dat-4-2ml-1766565710.jpg",
+                "icon_highlight_config": null
+            }
+          ]
+        }
