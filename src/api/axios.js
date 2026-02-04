@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// 🛠️ CHANGE THIS: This must match your Python/Node backend URL
+// Backend URL
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3500'; 
 
 export default axios.create({

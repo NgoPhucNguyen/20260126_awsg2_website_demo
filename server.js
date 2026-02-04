@@ -6,18 +6,35 @@ import cookieParser from 'cookie-parser';
 //Payment Part (26/01/2025)
 import axios from 'axios';
 import crypto from 'crypto';
-import 'dotenv/config'; // Loads .env file
+import { config } from 'dotenv'; // Loads .env file
+config(); // Initialize dotenv
+
+// database
+// import { connectDB, disconnectDB } from './src/config/db.js';
+// connectDB();
+// Hande disconcect db
+
+// encode password
+// import bcrypt from 'bcrypt';
+
+// routes
+import route from './src/routes/authRoute.js';
 
 // --------------------------------------
 // EXPRESS APP SETUP
 // --------------------------------------
 const app = express();
 
-// Allow BOTH localhost (for you) AND the EC2 IP (for the public)
+// Middleware
+app.use(express.json());
+app.use(cookieParser());
+
+app.use('/auth', route);
+
 const allowedOrigins = [
   'http://localhost:5173', 
+  'http://127.0.0.1:5173',
 //   'http://44.249.179.198:5173',
-  'http://127.0.0.1:5173'
 ];
 
 // CORS Middleware
@@ -26,21 +43,18 @@ app.use(cors({
     credentials: true
 }));
 
-// Middleware
-app.use(express.json());
-app.use(cookieParser());
 
-const ROLES_LIST = {
-    "Admin": 5150,
-    "User": 2001
-}
+// const ROLES_LIST = {
+//     "Admin": 5150,
+//     "User": 2001
+// }
 
-const usersDB = {
-    users: [
-        { username: "admin", password: "admin", roles: [ROLES_LIST.Admin, ROLES_LIST.User] }
-    ],
-    setUsers: function (data) { this.users = data }
-}
+// const usersDB = {
+//     users: [
+//         { username: "admin", password: "admin", roles: [ROLES_LIST.Admin, ROLES_LIST.User] }
+//     ],
+//     setUsers: function (data) { this.users = data }
+// }
 
 // 🧠 NEW: SESSION STORAGE (Tracks who owns which token)
 const sessions = {}; 
@@ -48,51 +62,54 @@ const sessions = {};
 // --------------------------------------
 // 📝 REGISTER
 // --------------------------------------
-app.post('/register', (req, res) => {
-    const { user, pwd } = req.body;
-    if (!user || !pwd) return res.status(400).json({ 'message': 'Username and password are required.' });
+// app.post('/register', (req, res) => {
+//     const { user, pwd } = req.body;
+//     if (!user || !pwd) return res.status(400).json({ 'message': 'Username and password are required.' });
 
-    const duplicate = usersDB.users.find(person => person.username === user);
-    if (duplicate) return res.status(409).json({ 'message': 'Username taken' });
+//     const duplicate = usersDB.users.find(person => person.username === user);
+//     if (duplicate) return res.status(409).json({ 'message': 'Username taken' });
 
-    const newUser = { 
-        "username": user, 
-        "password": pwd,
-        "roles": [ROLES_LIST.User] 
-    };
+//     const newUser = { 
+//         "username": user, 
+//         "password": pwd,
+//         "roles": [ROLES_LIST.User] 
+//     };
     
-    usersDB.setUsers([...usersDB.users, newUser]);
-    console.log(`✅ New User Registered: ${user}`);
-    res.status(201).json({ 'success': `New user ${user} created!` });
-});
+//     usersDB.setUsers([...usersDB.users, newUser]);
+//     console.log(`✅ New User Registered: ${user}`);
+//     res.status(201).json({ 'success': `New user ${user} created!` });
+// });
+// app.post('/register', async (req, res) => {
+
+// }
 
 // --------------------------------------
 // 🔐 LOGIN (Updated to save session)
 // --------------------------------------
-app.post('/auth', (req, res) => {
-    const { user, pwd } = req.body;
-    const foundUser = usersDB.users.find(person => person.username === user && person.password === pwd); // finding user
+// app.post('/auth', (req, res) => {
+//     const { user, pwd } = req.body;
+//     const foundUser = usersDB.users.find(person => person.username === user && person.password === pwd); // finding user
     
-    // If not find user -> unauthorized
-    if (!foundUser) return res.status(401).json({ 'message': 'Invalid Credentials' });
+//     // If not find user -> unauthorized
+//     if (!foundUser) return res.status(401).json({ 'message': 'Invalid Credentials' });
 
-    const roles = foundUser.roles;
-    const accessToken = "fake_access_token_" + Date.now();
-    const refreshToken = "fake_refresh_token_" + Date.now();
+//     const roles = foundUser.roles;
+//     const accessToken = "fake_access_token_" + Date.now();
+//     const refreshToken = "fake_refresh_token_" + Date.now();
 
-    // 🧠 NEW: Link the token to the user's data in our memory
-    sessions[refreshToken] = foundUser; 
+//     // 🧠 NEW: Link the token to the user's data in our memory
+//     sessions[refreshToken] = foundUser; 
 
-    // Set refresh token as HttpOnly cookie
-    res.cookie('jwt', refreshToken, {
-        httpOnly: true,
-        secure: false, 
-        sameSite: 'lax',
-        maxAge: 24 * 60 * 60 * 1000 * 30
-    });
+//     // Set refresh token as HttpOnly cookie
+//     res.cookie('jwt', refreshToken, {
+//         httpOnly: true,
+//         secure: false, 
+//         sameSite: 'lax',
+//         maxAge: 24 * 60 * 60 * 1000 * 30
+//     });
 
-    res.json({ accessToken, roles }); 
-});
+//     res.json({ accessToken, roles }); 
+// });
 
 // --------------------------------------
 // ♻️ REFRESH (Updated to lookup user)
