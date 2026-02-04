@@ -1,309 +1,341 @@
-// server.js
+import 'dotenv/config'; 
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-
-//Payment Part (26/01/2025)
 import axios from 'axios';
 import crypto from 'crypto';
-import 'dotenv/config'; // Loads .env file
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import pkg from 'pg';
+const { Pool } = pkg; 
 
 // --------------------------------------
-// EXPRESS APP SETUP
+// 1. CONFIGURATION & DATABASE
 // --------------------------------------
 const app = express();
+const PORT = process.env.PORT || 3500;
 
-// Allow BOTH localhost (for you) AND the EC2 IP (for the public)
+const connectionString = process.env.SUPA_URL;
+if (!connectionString) {
+  console.error("❌ CRITICAL ERROR: SUPA_URL is missing in .env file");
+  process.exit(1); 
+}
+
+const pool = new Pool({
+  connectionString: connectionString,
+  ssl: { rejectUnauthorized: false } 
+});
+
+pool.connect((err, client, release) => {
+  if (err) return console.error('❌ Database Connection Failed:', err.message);
+  client.query('SELECT NOW()', (err, result) => {
+    release(); 
+    if (err) return console.error('❌ Query Error:', err.message);
+    console.log(`✅ Connected to Supabase! DB Time: ${result.rows[0].now}`);
+  });
+});
+
+// --------------------------------------
+// 2. MIDDLEWARE (MUST BE HERE BEFORE ROUTES)
+// --------------------------------------
 const allowedOrigins = [
-  'http://localhost:5173', 
-//   'http://44.249.179.198:5173',
-  'http://127.0.0.1:5173'
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
 ];
 
-// CORS Middleware
 app.use(cors({
-    origin: allowedOrigins, 
+    origin: allowedOrigins,
     credentials: true
 }));
 
-// Middleware
-app.use(express.json());
+app.use(express.json()); // 👈 CRITICAL: This enables reading req.body
 app.use(cookieParser());
 
-const ROLES_LIST = {
-    "Admin": 5150,
-    "User": 2001
-}
-
-const usersDB = {
-    users: [
-        { username: "admin", password: "admin", roles: [ROLES_LIST.Admin, ROLES_LIST.User] }
-    ],
-    setUsers: function (data) { this.users = data }
-}
-
-// 🧠 NEW: SESSION STORAGE (Tracks who owns which token)
-const sessions = {}; 
-// --------------------------------------
-// MULTER SETUP FOR FILE UPLOADS
-// --------------------------------------
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const dir = './uploads';
-    // Create uploads folder if it doesn't exist
-    if (!fs.existsSync(dir)){
-        fs.mkdirSync(dir);
+// AWS S3 Client
+const s3 = new S3Client({
+    region: process.env.AWS_REGION, 
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
     }
-    cb(null, dir);
-  },
-  filename: function (req, file, cb) {
-    // Save as "timestamp-name.jpg" to avoid overwriting
-    cb(null, Date.now() + path.extname(file.originalname)); 
+});
+
+// Multer Setup
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+// --------------------------------------
+// 3. AUTH ROUTES
+// --------------------------------------
+// const ROLES_LIST = { "Admin": 5150, "User": 2001 };
+const sessions = {}; 
+
+// ➤ REGISTER ROUTE
+app.post('/register', async (req, res) => {
+    const { accountName, mail, pwd } = req.body;
+
+    if (!accountName || !mail || !pwd) {
+        return res.status(400).json({ 'message': 'Account Name, Email, and Password are required.' });
+    }
+
+    const client = await pool.connect();
+
+    try {
+        await client.query('BEGIN'); 
+
+        // Check for Duplicates
+        const check = await client.query(
+            'SELECT id FROM customer WHERE mail = $1 OR account_name = $2',
+            [mail, accountName]
+        );
+
+        if (check.rows.length > 0) {
+            await client.query('ROLLBACK');
+            return res.status(409).json({ 'message': 'Account Name or Email already exists' });
+        }
+
+        const hashedPassword = await bcrypt.hash(pwd, 10);
+
+        // Insert into Supabase
+        await client.query(
+            `INSERT INTO customer (account_name, mail, password_hash, tier, skin_profile)
+             VALUES ($1, $2, $3, 1, '{}')
+             RETURNING id, account_name`,
+            [accountName, mail, hashedPassword]
+        );
+
+        await client.query('COMMIT'); 
+        console.log(`✅ New User Registered: ${accountName}`);
+        res.status(201).json({ 'success': `User ${accountName} created!` });
+
+    } catch (err) {
+        await client.query('ROLLBACK');
+        console.error("❌ Register Error:", err);
+        res.status(500).json({ 'message': 'Server Error' });
+    } finally {
+        client.release();
+    }
+});
+
+// ➤ LOGIN ROUTE (Hardcoded Admin + Database User)
+app.post('/auth', async (req, res) => {
+    // Flexible Input: Works with 'loginIdentifier' OR 'user'
+    const user = req.body.loginIdentifier || req.body.user;
+    const pwd = req.body.password || req.body.pwd;
+
+    if (!user || !pwd) {
+        return res.status(400).json({ 'message': 'Username/Email and Password are required.' });
+    }
+
+    // 🛡️ HARDCODED ADMIN CHECK
+    if (user === process.env.ADMIN_NAME && pwd === process.env.ADMIN_PASS) {
+        console.log("⚠️  Admin Logged In (Hardcoded Mode)");
+        
+        const accessToken = jwt.sign(
+            { id: 9999, role: 5150 }, 
+            process.env.ACCESS_TOKEN_SECRET || "test_secret",
+            { expiresIn: '1d' }
+        );
+        const refreshToken = "fake_admin_refresh_" + Date.now();
+        sessions[refreshToken] = { username: "Admin", roles: [5150] };
+
+        res.cookie('jwt', refreshToken, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 24 * 60 * 60 * 1000 });
+        return res.json({ accessToken, roles: [5150] });
+    }
+
+    // ☁️ REAL DATABASE CHECK
+    try {
+        const result = await pool.query(
+            'SELECT * FROM customer WHERE mail = $1 OR account_name = $1',
+            [user]
+        );
+
+        if (result.rows.length === 0) return res.status(401).json({ 'message': 'User not found' }); 
+
+        const foundUser = result.rows[0];
+        const match = await bcrypt.compare(pwd, foundUser.password_hash);
+        
+        if (!match) return res.status(401).json({ 'message': 'Invalid Password' });
+
+        const accessToken = jwt.sign(
+            { id: foundUser.id, role: 2001 }, 
+            process.env.ACCESS_TOKEN_SECRET || "test_secret",
+            { expiresIn: '1h' }
+        );
+        
+        const refreshToken = "db_token_" + Date.now();
+        sessions[refreshToken] = { 
+            id: foundUser.id,
+            username: foundUser.account_name, 
+            roles: [2001] 
+        };
+
+        res.cookie('jwt', refreshToken, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 24 * 60 * 60 * 1000 });
+        res.json({ accessToken, roles: [2001] });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ 'message': 'Login Failed' });
+    }
+});
+
+// ➤ REFRESH & LOGOUT ROUTES
+app.get('/refresh', (req, res) => {
+    const cookies = req.cookies; 
+    if (!cookies?.jwt) return res.status(401).json({ message: 'Unauthorized' });
+    const refreshToken = cookies.jwt; // Retrieved cookie
+    const foundUser = sessions[refreshToken];
+    if (!foundUser) return res.status(403).json({ message: 'Forbidden' });
+    res.json({ accessToken: "new_fake_token_" + Date.now(), roles: foundUser.roles, username: foundUser.username });
+});
+
+app.get('/logout', (req, res) => {
+    const cookies = req.cookies;
+    if (!cookies?.jwt) return res.sendStatus(204);
+    delete sessions[cookies.jwt];
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'lax', secure: false });
+    res.sendStatus(204);
+});
+
+// --------------------------------------
+// 4. API ROUTES (Products, Uploads, Payments)
+// --------------------------------------
+
+// GET Costumer TABLES
+app.get('/api/customer', async (req, res) => {
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+        const result = await client.query('SELECT * FROM customer ORDER BY id ASC');
+        res.json(result.rows)
+    
+    } catch (err) {
+    console.error("❌ Fetch Customers Error:", err); 
+    res.status(500).json({ error: "Server Error" });
+    } finally {
+    client.release();
+    }
+
+
+});
+
+// ➤ PRODUCT IMPORT
+app.post('/api/products/import', async (req, res) => {
+  const { products } = req.body;
+  const client = await pool.connect();
+  
+  try {
+    await client.query('BEGIN'); 
+    for (const item of products) {
+      // 1. BRAND
+      let brandRes = await client.query(`SELECT id FROM brand WHERE name = $1`, [item.brand.name]);
+      let brandId;
+      if (brandRes.rows.length > 0) {
+        brandId = brandRes.rows[0].id;
+      } else {
+        const newBrand = await client.query(`INSERT INTO brand (name) VALUES ($1) RETURNING id`, [item.brand.name]);
+        brandId = newBrand.rows[0].id;
+      }
+
+      // 2. PRODUCT
+      const categoryId = 1; 
+      let productRes = await client.query(
+        `INSERT INTO product (name, brand_id, category_id, description, is_active)
+         VALUES ($1, $2, $3, $4, true)
+         ON CONFLICT (name) DO NOTHING
+         RETURNING id`,
+        [item.english_name || item.name, brandId, categoryId, item.short_desc]
+      );
+      
+      let productId;
+      if (productRes.rows.length === 0) {
+         const existing = await client.query(`SELECT id FROM product WHERE name = $1`, [item.english_name || item.name]);
+         productId = existing.rows[0].id;
+      } else {
+         productId = productRes.rows[0].id;
+      }
+
+      // 3. VARIANT
+      await client.query(
+        `INSERT INTO product_variant 
+        (product_id, sku, unit_price, thumbnail_url, specification, slug)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        ON CONFLICT DO NOTHING`, 
+        [productId, item.sku, item.price, item.image, JSON.stringify(item), item.product_url]
+      );
+    }
+    await client.query('COMMIT'); 
+    res.json({ message: "Relational Data Imported Successfully!" });
+
+  } catch (err) {
+    await client.query('ROLLBACK'); 
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  } finally {
+    client.release();
   }
 });
 
-const upload = multer({ storage: storage });
+// ➤ IMAGE UPLOAD
+app.post('/api/upload', upload.single('image'), async (req, res) => {
+  const file = req.file;
+  if (!file) return res.status(400).send('No file uploaded.');
 
-
-
-// --------------------------------------
-// 📝 REGISTER
-// --------------------------------------
-app.post('/register', (req, res) => {
-    const { user, pwd } = req.body;
-    if (!user || !pwd) return res.status(400).json({ 'message': 'Username and password are required.' });
-
-    const duplicate = usersDB.users.find(person => person.username === user);
-    if (duplicate) return res.status(409).json({ 'message': 'Username taken' });
-
-    const newUser = { 
-        "username": user, 
-        "password": pwd,
-        "roles": [ROLES_LIST.User] 
-    };
-    
-    usersDB.setUsers([...usersDB.users, newUser]);
-    console.log(`✅ New User Registered: ${user}`);
-    res.status(201).json({ 'success': `New user ${user} created!` });
-});
-
-// --------------------------------------
-// 🔐 LOGIN (Updated to save session)
-// --------------------------------------
-app.post('/auth', (req, res) => {
-    const { user, pwd } = req.body;
-    const foundUser = usersDB.users.find(person => person.username === user && person.password === pwd); // finding user
-    
-    // If not find user -> unauthorized
-    if (!foundUser) return res.status(401).json({ 'message': 'Invalid Credentials' });
-
-    const roles = foundUser.roles;
-    const accessToken = "fake_access_token_" + Date.now();
-    const refreshToken = "fake_refresh_token_" + Date.now();
-
-    // 🧠 NEW: Link the token to the user's data in our memory
-    sessions[refreshToken] = foundUser; 
-
-    // Set refresh token as HttpOnly cookie
-    res.cookie('jwt', refreshToken, {
-        httpOnly: true,
-        secure: false, 
-        sameSite: 'lax',
-        maxAge: 24 * 60 * 60 * 1000 * 30
+  try {
+    const fileName = `uploads/${Date.now()}-${file.originalname}`;
+    const command = new PutObjectCommand({
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: fileName,
+      Body: file.buffer,
+      ContentType: file.mimetype
     });
-
-    res.json({ accessToken, roles }); 
+    await s3.send(command);
+    const fileUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+    res.json({ message: "Upload successful!", url: fileUrl });
+  } catch (err) {
+    console.error("❌ S3 Upload Error:", err);
+    res.status(500).send("Error uploading to S3");
+  }
 });
 
-// --------------------------------------
-// ♻️ REFRESH (Updated to lookup user)
-// --------------------------------------
-app.get('/refresh', (req, res) => {
-    // Grab refresh token from cookies
-    const cookies = req.cookies; 
-    // Check if cookie with jwt exists
-    if (!cookies?.jwt) return res.status(401).json({ message: 'Unauthorized' });
-    // Extract the refresh token
-    const refreshToken = cookies.jwt;
-    // Look up the user by their token
-    const foundUser = sessions[refreshToken];
-    // If token not found in sessions
-    if (!foundUser) {
-        console.log("(You are not a User yet) ⚠️ Refresh Token not found in active sessions");
-        return res.status(403).json({ message: 'Forbidden' });
-    }
-    console.log(`♻️ Refreshing Token for: ${foundUser.username}`);
-    // 🟢 NOW WE USE THE REAL ROLES (Not hardcoded!)
-    // Get roles from found user
-    const roles = foundUser.roles; 
-    const username = foundUser.username;
-    // Generate new access token
-    const accessToken = "fake_new_access_token_" + Date.now();
-    res.json({ accessToken, roles, username });
-});
-
-
-// --------------------------------------
-// 🚪 LOGOUT ROUTE
-// --------------------------------------
-app.get('/logout', (req, res) => {
-    // On logout, we delete the refresh token from memory
-    const cookies = req.cookies;
-    if (!cookies?.jwt) return res.sendStatus(204); // No content
-    // Extract refresh token from cookies
-    const refreshToken = cookies.jwt;
-
-    // Is refreshToken in our session?
-    if (sessions[refreshToken]) {
-        delete sessions[refreshToken]; // Remove from memory
-    }
-    // Clear the cookie
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'lax', secure: false });
-    res.sendStatus(204);
-
-});
-
-// --------------------------------------
-// 📊 DASHBOARD
-// --------------------------------------
-app.get('/users', (req, res) => {
-    const authHeader = req.headers['authorization']; // Bearer token
-    if (!authHeader) return res.status(403).json({ message: 'Forbidden' });
-
-    res.json([
-        { username: "TestUser_1" },
-        { username: "TestUser_2" },
-        { username: "You_Are_Logged_In" }
-    ]);
-});
-
-// ----------------------------------------------------------------
-// PayMent with MoMo 
-// ----------------------------------------------------------------
+// ➤ PAYMENT ROUTE
 app.post('/create-payment', async (req, res) => {
-    // 1. Get amount from Frontend (or default to 1000 for test)
     const { amount = '5000' } = req.body; 
-
-    // 2. Load Config from .env (SECURE)
-    const partnerCode = process.env.MOMO_PARTNER_CODE; // e.g., MOMO_PARTNER_CODE=test
+    const partnerCode = process.env.MOMO_PARTNER_CODE;
     const accessKey = process.env.MOMO_ACCESS_KEY;
     const secretKey = process.env.MOMO_SECRET_KEY;
-    const apiEndpoint = "https://test-payment.momo.vn/v2/gateway/api/create"; // MoMo Test Endpoint
     
+    if (!partnerCode || !accessKey || !secretKey) return res.status(500).json({ error: "MoMo configs missing" });
 
-    // 3. Define URLs
-    // ⚠️ Redirect User back to your React App
-    const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
-    // Redirect URL after payment
-    const redirectUrl = `${CLIENT_URL}/payment-result`;
-    // ⚠️ Send silent notification to Webhook.site (for you to debug)
-    const ipnUrl = "https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b"; 
-
-    // 4. Generate IDs
     const requestId = partnerCode + new Date().getTime();
     const orderId = requestId;
-    const orderInfo = "Pay with MoMo";
+    const redirectUrl = "http://localhost:5173/payment-result";
+    const ipnUrl = "https://webhook.site/YOUR-WEBHOOK-ID"; 
+    const rawSignature = `accessKey=${accessKey}&amount=${amount}&extraData=&ipnUrl=${ipnUrl}&orderId=${orderId}&orderInfo=Pay with MoMo&partnerCode=${partnerCode}&redirectUrl=${redirectUrl}&requestId=${requestId}&requestType=captureWallet`;
     
-    // ⚠️ 'captureWallet' is the standard "Scan QR" method. 
-    // 'payWithMethod' is often for specific tokenized flows.
-    const requestType = "captureWallet"; 
-    const extraData = ""; 
-
-    // 5. Create Signature (Alphabetical Sort Required!)
-    const rawSignature = `accessKey=${accessKey}&amount=${amount}&extraData=${extraData}&ipnUrl=${ipnUrl}&orderId=${orderId}&orderInfo=${orderInfo}&partnerCode=${partnerCode}&redirectUrl=${redirectUrl}&requestId=${requestId}&requestType=${requestType}`;
-
-    console.log("--------------------RAW SIGNATURE----------------");
-    console.log(rawSignature);
-
-    // 6. Hash Signature
-    const signature = crypto
-        .createHmac('sha256', secretKey)
-        .update(rawSignature)
-        .digest('hex');
-
-    // 7. Send Request to MoMo
-    const requestBody = {
-        partnerCode,
-        partnerName: "Test",
-        storeId: "MomoTestStore",
-        requestId,
-        amount,
-        orderId,
-        orderInfo,
-        redirectUrl,
-        ipnUrl,
-        lang: 'vi',
-        requestType,
-        autoCapture: true,
-        extraData,
-        signature
-    };
+    const signature = crypto.createHmac('sha256', secretKey).update(rawSignature).digest('hex');
 
     try {
-        const response = await axios.post(apiEndpoint, requestBody);
-        
-        console.log("✅ MoMo Response:", response.data);
-        return res.status(200).json(response.data);
-
+        const response = await axios.post("https://test-payment.momo.vn/v2/gateway/api/create", {
+            partnerCode, partnerName: "Test", storeId: "MomoTestStore", requestId, amount, orderId,
+            orderInfo: "Pay with MoMo", redirectUrl, ipnUrl, lang: 'vi', requestType: "captureWallet",
+            autoCapture: true, extraData: "", signature
+        });
+        res.status(200).json(response.data);
     } catch (error) {
-        console.error("❌ MoMo Error:", error.response ? error.response.data : error.message);
-        return res.status(500).json({ error: 'Error processing payment' });
+        console.error("❌ MoMo Error:", error.response?.data || error.message);
+        res.status(500).json({ error: 'Payment Error' });
     }
 });
 
-
 // --------------------------------------
-/// 2026 01 26 Basic Product Route
-//
-
-app.get('/product', (req, res) => {
-    res.json({ message: 'Server is running' });
+// 5. START SERVER
+// --------------------------------------
+app.listen(PORT, () => {
+    console.log(`🚀 Server running at http://localhost:${PORT}`);
+    console.log(`📡 Connected to AWS Region: ${process.env.AWS_REGION}`);
 });
-
-// POST ROUTE TO UPLOAD SKIN IMAGE
-
-app.post('/upload-skin', upload.single('skinImage'), (req, res) => {
-    // Debugging logs
-    console.log("--------------------------------");
-    console.log("📷 File Received!");
-    console.log("File Info:", req.file); // Gives size, path, mimetype
-    
-    if (!req.file) {
-        return res.status(400).send({ message: "No file received" });
-    }
-
-    // TODO: FUTURE AI INTEGRATION HERE
-    // const result = await runAIModel(req.file.path);
-
-    res.json({ 
-        message: "Image received successfully", 
-        filePath: req.file.path 
-    });
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// --------------------------------------
-// START SERVER
-// --------------------------------------
-app.listen(3500, () => 
-    console.log('🚀 Server : http://localhost:3500')
-);

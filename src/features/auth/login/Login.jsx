@@ -90,12 +90,13 @@ const Login = ({ onClose, onSwitchToRegister }) => {
                 <p className="login-subtitle">Please sign in to continue</p>
                 
                 <form onSubmit={handleSubmit}>
-                    <label htmlFor="username">Username:</label>
+                    <label htmlFor="username">Email or Account Name</label>
                     <input
                         type="text"
                         id="username"
                         ref={userRef}
-                        autoComplete="off"
+                        autoComplete="username"
+
                         onChange={(e) => setUser(e.target.value)}
                         value={user}
                         required
@@ -105,6 +106,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
                     <input
                         type="password"
                         id="password"
+                        autoComplete='current-password'
                         onChange={(e) => setPwd(e.target.value)}
                         value={pwd}
                         required

@@ -11,8 +11,10 @@ const Register = ({ onClose, onSwitchToLogin }) => {
     const userRef = useRef();
     const errRef = useRef();
 
-    const [user, setUser] = useState('');
+    const [accountName, setAccountName] = useState('');
+    const [mail, setMail] = useState('');
     const [pwd, setPwd] = useState('');
+
     const [errorMessage, setErrorMessage] = useState('');
     const [success, setSuccess] = useState(false);
     
@@ -22,30 +24,35 @@ const Register = ({ onClose, onSwitchToLogin }) => {
         userRef.current.focus();
     }, [])
     
+    // Clear errors when user types
+    useEffect(() => {
+        setErrorMessage('');
+    }, [accountName, mail, pwd]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             await axios.post(REGISTER_URL,
-                JSON.stringify({ user, pwd }),
+                JSON.stringify({ accountName, mail, pwd }), //send as JSON 
             { 
                 headers: { 'Content-Type': 'application/json' }, 
                 withCredentials: true 
             }
             );
             setSuccess(true);
-            setUser('');
+            setAccountName('');
+            setMail('');
             setPwd('');
         // Handle successful registration
         } catch (err) {
             if (!err?.response) {
                 setErrorMessage('No Server Response');
             } else if (err.response?.status === 409) {
-                setErrorMessage('Username Taken');
+                setErrorMessage('Account or Username Taken');
             } else {
                 setErrorMessage('Registration Failed');
             }
-            errRef.current.focus();
+            if(errRef.current) errRef.current.focus();
         }
     }
 
@@ -82,14 +89,25 @@ const Register = ({ onClose, onSwitchToLogin }) => {
                         
                         <form onSubmit={handleSubmit}>
                             {/* ... Keep your existing Inputs ... */}
-                            <label htmlFor="username">Username:</label>
+
+                            <label htmlFor="accountName">Account Name:</label>
                             <input
                                 type="text"
-                                id="username"
+                                id="accountName"
                                 ref={userRef}
                                 autoComplete="off"
-                                onChange={(e) => setUser(e.target.value)}
-                                value={user}
+                                onChange={(e) => setAccountName(e.target.value)}
+                                value={accountName}
+                                required
+                            />
+    
+                            <label htmlFor="email">Email:</label>
+                            <input
+                                type="email"
+                                id="email"
+                                autoComplete="email"
+                                onChange={(e) => setMail(e.target.value)}
+                                value={mail}
                                 required
                             />
 
@@ -97,6 +115,7 @@ const Register = ({ onClose, onSwitchToLogin }) => {
                             <input
                                 type="password"
                                 id="password"
+                                autoComplete='new-password'
                                 onChange={(e) => setPwd(e.target.value)}
                                 value={pwd}
                                 required
