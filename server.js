@@ -71,7 +71,7 @@ const upload = multer({ storage: storage });
 // --------------------------------------
 // 3. AUTH ROUTES
 // --------------------------------------
-const ROLES_LIST = { "Admin": 5150, "User": 2001 };
+// const ROLES_LIST = { "Admin": 5150, "User": 2001 };
 const sessions = {}; 
 
 // ➤ REGISTER ROUTE
@@ -101,7 +101,7 @@ app.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(pwd, 10);
 
         // Insert into Supabase
-        const newUser = await client.query(
+        await client.query(
             `INSERT INTO customer (account_name, mail, password_hash, tier, skin_profile)
              VALUES ($1, $2, $3, 1, '{}')
              RETURNING id, account_name`,
@@ -187,7 +187,7 @@ app.post('/auth', async (req, res) => {
 app.get('/refresh', (req, res) => {
     const cookies = req.cookies; 
     if (!cookies?.jwt) return res.status(401).json({ message: 'Unauthorized' });
-    const refreshToken = cookies.jwt;
+    const refreshToken = cookies.jwt; // Retrieved cookie
     const foundUser = sessions[refreshToken];
     if (!foundUser) return res.status(403).json({ message: 'Forbidden' });
     res.json({ accessToken: "new_fake_token_" + Date.now(), roles: foundUser.roles, username: foundUser.username });
@@ -204,6 +204,24 @@ app.get('/logout', (req, res) => {
 // --------------------------------------
 // 4. API ROUTES (Products, Uploads, Payments)
 // --------------------------------------
+
+// GET Costumer TABLES
+app.get('/api/customer', async (req, res) => {
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+        const result = await client.query('SELECT * FROM customer ORDER BY id ASC');
+        res.json(result.rows)
+    
+    } catch (err) {
+    console.error("❌ Fetch Customers Error:", err); 
+    res.status(500).json({ error: "Server Error" });
+    } finally {
+    client.release();
+    }
+
+
+});
 
 // ➤ PRODUCT IMPORT
 app.post('/api/products/import', async (req, res) => {

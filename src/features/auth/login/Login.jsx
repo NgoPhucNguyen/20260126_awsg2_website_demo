@@ -95,7 +95,8 @@ const Login = ({ onClose, onSwitchToRegister }) => {
                         type="text"
                         id="username"
                         ref={userRef}
-                        autoComplete="off"
+                        autoComplete="username"
+
                         onChange={(e) => setUser(e.target.value)}
                         value={user}
                         required
@@ -105,6 +106,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
                     <input
                         type="password"
                         id="password"
+                        autoComplete='current-password'
                         onChange={(e) => setPwd(e.target.value)}
                         value={pwd}
                         required

@@ -222,7 +222,7 @@ const Navbar = () => {
     const [language, setLanguage] = useState('EN');
 
     const openModal = useCallback((modalName) => {
-        setModals(prev => {
+        setModals(() => {
             const next = { login: false, register: false, contact: false };
             next[modalName] = true;
             return next;
@@ -298,7 +298,7 @@ const Navbar = () => {
 
                     {isLoggedIn ? (
                         <AccountDropdown 
-                            user={auth?.user}
+                            user={auth?.user?.name}
                             isAdmin={isAdmin}
                             onLogout={handleLogout}
                         />

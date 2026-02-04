@@ -105,7 +105,7 @@ const Register = ({ onClose, onSwitchToLogin }) => {
                             <input
                                 type="email"
                                 id="email"
-                                autoComplete="off"
+                                autoComplete="email"
                                 onChange={(e) => setMail(e.target.value)}
                                 value={mail}
                                 required
@@ -115,6 +115,7 @@ const Register = ({ onClose, onSwitchToLogin }) => {
                             <input
                                 type="password"
                                 id="password"
+                                autoComplete='new-password'
                                 onChange={(e) => setPwd(e.target.value)}
                                 value={pwd}
                                 required
