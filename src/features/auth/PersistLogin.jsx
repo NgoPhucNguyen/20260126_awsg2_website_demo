@@ -30,7 +30,7 @@ const PersistLogin = () => {
 
     // 🚨 VISUAL DEBUGGING
     if (isLoading) {
-        return <h1>⏳ PersistLogin is LOADING... (If you see this, I am stuck)</h1>;
+        return <h1>⏳ PersistLogin is LOADING... (If you see this, wait for a moment</h1>;
     }
 
     return <Outlet />;
