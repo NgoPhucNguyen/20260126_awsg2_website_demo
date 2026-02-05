@@ -13,6 +13,7 @@ git add .
 git commit -m "Setting up AWS backend structure"
 git push origin feature/aws-backend-setup
 
+04/ Feb/ 2026 - create a column account_name in Database
 
 -- 1. ENFORCE ESSENTIALS (Make them Required)
 ALTER TABLE customer ALTER COLUMN mail SET NOT NULL;
