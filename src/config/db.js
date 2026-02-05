@@ -1,15 +1,17 @@
-import { PrismaClient } from "../../prisma/generated/index.js";
+import 'dotenv/config'
+import { PrismaClient } from "../../prisma/generated/client.js";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 
-const prisma = new PrismaClient({
-    log: process.env.NODE_ENV === 'development' ? ['query', 'warn', 'error'] : ['warn', 'error'],
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
 });
 
-// import pkg from '../prisma/generated/index.js';
-// const { PrismaClient } = pkg;
+const adapter = new PrismaPg(pool);
 
-// const prisma = new PrismaClient({
-//     log: process.env.NODE_ENV === 'development' ? ['query', 'warn', 'error'] : ['warn', 'error'],
-// });
+const prisma = new PrismaClient({
+    adapter: adapter,
+});
 
 const connectDB = async () => {
     try {

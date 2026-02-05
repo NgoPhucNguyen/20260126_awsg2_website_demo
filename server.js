@@ -10,12 +10,9 @@ import { config } from 'dotenv'; // Loads .env file
 config(); // Initialize dotenv
 
 // database
-// import { connectDB, disconnectDB } from './src/config/db.js';
-// connectDB();
+import { connectDB, disconnectDB } from './src/config/db.js';
+connectDB();
 // Hande disconcect db
-
-// encode password
-// import bcrypt from 'bcrypt';
 
 // routes
 import route from './src/routes/authRoute.js';
@@ -58,30 +55,6 @@ app.use(cors({
 
 // 🧠 NEW: SESSION STORAGE (Tracks who owns which token)
 const sessions = {}; 
-
-// --------------------------------------
-// 📝 REGISTER
-// --------------------------------------
-// app.post('/register', (req, res) => {
-//     const { user, pwd } = req.body;
-//     if (!user || !pwd) return res.status(400).json({ 'message': 'Username and password are required.' });
-
-//     const duplicate = usersDB.users.find(person => person.username === user);
-//     if (duplicate) return res.status(409).json({ 'message': 'Username taken' });
-
-//     const newUser = { 
-//         "username": user, 
-//         "password": pwd,
-//         "roles": [ROLES_LIST.User] 
-//     };
-    
-//     usersDB.setUsers([...usersDB.users, newUser]);
-//     console.log(`✅ New User Registered: ${user}`);
-//     res.status(201).json({ 'success': `New user ${user} created!` });
-// });
-// app.post('/register', async (req, res) => {
-
-// }
 
 // --------------------------------------
 // 🔐 LOGIN (Updated to save session)

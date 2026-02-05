@@ -45,7 +45,7 @@ CREATE TABLE "customer" (
     "skin_profile" JSONB,
     "tier" INTEGER,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "address_id" TEXT NOT NULL,
+    "address_id" TEXT,
 
     CONSTRAINT "customer_pkey" PRIMARY KEY ("id")
 );
@@ -268,7 +268,7 @@ CREATE UNIQUE INDEX "employee_mail_key" ON "employee"("mail");
 CREATE UNIQUE INDEX "coupon_code_key" ON "coupon"("code");
 
 -- AddForeignKey
-ALTER TABLE "customer" ADD CONSTRAINT "customer_address_id_fkey" FOREIGN KEY ("address_id") REFERENCES "address"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "customer" ADD CONSTRAINT "customer_address_id_fkey" FOREIGN KEY ("address_id") REFERENCES "address"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "employee" ADD CONSTRAINT "employee_address_id_fkey" FOREIGN KEY ("address_id") REFERENCES "address"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
