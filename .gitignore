@@ -3,3 +3,11 @@ node_modules
 dist
 build
 .DS_Store
+
+*.pem
+setup-db.js
+database_sql.txt
+note.txt
+/src/generated/prisma
+
+/src/generated/prisma

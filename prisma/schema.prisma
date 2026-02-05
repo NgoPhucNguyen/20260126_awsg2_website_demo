@@ -1,0 +1,255 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model address {
+  id             Int        @id @default(autoincrement())
+  full_address   String?
+  province       String?    @db.VarChar(255)
+  district       String?
+  ward           String?
+  street_address String?
+  created_at     DateTime?  @default(now()) @db.Timestamp(6)
+  customer       customer[]
+  employee       employee[]
+}
+
+model brand {
+  id      Int       @id @default(autoincrement())
+  name    String?   @db.VarChar(255)
+  product product[]
+}
+
+model cart {
+  id                                     Int            @id @default(autoincrement())
+  customer_id                            Int?
+  status                                 String?
+  create_at                              DateTime?      @db.Timestamp(6)
+  shipping_coupon_id                     Int?
+  shipping_discount                      Int?
+  coupon_id                              Int?
+  coupon_discount                        Int?
+  final_price                            Int?
+  coupon_cart_coupon_idTocoupon          coupon?        @relation("cart_coupon_idTocoupon", fields: [coupon_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  customer                               customer?      @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  coupon_cart_shipping_coupon_idTocoupon coupon?        @relation("cart_shipping_coupon_idTocoupon", fields: [shipping_coupon_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  order_detail                           order_detail[]
+  shipment                               shipment[]
+}
+
+model category {
+  id             Int        @id @default(autoincrement())
+  name           String?    @db.Char(255)
+  name_vn        String?
+  slug           String?
+  parent_id      Int?
+  category_level Int?
+  category       category?  @relation("categoryTocategory", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  other_category category[] @relation("categoryTocategory")
+  product        product[]
+}
+
+model coupon {
+  id                                   Int       @id @default(autoincrement())
+  description                          String?
+  code                                 String?
+  type                                 String?
+  value                                Float?
+  rule                                 Json?
+  create_at                            DateTime? @default(now()) @db.Timestamp(6)
+  expire_at                            DateTime? @db.Timestamp(6)
+  usage_limit                          Int?
+  cart_cart_coupon_idTocoupon          cart[]    @relation("cart_coupon_idTocoupon")
+  cart_cart_shipping_coupon_idTocoupon cart[]    @relation("cart_shipping_coupon_idTocoupon")
+}
+
+model customer {
+  id            Int       @id @default(autoincrement())
+  account_name  String?   @db.VarChar(20)
+  mail          String?   @db.VarChar(255)
+  password_hash String?
+  first_name    String?   @db.VarChar(255)
+  last_name     String?   @db.VarChar(255)
+  phone_number  String?   @db.VarChar(10)
+  avatar_url    String?
+  is_active     Boolean?
+  gender        String?   @db.VarChar(10)
+  birthday      DateTime? @db.Date
+  skin_profile  Json?
+  tier          Int?
+  created_at    DateTime? @default(now()) @db.Timestamp(6)
+  address_id    Int?
+  cart          cart[]
+  address       address?  @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model employee {
+  id            Int        @id @default(autoincrement())
+  first_name    String?
+  last_name     String?
+  mail          String?
+  phone_number  String?    @db.VarChar(10)
+  address_id    Int?
+  warehouse_id  Int?
+  is_active     Boolean?
+  gender        String?    @db.VarChar(10)
+  birthday      DateTime?  @db.Date
+  password_hash String?
+  created_at    DateTime?  @default(now()) @db.Timestamp(6)
+  address       address?   @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  warehouse     warehouse? @relation(fields: [warehouse_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model importation {
+  id                 Int                  @id @default(autoincrement())
+  supplier_id        Int?
+  warehouse_id       Int?
+  order_time         DateTime?            @db.Timestamp(6)
+  import_time        DateTime?            @db.Timestamp(6)
+  total_expense      Float?
+  supplier           supplier?            @relation(fields: [supplier_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  warehouse          warehouse?           @relation(fields: [warehouse_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  importation_detail importation_detail[]
+}
+
+model importation_detail {
+  id                 Int              @id @default(autoincrement())
+  importation_id     Int?
+  product_variant_id Int?
+  quantity           Int?
+  unit_price         Float?
+  importation        importation?     @relation(fields: [importation_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  product_variant    product_variant? @relation(fields: [product_variant_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model inventory {
+  id                 Int              @id @default(autoincrement())
+  product_variant_id Int?
+  warehouse_id       Int?
+  quantity           Int?
+  product_variant    product_variant? @relation(fields: [product_variant_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  warehouse          warehouse?       @relation(fields: [warehouse_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model order_detail {
+  id                 Int               @id @default(autoincrement())
+  order_id           Int?
+  product_variant_id Int?
+  quantity           Int?
+  original_price     Float?
+  unit_price         Float?
+  cart               cart?             @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  product_variant    product_variant?  @relation(fields: [product_variant_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  shipment_detail    shipment_detail[]
+}
+
+model product {
+  id              Int               @id @default(autoincrement())
+  name            String?           @db.VarChar(255)
+  name_vn         String?           @db.VarChar(255)
+  brand_id        Int?
+  category_id     Int?
+  description     String?
+  ingredient      String?
+  skin_type       String?           @db.VarChar(255)
+  is_active       Boolean?
+  brand           brand?            @relation(fields: [brand_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  category        category?         @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  product_variant product_variant[]
+}
+
+model product_images {
+  id                 Int              @id @default(autoincrement())
+  product_variant_id Int?
+  image_url          String?
+  display_order      Int?
+  alt_text           String?
+  product_variant    product_variant? @relation(fields: [product_variant_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model product_promotion {
+  id                 Int              @id @default(autoincrement())
+  promotion_id       Int?
+  product_variant_id Int?
+  product_variant    product_variant? @relation(fields: [product_variant_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  promotion          promotion?       @relation(fields: [promotion_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model product_variant {
+  id                 Int                  @id @default(autoincrement())
+  product_id         Int?
+  sku                String?
+  specification      Json?
+  unit_price         Float?
+  thumbnail_url      String?
+  slug               String?
+  importation_detail importation_detail[]
+  inventory          inventory[]
+  order_detail       order_detail[]
+  product_images     product_images[]
+  product_promotion  product_promotion[]
+  product            product?             @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  shipment_detail    shipment_detail[]
+}
+
+model promotion {
+  id                Int                 @id @default(autoincrement())
+  description       String?
+  type              String?
+  value             Float?
+  rule              Json?
+  start_time        DateTime?           @db.Timestamp(6)
+  end_time          DateTime?           @db.Timestamp(6)
+  product_promotion product_promotion[]
+}
+
+model shipment {
+  id               Int               @id @default(autoincrement())
+  status           String?
+  order_id         Int?
+  warehouse_id     Int?
+  tracking_code    String?
+  shipping_carrier String?
+  shipping_fee     Float?
+  cart             cart?             @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  warehouse        warehouse?        @relation(fields: [warehouse_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  shipment_detail  shipment_detail[]
+}
+
+model shipment_detail {
+  id                 Int              @id @default(autoincrement())
+  status             String?
+  shipment_id        Int?
+  order_item_id      Int?
+  product_variant_id Int?
+  quantity           Int?
+  shipping_fee       Float?
+  order_detail       order_detail?    @relation(fields: [order_item_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  product_variant    product_variant? @relation(fields: [product_variant_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  shipment           shipment?        @relation(fields: [shipment_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model supplier {
+  id          Int           @id @default(autoincrement())
+  name        String?       @db.VarChar(255)
+  importation importation[]
+}
+
+model warehouse {
+  id             Int           @id @default(autoincrement())
+  name           String?       @db.VarChar(255)
+  full_address   String?
+  province       String?       @db.VarChar(255)
+  district       String?
+  ward           String?
+  street_address String?
+  employee       employee[]
+  importation    importation[]
+  inventory      inventory[]
+  shipment       shipment[]
+}
