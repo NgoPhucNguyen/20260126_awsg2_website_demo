@@ -18,8 +18,8 @@ const AdminLayout = () => {
                         <FaUsers /> <span>Users</span>
                     </NavLink>
                     
-                    <NavLink to="/admin/products" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-                        <FaBoxOpen /> <span>Products</span>
+                    <NavLink to="/admin/inventory" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                        <FaBoxOpen /> <span>Inventory</span>
                     </NavLink>
 
                     <NavLink to="/admin/analytics" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>

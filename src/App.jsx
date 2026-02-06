@@ -20,10 +20,10 @@ import PersistLogin from './features/auth/PersistLogin';
 
 // 🆕 ADMIN IMPORTS
 import AdminLayout from './components/AdminLayout'; // The Shell (Sidebar)
-import Users from './pages/admin/User';           // The User Table
+import Users from './pages/admin/Users';           // The User Table
 
 // 🚧 Placeholders for future features
-const Products = () => <div className="fade-in" style={{padding: '2rem'}}><h2>📦 Products Manager</h2><p>Coming soon...</p></div>;
+import Inventory from './pages/admin/Inventory';
 const Analytics = () => <div className="fade-in" style={{padding: '2rem'}}><h2>📈 Analytics Dashboard</h2><p>Coming soon...</p></div>;
 
 const ROLES = {
@@ -73,7 +73,7 @@ function App() {
 
                     {/* 3. CHILDREN: The Content */}
                     <Route path="users" element={<Users />} />
-                    <Route path="products" element={<Products />} />
+                    <Route path="inventory" element={<Inventory />} />
                     <Route path="analytics" element={<Analytics />} />
                     
                 </Route>

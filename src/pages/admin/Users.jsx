@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate"; 
 import { FaUserTag, FaEnvelope, FaCrown, FaArrowRight } from "react-icons/fa6"; 
-import './User.css'
+import './Users.css'
 const Users = () => {
     // --- STATE ---
     const [users, setUsers] = useState([]); 
