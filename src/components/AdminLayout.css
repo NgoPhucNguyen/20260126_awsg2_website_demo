@@ -1,0 +1,89 @@
+/* 1. THE SKELETON (Crucial) */
+.admin-layout {
+    display: flex;       /* This puts Sidebar next to Content */
+    min-height: 100vh;   /* Full height of the screen */
+    background-color: #f3f4f6; /* Light grey background */
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* 2. THE SIDEBAR (Left) */
+.admin-sidebar {
+    width: 260px;            /* Fixed width */
+    background-color: white;
+    border-right: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;  /* Stack logo, menu, footer vertically */
+    position: sticky;        /* Keeps sidebar visible when scrolling */
+    top: 0;
+    height: 100vh;
+}
+
+/* 3. THE CONTENT HOLE (Right) */
+.admin-main {
+    flex: 1;              /* Take up all remaining space */
+    overflow-y: auto;     /* Allow scrolling inside content if needed */
+    padding: 0;
+    padding-left: 15px;           /* Let children handle their own padding */
+}
+
+/* --- STYLING (To make it look nice) --- */
+
+/* Brand / Logo */
+.sidebar-brand {
+    padding: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #4f46e5;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+/* Menu Links */
+.sidebar-menu {
+    flex: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    text-decoration: none; /* Removes underline from Links */
+    border-radius: 8px;
+    color: #6b7280;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.menu-item:hover {
+    background-color: #f9fafb;
+    color: #111827;
+}
+
+/* Active State (React Router adds this class automatically) */
+.menu-item.active {
+    background-color: #e0e7ff;
+    color: #4338ca;
+    font-weight: 600;
+}
+
+/* Footer / Logout */
+.sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid #f3f4f6;
+}
+
+.menu-item.logout {
+    color: #dc2626;
+}
+
+.menu-item.logout:hover {
+    background-color: #fef2f2;
+}
