@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
+import { useAuth } from "../../features/auth/AuthProvider";
 import useLogout from "../../hooks/useLogout";
 import Login from '../../features/auth/login/Login';
 import Register from '../../features/auth/register/Register';

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth"; 
+import { useAuth } from '../features/auth/AuthProvider'; 
 // import useAxiosPrivate from "../hooks/useAxiosPrivate"; // ❌ Disable for test
 
 // 📸 IMPORT SOME ICONS OR PLACEHOLDERS FOR TESTING

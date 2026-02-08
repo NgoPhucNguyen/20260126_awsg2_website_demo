@@ -12,11 +12,10 @@ import PaymentResult from './pages/Payment';
 // Components
 import PaymentMoMo from './components/Payment/PaymentMoMo'; 
 import Layout from './components/Layout'; 
-import Unauthorized from './features/auth/Unauthorized';
 
 // Auth Components
-import RequireAuth from './features/auth/RequireAuth';
-import PersistLogin from './features/auth/PersistLogin';
+import { PersistLogin, RequireAuth } from './features/auth/AuthRoutes';
+import Unauthorized from './features/auth/Unauthorized';
 
 // 🆕 ADMIN IMPORTS
 import AdminLayout from './components/AdminLayout'; // The Shell (Sidebar)
