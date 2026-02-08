@@ -11,3 +11,6 @@ note.txt
 /src/generated/prisma
 
 /src/generated/prisma
+
+.*
+_*.*
