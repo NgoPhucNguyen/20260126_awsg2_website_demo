@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FaBoxOpen, FaPlus, FaTrash, FaEdit, FaSearch } from "react-icons/fa6"; // Added FaEdit, FaSearch
+import { FaBoxOpen, FaPlus, FaTrash, FaPenToSquare, FaMagnifyingGlass } from "react-icons/fa6"; // Added FaEdit, FaSearch
 import "./Inventory.css"; // 👈 Import your new clean CSS
 import "./Users.css"; // Keep this for shared table styles (table-responsive, etc)
 
@@ -56,7 +56,7 @@ const Inventory = () => {
 
             {/* 🔍 SEARCH BAR */}
             <div className="search-container">
-                <FaSearch className="search-icon" />
+                <FaMagnifyingGlass className="search-icon" />
                 <input 
                     type="text" 
                     placeholder="Search products..." 
@@ -112,7 +112,9 @@ const Inventory = () => {
                                         {/* Actions */}
                                         <td>
                                             <div className="actions-cell">
-                                                <button title="Edit" className="btn-icon btn-edit"><FaEdit /></button>
+                                                <button title="Edit" className="btn-icon btn-edit" > 
+                                                    <FaPenToSquare />
+                                                </button>
                                                 <button title="Delete" className="btn-icon btn-delete"><FaTrash /></button>
                                             </div>
                                         </td>
