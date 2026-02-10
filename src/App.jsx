@@ -1,13 +1,15 @@
+//src/App.jsx
+
 import './index.css';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 // Pages
-import Product from './pages/Product'; 
-import Profile from './pages/Profile';
-import History from './pages/History';
-import Cart from './pages/Cart';
-import AnalyzeSkin from './pages/AnalyzeSkin';
-import PaymentResult from './pages/Payment'; 
+import Product from './pages/Product';     // page that contains a showroom
+import Cart from './pages/Cart';           // page show the Cart of each user
+import Profile from './pages/Profile';     // page for edit the profile of user
+import History from './pages/History';     // page user could see their history 
+import AnalyzeSkin from './pages/AnalyzeSkin'; // analyze their face
+import PaymentResult from './pages/Payment';   
 
 // Components
 import PaymentMoMo from './components/Payment/PaymentMoMo'; 
@@ -23,7 +25,10 @@ import Users from './pages/admin/Users';           // The User Table
 
 // 🚧 Placeholders for future features
 import Inventory from './pages/admin/Inventory';
+
+
 const Analytics = () => <div className="fade-in" style={{padding: '2rem'}}><h2>📈 Analytics Dashboard</h2><p>Coming soon...</p></div>;
+
 
 const ROLES = {
   'User': 2001,
@@ -37,7 +42,7 @@ function App() {
         
         {/* 🌍 PUBLIC ROUTES */}
         <Route path="unauthorized" element={<Unauthorized />} />
-
+        
         {/* 🔐 PERSIST LOGIN */}
         <Route element={<PersistLogin />}>
             
