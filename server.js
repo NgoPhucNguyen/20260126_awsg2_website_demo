@@ -205,16 +205,8 @@ app.get('/api/customer', async (req, res) => {
     }
 });
 
-// ➤ PRODUCT IMPORT (Note: If you haven't converted this to Prisma yet, comment it out temporarily to test the server)
-// For now, I will comment out the OLD pool import logic to prevent crashes.
-/* app.post('/api/products/import', async (req, res) => {
-  // You need to convert this logic to Prisma later!
-  // Mixing pool and Prisma often causes the error you are seeing.
-  res.status(503).json({message: "Endpoint under maintenance (Converting to Prisma)"});
-});
-*/
 
-// ➤ IMAGE UPLOAD
+// ➤ IMAGE UPLOAD ( Need an S3 to store the image, it may on the different tables )
 app.post('/api/upload', upload.single('image'), async (req, res) => {
   const file = req.file;
   if (!file) return res.status(400).send('No file uploaded.');

@@ -1,6 +1,7 @@
-import React, { useState, useRef, useCallback } from "react";
-import Webcam from "react-webcam";
+// AnalyzeSkin.jsx Page
 import './AnalyzeSkin.css'; 
+import { useState, useRef, useCallback } from "react";
+import Webcam from "react-webcam";
 
 const AnalyzeSkin = () => {
     const webcamRef = useRef(null);
@@ -41,7 +42,8 @@ const AnalyzeSkin = () => {
         formData.append("skinImage", blob, "scan.jpg");
 
         try {
-        const response = await fetch("http://localhost:3500/upload-skin", {
+        // This Will have changes in the future 02/10
+        const response = await fetch("http://localhost:3500/upload", {
             method: "POST",
             body: formData,
         });
