@@ -92,9 +92,9 @@ app.post('/register', async (req, res) => {
             data: {
                 account_name: accountName,
                 mail: mail,
-                password_hash: hashedPassword,
+                passwordHash: hashedPassword,
                 tier: 1,
-                skin_profile: {} // Empty JSON object
+                skinProfile: {} // Empty JSON object
             }
         });
 
@@ -144,7 +144,7 @@ app.post('/auth', async (req, res) => {
         if (!foundUser) return res.status(401).json({ 'message': 'User not found' });
 
         // compare 
-        const match = await bcrypt.compare(pwd, foundUser.password_hash);
+        const match = await bcrypt.compare(pwd, foundUser.passwordHash);
         
         if (!match) return res.status(401).json({ 'message': 'Invalid Password' });
 

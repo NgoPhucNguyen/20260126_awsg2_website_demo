@@ -1,3 +1,7 @@
+10 Feb 2026 : the schema.prisma change : shippingCouponId String? / couponId         String?
+10 Feb 2026 : The Cart.jsx  
+
+
 20262601 : Database 
 
 2026 27 01 : server.js improvement. 
