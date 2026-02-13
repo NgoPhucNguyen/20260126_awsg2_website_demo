@@ -43,6 +43,9 @@
     "prisma": "^5.22.0",
     "vite": "^7.2.4"
   },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
   "main": "eslint.config.js",
   "keywords": [],

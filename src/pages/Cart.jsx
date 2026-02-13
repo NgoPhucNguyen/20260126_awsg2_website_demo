@@ -1,7 +1,7 @@
 // features/cart/Cart.jsx
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../features/auth/AuthProvider"; 
+import { useAuth } from "../features/auth/AuthProvider"; // Adjust path if needed
+import { useCart } from "../context/CartProvider"; 
 import { FiTrash2, FiMinus, FiPlus } from "react-icons/fi"; 
 import "./Cart.css"; 
 
@@ -9,54 +9,35 @@ const Cart = () => {
     const { auth } = useAuth();
     const navigate = useNavigate();
     
-    // 🧪 MOCK DATA (Team Member Note: Replace this with API call later)
-    const [cartItems, setCartItems] = useState([
-        {
-            id: 1,
-            name: "Aphrodite Glow Serum",
-            price: 25.00,
-            quantity: 2,
-            image: "https://via.placeholder.com/150" 
-        },
-        {
-            id: 2,
-            name: "Rose Gold Moisturizer",
-            price: 40.50,
-            quantity: 1,
-            image: "https://via.placeholder.com/150"
-        }
-    ]);
+    // 🗑️ DELETE THE OLD LOCAL STATE (useState)
+    // 🔌 CONNECT TO GLOBAL CONTEXT
+    const { 
+        cartItems, 
+        removeFromCart, 
+        updateQuantity, 
+        totalPrice, 
+        totalItems 
+    } = useCart(); 
 
-    // 🧮 Derived State (Auto-calculates when items change)
-    const totalPrice = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-    const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-
-    // 🎮 HANDLERS (Simulating Backend Actions)
+    // 🎮 UPDATED HANDLERS (Now they call the Context functions)
     const handleIncrease = (id) => {
-        setCartItems(items => 
-            items.map(item => item.id === id ? { ...item, quantity: item.quantity + 1 } : item)
-        );
+        updateQuantity(id, 1);
     };
 
     const handleDecrease = (id) => {
-        setCartItems(items => 
-            items.map(item => 
-                item.id === id && item.quantity > 1 
-                    ? { ...item, quantity: item.quantity - 1 } 
-                    : item
-            )
-        );
+        updateQuantity(id, -1);
     };
 
     const handleRemove = (id) => {
-        setCartItems(items => items.filter(item => item.id !== id));
+        removeFromCart(id);
     };
 
     const handleCheckout = () => {
         if (!auth?.accessToken) {
-            navigate('/login'); // Redirect to login if guest
+            navigate('/login'); 
         } else {
             console.log("Processing Checkout...", cartItems);
+            // Later: axiosPrivate.post('/orders', { items: cartItems })
             alert("Proceeding to Payment Gateway (Mock)");
         }
     };
@@ -92,6 +73,7 @@ const Cart = () => {
                                     {/* Controls */}
                                     <div className="item-controls">
                                         <div className="quantity-wrapper">
+                                            {/* 👇 Update buttons to use new handlers */}
                                             <button onClick={() => handleDecrease(item.id)}><FiMinus /></button>
                                             <span>{item.quantity}</span>
                                             <button onClick={() => handleIncrease(item.id)}><FiPlus /></button>
@@ -101,7 +83,7 @@ const Cart = () => {
                                         </button>
                                     </div>
                                     
-                                    {/* Subtotal for this specific item */}
+                                    {/* Subtotal */}
                                     <div className="item-subtotal">
                                         ${(item.price * item.quantity).toFixed(2)}
                                     </div>

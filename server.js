@@ -12,6 +12,7 @@ import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 // ✅ IMPORT PRISMA
 import prisma from './prismaClient.js';
 
+import { getProducts } from './controllers/productController.js';
 // --------------------------------------
 // 1. CONFIGURATION
 // --------------------------------------
@@ -191,6 +192,10 @@ app.get('/logout', (req, res) => {
 // --------------------------------------
 // 4. API ROUTES
 // --------------------------------------
+
+// GET Products on controllers folder
+app.get('/api/products', getProducts);
+
 
 // ➤ GET CUSTOMERS (Using Prisma)
 app.get('/api/customer', async (req, res) => {
