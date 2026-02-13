@@ -1,106 +1,118 @@
-import { useState, useEffect } from "react";
+// features/cart/Cart.jsx
 import { useNavigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth"; 
-// import useAxiosPrivate from "../hooks/useAxiosPrivate"; // ❌ Disable for test
-
-// 📸 IMPORT SOME ICONS OR PLACEHOLDERS FOR TESTING
+import { useAuth } from "../features/auth/AuthProvider"; // Adjust path if needed
+import { useCart } from "../context/CartProvider"; 
 import { FiTrash2, FiMinus, FiPlus } from "react-icons/fi"; 
-import "./Cart.css"; // We will create this next
+import "./Cart.css"; 
 
 const Cart = () => {
     const { auth } = useAuth();
     const navigate = useNavigate();
     
-    // 🧪 1. TEST MODE: Initialize with DUMMY DATA instead of []
-    const [cartItems, setCartItems] = useState([
-        {
-            id: 1,
-            name: "Aphrodite Glow Serum",
-            price: 25.00,
-            quantity: 2,
-            image: "https://via.placeholder.com/150" // 🖼️ Fake image for testing
-        },
-        {
-            id: 2,
-            name: "Rose Gold Moisturizer",
-            price: 40.50,
-            quantity: 1,
-            image: "https://via.placeholder.com/150"
-        }
-    ]);
+    // 🗑️ DELETE THE OLD LOCAL STATE (useState)
+    // 🔌 CONNECT TO GLOBAL CONTEXT
+    const { 
+        cartItems, 
+        removeFromCart, 
+        updateQuantity, 
+        totalPrice, 
+        totalItems 
+    } = useCart(); 
 
-    // 🧮 Calculate Total Price
-    const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    // 🎮 UPDATED HANDLERS (Now they call the Context functions)
+    const handleIncrease = (id) => {
+        updateQuantity(id, 1);
+    };
 
-    /* // ⚠️ REAL BACKEND CODE (Uncomment this later when Backend is ready)
-    const axiosPrivate = useAxiosPrivate();
-    useEffect(() => { 
-        if (auth?.userId) {
-            axiosPrivate.get(`/cart?userId=${auth.userId}`)
-                .then(res => setCartItems(res.data))
-                .catch(err => console.error(err));
+    const handleDecrease = (id) => {
+        updateQuantity(id, -1);
+    };
+
+    const handleRemove = (id) => {
+        removeFromCart(id);
+    };
+
+    const handleCheckout = () => {
+        if (!auth?.accessToken) {
+            navigate('/login'); 
+        } else {
+            console.log("Processing Checkout...", cartItems);
+            // Later: axiosPrivate.post('/orders', { items: cartItems })
+            alert("Proceeding to Payment Gateway (Mock)");
         }
-    }, [auth]); 
-    */
+    };
 
     return (
         <div className="cart-page">
-            <h1>Your Shopping Cart</h1>
+            <h1 className="cart-title">Your Bag ({totalItems} items)</h1>
             
             <div className="cart-container">
-                {/* LEFT: Cart Items */}
+                {/* 📦 LEFT: Cart Items List */}
                 <div className="cart-items-section">
                     {cartItems.length === 0 ? (
-                        <p>Your cart is empty.</p>
+                        <div className="empty-cart">
+                            <p>Your cart is empty.</p>
+                            <button onClick={() => navigate('/products')}>Continue Shopping</button>
+                        </div>
                     ) : (
-                        <ul className="cart-items-list">
+                        <div className="cart-list">
                             {cartItems.map((item) => (
-                                <li key={item.id} className="cart-item">
+                                <div key={item.id} className="cart-item">
                                     
-                                    {/* 🖼️ 1. PRODUCT IMAGE */}
-                                    <div className="item-image">
-                                        <img src={item.image} alt={item.name} />
+                                    {/* Product Image */}
+                                    <div className="item-image-wrapper">
+                                        <img src={item.image} alt={item.name} className="item-image" />
                                     </div>
 
-                                    {/* 📝 2. DETAILS */}
-                                    <div className="item-details">
-                                        <h2>{item.name}</h2>
-                                        <p className="item-price">${item.price}</p>
+                                    {/* Details */}
+                                    <div className="item-info">
+                                        <h3>{item.name}</h3>
+                                        <p className="item-price">${item.price.toFixed(2)}</p>
                                     </div>
 
-                                    {/* ➕ 3. QUANTITY CONTROLS (Visual Only for now) */}
-                                    <div className="item-actions">
-                                        <div className="quantity-controls">
-                                            <button><FiMinus /></button>
+                                    {/* Controls */}
+                                    <div className="item-controls">
+                                        <div className="quantity-wrapper">
+                                            {/* 👇 Update buttons to use new handlers */}
+                                            <button onClick={() => handleDecrease(item.id)}><FiMinus /></button>
                                             <span>{item.quantity}</span>
-                                            <button><FiPlus /></button>
+                                            <button onClick={() => handleIncrease(item.id)}><FiPlus /></button>
                                         </div>
-                                        <button className="remove-btn"><FiTrash2 /></button>
+                                        <button className="remove-btn" onClick={() => handleRemove(item.id)}>
+                                            <FiTrash2 />
+                                        </button>
                                     </div>
-                                </li>
+                                    
+                                    {/* Subtotal */}
+                                    <div className="item-subtotal">
+                                        ${(item.price * item.quantity).toFixed(2)}
+                                    </div>
+                                </div>
                             ))}
-                        </ul>
+                        </div>
                     )}
                 </div>
 
-                {/* RIGHT: Order Summary */}
+                {/* 💳 RIGHT: Order Summary */}
                 {cartItems.length > 0 && (
                     <div className="cart-summary">
                         <h3>Order Summary</h3>
                         <div className="summary-row">
-                            <span>Subtotal:</span>
+                            <span>Subtotal</span>
                             <span>${totalPrice.toFixed(2)}</span>
                         </div>
                         <div className="summary-row">
-                            <span>Shipping:</span>
-                            <span>Free</span>
+                            <span>Shipping</span>
+                            <span className="free-text">Free</span>
                         </div>
-                        <hr />
+                        <div className="divider"></div>
                         <div className="summary-row total">
-                            <span>Total:</span>
+                            <span>Total</span>
                             <span>${totalPrice.toFixed(2)}</span>
                         </div>
-                        <button className="checkout-btn">Proceed to Checkout</button>
+                        <button className="checkout-btn" onClick={handleCheckout}>
+                            Proceed to Checkout
+                        </button>
                     </div>
                 )}
             </div>

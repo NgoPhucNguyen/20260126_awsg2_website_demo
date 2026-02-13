@@ -1,0 +1,213 @@
+/* --- ANIMATION --- */
+.fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- HEADER SECTION --- */
+.dashboard-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.dashboard-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.admin-subtitle {
+    color: #6b7280;
+    margin-top: 0.25rem;
+    font-size: 0.95rem;
+}
+
+/* --- TABLE CONTAINER --- */
+.table-responsive {
+    overflow-x: auto;
+    background: white;
+    border-radius: 12px; /* Smooth corners */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    border: 1px solid #f3f4f6;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: separate; /* Allows border-radius on rows */
+    border-spacing: 0;
+    text-align: left;
+    min-width: 600px; /* Prevents squishing on small screens */
+}
+
+/* --- TABLE HEADER --- */
+.users-table th {
+    background-color: #f9fafb;
+    padding: 1rem 1.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* Icons inside headers */
+.users-table th svg {
+    margin-right: 6px;
+    vertical-align: text-bottom;
+    color: #9ca3af;
+}
+
+/* --- TABLE BODY --- */
+.users-table td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+    color: #374151;
+    font-size: 0.925rem;
+    transition: background-color 0.15s;
+}
+
+/* Hover Effect on Rows */
+.users-table tbody tr:hover td {
+    background-color: #f9fafb;
+}
+
+/* Last row shouldn't have a border */
+.users-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* --- SPECIFIC COLUMNS --- */
+.col-id {
+    font-family: 'Monaco', 'Consolas', monospace;
+    color: #9ca3af;
+    font-size: 0.85rem;
+}
+
+.col-name {
+    font-weight: 600;
+    color: #111827;
+}
+
+/* --- BADGES (Tier System) --- */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Tier 1 (Standard) */
+.tier-1 {
+    background-color: #f3f4f6;
+    color: #4b5563;
+    border: 1px solid #e5e7eb;
+}
+
+/* Tier 2 (Admin/Premium) */
+.tier-2 {
+    background-color: #e0e7ff; /* Light Indigo */
+    color: #4338ca;            /* Dark Indigo */
+    border: 1px solid #c7d2fe;
+}
+
+/* Tier 3 (Gold/Example) */
+.tier-3 {
+    background-color: #fef3c7;
+    color: #d97706;
+    border: 1px solid #fde68a;
+}
+
+/* --- STATUS DOT --- */
+.status-active {
+    display: inline-flex;
+    align-items: center;
+    color: #059669; /* Emerald Green */
+    font-weight: 600;
+    font-size: 0.85rem;
+    background-color: #ecfdf5;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+/* --- PAGINATION --- */
+.pagination-container {
+    margin-top: 2rem;
+    text-align: center;
+    padding-bottom: 2rem;
+}
+
+.btn-show-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    background-color: white;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    color: #374151;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    transition: all 0.2s;
+}
+
+.btn-show-more:hover {
+    background-color: #f9fafb;
+    border-color: #9ca3af;
+    transform: translateY(-1px);
+}
+
+.btn-show-more:active {
+    transform: translateY(0);
+}
+
+/* --- LOADING & EMPTY STATES --- */
+.loading-container {
+    padding: 4rem;
+    text-align: center;
+    color: #6b7280;
+}
+
+.spinner {
+    border: 3px solid #e5e7eb;
+    border-top: 3px solid #4f46e5; /* Brand Color */
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #9ca3af;
+    font-style: italic;
+}
+
+.error-banner {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}

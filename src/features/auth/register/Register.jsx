@@ -1,11 +1,11 @@
 import '../auth.css'; 
+import { FiX } from 'react-icons/fi';
 
 import { useRef, useState, useEffect } from "react";
 import axios from '../../../api/axios';
 // Icons
-import { FiX } from 'react-icons/fi';
 // API endpoint for registration
-const REGISTER_URL = '/register';
+const REGISTER_URL = 'api/auth/register';
 
 const Register = ({ onClose, onSwitchToLogin }) => {
     const userRef = useRef();

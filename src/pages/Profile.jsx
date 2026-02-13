@@ -1,4 +1,4 @@
-import useAuth from '../hooks/useAuth'; // Import your auth hook
+import { useAuth } from '../features/auth/AuthProvider'; 
 import './Profile.css'; // Import the separate CSS file
 
 const Profile = () => {

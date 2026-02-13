@@ -1,17 +1,112 @@
-import './Product.css';
+// src/pages/Product.jsx
+import axios from "../api/axios"; // <--- This is YOUR file (Has Base URL)
+import { useEffect, useState } from "react";
+import { useCart } from "../context/CartProvider";
+import "./Product.css";
 
 const Product = () => {
+    const { addToCart } = useCart();
+    // 1. State to hold real data
+
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    
+    // 2. Fetch Data from API
+    useEffect(() => {
+        const controller = new AbortController();
+        const fetchProducts = async () => {
+            try {
+                // Make sure this URL matches your backend port (e.g., localhost:5000)
+                const response = await axios.get('/api/get-products',{
+                    signal: controller.signal
+                }); 
+
+                const data = response.data
+
+                // 3. TRANSFORM DATA (The Magic Step) 🪄
+                // We convert nested DB structure to flat UI structure
+                const formattedData = data.map(item => {
+                    // Grab the first variant (e.g., the 140ml bottle) as the default display
+                    const defaultVariant = item.variants[0]; 
+                    const defaultImage = defaultVariant?.images[0]?.imageUrl;
+
+                    return {
+                        id: item.id,
+                        name: item.name,
+                        // If no variant, default to 0. Real price is in variants.
+                        price: defaultVariant ? defaultVariant.unitPrice : 0, 
+                        // Use local image path from DB, or a placeholder if missing
+                        image: defaultImage || "https://via.placeholder.com/300?text=No+Image",
+                        description: item.description
+                    };
+                });
+
+                setProducts(formattedData);
+                setLoading(false);
+            } catch (err) {
+                if (err.name === 'CanceledError' || err.name === 'AbortError') {
+                    console.log('Request aborted cleanly'); // Ignore this
+                    return;
+                }
+                
+                console.error("Error fetching products:", err);
+                // Only show error if it's NOT a cancellation
+                setError("Could not load products. Is the server running?");
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+        return () => {
+            controller.abort();
+        }
+    }, []);
+
+    if (loading) return <div className="loading">Loading our collection...</div>;
+    if (error) return <div className="error">{error}</div>;
+
     return (
-        <section className="product-container">
-            <div className="product-hero">
-                <h1 className="product-hero-title">Our Products</h1>
-                <p className="product-hero-subtitle">
-                    Discover our exclusive range of organic serums and daily cleansers, 
-                    meticulously crafted to enhance your natural beauty and promote healthy skin.
-                </p>
+        <div className="product-page">
+            <header className="product-header">
+                <h1>Our Collection</h1>
+                <p>Discover the secret to perfect skin.</p>
+            </header>
+
+            <div className="product-grid">
+                {products.map((product) => (
+                    <div key={product.id} className="product-card">
+                        {/* 🖼️ Image */}
+                        <div className="card-image">
+                            {/* NOTE: Since we are using local images, make sure 
+                            your backend serves the 'public' folder or 
+                            images are in the frontend 'public' folder.
+                            */}
+                            <img src={product.image} alt={product.name} />
+                        </div>
+
+                        {/* 📝 Details */}
+                        <div className="card-details">
+                            <h3>{product.name}</h3>
+                            <p className="description">{product.description}</p>
+                            <div className="price-row">
+                                {/* Format price to currency (VND or USD) */}
+                                <span className="price">
+                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
+                                </span>
+                                <button 
+                                    className="add-btn"
+                                    onClick={() => addToCart(product)} 
+                                >
+                                    Add to Bag
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                ))}
             </div>
-        </section>
+        </div>
     );
-}
+};
 
 export default Product;

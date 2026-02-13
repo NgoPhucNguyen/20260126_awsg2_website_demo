@@ -1,12 +1,11 @@
-import { useRef, useState, useEffect } from 'react';
-import useAuth from '../../../hooks/useAuth';
-import axios from '../../../api/axios';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { FiX } from "react-icons/fi"; // 1. Import Close Icon
 import '../auth.css'; 
+import { FiX } from "react-icons/fi"; // 1. Import Close Icon
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useRef, useState, useEffect } from 'react';
+import { useAuth } from '../../auth/AuthProvider'; 
+import axios from '../../../api/axios';
 
-const LOGIN_URL = '/auth';
-
+const LOGIN_URL = '/api/auth/login';
 // 2. Accept Props for Modal Control
 const Login = ({ onClose, onSwitchToRegister }) => {
     const { setAuth } = useAuth();
