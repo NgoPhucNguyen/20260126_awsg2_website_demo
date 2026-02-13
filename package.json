@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "server": "node server.js",
+    "server": "node ./server/server.js",
     "website": "npm run dev & npm run server",
     "build": "vite build",
     "lint": "eslint .",

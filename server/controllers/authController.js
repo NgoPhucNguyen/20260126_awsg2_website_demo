@@ -1,5 +1,5 @@
 // controllers/authController.js
-import prisma from '../../prismaClient.js';
+import prisma from '../prismaClient.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 

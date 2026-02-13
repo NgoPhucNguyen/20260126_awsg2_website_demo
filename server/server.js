@@ -5,7 +5,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
 // Import Routes
-import apiRoutes from './src/routes/api.js'; 
+import apiRoutes from './routes/api.js'; 
 
 const app = express();
 const PORT = process.env.PORT || 3500;
