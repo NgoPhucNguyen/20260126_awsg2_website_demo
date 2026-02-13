@@ -1,25 +1,35 @@
+// src/features/auth/AuthProvider.jsx
 import { createContext, useState, useContext } from "react";
+import axios from "../../api/axios"; // Adjust path to your axios.js
 
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
-    // 🔒 Stores: { accessToken, roles, username }
     const [auth, setAuth] = useState({});
-    
-    // 💾 Optional: If you want a "Remember Me" checkbox, you'd add state here
-    // const [persist, setPersist] = useState(JSON.parse(localStorage.getItem("persist")) || false);
+
+    // 🚀 THE MERGED LOGOUT LOGIC
+    const logout = async () => {
+        // 1. Clear the local React state immediately for a fast UI response
+        setAuth({});
+        
+        try {
+            // 2. Tell the backend to kill the cookie and session
+            // Note: We use the full /api/auth path we set up in the controller
+            await axios.get('/api/auth/logout', {
+                withCredentials: true
+            });
+            console.log("✅ Successfully logged out from server");
+        } catch (err) {
+            console.error("❌ Server logout failed, but local state cleared:", err);
+        }
+    };
 
     return (
-        <AuthContext.Provider value={{ auth, setAuth }}>
+        <AuthContext.Provider value={{ auth, setAuth, logout }}>
             {children}
         </AuthContext.Provider>
     );
 };
 
-// ⚡️ Optimization: Export the hook directly from here!
-// No need for a separate 'useAuth.jsx' file.
-export const useAuth = () => {
-    return useContext(AuthContext);
-};
-
-export default AuthContext;
+// Custom hook to make it easy to use
+export const useAuth = () => useContext(AuthContext);

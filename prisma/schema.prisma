@@ -51,6 +51,8 @@ model Customer {
   mail         String    @unique
   phoneNumber  String?   @map("phone_number") @db.VarChar(10)
   passwordHash String    @map("password_hash")
+  // Stores the long-lived session token
+  refreshToken String?   @map("refresh_token") 
   avatarUrl    String?   @map("avatar_url")
   isActive     Boolean   @default(true) @map("is_active")
   gender       String?   @db.VarChar(10)

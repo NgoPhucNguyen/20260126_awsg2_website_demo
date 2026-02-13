@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../features/auth/AuthProvider";
-import useLogout from "../../hooks/useLogout";
 import Login from '../../features/auth/login/Login';
 import Register from '../../features/auth/register/Register';
 import "./Navbar.css";
@@ -202,8 +201,7 @@ const LanguageToggle = ({ currentLang, onToggle }) => (
 );
 
 const Navbar = () => {
-    const { auth } = useAuth();
-    const logout = useLogout();
+    const { auth, logout } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     

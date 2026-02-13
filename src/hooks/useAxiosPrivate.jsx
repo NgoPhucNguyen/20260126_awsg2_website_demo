@@ -13,7 +13,7 @@ export const useRefreshToken = () => {
     const refresh = async () => {
         try {
             // ☁️ AWS Fix: Ensure withCredentials is true for the cookie
-            const response = await axios.get('/refresh', {
+            const response = await axios.get('/api/auth/refresh', {
                 withCredentials: true
             });
 

@@ -1,28 +1,28 @@
 // src/pages/Product.jsx
+import axios from "../api/axios"; // <--- This is YOUR file (Has Base URL)
 import { useEffect, useState } from "react";
 import { useCart } from "../context/CartProvider";
 import "./Product.css";
 
 const Product = () => {
     const { addToCart } = useCart();
-    
     // 1. State to hold real data
+
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    
     // 2. Fetch Data from API
     useEffect(() => {
+        const controller = new AbortController();
         const fetchProducts = async () => {
             try {
                 // Make sure this URL matches your backend port (e.g., localhost:5000)
-                const response = await fetch('http://localhost:3500/api/products'); 
-                
-                if (!response.ok) {
-                    throw new Error('Failed to connect to Server');
-                }
+                const response = await axios.get('/api/get-products',{
+                    signal: controller.signal
+                }); 
 
-                const data = await response.json();
+                const data = response.data
 
                 // 3. TRANSFORM DATA (The Magic Step) 🪄
                 // We convert nested DB structure to flat UI structure
@@ -45,13 +45,22 @@ const Product = () => {
                 setProducts(formattedData);
                 setLoading(false);
             } catch (err) {
+                if (err.name === 'CanceledError' || err.name === 'AbortError') {
+                    console.log('Request aborted cleanly'); // Ignore this
+                    return;
+                }
+                
                 console.error("Error fetching products:", err);
+                // Only show error if it's NOT a cancellation
                 setError("Could not load products. Is the server running?");
                 setLoading(false);
             }
         };
 
         fetchProducts();
+        return () => {
+            controller.abort();
+        }
     }, []);
 
     if (loading) return <div className="loading">Loading our collection...</div>;
@@ -70,8 +79,8 @@ const Product = () => {
                         {/* 🖼️ Image */}
                         <div className="card-image">
                             {/* NOTE: Since we are using local images, make sure 
-                               your backend serves the 'public' folder or 
-                               images are in the frontend 'public' folder.
+                            your backend serves the 'public' folder or 
+                            images are in the frontend 'public' folder.
                             */}
                             <img src={product.image} alt={product.name} />
                         </div>
