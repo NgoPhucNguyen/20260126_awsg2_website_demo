@@ -13,24 +13,18 @@ import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import prisma from './prismaClient.js';
 
 import { getProducts } from './controllers/productController.js';
-// --------------------------------------
+
 // 1. CONFIGURATION
-// --------------------------------------
 const app = express();
 const PORT = process.env.PORT || 3500;
-
-// (We removed the old 'pool' connection code here because Prisma handles it!)
-
-// --------------------------------------
 // 2. MIDDLEWARE
-// --------------------------------------
 const allowedOrigins = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
     'https://feature-aws-setup.d2bre07rfuezd0.amplifyapp.com',
     'https://d26vwje9y7sojm.cloudfront.net'
 ];
-
+// 3. Handle Cors
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin) return callback(null, true);
