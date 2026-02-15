@@ -9,13 +9,14 @@ import {
     FiLogOut,
     FiShoppingCart,
     FiGlobe,
-    FiSettings
+    FiSettings,
+    FiSearch 
 } from "react-icons/fi";
 
 const ADMIN_ROLE_ID = 5150;
 
 const NAV_ITEMS = [
-    { label: "Aphrodite", path: "/", className: "brand-link", public: true },
+    { label: "Aphrodite", path: "/", className: "brand-link", public: true }, //Product.jsx / This is the main page
     { label: "", path: "/admin", adminOnly: true, IconComponent: FiSettings }
 ];
 
@@ -46,6 +47,10 @@ const ContactModal = ({ isOpen, onClose }) => {
         setMessage('');
         onClose();
     };
+    
+
+
+
 
     return (
         <div 
@@ -205,6 +210,18 @@ const Navbar = () => {
     const navigate = useNavigate();
     const location = useLocation();
     
+    // --- SEARCH STATE ---
+    const [searchTerm, setSearchTerm] = useState("");
+
+    // Handle pressing "Enter" in search bar
+    const handleSearch = (e) => {
+        if (e.key === 'Enter') {
+            // Navigate to the Product page with the search query
+            // Assuming "/" is your product page. If it's "/products", change it below.
+            navigate(`/?search=${searchTerm}`);
+        }
+    };
+
     const isLoggedIn = useMemo(() => !!auth?.accessToken, [auth?.accessToken]);
     const isAdmin = useMemo(() => 
         auth?.roles?.includes(ADMIN_ROLE_ID), 
@@ -275,6 +292,20 @@ const Navbar = () => {
                     ))}
                 </div>
 
+                {/* --- NEW SEARCH BAR SECTION --- */}
+                <div className="nav-search-container">
+                    <div className="search-wrapper">
+                        <FiSearch className="search-icon" />
+                        <input 
+                            type="text" 
+                            placeholder="Search..." 
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            onKeyDown={handleSearch}
+                        />
+                    </div>
+                </div>
+                
                 <div className="nav-links-right">
                     <button 
                         className="nav-btn" /* Your transparent button style */

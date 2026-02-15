@@ -1,34 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Cherry+Swash:wght@400;700&display=swap');
-
-:root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #fffdf5;
-  --text-primary: #1c1917;
-  --text-secondary: #57534e;
-  --accent-yellow: #E6C27A;
-  --border-color: #e7e5e4;
-
-  --font-body: 'Lato', sans-serif; 
-  --font-heading: 'Playfair Display', serif;
-  --font-accent: 'Cormorant Garamond', serif; 
-}
-
-/* ================= BODY ================= */
-body {
-  margin: 0;
-  background: #f3f4f6; /* nền ngoài giống sàn */
-  font-family: var(--font-body);
-  color: var(--text-primary);
-}
-
-/* ================= HEADING ================= */
-h1, h2, h3, h4 {
-  font-family: var(--font-heading);
-  font-weight: 600;
-}
-
 /* ================= PRODUCT DETAIL ================= */
 .product-detail {
   display: flex;

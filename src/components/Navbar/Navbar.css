@@ -12,9 +12,8 @@
   z-index: 100;
 }
 
-/* ------------------------------------------------ */
+
 /* LAYOUT CONTAINERS                                */
-/* ------------------------------------------------ */
 .nav-links-left {
   display: flex;
   gap: 2rem;
@@ -45,10 +44,8 @@
   gap: 0.5rem;
 }
 
-/* ------------------------------------------------ */
-/* 2. NAVIGATION LINKS (Animated Underline)         */
-/* ------------------------------------------------ */
 
+/* 2. NAVIGATION LINKS (Animated Underline)         */
 /* Target links that are NOT the brand logo */
 .navbar a:not(.brand-link) {
   font-size: 1.5rem;
@@ -81,10 +78,7 @@
   transform-origin: bottom center;
 }
 
-/* ------------------------------------------------ */
-/* 3. NEW: INTERACTIVE BUTTONS (Account, Contact)   */
-/* ------------------------------------------------ */
-/* Makes <button> look exactly like your <NavLink> */
+/* 3 button , contact, account , ...  */
 .nav-btn {
   background: none;
   border: none;
@@ -182,9 +176,9 @@
   margin-top: 0.5rem;
 }
 
-/* ------------------------------------------------ */
+
 /* 5. NEW: CONTACT MODAL (The Center Box)           */
-/* ------------------------------------------------ */
+
 .contact-modal-overlay {
   position: fixed;
   top: 0;
@@ -227,3 +221,45 @@
   font-weight: bold;
 }
 .close-btn:hover { background: black; }
+
+/* SEARCH BAR CONTAINER */
+.nav-search-container {
+    flex-grow: 1; /* Takes up available space */
+    display: flex;
+    justify-content: center; /* Centers the input in the middle of navbar */
+    margin: 0 20px;
+}
+
+.search-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 400px; /* Limit width */
+}
+
+.search-wrapper input {
+    width: 100%;
+    padding: 8px 15px 8px 35px; /* Left padding for the icon */
+    border-radius: 20px;
+    border: 1px solid #e0e0e0;
+    background-color: #f5f5f5;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.search-wrapper input:focus {
+    background-color: #fff;
+    border-color: #333;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    font-size: 1.1rem;
+}
+
+
+

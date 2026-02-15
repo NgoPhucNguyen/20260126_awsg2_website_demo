@@ -1,6 +1,6 @@
 // routes/api.js
 import express from 'express';
-import { getProducts } from '../controllers/productController.js';
+import { getProducts, getFilterAttributes } from '../controllers/productController.js';
 import { handleLogin, handleRegister, handleLogout, handleRefresh } from '../controllers/authController.js';
 import { uploadImage } from '../controllers/uploadController.js';
 import { createPayment } from '../controllers/paymentController.js';
@@ -18,7 +18,7 @@ router.get('/auth/logout', handleLogout);
 
 // --- PRODUCT ROUTES ---
 router.get('/get-products', getProducts); // URL becomes: /api/products
-
+router.get('/products/attributes', getFilterAttributes); 
 // --- UPLOAD ROUTES ---
 router.post('/upload', upload.single('image'), uploadImage);
 
