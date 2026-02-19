@@ -11,8 +11,7 @@
   --text-secondary: #57534e;
   --accent-yellow: #E6C27A;
   --border-color: #e7e5e4;
-
-  /* 🟢 NEW: FONT VARIABLES */
+  --space-md: clamp(1rem, 3vw, 2.5rem);
   /* Used for body text (clean, easy to read) */
   --font-body: 'Lato', sans-serif; 
   
@@ -38,3 +37,29 @@ h1, h2, h3, h4 {
   color: var(--text-primary);
 }
 
+.login-container {
+  padding: var(--space-md)
+}
+
+/* Toast Notification Styles */
+.custom-toast {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: #1a1a1a; /* Dark charcoal */
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 4px;
+    border-left: 4px solid #d4af37; /* Aphrodite Gold */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 9999;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}

@@ -1,196 +1,237 @@
-/* ========================================= */
-/* 1. SHARED OVERLAY (The Dimmed Background) */
-/* ========================================= */
+/* src/features/auth/auth.css */
+
+/* 💡 TIP: Use CSS Variables for easy theme changes later */
+:root {
+    --auth-bg: #ffffff;
+    --auth-text-main: #1c1917;
+    --auth-text-muted: #57534e;
+    --auth-border: #e7e5e4;
+    --auth-primary: #000000;
+    --auth-accent: #d4af37; /* Gold */
+    --auth-hover: #fde047;  /* Yellow */
+    --auth-error-bg: #fee2e2;
+    --auth-error-text: #991b1b;
+}
+
+/* --- 1. OVERLAY --- */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px); /* Increased blur slightly for luxury feel */
+    background-color: rgba(0, 0, 0, 0.5); /* Slightly lighter for modern feel */
+    backdrop-filter: blur(5px); /* Stronger blur hides background clutter */
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
     animation: fadeIn 0.3s ease-out;
-    padding: 1rem; /* Prevents card touching edges on mobile */
 }
 
-/* ========================================= */
-/* 2. MAIN CARD (Optimized for Both)         */
-/* ========================================= */
-/* This targets both Login AND Register containers */
-.login-container, 
-.register-container {
-    background-color: #ffffff;
-    padding: 3rem;
+/* --- 2. CARD CONTAINER --- */
+.login-container, .register-container {
+    background-color: var(--auth-bg);
+    padding: 2.5rem 3rem; /* Slightly reduced top/bottom padding */
     width: 100%;
-    max-width: 450px;
-    height: auto;
-    
-    /* Layout */
+    max-width: 420px; /* Slightly narrower for a cleaner look */
+    border: 1px solid var(--auth-border);
+    /* Softer, more diffuse shadow */
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15); 
+    border-radius: 12px; /* Rounder corners */
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     position: relative;
-    
-    /* Aesthetics */
-    border: 1px solid #e7e5e4;
-    border-radius: 8px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* Smoother bounce */
+    animation: slideUp 0.3s ease-out;
 }
 
-/* ========================================= */
-/* 3. TYPOGRAPHY                             */
-/* ========================================= */
-.login-container h1, 
-.register-container h1 {
-    font-family: var(--font-accent, serif);
-    font-size: 2.5rem;
-    color: #1c1917;
+/* --- 3. TYPOGRAPHY & INPUTS --- */
+.login-container h1, .register-container h1 {
+    font-family: var(--font-accent, sans-serif);
+    font-size: 2rem; /* Scaled down slightly */
+    color: var(--auth-text-main);
     margin-bottom: 0.5rem;
-    text-align: center;
-    line-height: 1.1;
+    font-weight: 700;
 }
 
-.login-subtitle, 
-.register-subtitle {
-    color: #57534e;
+.auth-subtitle {
+    color: var(--auth-text-muted);
     font-size: 0.85rem;
     margin-bottom: 2rem;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    text-align: center;
+    letter-spacing: 0.05em;
 }
 
-/* ========================================= */
-/* 4. FORM ELEMENTS                          */
-/* ========================================= */
-.login-container form, 
-.register-container form {
+form {
     width: 100%;
     display: flex;
     flex-direction: column;
 }
 
-.login-container label, 
-.register-container label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #57534e;
+label {
+    font-weight: 600;
     margin-bottom: 6px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--auth-text-muted);
+    letter-spacing: 0.05em;
 }
 
-.login-container input, 
-.register-container input {
-    padding: 12px 14px;
-    border: 1px solid #e7e5e4;
-    border-radius: 4px; /* Slight rounding matches container */
+input[type="text"], 
+input[type="password"], 
+input[type="email"] {
+    padding: 12px 16px;
+    border: 1px solid var(--auth-border);
+    border-radius: 6px; /* Mild border radius looks friendlier */
     margin-bottom: 1.25rem;
     background: #fafafa;
-    font-size: 1rem;
-    transition: all 0.2s ease;
-}
-
-.login-container input:focus, 
-.register-container input:focus {
-    outline: none;
-    border-color: #1c1917;
-    background: white;
-    box-shadow: 0 0 0 1px #1c1917;
-}
-
-/* ========================================= */
-/* 5. BUTTONS                                */
-/* ========================================= */
-/* Main Submit Buttons */
-.login-container button, 
-.register-container button {
-    padding: 14px;
-    background-color: #1c1917; /* Black */
-    color: white;
-    font-weight: 700;
-    border: 1px solid #1c1917;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    transition: all 0.2s ease;
-    margin-top: 0.5rem;
     width: 100%;
-    font-size: 0.9rem;
+    box-sizing: border-box;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.login-container button:hover, 
-.register-container button:hover {
-    background-color: #fde047; /* Yellow */
-    color: #1c1917;
-    border-color: #fde047;
-    transform: translateY(-2px);
+/* 💡 IMPROVEMENT: Focus State */
+input:focus {
+    outline: none;
+    border-color: var(--auth-primary);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
 }
 
-/* Close Button (The 'X') - Specific Overrides */
-.close-modal-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: transparent !important;
-    border: none !important;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #a8a29e !important;
-    padding: 5px !important;
-    width: auto !important; /* Overrides the 100% width above */
-    margin: 0 !important;
+/* --- 4. NEW: ONE-LINE ACTION ROW --- */
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    margin-top: -0.5rem; /* Pull closer to password field */
+}
+
+/* Remember Me (Left) */
+.checkbox-group {
     display: flex;
     align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--auth-accent);
+    cursor: pointer;
+    margin: 0;
+}
+
+.checkbox-group label {
+    margin: 0;
+    font-size: 0.85rem;
+    text-transform: none; /* Easier to read */
+    font-weight: normal;
+    cursor: pointer;
+}
+
+/* Forgot Password (Right) */
+.forgot-password-link {
+    background: none;
+    border: none;
+    color: var(--auth-text-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.forgot-password-link:hover {
+    color: var(--auth-primary);
+    text-decoration: underline;
+}
+
+/* --- 5. BUTTONS --- */
+.auth-btn {
+    padding: 14px;
+    background-color: var(--auth-primary);
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.auth-btn:active {
+    transform: scale(0.98); /* Tactile feedback when clicked */
+}
+
+
+.auth-btn:hover {
+    background-color: var(--auth-hover);
+    color: black;
+    transform: translateY(-1px); /* Subtle lift effect */
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: #9ca3af; /* Lighter initially */
+    padding: 5px;
     transition: color 0.2s;
 }
 
 .close-modal-btn:hover {
-    color: #1c1917 !important;
-    transform: none !important;
-    background: transparent !important;
+    color: var(--auth-primary);
 }
 
-/* ========================================= */
-/* 6. UTILITIES (Footer & Errors)            */
-/* ========================================= */
-.login-footer, 
-.register-footer {
+/* --- 6. FOOTER --- */
+.auth-footer {
     margin-top: 1.5rem;
-    font-size: 0.9rem;
-    color: #57534e;
     text-align: center;
+    font-size: 0.9rem;
+    color: var(--auth-text-muted);
 }
 
-/* Link styling inside text */
-.line button, .line a, .register-footer a {
-    color: #1c1917;
-    font-weight: 700;
-    text-decoration: underline;
+.switch-btn {
     background: none;
     border: none;
+    color: var(--auth-primary);
+    font-weight: 700;
     cursor: pointer;
+    margin-left: 5px;
+    text-decoration: underline;
     padding: 0;
-    font-size: inherit;
 }
 
-.errmsg, .error_message {
-    background-color: #fee2e2;
-    color: #b91c1c;
-    padding: 10px;
-    border-radius: 4px;
+.switch-btn:hover {
+    color: var(--auth-accent);
+}
+
+/* --- 7. UTILITIES & ANIMATIONS --- */
+.errmsg {
+    background-color: var(--auth-error-bg);
+    color: var(--auth-error-text);
+    /* Fluid padding: scales between 8px and 12px */
+    padding: clamp(0.5rem, 2vw, 0.75rem); 
+    border-radius: 6px;
     margin-bottom: 1.5rem;
     width: 100%;
     text-align: center;
-    border: 1px solid #fecaca;
     font-size: 0.9rem;
     font-weight: 500;
+    border: 1px solid rgba(153, 27, 27, 0.2);
+    /* Smooth entry animation */
+    animation: fadeIn 0.3s ease-in;
 }
 
 .offscreen {
@@ -198,15 +239,80 @@
     left: -9999px;
 }
 
-/* ========================================= */
-/* 7. ANIMATIONS                             */
-/* ========================================= */
+.success-section {
+    text-align: center;
+    width: 100%;
+    animation: fadeIn 0.5s ease;
+}
+
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
 }
 
 @keyframes slideUp {
-    from { transform: translateY(30px); opacity: 0; }
+    from { transform: translateY(20px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
+}
+
+/* --- 8. PASSWORD TOGGLE WRAPPER --- */
+.password-input-wrapper {
+    position: relative; /* Allows absolute positioning of the icon */
+    width: 100%;
+    margin-bottom: 1.5rem; /* Matches your input margin */
+}
+
+/* Force the input inside to have no margin, because the wrapper handles it */
+.password-input-wrapper input {
+    margin-bottom: 0 !important; 
+    width: 100%;
+    padding-right: 40px; /* Make space so text doesn't hit the icon */
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%); /* Center vertically */
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #57534e; /* Muted color */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-size: 1.2rem;
+    z-index: 10; /* Ensures it sits on top of the input */
+}
+
+.password-toggle-icon:hover {
+    color: black;
+}
+
+/* 🚫 HIDE BROWSER DEFAULT PASSWORD EYE (Edge/IE) */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+
+
+/* --- 9. INLINE ERROR STYLES --- */
+
+/* The Red Border for the Input */
+input.input-error {
+    border-color: var(--auth-error-text) !important;
+    background-color: #fffafb; /* Very light red background */
+}
+
+/* The Small Red Text */
+.field-error-text {
+    color: var(--auth-error-text);
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-top: -10px; /* Pull it closer to the input above */
+    margin-bottom: 12px; /* Push the next element down */
+    display: block;
+    animation: fadeIn 0.2s ease-in-out;
 }

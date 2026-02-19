@@ -1,82 +1,85 @@
 import { createContext, useState, useContext, useEffect } from "react";
+import { useToast } from  './ToastProvider';
 
 // 1. Create the Context
-const CartContext = createContext();
+export const CartContext = createContext();
 
-// 2. The Provider Component (Wraps the App)
+// 2. The Provider Component
 export const CartProvider = ({ children }) => {
-    // 🛒 Load cart from LocalStorage on startup
-    // This function runs only once when the app loads
+    const { showToast } = useToast();
+
+
+    // 🛒 Load cart from LocalStorage
     const [cartItems, setCartItems] = useState(() => {
         const savedCart = localStorage.getItem("shopping-cart");
         return savedCart ? JSON.parse(savedCart) : [];
     });
-
-    // 💾 Save to LocalStorage whenever cart changes
+    // 💾 Save to LocalStorage
     useEffect(() => {
         localStorage.setItem("shopping-cart", JSON.stringify(cartItems));
     }, [cartItems]);
 
-    // ➕ Add Item to Cart
+    // addToCart
+    // addToCart (FIXED)
     const addToCart = (product) => {
         setCartItems((prevItems) => {
-            // Check if item already exists in cart
-            const existingItem = prevItems.find((item) => item.id === product.id);
+            const existingItemIndex = prevItems.findIndex((item) => 
+                item.id === product.id && item.variantId === product.variantId
+            );
 
-            if (existingItem) {
-                // If yes, just increase quantity
-                return prevItems.map((item) =>
-                    item.id === product.id
-                        ? { ...item, quantity: item.quantity + 1 }
+            if (existingItemIndex > -1) {
+                // ✅ SAFER WAY: Use .map()
+                // This creates a NEW object for the item we are changing
+                return prevItems.map((item, index) => 
+                    index === existingItemIndex
+                        ? { ...item, quantity: item.quantity + 1 } // Copy item, then add 1
                         : item
                 );
             } else {
-                // If no, add new item with quantity 1
                 return [...prevItems, { ...product, quantity: 1 }];
             }
         });
         
-        // Optional: Simple browser alert for feedback (You can replace this with a Toast notification later)
-        alert(`${product.name} added to cart!`); 
+        // 🚀 Trigger the notification
+        showToast(`Added ${product.size ? product.size : ""} ${product.name} to bag!`); 
+    };
+    
+
+    // ➖ Remove Item from Cart (FIXED LOGIC)
+    const removeFromCart = (productId, variantId) => {
+        setCartItems((prevItems) => 
+            prevItems.filter((item) => 
+                // Keep item if ID matches BUT variant doesn't match
+                // OR if ID doesn't match at all
+                !(item.id === productId && item.variantId === variantId)
+            )
+        );
     };
 
-    // ➖ Remove Item from Cart
-    const removeFromCart = (productId) => {
-        setCartItems((prevItems) => prevItems.filter((item) => item.id !== productId));
-    };
-
-    // 🔄 Update Quantity (Increase or Decrease)
-    const updateQuantity = (productId, amount) => {
+    // 🔄 Update Quantity (FIXED LOGIC)
+    const updateQuantity = (productId, variantId, amount) => {
         setCartItems((prevItems) =>
             prevItems.map((item) =>
-                item.id === productId
-                    ? { ...item, quantity: Math.max(1, item.quantity + amount) } // Prevent quantity < 1
+                // Check both IDs to ensure we only update the specific row
+                (item.id === productId && item.variantId === variantId)
+                    ? { ...item, quantity: Math.max(1, item.quantity + amount) }
                     : item
             )
         );
     };
 
-    // 💰 Calculate Totals (Derived State)
+    // 💰 Calculate Totals
     const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
     const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
 
     return (
-        <CartContext.Provider value={{ 
-            cartItems, 
-            addToCart, 
-            removeFromCart, 
-            updateQuantity, 
-            totalPrice, 
-            totalItems 
-        }}>
+        <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity, totalPrice, totalItems }}>
             {children}
         </CartContext.Provider>
     );
 };
 
-// 🎣 Custom Hook to use the Cart anywhere
+// 🎣 Custom Hook
 export const useCart = () => {
     return useContext(CartContext);
 };
-
-export default CartContext;

@@ -1,265 +1,292 @@
 /* src/components/Navbar.css */
 
+/* ------------------------------------------------ */
+/* 1. MAIN NAVBAR CONTAINER                         */
+/* ------------------------------------------------ */
 .navbar {
   background-color: #ffffff;
+  height: 80px;               /* Fixed height for stability */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 2rem;
-  border-bottom: 1px solid var(--border-color); 
+  padding: 0 2rem;            /* Spacing on sides */
+  border-bottom: 1px solid #e5e5e5;
   position: sticky;
   top: 0;
   z-index: 100;
+  font-family: 'Inter', sans-serif;
 }
 
-
-/* LAYOUT CONTAINERS                                */
+/* ------------------------------------------------ */
+/* 2. LEFT SECTION (Brand & Admin)                  */
+/* ------------------------------------------------ */
 .nav-links-left {
   display: flex;
-  gap: 2rem;
+  align-items: center;
+  gap: 1rem;
+  flex: 1; /* Takes up left space */
+}
+
+/* The "Aphrodite" Text */
+.brand-link {
+  font-family: "Playfair Display", serif; /* The elegant font */
+  font-size: 2rem;
+  font-weight: 500;
+  color: #c6a87c; /* The specific GOLD color from your image */
+  text-decoration: none;
+  letter-spacing: -0.02em;
+  display: flex;
   align-items: center;
 }
 
+.brand-link:hover {
+  opacity: 0.8;
+}
+
+/* Admin Gear Icon */
+.admin-btn {
+  color: #1a1a1a;
+  opacity: 0.5;
+  font-size: 1.2rem;
+  display: flex; /* Fixes icon alignment */
+}
+.admin-btn:hover { opacity: 1; }
+
+/* ------------------------------------------------ */
+/* 3. RIGHT SECTION (Contact, Lang, Cart, User)     */
+/* ------------------------------------------------ */
 .nav-links-right {
   display: flex;
-  gap: 1.5rem;
-  align-items: center; /* ✅ Fixed: 'right' is not valid CSS, used 'center' */
-}
-
-/* ------------------------------------------------ */
-/* 1. BRAND LOGO STYLING (No Underline)             */
-/* ------------------------------------------------ */
-.brand-link {
-  font-family: var(--font-heading); /* Elegant Heading Font */
-  font-size: 2rem;
-  font-weight: 100;
-  letter-spacing: -0.03em;
-  text-transform: none; 
-  color: var(--accent-yellow);
-  text-decoration: none;
-  position: static; 
-  /* center the text */
-  display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: flex-end; /* Pushes items to the right */
+  gap: 1.5rem;
+  flex: 1;
 }
 
-
-/* 2. NAVIGATION LINKS (Animated Underline)         */
-/* Target links that are NOT the brand logo */
-.navbar a:not(.brand-link) {
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  text-transform: none; 
-  color: var(--text-primary);
-  text-decoration: none;
-  position: relative;
-}
-
-/* The Invisible Line */
-.navbar a:not(.brand-link)::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  bottom: -4px;
-  left: 0;
-  background: var(--text-primary);
-  transform: scaleX(0);
-  transform-origin: bottom center;
-  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-/* Hover & Active Animation */
-.navbar a:not(.brand-link):hover::after,
-.navbar a:not(.brand-link).active::after {
-  transform: scaleX(1);
-  transform-origin: bottom center;
-}
-
-/* 3 button , contact, account , ...  */
+/* Shared Style for ALL Buttons (Contact, User, Cart) */
 .nav-btn {
   background: none;
   border: none;
-  font-size: 1.5rem; /* Matches your links */
-  font-weight: 700;
-  color: var(--text-primary);
   cursor: pointer;
   padding: 0;
-  font-family: inherit;
+  color: #1a1a1a; /* Black text */
+  font-size: 1rem;
+  font-weight: 600; /* Bold text for "Contact" */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
 }
 
 .nav-btn:hover {
-  text-decoration: underline; /* Simple feedback */
+  color: #c6a87c; /* Gold hover */
+  text-decoration: none; /* Removed underline to look cleaner */
 }
 
-/* Language Toggle Button (Pill Shape) */
+/* Fix Icon Sizes inside buttons */
+.nav-btn svg {
+  font-size: 1.4rem;
+  stroke-width: 2px;
+}
+
+/* Language Pill Button (EN/VI) */
 .lang-btn {
-  padding: 0.2rem 0.8rem;
-  border: 1px solid var(--text-primary);
-  background: transparent;
-  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  border: 1px solid #1a1a1a;
+  border-radius: 20px; /* Pill shape */
+  padding: 5px 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
   cursor: pointer;
-  border-radius: 20px;
-  font-size: 0.9rem;
+  color: #1a1a1a;
   transition: all 0.2s ease;
 }
 
+.lang-btn svg { font-size: 1rem; }
+
 .lang-btn:hover {
-  background-color: var(--text-primary);
-  color: #fff;
+  background-color: #1a1a1a;
+  color: white;
 }
 
 /* ------------------------------------------------ */
-/* 4. NEW: ACCOUNT DROPDOWN (The Small Box)         */
+/* 4. CART ICON & BADGE                             */
 /* ------------------------------------------------ */
-.menu-item {
-  position: relative; /* Anchor point for the dropdown */
+.cart-nav-btn {
+  color: #1a1a1a;
+  text-decoration: none; /* Remove link underline */
 }
+
+.icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background-color: #ef4444; /* Red badge */
+  color: white;
+  font-size: 0.65rem;
+  font-weight: bold;
+  height: 16px;
+  min-width: 16px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}
+
+
+/* ========================================================= */
+/* ⛔️ PRESERVED SECTIONS (Search, Modals, Dropdown)          */
+/* ========================================================= */
+
+/* --- SEARCH BAR CONTAINER --- */
+.nav-search-container {
+    flex-grow: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;     /* Centers the whole bar vertically in Navbar */
+    max-width: 600px;
+    margin: 0 1.5rem;
+    height: 100%;
+}
+
+/* --- WRAPPER (Relative anchor for the absolute icon) --- */
+.search-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+/* --- SEARCH ICON (FiSearch) --- */
+.search-icon {
+    /* Horizontal position inside the bar */
+    top: 50%;
+    transform: translateY(-50%); /* Perfect vertical center */
+    
+    color: #7f4a4a;
+    pointer-events: none;    /* Ensures clicks pass through to the input */
+    z-index: 10;
+    display: block;          /* Removes SVG baseline spacing quirks */
+}
+
+/* --- INPUT FIELD --- */
+.search-wrapper input {
+    width: 100%;
+    /* Left padding = Icon Left (14px) + Icon Width (18px) + Gap (12px) = 44px */
+    
+    border-radius: 30px;
+    border: 1px solid #e5e5e5;
+    background-color: #f5f5f5;
+    outline: none;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    box-sizing: border-box;  /* Crucial for padding/width calculation */
+}
+
+.search-wrapper input:focus {
+    background-color: #ffffff;
+    border-color: #c6a87c;   /* Matching your Aphrodite Gold color */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* DROPDOWN MENU */
+.menu-item { position: relative; }
 
 .dropdown-menu {
   position: absolute;
-  top: 160%; /* Push it slightly below the navbar */
-  right: 0;  /* Align to right edge of button */
+  top: 180%; 
+  right: 0; 
   width: 220px;
   background-color: white;
   border: 1px solid #e0e0e0;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Soft shadow */
-  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  border-radius: 12px;
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 0.5rem;
   z-index: 200;
 }
 
-.dropdown-menu a {
-  font-size: 1rem !important; /* Overwrite the big navbar font size */
-  font-weight: 500 !important;
-  color: #333 !important;
+.dropdown-menu a, .dropdown-menu button {
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  color: #333;
+  cursor: pointer;
+  border-radius: 6px;
+  text-decoration: none;
 }
 
-.dropdown-menu a:hover {
-  color: #007bff !important; /* Blue hover for menu items */
+.dropdown-menu a:hover, .dropdown-menu button:hover {
+  background-color: #f5f5f5;
 }
 
-/* User Info Section inside Dropdown */
 .user-info {
-  display: flex;
-  flex-direction: column;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
 }
-.user-name { margin: 0; font-weight: bold; font-size: 1rem; }
-.user-role { font-size: 0.8rem; color: gray; }
-
-.login-btn-link {
-  background: none;
-  border: none;
-  text-align: left;
-  color: #28a745; /* Green color */
-  cursor: pointer;
-  padding: 0;
-  font-weight: bold;
-  font-size: 0.9rem;
-}
-
-/* Logout Text Button inside Dropdown */
-.logout-text-btn {
-  background: none;
-  border: none;
-  text-align: left;
-  color: #dc3545; /* Red color */
-  cursor: pointer;
-  padding: 0;
-  font-weight: bold;
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-}
+.user-name { display: block; font-weight: bold; }
+.user-role { display: block; font-size: 0.8rem; color: #888; }
+.logout-text-btn { color: #dc3545 !important; }
 
 
-/* 5. NEW: CONTACT MODAL (The Center Box)           */
-
+/* CONTACT MODAL */
 .contact-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Dimmed background */
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Must be higher than Navbar z-index */
+  z-index: 2000;
 }
 
 .contact-modal-box {
   background: white;
-  padding: 2.5rem;
-  width: 450px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  padding: 2rem;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+  position: relative;
   text-align: center;
 }
 
 .contact-modal-box textarea {
   width: 100%;
-  height: 100px;
+  height: 120px;
   margin: 1rem 0;
-  padding: 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-family: inherit;
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  resize: none;
 }
 
 .close-btn {
-  background: #333;
-  color: white;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
   border: none;
-  padding: 0.6rem 2rem;
+  font-size: 1.5rem;
   cursor: pointer;
-  border-radius: 6px;
-  font-weight: bold;
 }
-.close-btn:hover { background: black; }
-
-/* SEARCH BAR CONTAINER */
-.nav-search-container {
-    flex-grow: 1; /* Takes up available space */
-    display: flex;
-    justify-content: center; /* Centers the input in the middle of navbar */
-    margin: 0 20px;
-}
-
-.search-wrapper {
-    position: relative;
-    width: 100%;
-    max-width: 400px; /* Limit width */
-}
-
-.search-wrapper input {
-    width: 100%;
-    padding: 8px 15px 8px 35px; /* Left padding for the icon */
-    border-radius: 20px;
-    border: 1px solid #e0e0e0;
-    background-color: #f5f5f5;
-    outline: none;
-    transition: all 0.2s;
-}
-
-.search-wrapper input:focus {
-    background-color: #fff;
-    border-color: #333;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-.search-icon {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #888;
-    font-size: 1.1rem;
-}
-
-
-

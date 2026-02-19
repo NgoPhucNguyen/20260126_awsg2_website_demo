@@ -1,44 +1,25 @@
-/* Product.css */
+/* src/pages/Product.css */
 
-/* --- 1. MAIN LAYOUT (You were missing this part) --- */
+/* --- MAIN LAYOUT --- */
 .product-page-container {
     display: grid;
-    grid-template-columns: 250px 1fr; /* Sidebar 250px, Content takes rest */
+    grid-template-columns: 250px 1fr; /* Sidebar fixed, content flex */
     gap: 2rem;
     padding: 2rem;
     max-width: 1400px;
     margin: 0 auto;
 }
 
-.filter-sidebar {
-    background: #f9f9f9;
-    padding: 1.5rem;
-    border-radius: 8px;
-    height: fit-content;
+/* Responsive: Stack on mobile */
+@media (max-width: 768px) {
+    .product-page-container {
+        grid-template-columns: 1fr;
+    }
+    /* Hide sidebar on mobile? Or show below? */
+    /* You might want to add a "Show Filters" button for mobile later */
 }
 
-/* --- 2. EXISTING STYLES (Brands/Checkbox) --- */
-.filter-group {
-    margin-bottom: 2rem;
-}
-
-.filter-group h3 {
-    font-size: 1rem;
-    margin-bottom: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.filter-checkbox {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 0.5rem;
-    cursor: pointer;
-    font-size: 0.9rem;
-}
-
-/* --- 3. PRODUCT GRID STYLES --- */
+/* --- PRODUCT GRID --- */
 .product-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -101,7 +82,7 @@
 .description {
     font-size: 0.85rem;
     color: #666;
-    margin-bottom: auto; /* Pushes price to bottom */
+    margin-bottom: auto;
 }
 
 .price-row {
@@ -123,90 +104,4 @@
     padding: 5px 15px;
     border-radius: 4px;
     cursor: pointer;
-}
-
-/* --- 4. MODERN SLIDER STYLES (You had this) --- */
-.price-slider-container {
-    padding: 10px 0;
-}
-
-.price-inputs {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-    margin-bottom: 15px;
-}
-
-.input-wrapper {
-    display: flex;
-    align-items: center;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    padding: 5px 10px;
-    background: #fff;
-    width: 45%;
-    transition: border-color 0.3s;
-}
-
-.input-wrapper:focus-within {
-    border-color: #333;
-}
-
-.input-wrapper span {
-    color: #888;
-    font-size: 0.9rem;
-    margin-right: 4px;
-}
-
-.input-wrapper input {
-    width: 100%;
-    border: none;
-    outline: none;
-    font-size: 0.9rem;
-    color: #333;
-    font-weight: 500;
-}
-
-.input-wrapper input::-webkit-outer-spin-button,
-.input-wrapper input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-.separator {
-    color: #999;
-}
-
-.apply-btn {
-    width: 100%;
-    padding: 10px;
-    background-color: #000;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 1px;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: background 0.3s, transform 0.1s;
-}
-
-.apply-btn:hover {
-    background-color: #333;
-}
-
-.apply-btn:active {
-    transform: scale(0.98);
-}
-
-/* Responsive: Stack on mobile */
-@media (max-width: 768px) {
-    .product-page-container {
-        grid-template-columns: 1fr;
-    }
-    .filter-sidebar {
-        margin-bottom: 2rem;
-    }
 }

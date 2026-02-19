@@ -16,7 +16,7 @@ export const getProducts = async (req, res) => {
       maxPrice,
       sort 
     } = req.query;
-
+    
     // 2. Build the dynamic 'where' object
     const whereClause = {
       isActive: true, // Only show active products
@@ -48,8 +48,8 @@ export const getProducts = async (req, res) => {
       whereClause.variants = {
         some: {
           unitPrice: {
-            gte: minPrice ? Number(minPrice) : 0,
-            lte: maxPrice ? Number(maxPrice) : 999999999,
+            gte: minPrice ? Number(minPrice) : 1000,  
+            lte: maxPrice ? Number(maxPrice) : 1000000, // 1 trieu em oi
           },
         },
       };
@@ -112,5 +112,71 @@ export const getFilterAttributes = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to fetch attributes' });
+  }
+};
+// Add this to your productController.js
+
+export const getProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await prisma.product.findUnique({
+      where: { id: Number(id) },
+      include: {
+        brand: true,
+        category: true,
+        variants: {
+          include: {
+            images: true // Important: Get images for each variant
+          }
+        }
+      }
+    });
+
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    res.json(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+
+// GET /api/products/:id/related
+export const getRelatedProducts = async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    
+    // 1. Get current product's category
+    const currentProduct = await prisma.product.findUnique({
+      where: { id },
+      select: { categoryId: true }
+    });
+
+    if (!currentProduct) return res.json([]);
+
+    // 2. Find 4 other products in same category
+    const related = await prisma.product.findMany({
+      where: {
+        categoryId: currentProduct.categoryId,
+        NOT: { id: id } // Don't show the current product again
+      },
+      take: 4,
+      include: {
+        variants: {
+          include: { images: true },
+          take: 1 // We only need 1 variant for the card
+        },
+        brand: true
+      }
+    });
+
+    res.json(related);
+  } catch (error) {
+    console.error(error);
+    res.json([]); // Return empty array on error, don't crash
   }
 };

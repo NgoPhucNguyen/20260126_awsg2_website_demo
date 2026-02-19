@@ -1,220 +1,111 @@
 // src/pages/Product.jsx
-//import path
 import axios from "../api/axios";
 import { useEffect, useState } from "react";
-import { useLocation, useSearchParams } from "react-router-dom"; // 👈 New hooks for URL
+import { useLocation } from "react-router-dom";
 import { useCart } from "../context/CartProvider";
-import "./Product.css"
-import Slider from 'rc-slider'; // 👈 Import the slider
-import 'rc-slider/assets/index.css';
+import ProductFilter from "../components/ProductComponents/ProductFilter";
+import ProductCard from "../components/ProductComponents/ProductCard";
+import "./Product.css";
 
-// Product function
+// 🛠️ HELPER: Extract Variant Label
+const getVariantLabel = (variant) => {
+    if (!variant?.specification) return "Standard";
+    try {
+        const spec = typeof variant.specification === 'string' 
+            ? JSON.parse(variant.specification) 
+            : variant.specification;
+        return spec?.size || spec?.volume || variant.sku;
+    } catch (e) {
+        return "Standard";
+    }
+};
+
 const Product = () => {
     const { addToCart } = useCart();
     const location = useLocation();
-    const [searchParams, setSearchParams] = useSearchParams();
 
-    // --- State ---
     const [products, setProducts] = useState([]);
-    const [filterOptions, setFilterOptions] = useState({ brands: [], categories: [] }); // For Sidebar
+    const [filterOptions, setFilterOptions] = useState({ brands: [], categories: [] });
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
-    // PRICE STATE: We use an array [min, max] for the slider
-    const MAX_PRICE = 2000000; 
-    const [priceRange, setPriceRange] = useState([0, MAX_PRICE]);
-
-
-    // --- 1. Fetch Filter Options (Run once on mount) ---
+    // 1. Fetch Attributes
     useEffect(() => {
-        const fetchAttributes = async () => {
-            try {
-                // Ensure you added this route in your backend as discussed!
-                const res = await axios.get('/api/products/attributes'); 
-                setFilterOptions(res.data);
-            } catch (err) {
-                console.error("Failed to load filters", err);
-            }
-        };
-        fetchAttributes();
+        axios.get('/api/products/attributes')
+            .then(res => setFilterOptions(res.data))
+            .catch(err => console.error(err));
     }, []);
 
-    // --- 2. Fetch Products (Run when URL changes) ---
+    // 2. Fetch Products & FLATTEN VARIANTS
     useEffect(() => {
         const controller = new AbortController();
         const fetchProducts = async () => {
             setLoading(true);
             try {
-                // Pass the URL query string (e.g., "?brandId=123&search=toner") directly to backend
-                const query = location.search; 
-                const response = await axios.get(`/api/get-products${query}`, {
+                const response = await axios.get(`/api/get-products${location.search}`, {
                     signal: controller.signal
                 });
+                
+                const query = new URLSearchParams(location.search);
+                const min = query.get('minPrice') ? Number(query.get('minPrice')) : 0;
+                const max = query.get('maxPrice') ? Number(query.get('maxPrice')) : 99999999;
+                // 🔄 NEW LOGIC: Create a card for EVERY variant
+                // If a product has 2 variants, this creates 2 cards.
+                const formattedData = response.data.flatMap(product => {
+                    // Check if product has variants
+                    if (!product.variants || product.variants.length === 0) return [];
 
-                // Transform Data
-                const formattedData = response.data.map(item => {
-                    const defaultVariant = item.variants[0];
-                    const defaultImage = defaultVariant?.images[0]?.imageUrl;
-
-                    return {
-                        id: item.id,
-                        name: item.name,
-                        brand: item.brand?.name, // Show brand name
-                        price: defaultVariant ? defaultVariant.unitPrice : 0,
-                        image: defaultImage || "https://via.placeholder.com/300?text=No+Image",
-                        description: item.description
-                    };
+                    return product.variants
+                    .filter(variant => variant.unitPrice >= min && variant.unitPrice <= max)
+                    .map(variant => {
+                        const variantLabel = getVariantLabel(variant);
+                        
+                        return {
+                            // Link Info (Both cards go to same Product Detail page)
+                            id: product.id, 
+                            // Unique Info for THIS card
+                            variantId: variant.id, // 👈 Key for Cart
+                            name: `${product.name} - ${variantLabel}`, 
+                            brand: product.brand?.name,
+                            description: product.description,
+                            // Specific Variant Data
+                            size: variantLabel,
+                            price: variant.unitPrice, 
+                            image: variant.images?.[0]?.imageUrl || "https://via.placeholder.com/300",
+                        };
+                    });
                 });
 
                 setProducts(formattedData);
                 setLoading(false);
             } catch (err) {
-                if (err.name !== 'CanceledError') {
-                    console.error("Error fetching products:", err);
-                    setError("Could not load products.");
-                    setLoading(false);
-                }
+                if (err.name !== 'CanceledError') setLoading(false);
             }
         };
 
         fetchProducts();
         return () => controller.abort();
-    }, [location.search]); // 👈 Re-run whenever URL changes
-
-    const handleFilterChange = (key, value) => {
-        const newParams = new URLSearchParams(searchParams);
-        if (newParams.get(key) === value.toString()) {
-            newParams.delete(key);
-        } else {
-            newParams.set(key, value);
-        }
-        setSearchParams(newParams);
-    };
-
-    const handleSliderChange = (value) => {
-        setPriceRange(value);
-    };
-
-    const handleInputChange = (index, value) => {
-        const newRange = [...priceRange];
-        newRange[index] = Number(value);
-        setPriceRange(newRange);
-    };
-
-    const applyFilters = () => {
-        const newParams = new URLSearchParams(searchParams);
-        newParams.set('minPrice', priceRange[0]);
-        newParams.set('maxPrice', priceRange[1]);
-        setSearchParams(newParams);
-    };
+    }, [location.search]);
 
     return (
         <div className="product-page-container">
-            {/* --- LEFT SIDEBAR (FILTERS) --- */}
-            <aside className="filter-sidebar">
-                <div className="filter-group">
-                    <h3>Brands</h3>
-                    {filterOptions.brands.map(brand => (
-                        <label key={brand.id} className="filter-checkbox">
-                            <input 
-                                type="checkbox" 
-                                checked={searchParams.get('brandId') === brand.id}
-                                onChange={() => handleFilterChange('brandId', brand.id)}
-                            />
-                            {brand.name}
-                        </label>
-                    ))}
-                </div>
+            <ProductFilter filterOptions={filterOptions} />
 
-                <div className="filter-group">
-                    <h3>Categories</h3>
-                    {filterOptions.categories.map(cat => (
-                        <label key={cat.id} className="filter-checkbox">
-                            <input 
-                                type="checkbox" 
-                                checked={searchParams.get('categoryId') === cat.id.toString()}
-                                onChange={() => handleFilterChange('categoryId', cat.id)}
-                            />
-                            {cat.name}
-                        </label>
-                    ))}
-                </div>
-
-                <div className="filter-group">
-                    <h3>Price Range</h3>
-                    <div className="price-slider-container">
-                        <Slider 
-                            range 
-                            min={0} 
-                            max={MAX_PRICE} 
-                            step={10000}
-                            value={priceRange} 
-                            onChange={handleSliderChange}
-                            trackStyle={[{ backgroundColor: '#333', height: 4 }]}
-                            handleStyle={[
-                                { borderColor: '#333', backgroundColor: '#fff', opacity: 1 }, 
-                                { borderColor: '#333', backgroundColor: '#fff', opacity: 1 }
-                            ]}
-                            railStyle={{ backgroundColor: '#ddd', height: 4 }}
-                        />
-
-                        <div className="price-inputs">
-                            <div className="input-wrapper">
-                                <span>₫</span>
-                                <input 
-                                    type="number" 
-                                    value={priceRange[0]} 
-                                    onChange={(e) => handleInputChange(0, e.target.value)}
-                                />
-                            </div>
-                            <span className="separator">-</span>
-                            <div className="input-wrapper">
-                                <span>₫</span>
-                                <input 
-                                    type="number" 
-                                    value={priceRange[1]} 
-                                    onChange={(e) => handleInputChange(1, e.target.value)}
-                                />
-                            </div>
-                        </div>
-
-                        <button className="apply-btn" onClick={applyFilters}>
-                            APPLY
-                        </button>
-                    </div>
-                </div>
-            </aside>
-
-            {/* --- RIGHT CONTENT (GRID) --- */}
             <main className="product-main">
                 <header className="product-header">
                     <h1>Our Collection</h1>
-                    <p>{products.length} products found</p>
+                    {/* Count now reflects total options, not just products */}
+                    <p>{products.length} options available</p> 
                 </header>
 
                 {loading ? <div className="loading">Loading...</div> : (
                     <div className="product-grid">
-                        {products.length > 0 ? products.map((product) => (
-                            <div key={product.id} className="product-card">
-                                <div className="card-image">
-                                    <img src={product.image} alt={product.name} />
-                                    {/* Optional: Add Brand Tag */}
-                                    <span className="brand-tag">{product.brand}</span>
-                                </div>
-
-                                <div className="card-details">
-                                    <h3>{product.name}</h3>
-                                    <p className="description">{product.description}</p>
-                                    <div className="price-row">
-                                        <span className="price">
-                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
-                                        </span>
-                                        <button className="add-btn" onClick={() => addToCart(product)}>
-                                            Add
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                        {products.length > 0 ? products.map((item) => (
+                            <ProductCard 
+                                // ⚠️ IMPORTANT: Use variantId as Key now (since product.id repeats)
+                                key={item.variantId} 
+                                product={item} 
+                                addToCart={addToCart} 
+                            />
                         )) : (
                             <div className="no-results">No products match your filter.</div>
                         )}

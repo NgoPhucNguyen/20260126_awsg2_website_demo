@@ -2,7 +2,7 @@
 import prisma from '../prismaClient.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-
+import crypto from 'crypto';
 // ⚠️ 1. DEFINE THIS VARIABLE SO IT DOESN'T CRASH
 const sessions = {}; 
 
@@ -11,6 +11,9 @@ export const handleLogin = async (req, res) => {
     const user = req.body.loginIdentifier || req.body.user;
     const pwd = req.body.password || req.body.pwd;
 
+    const rememberMe = req.body.remember === true;
+    const falseRe = 24 * 60 * 60 * 1000; // 1 Days
+    const trueRe = 30 * 24 * 60 * 60 * 1000; // 30 Days
     if (!user || !pwd) {
         return res.status(400).json({ 'message': 'Username and password required.' });
     }
@@ -32,20 +35,22 @@ export const handleLogin = async (req, res) => {
             httpOnly: true, 
             secure: true, 
             sameSite: 'None', 
-            maxAge: 24 * 60 * 60 * 1000  // Amount of time the Token experied (1days)
+            maxAge: rememberMe ? trueRe : falseRe
+            // (1days) If remember ->30days
         });
-        return res.json({ accessToken, roles: [5150] });
+        return res.json({ accessToken, roles: [5150], user: "Admin" });
     }
-
+    
     // ☁️ 2. PRISMA DATABASE CHECK
     try {
         const foundUser = await prisma.customer.findFirst({
             where: { OR: [{ mail: user }, { account_name: user }] }
         });
         if (!foundUser) return res.status(401).json({ 'message': 'User not found' });
-
+        
         const match = await bcrypt.compare(pwd, foundUser.passwordHash);
         if (match) {
+            console.log("USER LOGGIN IN");
             const accessToken = jwt.sign(
                 { "username": foundUser.account_name, "id": foundUser.id },
                 process.env.ACCESS_TOKEN_SECRET,
@@ -56,18 +61,19 @@ export const handleLogin = async (req, res) => {
                 process.env.REFRESH_TOKEN_SECRET,
                 { expiresIn: '1d' }
             );
-
+            
             // SAVE TO DB
             await prisma.customer.update({
                 where: { id: foundUser.id },
                 data: { refreshToken: refreshToken } 
             });
-
+            
             res.cookie('jwt', refreshToken, { 
                 httpOnly: true, 
                 secure: true, 
                 sameSite: 'None', 
-                maxAge: 24 * 60 * 60 * 1000 
+                maxAge: rememberMe ? trueRe : falseRe
+                // (1days) If remember ->30days
             });
             res.json({ accessToken, roles: [2001], user: foundUser.account_name });
         } else {
@@ -158,7 +164,7 @@ export const handleRefresh = async (req, res) => {
             process.env.ACCESS_TOKEN_SECRET || "test_secret",
             { expiresIn: '1d' }
         );
-        return res.json({ accessToken, roles: [5150], username: "Admin" });
+        return res.json({ accessToken, roles: [5150], user: "Admin" });
     }
 
     // 2. CHECK DB (Regular User) - THIS WAS MISSING IN YOUR CODE
@@ -182,4 +188,95 @@ export const handleRefresh = async (req, res) => {
             res.json({ accessToken, roles: [2001], user: foundUser.account_name });
         }
     );
+};
+
+
+// ➤ FORGOT PASSWORD (Request link)
+export const handleForgotPassword = async (req, res) => {
+    const { mail } = req.body;
+    if (!mail) return res.status(400).json({ 'message': 'Email is required.' });
+
+    try {
+        const foundUser = await prisma.customer.findUnique({ where: { mail } });
+
+        // Security: Don't confirm if email exists or not
+        if (!foundUser) {
+            return res.status(200).json({ 'message': 'If an account exists, a reset link has been sent.' });
+        }
+
+        // 1. Generate a plain token for the user and a hash for the DB
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        const tokenHash = await bcrypt.hash(resetToken, 10);
+        const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 Minutes expiry
+
+        // 2. Save hashed token to DB
+        await prisma.passwordResetToken.create({
+            data: {
+                tokenHash: tokenHash,
+                customerId: foundUser.id,
+                expiresAt: expiresAt
+            }
+        });
+
+        // 3. Construct URL (Frontend URL)
+        const clientUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    
+        const resetUrl = `${clientUrl}/reset-password?token=${resetToken}&id=${foundUser.id}`;
+        
+        console.log(`✉️ RESET LINK: ${resetUrl}`); 
+        // 💡 Later: Use a mailer like Resend or Nodemailer here
+
+        res.status(200).json({ 'message': 'Check your email for the reset link.' });
+
+    } catch (err) {
+        console.error("Forgot Password Error:", err);
+        res.status(500).json({ 'message': 'Server Error' });
+    }
+};
+
+// ➤ RESET PASSWORD (Update DB)
+export const handleResetPassword = async (req, res) => {
+    const { token, id, newPwd } = req.body;
+    if (!token || !id || !newPwd) return res.status(400).json({ 'message': 'All fields required.' });
+
+    try {
+        // 1. Get all active tokens for this user
+        const tokens = await prisma.passwordResetToken.findMany({
+            where: { customerId: id }
+        });
+
+        // 2. Find the matching token
+        let validTokenRecord = null;
+        for (const record of tokens) {
+            const isMatch = await bcrypt.compare(token, record.tokenHash);
+            const isNotExpired = record.expiresAt > new Date();
+            
+            if (isMatch && isNotExpired) {
+                validTokenRecord = record;
+                break;
+            }
+        }
+
+        if (!validTokenRecord) {
+            return res.status(400).json({ 'message': 'Invalid or expired token.' });
+        }
+
+        // 3. Hash new password & Update user
+        const newHashedPassword = await bcrypt.hash(newPwd, 10);
+        await prisma.customer.update({
+            where: { id: id },
+            data: { passwordHash: newHashedPassword }
+        });
+
+        // 4. Clean up: Delete the used token
+        await prisma.passwordResetToken.delete({
+            where: { id: validTokenRecord.id }
+        });
+
+        res.status(200).json({ 'message': 'Password reset successful! You can now login.' });
+
+    } catch (err) {
+        console.error("Reset Password Error:", err);
+        res.status(500).json({ 'message': 'Server Error' });
+    }
 };
