@@ -102,7 +102,7 @@ const ProductDetail = () => {
     }, [product, selectedVariant]); 
 
     // --- CALCULATIONS ---
-    // ✅ Updated to use new function name
+    
     const currentVariantLabel = useMemo(() => getVariantLabel(selectedVariant), [selectedVariant]);
     const displayImages = selectedVariant?.images || [];
 

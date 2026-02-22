@@ -5,6 +5,53 @@
     align-items: flex-end;
     margin-bottom: 1.5rem;
 }
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* --- TOGGLE BUTTON BASE --- */
+.btn-toggle {
+    padding: 0.6rem 1.25rem;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 🟢 State: Viewing Active (Button says "View Archived") */
+.btn-toggle-active {
+    background-color: white;
+    color: #374151;
+}
+
+.btn-toggle-active:hover {
+    background-color: #f3f4f6;
+}
+
+/* 🔴 State: Viewing Archived (Button says "Back to Active") */
+.btn-toggle-archived {
+    background-color: #fee2e2;
+    color: #ef4444;
+    border-color: #fca5a5;
+}
+
+.btn-toggle-archived:hover {
+    background-color: #fecaca;
+}
+
+/* --- RESTORE BUTTON --- */
+.btn-restore {
+    color: #10b981; /* Emerald green */
+}
+
+.btn-restore:hover {
+    background-color: #d1fae5; /* Light green hover background */
+}
 
 .btn-add {
     background-color: #4f46e5;
@@ -105,6 +152,8 @@
 .actions-cell {
     display: flex;
     gap: 12px;
+    position: relative;
+    z-index: 50;
 }
 
 .btn-icon {
@@ -115,6 +164,7 @@
     padding: 4px;
     border-radius: 4px;
     transition: background 0.2s;
+    pointer-events: auto;
 }
 
 .btn-edit { color: #6366f1; }

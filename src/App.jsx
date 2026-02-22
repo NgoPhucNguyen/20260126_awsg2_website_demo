@@ -1,7 +1,7 @@
 //src/App.jsx
 
 import './index.css';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 // Pages
 import Product from './pages/Product';     // showroom
 import ProductDetail from './pages/ProductDetail'; // contains details description
@@ -37,13 +37,13 @@ const ROLES = {
 function App() {
   return (
     <Routes>
+      {/* 🌍 PUBLIC ROUTES */}
+      <Route path="unauthorized" element={<Unauthorized />} />
+      <Route path="forgot-password" element={<ForgotPassword />} />
+      <Route path="reset-password" element={<ResetPassword />} />
+
+      {/* MAIN ROUTES */}
       <Route path="/" element={<Layout />}>
-        
-        {/* 🌍 PUBLIC ROUTES */}
-        <Route path="unauthorized" element={<Unauthorized />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
-        <Route path="reset-password" element={<ResetPassword />} />
-        
         {/* 🔐 PERSIST LOGIN */}
         <Route element={<PersistLogin />}>
             
@@ -70,10 +70,8 @@ function App() {
 
             {/* 👑 ADMIN DASHBOARD (NESTED ROUTES) */}
             <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
-                
                 {/* 1. PARENT: The Sidebar Shell */}
                 <Route path="admin" element={<AdminLayout />}>
-                    
                     {/* 2. DEFAULT: Redirect /admin -> /admin/users */}
                     <Route index element={<Navigate to="users" replace />} />
 
@@ -81,13 +79,10 @@ function App() {
                     <Route path="users" element={<Users />} />
                     <Route path="inventory" element={<Inventory />} />
                     <Route path="analytics" element={<Analytics />} />
-                    
                 </Route>
-
             </Route>
-
         </Route> {/* End PersistLogin */}
-      </Route>
+      </Route> {/* End Layout */}
     </Routes>
   );
 }

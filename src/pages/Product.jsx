@@ -28,7 +28,7 @@ const Product = () => {
     const [filterOptions, setFilterOptions] = useState({ brands: [], categories: [] });
     const [loading, setLoading] = useState(true);
 
-    // 1. Fetch Attributes
+    // 1. Fetch Attributes for Filters (Brands, Categories, etc.)
     useEffect(() => {
         axios.get('/api/products/attributes')
             .then(res => setFilterOptions(res.data))
@@ -41,7 +41,7 @@ const Product = () => {
         const fetchProducts = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`/api/get-products${location.search}`, {
+                const response = await axios.get(`/api/products${location.search}`, {
                     signal: controller.signal
                 });
                 

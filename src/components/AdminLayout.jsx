@@ -1,50 +1,45 @@
-import { Outlet, NavLink, Link } from "react-router-dom";
-import { FaUsers, FaBoxOpen, FaChartLine } from "react-icons/fa6";
-import { MdDashboard, MdLogout } from "react-icons/md";
-import "./AdminLayout.css"; 
+// src/components/AdminLayout.jsx
+import { useState } from 'react';
+import { Outlet, NavLink } from 'react-router-dom';
+import { FaBars, FaUsers, FaBoxOpen, FaChartLine, FaArrowRightFromBracket } from 'react-icons/fa6';
+import "./AdminLayout.css" 
 
 const AdminLayout = () => {
+    // 🌟 STATE TO TRACK SIDEBAR SIZE
+    const [isCollapsed, setIsCollapsed] = useState(false);
+
     return (
         <div className="admin-layout">
-            {/* 1. SIDEBAR (Fixed) */}
-            <aside className="admin-sidebar">
-                <div className="sidebar-brand">
-                    <MdDashboard size={24}/> <span>AdminPanel</span>
-                </div>
+            {/* 🌟 Apply 'collapsed' class dynamically */}
+            <aside className={`admin-sidebar ${isCollapsed ? 'collapsed' : ''}`}>
                 
+                <div className="sidebar-brand">
+                    {/* The Hamburger Icon triggers the collapse */}
+                    <FaBars className="toggle-btn" onClick={() => setIsCollapsed(!isCollapsed)} />
+                    {!isCollapsed && <span className="brand-text">Aphrodite</span>}
+                </div>
+
                 <nav className="sidebar-menu">
-                    {/* NavLink automatically adds "active" class when URL matches! */}
-                    <NavLink to="/admin/users" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-                        <FaUsers /> <span>Users</span>
+                    <NavLink to="users" className="menu-item">
+                        <FaUsers size={20} />
+                        {!isCollapsed && <span>Users</span>}
                     </NavLink>
-                    
-                    <NavLink to="/admin/inventory" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-                        <FaBoxOpen /> <span>Inventory</span>
+                    <NavLink to="inventory" className="menu-item">
+                        <FaBoxOpen size={20} />
+                        {!isCollapsed && <span>Inventory</span>}
                     </NavLink>
-
-                    <NavLink to="/admin/analytics" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-                        <FaChartLine /> <span>Analytics</span>
-                    </NavLink>
-
-                    <NavLink to="/admin/settings" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-                        <span>Settings</span>
+                    <NavLink to="analytics" className="menu-item">
+                        <FaChartLine size={20} />
+                        {!isCollapsed && <span>Analytics</span>}
                     </NavLink>
                 </nav>
-
-                <div className="sidebar-footer">
-                    <Link to="/" className="menu-item logout">
-                         <MdLogout /> <span>Back Home</span>
-                    </Link>
-                </div>
             </aside>
-
-            {/* 2. DYNAMIC CONTENT AREA */}
+            
             <main className="admin-main">
-                {/* This is the "hole" where Users.jsx or Products.jsx will appear */}
                 <Outlet />
             </main>
         </div>
     );
-}
+};
 
 export default AdminLayout;

@@ -1,47 +1,7 @@
-    tab-size: 4;
-    -webkit-text-size-adjust: 100%;
-    -webkit-font-smoothing: antialiased;
-    --screen-height: 100vh;
-    --promo-height: 2.0625rem;
-    --menu-height: 3.8125rem;
-    border-style: solid;
-    --tw-shadow: 0 0 #0000;
-    --tw-ring-inset: var(--tw-empty,/*!*/ /*!*/);
-    --tw-ring-offset-width: 0px;
-    --tw-ring-offset-color: #fff;
-    --tw-ring-color: rgba(59, 130, 246, 0.5);
-    --tw-ring-offset-shadow: 0 0 #0000;
-    --tw-ring-shadow: 0 0 #0000;
-    box-sizing: border-box;
-    margin: 0;
-    background-image: none;
-    -webkit-appearance: button;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    transition-property: background-color, border-color, color, fill, stroke;
-    transition-duration: 300ms;
-    transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
-    cursor: pointer;
-    white-space: nowrap;
-    font-family: Barlow Semi Condensed;
-    font-weight: 500;
-    text-transform: uppercase;
-    border-width: 1px;
-    --tw-border-opacity: 1;
-    border-color: rgba(237, 224, 204, var(--tw-border-opacity));
-    --tw-bg-opacity: 1;
-    background-color: rgba(254, 251, 244, var(--tw-bg-opacity));
-    --tw-text-opacity: 1;
-    color: rgba(31, 28, 23, var(--tw-text-opacity));
-    line-height: 1.75rem;
-    padding: 1.6875rem;
-    border-radius: 4px;
-    font-size: 1.375rem;
-    height: 4.375rem;
-    width: 25rem;
-    margin-top: 2rem;
+Fullsetup 22/02 : S3, EC2, 
+
+19/02/2026
+Google [Aphrodite Shop] 16 num code: wpab beyj wkbu jmsy 
 
 
 

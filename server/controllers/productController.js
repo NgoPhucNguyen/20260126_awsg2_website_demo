@@ -2,7 +2,7 @@
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
-
+// Get product from DB 
 export const getProducts = async (req, res) => {
   try {
     // 1. Destructure query params from the URL
@@ -14,13 +14,20 @@ export const getProducts = async (req, res) => {
       skinType, 
       minPrice, 
       maxPrice,
-      sort 
+      sort,
+      status
     } = req.query;
     
     // 2. Build the dynamic 'where' object
-    const whereClause = {
-      isActive: true, // Only show active products
-    };
+    // Cái này mình có thể điều chỉnh thay vì sử dụng DB không cần thiết.
+    // VD : xóa 1 sản phẩm
+    const whereClause = {};
+
+    if (status === 'archived') {
+        whereClause.isActive = false; 
+    } else {
+        whereClause.isActive = true; // Default behavior for the main store
+    }
 
     // --- Search Logic (Name OR Vietnamese Name) ---
     if (search) {
@@ -77,7 +84,8 @@ export const getProducts = async (req, res) => {
         category: true,
         variants: {
           include: {
-            images: true // Get images to show thumbnail
+            images: true, // Get images to show thumbnail
+            inventories: true
           }
         }
       }
@@ -89,9 +97,8 @@ export const getProducts = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch products' });
   }
 };
-
-
 // Get all available brands, categories, and skin types to build the Sidebar
+// This func build for Filter
 export const getFilterAttributes = async (req, res) => {
   try {
     const [brands, categories, skinTypes] = await Promise.all([
@@ -114,8 +121,6 @@ export const getFilterAttributes = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch attributes' });
   }
 };
-// Add this to your productController.js
-
 export const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -143,8 +148,6 @@ export const getProductById = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
-
-
 // GET /api/products/:id/related
 export const getRelatedProducts = async (req, res) => {
   try {
@@ -179,4 +182,140 @@ export const getRelatedProducts = async (req, res) => {
     console.error(error);
     res.json([]); // Return empty array on error, don't crash
   }
+};
+// NOT USING DB .Delete using the whereClause. 
+// server/controllers/productController.js
+
+export const deleteProduct = async (req, res) => {
+  try {
+    // 1️⃣ Get the ID from the URL (e.g., /api/products/5)
+    const { id } = req.params;
+
+    // 2️⃣ Double-check the product actually exists
+    const existingProduct = await prisma.product.findUnique({
+      where: { id: Number(id) }
+    });
+
+    if (!existingProduct) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    // 3️⃣ 🛡️ THE SOFT DELETE: Update isActive to false
+    await prisma.product.update({
+      where: { id: Number(id) },
+      data: { isActive: false } // 👈 The magic switch!
+    });
+
+    // 4️⃣ Send success message back to React
+    res.json({ message: "Product successfully hidden from the store!" });
+
+  } catch (error) {
+    console.error("Soft delete error:", error);
+    res.status(500).json({ error: "Failed to delete product" });
+  }
+};
+
+
+// ♻️ RESTORE PRODUCT (UNDO)
+export const restoreProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await prisma.product.update({
+      where: { id: Number(id) },
+      data: { isActive: true } // 👈 Flips it back on!
+    });
+
+    res.json({ message: "Product restored to the store!" });
+  } catch (error) {
+    console.error("Restore error:", error);
+    res.status(500).json({ error: "Failed to restore product" });
+  }
+};
+
+
+// server/controllers/productController.js
+
+export const createProduct = async (req, res) => {
+    try {
+        // 1. Get all the simple data from the React form
+        const { 
+            name, nameVn, brandId, categoryId, description, 
+            ingredient, skinType, sku, unitPrice, stock, imageUrls 
+        } = req.body;
+
+        // 2. 🏢 THE WAREHOUSE TRICK
+        // Find the first warehouse. If the DB is empty, create a dummy one!
+        let warehouse = await prisma.warehouse.findFirst();
+        if (!warehouse) {
+            warehouse = await prisma.warehouse.create({
+                data: {
+                    name: "Main Warehouse",
+                    fullAddress: "System Default",
+                    province: "Default", district: "Default", ward: "Default", streetAddress: "Default"
+                }
+            });
+        }
+
+        const imageRecords = imageUrls.map((url, index) => ({
+            imageUrl: url,
+            displayOrder: index + 1, // 1st image is 1, 2nd is 2...
+            altText: `${name} image ${index + 1}`
+        }));
+
+        // 3. 🛡️ THE MASSIVE SINGLE QUERY (Nested Writes)
+        // This safely creates the Product, Variant, Image, and Inventory all at once!
+        const newProduct = await prisma.product.create({
+            data: {
+                name,
+                nameVn: nameVn || name, 
+                brandId,
+                categoryId: Number(categoryId),
+                description,
+                ingredient,
+                skinType,
+                isActive: true, 
+                
+                // Nest the Variant creation
+                variants: {
+                    create: [{
+                        sku: sku || `SKU-${Date.now()}`, 
+                        unitPrice: Number(unitPrice),
+                        thumbnailUrl: imageUrls[0] || "",
+                        specification: { packaging: "Standard" }, 
+                        
+                        // Nest the High-Res Image creation
+                        images: {
+                            create: imageRecords
+                        },
+                        
+                        // Nest the Inventory creation
+                        inventories: {
+                            create: [{
+                                warehouseId: warehouse.id,
+                                quantity: Number(stock)
+                            }]
+                        }
+                    }]
+                }
+            }, // 👈 THE FIX: Close the 'data' object right here with a comma!
+
+            // 🌟 NOW include is a sibling to data
+            include: {
+                category: true,
+                variants: {
+                    include: {
+                        images: true,
+                        inventories: true
+                    }
+                }
+            }
+        });
+
+        res.status(201).json({ message: "Product created successfully!", product: newProduct });
+        
+    } catch (error) {
+        console.error("❌ Error creating product:", error);
+        res.status(500).json({ error: "Failed to create product in database." });
+    }
 };

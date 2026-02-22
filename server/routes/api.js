@@ -5,7 +5,10 @@ import {
   getProducts, 
   getFilterAttributes, 
   getProductById, 
-  getRelatedProducts 
+  getRelatedProducts,
+  deleteProduct,
+  restoreProduct,
+  createProduct
 } from '../controllers/productController.js';
 import { 
   handleLogin, 
@@ -38,10 +41,14 @@ router.post('/auth/forgot-password', handleForgotPassword);
 router.post('/auth/reset-password', handleResetPassword);
 
 // --- PRODUCT ROUTES ---
-router.get('/get-products', getProducts);
+router.get('/products', getProducts);
 router.get('/products/attributes', getFilterAttributes);
 router.get('/products/:id', getProductById);
 router.get('/products/:id/related', getRelatedProducts);
+router.delete('/:id', deleteProduct); //"Soft" delete
+router.patch('/:id/restore', restoreProduct); // Undo Soft Delete
+router.post('/products', createProduct); // 👈
+
 // --- UPLOAD ROUTES ---
 router.post('/upload', upload.single('image'), uploadImage);
 
