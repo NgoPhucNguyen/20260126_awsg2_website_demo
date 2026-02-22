@@ -61,11 +61,27 @@ model Customer {
   tier         Int?
   createdAt    DateTime  @default(now()) @map("created_at")
   addressId    String?   @map("address_id")
+  //user forgot password
+  resetTokens  PasswordResetToken[] 
+  
 
   address Address? @relation(fields: [addressId], references: [id])
   carts   Cart[]
 
   @@map("customer")
+}
+
+// 1. Add this new model
+model PasswordResetToken {
+  id         String   @id @default(uuid())
+  tokenHash  String   @unique @map("token_hash")
+  customerId String   @map("customer_id")
+  expiresAt  DateTime @map("expires_at")
+
+  // Link only to Customer for now
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@map("password_reset_token")
 }
 
 model Employee {

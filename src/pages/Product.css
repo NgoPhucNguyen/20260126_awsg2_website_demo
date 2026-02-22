@@ -1,123 +1,107 @@
-/* src/features/products/Product.css */
+/* src/pages/Product.css */
 
-.product-page {
-    max-width: 1200px;
-    margin: 0 auto;
+/* --- MAIN LAYOUT --- */
+.product-page-container {
+    display: grid;
+    grid-template-columns: 250px 1fr; /* Sidebar fixed, content flex */
+    gap: 2rem;
     padding: 2rem;
-    font-family: 'Inter', sans-serif; /* Or your preferred font */
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-.product-header {
-    text-align: center;
-    margin-bottom: 3rem;
+/* Responsive: Stack on mobile */
+@media (max-width: 768px) {
+    .product-page-container {
+        grid-template-columns: 1fr;
+    }
+    /* Hide sidebar on mobile? Or show below? */
+    /* You might want to add a "Show Filters" button for mobile later */
 }
 
-.product-header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-    color: #222;
-}
-
-.product-header p {
-    color: #666;
-    font-size: 1.1rem;
-}
-
-/* --- GRID LAYOUT --- */
+/* --- PRODUCT GRID --- */
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 2rem;
 }
 
-/* --- PRODUCT CARD --- */
 .product-card {
-    background: white;
-    border-radius: 12px;
+    border: 1px solid #eee;
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid #f0f0f0;
+    transition: transform 0.2s, box-shadow 0.2s;
+    background: white;
+    display: flex;
+    flex-direction: column;
 }
 
 .product-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .card-image {
-    width: 100%;
-    height: 250px;
-    overflow: hidden;
-    background-color: #f9f9f9;
+    position: relative;
+    height: 200px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
 }
 
-.product-card:hover .card-image img {
-    transform: scale(1.05); /* Slight zoom effect on hover */
+.brand-tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #333;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
 }
 
 .card-details {
-    padding: 1.5rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .card-details h3 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1.2rem;
-    color: #333;
+    font-size: 1rem;
+    margin: 0 0 5px 0;
 }
 
 .description {
-    color: #777;
-    font-size: 0.9rem;
-    line-height: 1.4;
-    margin-bottom: 1.5rem;
-    height: 40px; /* Limits height to keep cards aligned */
-    overflow: hidden;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: auto;
 }
 
-/* --- PRICE & BUTTON ROW --- */
 .price-row {
+    margin-top: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: auto; /* Pushes to bottom */
 }
 
 .price {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #000;
+    font-weight: bold;
+    font-size: 1.1rem;
 }
 
 .add-btn {
-    background-color: #000;
+    background: #333;
     color: white;
     border: none;
-    padding: 0.7rem 1.2rem;
-    border-radius: 6px;
-    font-weight: 600;
+    padding: 5px 15px;
+    border-radius: 4px;
     cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-}
-
-.add-btn:hover {
-    background-color: #333;
-}
-
-.add-btn:active {
-    transform: scale(0.95);
-}
-
-/* --- RESPONSIVE --- */
-@media (max-width: 600px) {
-    .product-grid {
-        grid-template-columns: 1fr; /* 1 column on mobile */
-    }
 }

@@ -1,15 +1,13 @@
-// features/cart/Cart.jsx
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../features/auth/AuthProvider"; // Adjust path if needed
+import { useAuth } from "../features/auth/AuthProvider"; 
 import { useCart } from "../context/CartProvider"; 
-import { FiTrash2, FiMinus, FiPlus } from "react-icons/fi"; 
+import { FiTrash2, FiMinus, FiPlus, FiArrowLeft, FiShoppingBag } from "react-icons/fi"; 
 import "./Cart.css"; 
 
 const Cart = () => {
     const { auth } = useAuth();
     const navigate = useNavigate();
     
-    // 🗑️ DELETE THE OLD LOCAL STATE (useState)
     // 🔌 CONNECT TO GLOBAL CONTEXT
     const { 
         cartItems, 
@@ -19,102 +17,132 @@ const Cart = () => {
         totalItems 
     } = useCart(); 
 
-    // 🎮 UPDATED HANDLERS (Now they call the Context functions)
-    const handleIncrease = (id) => {
-        updateQuantity(id, 1);
-    };
-
-    const handleDecrease = (id) => {
-        updateQuantity(id, -1);
-    };
-
-    const handleRemove = (id) => {
-        removeFromCart(id);
+    // 🇻🇳 HELPER: Format VND
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
     };
 
     const handleCheckout = () => {
-        if (!auth?.accessToken) {
-            navigate('/login'); 
-        } else {
-            console.log("Processing Checkout...", cartItems);
-            // Later: axiosPrivate.post('/orders', { items: cartItems })
-            alert("Proceeding to Payment Gateway (Mock)");
-        }
-    };
+    if (!auth?.accessToken) {
+        // ✅ Change: Add a query parameter instead of a new path
+        navigate('/cart?login=true'); 
+    } else {
+        console.log("Processing Checkout...", cartItems);
+        alert("Proceeding to Payment Gateway...");
+    }
+};
+
+    if (cartItems.length === 0) {
+        return (
+            <div className="empty-cart-container">
+                <FiShoppingBag className="empty-icon" />
+                <h2>Your bag is empty</h2>
+                <p>Looks like you haven't added any skincare treats yet.</p>
+                <button className="continue-btn" onClick={() => navigate('/')}>
+                    Start Shopping
+                </button>
+            </div>
+        );
+    }
 
     return (
         <div className="cart-page">
-            <h1 className="cart-title">Your Bag ({totalItems} items)</h1>
+            <div className="cart-header">
+                <h1>Your Bag <span>({totalItems} items)</span></h1>
+                <button className="back-link" onClick={() => navigate('/')}>
+                    <FiArrowLeft /> Continue Shopping
+                </button>
+            </div>
             
             <div className="cart-container">
                 {/* 📦 LEFT: Cart Items List */}
                 <div className="cart-items-section">
-                    {cartItems.length === 0 ? (
-                        <div className="empty-cart">
-                            <p>Your cart is empty.</p>
-                            <button onClick={() => navigate('/products')}>Continue Shopping</button>
-                        </div>
-                    ) : (
-                        <div className="cart-list">
-                            {cartItems.map((item) => (
-                                <div key={item.id} className="cart-item">
-                                    
-                                    {/* Product Image */}
-                                    <div className="item-image-wrapper">
-                                        <img src={item.image} alt={item.name} className="item-image" />
-                                    </div>
+                    <div className="cart-list">
+                        {cartItems.map((item) => (
+                            // ✅ FIX 1: Unique Key using Product ID + Variant ID
+                            <div key={`${item.id}-${item.variantId}`} className="cart-item">
+                                
+                                {/* Product Image */}
+                                <div className="item-image-wrapper">
+                                    <img src={item.image} alt={item.name} className="item-image" />
+                                </div>
 
-                                    {/* Details */}
-                                    <div className="item-info">
+                                {/* Details */}
+                                <div className="item-info">
+                                    <div className="item-meta">
                                         <h3>{item.name}</h3>
-                                        <p className="item-price">${item.price.toFixed(2)}</p>
+                                        {/* Show Size if available */}
+                                        {item.size && <span className="item-variant">Size: {item.size}</span>}
                                     </div>
+                                    <p className="item-price">{formatPrice(item.price)}</p>
+                                </div>
 
-                                    {/* Controls */}
-                                    <div className="item-controls">
-                                        <div className="quantity-wrapper">
-                                            {/* 👇 Update buttons to use new handlers */}
-                                            <button onClick={() => handleDecrease(item.id)}><FiMinus /></button>
-                                            <span>{item.quantity}</span>
-                                            <button onClick={() => handleIncrease(item.id)}><FiPlus /></button>
-                                        </div>
-                                        <button className="remove-btn" onClick={() => handleRemove(item.id)}>
-                                            <FiTrash2 />
+                                {/* Controls */}
+                                <div className="item-controls">
+                                    <div className="quantity-wrapper">
+                                        {/* ✅ FIX 2: Pass variantId to updateQuantity */}
+                                        <button 
+                                            onClick={() => updateQuantity(item.id, item.variantId, -1)}
+                                            disabled={item.quantity <= 1}
+                                        >
+                                            <FiMinus />
+                                        </button>
+                                        
+                                        <span>{item.quantity}</span>
+                                        
+                                        <button onClick={() => updateQuantity(item.id, item.variantId, 1)}>
+                                            <FiPlus />
                                         </button>
                                     </div>
                                     
-                                    {/* Subtotal */}
-                                    <div className="item-subtotal">
-                                        ${(item.price * item.quantity).toFixed(2)}
-                                    </div>
+                                    {/* ✅ FIX 3: Pass variantId to removeFromCart */}
+                                    <button 
+                                        className="remove-btn" 
+                                        onClick={() => removeFromCart(item.id, item.variantId)}
+                                    >
+                                        <FiTrash2 />
+                                    </button>
                                 </div>
-                            ))}
-                        </div>
-                    )}
+                                
+                                {/* Subtotal */}
+                                <div className="item-subtotal">
+                                    {formatPrice(item.price * item.quantity)}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
                 {/* 💳 RIGHT: Order Summary */}
-                {cartItems.length > 0 && (
+                <div className="cart-summary-wrapper">
                     <div className="cart-summary">
                         <h3>Order Summary</h3>
+                        
                         <div className="summary-row">
                             <span>Subtotal</span>
-                            <span>${totalPrice.toFixed(2)}</span>
+                            <span>{formatPrice(totalPrice)}</span>
                         </div>
                         <div className="summary-row">
                             <span>Shipping</span>
                             <span className="free-text">Free</span>
                         </div>
+                        
                         <div className="divider"></div>
+                        
                         <div className="summary-row total">
                             <span>Total</span>
-                            <span>${totalPrice.toFixed(2)}</span>
+                            <span>{formatPrice(totalPrice)}</span>
                         </div>
+                        
                         <button className="checkout-btn" onClick={handleCheckout}>
-                            Proceed to Checkout
+                            CHECKOUT
                         </button>
+                        
+                        <div className="secure-note">
+                            🔒 Secure Checkout
+                        </div>
                     </div>
-                )}
+                </div>
             </div>
         </div>
     );

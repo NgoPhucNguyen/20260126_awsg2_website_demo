@@ -2,15 +2,16 @@
 
 import './index.css';
 import { Routes, Route, Navigate } from 'react-router-dom';
-
 // Pages
-import Product from './pages/Product';     // page that contains a showroom
-import Cart from './pages/Cart';           // page show the Cart of each user
+import Product from './pages/Product';     // showroom
+import ProductDetail from './pages/ProductDetail'; // contains details description
+import Cart from './pages/Cart';           // Cart of each user
 import Profile from './pages/Profile';     // page for edit the profile of user
-import History from './pages/History';     // page user could see their history 
-import AnalyzeSkin from './pages/AnalyzeSkin'; // analyze their face
-import PaymentResult from './pages/Payment';   
-
+import History from './pages/History';     // User buying history 
+import AnalyzeSkin from './pages/AnalyzeSkin'; // Analyze face
+import PaymentResult from './pages/Payment';   // User Payment (NotDoneYet)
+import ResetPassword from './pages/ResetPassword';
+import ForgotPassword from './pages/ForgotPassword';
 // Components
 import PaymentMoMo from './components/Payment/PaymentMoMo'; 
 import Layout from './components/Layout'; 
@@ -22,8 +23,6 @@ import Unauthorized from './features/auth/Unauthorized';
 // 🆕 ADMIN IMPORTS
 import AdminLayout from './components/AdminLayout'; // The Shell (Sidebar)
 import Users from './pages/admin/Users';           // The User Table
-
-// 🚧 Placeholders for future features
 import Inventory from './pages/admin/Inventory';
 
 
@@ -42,12 +41,15 @@ function App() {
         
         {/* 🌍 PUBLIC ROUTES */}
         <Route path="unauthorized" element={<Unauthorized />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="reset-password" element={<ResetPassword />} />
         
         {/* 🔐 PERSIST LOGIN */}
         <Route element={<PersistLogin />}>
             
             {/* PUBLIC ACCESS (Inside PersistLogin) */}
             <Route path="/" element={<Product />} />
+            <Route path="product/:id" element={<ProductDetail />} />
             <Route path="cart" element={<Cart />} />
             <Route path="analyze-skin" element={<AnalyzeSkin />} />
 
@@ -85,7 +87,6 @@ function App() {
             </Route>
 
         </Route> {/* End PersistLogin */}
-
       </Route>
     </Routes>
   );
