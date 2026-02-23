@@ -1,8 +1,8 @@
 // src/pages/admin/Inventory.jsx
 import { useState, useEffect } from "react";
 import { FaBoxOpen, FaPlus, FaTrash, FaPenToSquare, FaMagnifyingGlass, FaRotateLeft } from "react-icons/fa6";
-import axios from "../../api/axios";
-import AddProductModal from "../../components/AddProductModal";
+import axios from "@/api/axios";
+import AddProductModal from "@/components/AddProductModal";
 import "./Inventory.css"; 
 import "./Users.css"; 
 

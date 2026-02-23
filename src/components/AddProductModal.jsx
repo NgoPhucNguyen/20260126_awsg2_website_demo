@@ -1,7 +1,7 @@
+import axios from "@/api/axios";
 import { useState } from "react";
-import axios from "../api/axios";
 import { FaXmark, FaCloudArrowUp, FaSpinner } from "react-icons/fa6";
-import "./AddProductModal.css"; // We will create this next!
+import "./AddProductModal.css";
 
 const AddProductModal = ({ isOpen, onClose, onSuccess, filterOptions }) => {
     // 1️⃣ Form State

@@ -1,5 +1,4 @@
-import React from 'react';
-import axios from '../../api/axios'; // Or use standard 'axios' if you haven't set up the instance yet
+import axios from '@/api/axios';
 
 const PaymentMoMo = ({ amount }) => {
 
