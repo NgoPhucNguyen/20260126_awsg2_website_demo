@@ -2,6 +2,7 @@
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
+// ❌ REMOVED: const IMAGE_DOMAIN = ...
 
 async function main() {
   console.log('🌱 Starting seed...');
@@ -74,10 +75,12 @@ async function main() {
           {
             sku: 'CC-BD-140',
             unitPrice: 195000,
-            thumbnailUrl: '/images/products/winter-melon-140.jpg',
+            // ✅ FIX: Only store the relative path
+            thumbnailUrl: '/images/products/winter-melon-140.jpg', 
             specification: { volume: '140ml', packaging: 'Bottle' },
             images: {
               create: [
+                // ✅ FIX: Only store the relative paths
                 { imageUrl: '/images/products/winter-melon-140-front.jpg', displayOrder: 1, altText: 'Front View' },
                 { imageUrl: '/images/products/winter-melon-texture.jpg', displayOrder: 2, altText: 'Texture' }
               ]
@@ -86,11 +89,11 @@ async function main() {
           {
             sku: 'CC-BD-310',
             unitPrice: 295000,
-            thumbnailUrl: '/images/products/winter-melon-310.jpg',
+            thumbnailUrl: '/images/products/winter-melon-310.jpg', // ✅ FIX
             specification: { volume: '310ml', packaging: 'Pump Bottle' },
             images: {
               create: [
-                { imageUrl: '/images/products/winter-melon-310-front.jpg', displayOrder: 1, altText: 'Front View' }
+                { imageUrl: '/images/products/winter-melon-310-front.jpg', displayOrder: 1, altText: 'Front View' } // ✅ FIX
               ]
             }
           }
@@ -114,22 +117,22 @@ async function main() {
           {
             sku: 'CC-TN-30',
             unitPrice: 145000,
-            thumbnailUrl: '/images/products/turmeric-30.jpg',
+            thumbnailUrl: '/images/products/turmeric-30.jpg', // ✅ FIX
             specification: { volume: '30ml', packaging: 'Small Jar' },
             images: {
               create: [
-                { imageUrl: '/images/products/turmeric-30-front.jpg', displayOrder: 1, altText: 'Front View' }
+                { imageUrl: '/images/products/turmeric-30-front.jpg', displayOrder: 1, altText: 'Front View' } // ✅ FIX
               ]
             }
           },
           {
             sku: 'CC-TN-100',
             unitPrice: 345000,
-            thumbnailUrl: '/images/products/turmeric-100.jpg',
+            thumbnailUrl: '/images/products/turmeric-100.jpg', // ✅ FIX
             specification: { volume: '100ml', packaging: 'Large Jar' },
             images: {
               create: [
-                { imageUrl: '/images/products/turmeric-100-front.jpg', displayOrder: 1, altText: 'Front View' }
+                { imageUrl: '/images/products/turmeric-100-front.jpg', displayOrder: 1, altText: 'Front View' } // ✅ FIX
               ]
             }
           }

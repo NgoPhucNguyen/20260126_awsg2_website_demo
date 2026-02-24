@@ -1,0 +1,92 @@
+/* AddProductModal.css */
+
+.inline-add-panel {
+    background: white;
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    animation: slideDown 0.3s ease-out;
+    box-sizing: border-box; /* 🌟 CRUCIAL: Keeps everything inside */
+}
+
+.panel-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fafafa;
+    border-radius: 12px 12px 0 0;
+}
+
+.panel-header h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    color: #111827;
+    font-weight: 700;
+}
+
+/* 📜 THE FORM GRID */
+.product-form {
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    gap: 1.25rem;
+    box-sizing: border-box;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    box-sizing: border-box;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #4b5563;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+    width: 100%; /* 🌟 Ensures it fills the column exactly */
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+    box-sizing: border-box; /* 🌟 PREVENTS OVERFLOW */
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus {
+    border-color: #4f46e5;
+}
+
+/* 📌 FOOTER */
+.panel-actions {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    background-color: #fafafa;
+    border-radius: 0 0 12px 12px;
+}
+
+/* Rest of your button and file-upload styles remain the same... */

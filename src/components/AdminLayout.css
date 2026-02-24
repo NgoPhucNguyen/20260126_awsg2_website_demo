@@ -6,17 +6,40 @@
     font-family: 'Inter', system-ui, sans-serif;
 }
 
-/* 2. THE SIDEBAR (Left) */
+/* --- 2 SKELETON & SIDEBAR --- */
 .admin-sidebar {
-    width: 260px;            /* Fixed width */
+    width: 260px;
     background-color: white;
     border-right: 1px solid #e5e7eb;
     display: flex;
-    flex-direction: column;  /* Stack logo, menu, footer vertically */
-    position: sticky;        /* Keeps sidebar visible when scrolling */
+    flex-direction: column;
+    position: sticky;
     top: 0;
     height: 100vh;
+    transition: width 0.3s ease; /* 🌟 Smooth sliding animation */
 }
+
+/* 🌟 WHEN COLLAPSED */
+.admin-sidebar.collapsed {
+    width: 80px; /* Shrinks to just icon width */
+}
+
+.admin-sidebar.collapsed .sidebar-brand {
+    justify-content: center; /* Centers the hamburger icon */
+    padding: 1.5rem 0;
+}
+
+.admin-sidebar.collapsed .menu-item {
+    justify-content: center; /* Centers the icons */
+    padding: 12px 0;
+}
+
+.toggle-btn {
+    cursor: pointer;
+    color: #4f46e5;
+    transition: color 0.2s;
+}
+.toggle-btn:hover { color: #3730a3; }
 
 /* 3. THE CONTENT HOLE (Right) */
 .admin-main {

@@ -4,11 +4,11 @@ import AnalyzeSkinBtn from "./AnalyzeSkinBtn/AnalyzeSkinBtn";
 const Layout = () => {
     return (
         <main className="App">
-            <Navbar />
             <div className="content">
+            <Navbar />
                 <Outlet /> {/* This is where Home, Admin, or Login will appear */}
-            </div>
             <AnalyzeSkinBtn /> 
+            </div>
             {/* <Footer/> */} 
         </main>
     )

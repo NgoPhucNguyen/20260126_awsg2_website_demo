@@ -3,6 +3,7 @@ import prisma from '../prismaClient.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
+import nodemailer from 'nodemailer';
 // ⚠️ 1. DEFINE THIS VARIABLE SO IT DOESN'T CRASH
 const sessions = {}; 
 
@@ -223,7 +224,32 @@ export const handleForgotPassword = async (req, res) => {
     
         const resetUrl = `${clientUrl}/reset-password?token=${resetToken}&id=${foundUser.id}`;
         
-        console.log(`✉️ RESET LINK: ${resetUrl}`); 
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            }
+        });
+
+        const mailOptions = {
+            from: `"Aphrodite Support" <${process.env.EMAIL_USER}>`,
+            to: foundUser.mail,
+            subject: 'Reset Your Password - Aphrodite',
+            html: `
+                <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+                    <h2 style="color: #d4af37;">Aphrodite</h2>
+                    <p>You requested a password reset. Click the button below to set a new password:</p>
+                    <a href="${resetUrl}" style="background-color: #000; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; margin: 20px 0; font-weight: bold;">Reset Password</a>
+                    <p>Or copy this link:</p>
+                    <p style="color: #555; word-break: break-all;">${resetUrl}</p>
+                    <p>This link expires in 15 minutes.</p>
+                </div>
+            `
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log(`✅ Email sent successfully to ${foundUser.mail}`);
         // 💡 Later: Use a mailer like Resend or Nodemailer here
 
         res.status(200).json({ 'message': 'Check your email for the reset link.' });

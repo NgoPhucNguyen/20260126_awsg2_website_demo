@@ -1,12 +1,17 @@
 // routes/api.js
 import express from 'express';
+// Middleware for uploads
+import multer from 'multer';
 //controller import
 import { 
   getProducts, 
   getFilterAttributes, 
   getProductById, 
-  getRelatedProducts 
-} from '../controllers/productController.js';
+  getRelatedProducts,
+  deleteProduct,
+  restoreProduct,
+  createProduct
+} from '#server/controllers/productController.js';
 import { 
   handleLogin, 
   handleRegister, 
@@ -14,14 +19,12 @@ import {
   handleRefresh,
   handleForgotPassword,
   handleResetPassword
-} from '../controllers/authController.js';
+} from '#server/controllers/authController.js';
 
-import { uploadImage } from '../controllers/uploadController.js';
+import { uploadImage } from '#server/controllers/uploadController.js';
 
-import { createPayment } from '../controllers/paymentController.js';
-// Middleware for uploads
+import { createPayment } from '#server/controllers/paymentController.js';
 
-import multer from 'multer';
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -38,10 +41,14 @@ router.post('/auth/forgot-password', handleForgotPassword);
 router.post('/auth/reset-password', handleResetPassword);
 
 // --- PRODUCT ROUTES ---
-router.get('/get-products', getProducts);
+router.get('/products', getProducts);
 router.get('/products/attributes', getFilterAttributes);
 router.get('/products/:id', getProductById);
 router.get('/products/:id/related', getRelatedProducts);
+router.delete('/:id', deleteProduct); //"Soft" delete
+router.patch('/:id/restore', restoreProduct); // Undo Soft Delete
+router.post('/products', createProduct); // 👈
+
 // --- UPLOAD ROUTES ---
 router.post('/upload', upload.single('image'), uploadImage);
 
