@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { FiUser, FiLogOut } from "react-icons/fi";
 
-const NavbarDropdown = ({ user, isAdmin, onLogout }) => {
+// 👇 1. Changed "accountName" to "user" to match Navbar.jsx
+const NavbarDropdown = ({ accountName, isAdmin, onLogout }) => { 
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
     const location = useLocation();
@@ -21,15 +22,17 @@ const NavbarDropdown = ({ user, isAdmin, onLogout }) => {
     useEffect(() => setIsOpen(false), [location.pathname]);
 
     return (
-        <div className="menu-item" ref={dropdownRef}>
+        <div className="menu-item" ref={dropdownRef} style={{ position: 'relative' }}>
             <button className="nav-btn" onClick={() => setIsOpen(!isOpen)}>
-                <FiUser />
+                <FiUser /> 
+                {/* Optional: You can put {user} right here on the button if you want it always visible! */}
             </button>
             
             {isOpen && (
                 <div className="dropdown-menu">
                     <div className="user-info">
-                        <p className="user-name">{user?.name || "User"}</p>
+                        {/* 👇 2. Changed this to just render the 'user' string directly! */}
+                        <p className="user-name">{accountName || "Ghost User "}</p> 
                         <span className="user-role">{isAdmin ? "Admin" : "Member"}</span>
                     </div>
                     <hr />

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import Login from "../../features/auth/login/Login";
-import Register from "../../features/auth/register/Register";
+import Login from "@/features/auth/login/Login";
+import Register from "@/features/auth/register/Register";
 
 // --- CONTACT MODAL SUB-COMPONENT ---
 const ContactModal = ({ isOpen, onClose }) => {

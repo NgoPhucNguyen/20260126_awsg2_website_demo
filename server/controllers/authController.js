@@ -4,61 +4,62 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
+
 // ⚠️ 1. DEFINE THIS VARIABLE SO IT DOESN'T CRASH
 const sessions = {}; 
 
 // ➤ LOGIN (Hybrid: Admin RAM + User DB)
 export const handleLogin = async (req, res) => {
-    const user = req.body.loginIdentifier || req.body.user;
+    const user = req.body.accountName || req.body.user;
     const pwd = req.body.password || req.body.pwd;
 
     const rememberMe = req.body.remember === true;
     const falseRe = 24 * 60 * 60 * 1000; // 1 Days
     const trueRe = 30 * 24 * 60 * 60 * 1000; // 30 Days
     if (!user || !pwd) {
-        return res.status(400).json({ 'message': 'Username and password required.' });
+        return res.status(400).json({ 'message': 'Account name and password required.' });
     }
 
     // 🛡️ 1. HARDCODED ADMIN CHECK
     if (user === process.env.ADMIN_NAME && pwd === process.env.ADMIN_PASS) {
         console.log("⚠️  DEBUG: Admin Logged In");
         const accessToken = jwt.sign(
-            { id: 9999, role: 5150, username: "Admin" },
+            { id: 9999, role: 5150, accountName: "Admin" },
             process.env.ACCESS_TOKEN_SECRET || "test_secret",
             { expiresIn: '1d' }
         );
         const refreshToken = "fake_admin_refresh_" + Date.now();
         
         // Save to RAM
-        sessions[refreshToken] = { id: 9999, username: "Admin", roles: [5150] };
+        sessions[refreshToken] = { id: 9999, accountName: "Admin", roles: [5150] };
 
         res.cookie('jwt', refreshToken, { 
             httpOnly: true, 
             secure: true, 
             sameSite: 'None', 
-            maxAge: rememberMe ? trueRe : falseRe
-            // (1days) If remember ->30days
+            maxAge: rememberMe ? trueRe : falseRe // (1days) If remember ->30days
+            
         });
-        return res.json({ accessToken, roles: [5150], user: "Admin" });
+        return res.json({ accessToken, roles: [5150], accountName: "Admin" });
     }
     
     // ☁️ 2. PRISMA DATABASE CHECK
     try {
         const foundUser = await prisma.customer.findFirst({
-            where: { OR: [{ mail: user }, { account_name: user }] }
+            where: { OR: [{ mail: user }, { accountName: user }] }
         });
         if (!foundUser) return res.status(401).json({ 'message': 'User not found' });
         
         const match = await bcrypt.compare(pwd, foundUser.passwordHash);
         if (match) {
-            console.log("USER LOGGIN IN");
+            console.log("USER  LOGGIN IN");
             const accessToken = jwt.sign(
-                { "username": foundUser.account_name, "id": foundUser.id },
+                { "accountName": foundUser.accountName, "id": foundUser.id },
                 process.env.ACCESS_TOKEN_SECRET,
                 { expiresIn: '10m' }
             );
             const refreshToken = jwt.sign(
-                { "username": foundUser.account_name, "id": foundUser.id },
+                { "accountName": foundUser.accountName, "id": foundUser.id },
                 process.env.REFRESH_TOKEN_SECRET,
                 { expiresIn: '1d' }
             );
@@ -76,7 +77,7 @@ export const handleLogin = async (req, res) => {
                 maxAge: rememberMe ? trueRe : falseRe
                 // (1days) If remember ->30days
             });
-            res.json({ accessToken, roles: [2001], user: foundUser.account_name });
+            res.json({ accessToken, roles: [2001], accountName: foundUser.accountName });
         } else {
             res.sendStatus(401);
         }
@@ -93,7 +94,7 @@ export const handleRegister = async (req, res) => {
 
     try {
         const existingUser = await prisma.customer.findFirst({
-            where: { OR: [{ mail }, { account_name: accountName }] }
+            where: { OR: [{ mail }, { accountName: accountName }] }
         });
 
         if (existingUser) return res.status(409).json({ 'message': 'User already exists' });
@@ -102,7 +103,7 @@ export const handleRegister = async (req, res) => {
 
         const newUser = await prisma.customer.create({
             data: {
-                account_name: accountName,
+                accountName: accountName,
                 mail,
                 passwordHash: hashedPassword,
                 tier: 1,
@@ -110,8 +111,8 @@ export const handleRegister = async (req, res) => {
             }
         });
 
-        console.log(`✅ New User Registered: ${newUser.account_name}`);
-        res.status(201).json({ 'success': `User ${newUser.account_name} created!` });
+        console.log(`✅ New User Registered: ${newUser.accountName}`);
+        res.status(201).json({ 'success': `User ${newUser.accountName} created!` });
 
     } catch (err) {
         console.error("❌ Register Error:", err);
@@ -161,11 +162,11 @@ export const handleRefresh = async (req, res) => {
     const adminSession = sessions[refreshToken];
     if (adminSession) {
         const accessToken = jwt.sign(
-            { "username": adminSession.username, "id": adminSession.id, "role": 5150 },
+            { "accountName": adminSession.accountName, "id": adminSession.id, "role": 5150 },
             process.env.ACCESS_TOKEN_SECRET || "test_secret",
             { expiresIn: '1d' }
         );
-        return res.json({ accessToken, roles: [5150], user: "Admin" });
+        return res.json({ accessToken, roles: [5150], accountName: "Admin" });
     }
 
     // 2. CHECK DB (Regular User) - THIS WAS MISSING IN YOUR CODE
@@ -179,14 +180,14 @@ export const handleRefresh = async (req, res) => {
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET,
         (err, decoded) => {
-            if (err || foundUser.account_name !== decoded.username) return res.sendStatus(403);
+            if (err || foundUser.accountName !== decoded.accountName) return res.sendStatus(403);
             
             const accessToken = jwt.sign(
-                { "username": decoded.username, "id": decoded.id },
+                { "accountName": decoded.accountName, "id": decoded.id },
                 process.env.ACCESS_TOKEN_SECRET,
                 { expiresIn: '10m' }
             );
-            res.json({ accessToken, roles: [2001], user: foundUser.account_name });
+            res.json({ accessToken, roles: [2001], accountName: foundUser.accountName });
         }
     );
 };

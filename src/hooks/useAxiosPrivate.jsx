@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { useAuth } from "../features/auth/AuthProvider";
+import { useAuth } from "@/features/auth/AuthProvider";
 
 // 👇 FIX: You must import the default 'axios' instance here!
-import axios, { axiosPrivate } from "../api/axios"; 
+import axios, { axiosPrivate } from "@/api/axios"; 
 
 // ---------------------------
 // 1️⃣ HOOK: useRefreshToken
@@ -22,7 +22,7 @@ export const useRefreshToken = () => {
             setAuth(prev => ({
                 ...prev,
                 roles: response.data.roles,
-                username: response.data.username,
+                accountName: response.data.accountName,
                 accessToken: response.data.accessToken
             }));
 

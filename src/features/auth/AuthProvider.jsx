@@ -1,6 +1,6 @@
 // src/features/auth/AuthProvider.jsx
 import { createContext, useState, useContext } from "react";
-import axios from "../../api/axios"; // Adjust path to your axios.js
+import axios from "@/api/axios"; // Adjust path to your axios.js
 
 const AuthContext = createContext({});
 

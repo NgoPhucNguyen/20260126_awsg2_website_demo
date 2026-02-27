@@ -10,8 +10,5 @@ setup-db.js
 database_sql.txt
 note.txt
 /src/generated/prisma
-
-/src/generated/prisma
-
 .*
 _*.*

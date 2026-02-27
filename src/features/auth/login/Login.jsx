@@ -3,9 +3,9 @@ import '../auth.css';
 import { FiX, FiEye, FiEyeOff } from "react-icons/fi"; 
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useRef, useState, useEffect } from 'react';
-import { useAuth } from '../../auth/AuthProvider'; 
-import { useToast } from '../../../context/ToastProvider';
-import axios from '../../../api/axios';
+import { useAuth } from '@/features/auth/AuthProvider'; 
+import { useToast } from '@/context/ToastProvider';
+import axios from '@/api/axios';
 
 const LOGIN_URL = '/api/auth/login';
 
@@ -16,25 +16,25 @@ const Login = ({ onClose, onSwitchToRegister }) => {
     const location = useLocation();
     const from = location.state?.from?.pathname || "/"; 
 
-    const userRef = useRef();
+    const accountRef = useRef();
     const errRef = useRef();
 
     const [remember, setRemember] = useState(false);
-    const [user, setUser] = useState('');
+    const [accountName, setAccountName] = useState('');
     const [pwd, setPwd] = useState('');
 
-    const [userErr, setUserErr] = useState('');
+    const [accountNameErr, setAccountNameErr] = useState('');
     const [pwdErr, setPwdErr] = useState('');
     const [generalErr, setGeneralErr] = useState('');
 
     const [showPwd, setShowPwd] = useState(false);
 
-    useEffect(() => { userRef.current.focus(); }, [])
+    useEffect(() => { accountRef.current.focus(); }, [])
 
     useEffect(() => { 
-        setUserErr(''); 
+        setAccountNameErr(''); 
         setGeneralErr('');
-    }, [user]);
+    }, [accountName]);
     
     useEffect(() => { 
             setPwdErr(''); 
@@ -47,8 +47,8 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
         let isValid = true;
 
-        if (!user) {
-            setUserErr("Username is required");
+        if (!accountName) {
+            setAccountNameErr("Account name is required");
             isValid = false;
         }
         
@@ -60,33 +60,35 @@ const Login = ({ onClose, onSwitchToRegister }) => {
         if (!isValid) return;
 
         try {
+            
             const response = await axios.post(LOGIN_URL,
-                JSON.stringify({ user, pwd, remember }),
+                JSON.stringify({ accountName, pwd, remember }),
                 {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true
                 }
             );
+
             const accessToken = response?.data?.accessToken;
             const roles = response?.data?.roles;
-            const username = response?.data?.user;
+            const fetchedName = response?.data?.accountName;
             
-            setAuth({ user: { name: username || "User" }, roles, accessToken });
-            setUser('');
+            setAuth({ accountName: fetchedName, roles, accessToken });
+            setAccountName('');
             setPwd('');
-            showToast(`Welcome back, ${username}!`);
+            showToast(`Welcome back, ${fetchedName}!`);
             
             if (onClose) setTimeout(() => onClose(), 50); 
             else navigate(from, { replace: true });
             
         } catch (err) {
             if (!err?.response) {
-                setGeneralErr('No Server Response');
+                setGeneralErr('No Server Response PLEASE ');
             } else if (err.response?.status === 400) {
-                setGeneralErr('Missing Username or Password');
+                setGeneralErr('Missing Account Name or Password');
             } else if (err.response?.status === 401) {
                 // 4️⃣ Handle "Wrong Password" specifically
-                setPwdErr('Incorrect password or username'); 
+                setPwdErr('Incorrect Password or Account Name'); 
                 // Note: For security, it's often better not to say WHICH one is wrong, 
                 // but if you want specific UI, this is how you do it.
             } else {
@@ -109,23 +111,29 @@ const Login = ({ onClose, onSwitchToRegister }) => {
                     <FiX />
                 </button>
 
-                <p ref={errRef} className={generalErr ? "generalErr" : "offscreen"} aria-live="assertive">{generalErr}</p>
+                <p 
+                    ref={errRef} 
+                    className={generalErr ? "generalErr" : "offscreen"} aria-live="assertive"
+                    tabIndex="-1"
+                >
+                    {generalErr}
+                </p>
                 
                 <h1>Welcome Back</h1>
                 <p className="auth-subtitle">Please sign in to continue</p>
                 
                 <form onSubmit={handleSubmit} noValidate>
-                    <label htmlFor="username">Email or Account Name</label>
+                    <label htmlFor="accountName">Email or Account Name</label>
                     <input
                         type="text"
-                        id="username"
-                        ref={userRef}
+                        id="accountName"
+                        ref={accountRef}
                         autoComplete="username"
-                        onChange={(e) => setUser(e.target.value)}
-                        value={user}
-                        className={userErr ? "input-error" : ""} 
+                        onChange={(e) => setAccountName(e.target.value)}
+                        value={accountName}
+                        className={accountNameErr ? "input-error" : ""} 
                     />
-                    {userErr && <span className="field-error-text">{userErr}</span>}
+                    {accountNameErr && <span className="field-error-text">{accountNameErr}</span>}
 
                     <label htmlFor="password">Password:</label>
                     
