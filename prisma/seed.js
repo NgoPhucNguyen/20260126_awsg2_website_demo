@@ -1,33 +1,51 @@
 // prisma/seed.js
 import { PrismaClient } from '@prisma/client';
-import { products } from './product_data.js'; // Or edit_product_data.js
-
+import { products } from './data/edit_product_data.js'; // Or your edit file
+import { brands } from './data/brand_data.js';
+import { categories } from './data/category_data.js';
 const prisma = new PrismaClient();
 
 async function main() {
   console.log('🌱 Starting database seeding...');
 
-  // 🧹 FIX 1: The Ultimate Bottom-Up Delete
-  console.log('🧹 Clearing old data from the bottom up...');
-  
-  // A. Delete everything that relies on ProductVariant first
+  // 🧹 1. Clearing old data from the bottom up...
+  console.log('🧹 Clearing old data...');
   await prisma.productPromotion.deleteMany({});
   await prisma.inventory.deleteMany({});
   await prisma.importationDetail.deleteMany({});
   await prisma.shipmentDetail.deleteMany({});
   await prisma.orderDetail.deleteMany({});
   await prisma.productImage.deleteMany({});
-  
-  // B. Now it is 100% safe to delete Variants and Products
   await prisma.productVariant.deleteMany({});
   await prisma.product.deleteMany({});
-  
+  await prisma.category.deleteMany({}); // Add this to clear old categories
+  await prisma.brand.deleteMany({});
   console.log('✅ Old products and all related data safely cleared.');
 
-  // 🚀 Loop through the data file and create the products
+  // 2. SEED BRANDS (The Loop)
+  console.log('🏗️ Seeding Brands...');
+  for (const brand of brands) {
+    await prisma.brand.upsert({
+      where: { id: brand.id },
+      update: {},
+      create: brand // This injects { id: '...', name: '...' } automatically
+    });
+  }
+  console.log(`✅ ${brands.length} Brands created.`);
+
+  // 3. SEED CATEGORIES (The Loop)
+  console.log('🏗️ Seeding Categories...');
+  for (const cat of categories) {
+    await prisma.category.upsert({
+      where: { id: cat.id },
+      update: {},
+      create: cat 
+    });
+  }
+  console.log(`✅ ${categories.length} Categories created.`);
+
+  // 🚀 3. Loop through the data file and create the products
   for (const prod of products) {
-    
-    // Format the variants
     const formattedVariants = prod.variants.map((variant) => ({
       sku: variant.sku,
       specification: variant.specification,
@@ -39,13 +57,12 @@ async function main() {
       }
     }));
 
-    // ⚠️ CRITICAL NOTE: If this fails here, it means the Brand or Category is missing!
     await prisma.product.create({
       data: {
         name: prod.name,
         nameVn: prod.nameVn,
-        brandId: prod.brandId,       // 'brand-cocoon' MUST exist in the Brand table first!
-        categoryId: prod.categoryId, // Category '2' MUST exist in the Category table first!
+        brandId: prod.brandId,
+        categoryId: prod.categoryId,
         description: prod.description,
         ingredient: prod.ingredient,
         skinType: prod.skinType,

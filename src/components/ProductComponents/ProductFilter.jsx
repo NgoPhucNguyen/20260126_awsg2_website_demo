@@ -63,7 +63,7 @@ const ProductFilter = ({ filterOptions }) => {
                     </label>
                 ))}
             </div>
-
+            {/* Need change in this state, the categories need to dicuss later? */}
             {/* CATEGORIES */}
             <div className="filter-group">
                 <h3>Categories</h3>
@@ -87,7 +87,7 @@ const ProductFilter = ({ filterOptions }) => {
                         range 
                         min={0} 
                         max={MAX_PRICE} 
-                        step={10000} // 👈 Key for VND: Step by 10k
+                        step={50000} // 👈 Key for VND: Step by 50k
                         value={priceRange} 
                         onChange={setPriceRange} // Only updates local state
                         trackStyle={[{ backgroundColor: '#333', height: 4 }]}

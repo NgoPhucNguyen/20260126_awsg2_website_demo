@@ -1,12 +1,12 @@
 import '../auth.css'; 
 import { FiX, FiEye, FiEyeOff } from 'react-icons/fi'; // 1. Import Eyes
 import { useRef, useState, useEffect } from "react";
-import axios from '../../../api/axios';
+import axios from '@/api/axios';
 
 const REGISTER_URL = 'api/auth/register';
 
 const Register = ({ onClose, onSwitchToLogin }) => {
-    const userRef = useRef();
+    const accountRef = useRef();
     const errRef = useRef();
 
     // Simple State
@@ -14,7 +14,7 @@ const Register = ({ onClose, onSwitchToLogin }) => {
     const [mail, setMail] = useState('');
     const [pwd, setPwd] = useState('');
 
-    const [accountErr, setAccountErr] = useState('');
+    const [accountNameErr, setAccountNameErr] = useState('');
     const [mailErr, setMailErr] = useState('');
     const [pwdErr, setPwdErr] = useState('');
     const [generalErr, setGeneralErr] = useState(''); // Renamed for consistency
@@ -22,12 +22,12 @@ const Register = ({ onClose, onSwitchToLogin }) => {
     const [success, setSuccess] = useState(false);
     const [showPwd, setShowPwd] = useState(false);
 
-    // Focus on username when opening
-    useEffect(() => { userRef.current.focus(); }, [])
+    // Focus on account_name when opening
+    useEffect(() => { accountRef.current.focus(); }, [])
 
     // Clear error when user types
     useEffect(() => { 
-        setAccountErr(''); 
+        setAccountNameErr(''); 
         setGeneralErr('');
     }, [accountName]);
 
@@ -49,7 +49,7 @@ const Register = ({ onClose, onSwitchToLogin }) => {
 
         // 3️⃣ Manual Validation Logic
         if (!accountName) {
-            setAccountErr("Account name is required");
+            setAccountNameErr("Account Name is required");
             isValid = false;
         }
 
@@ -85,7 +85,7 @@ const Register = ({ onClose, onSwitchToLogin }) => {
             if (!err?.response) {
                 setGeneralErr('No Server Response');
             } else if (err.response?.status === 409) {
-                setGeneralErr('Account or Email already taken');
+                setGeneralErr('Account Name or Email already taken');
             } else {
                 setGeneralErr('Registration Failed');
             }
@@ -127,13 +127,15 @@ const Register = ({ onClose, onSwitchToLogin }) => {
                             <input
                                 type="text"
                                 id="accountName"
-                                ref={userRef}
+                                ref={accountRef}
                                 autoComplete="username"
                                 onChange={(e) => setAccountName(e.target.value)}
                                 value={accountName}
-                                className={accountErr ? "input-error" : ""}
+                                className={accountNameErr ? "input-error" : ""}
                             />
-    
+                            
+                            {accountNameErr && <span className="field-error-text">{accountNameErr}</span>}
+
                             <label htmlFor="email">Email</label>
                             <input
                                 type="email"

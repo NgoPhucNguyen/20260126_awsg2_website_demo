@@ -1,7 +1,7 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useAuth } from "../auth/AuthProvider";
-import { useRefreshToken } from "../../hooks/useAxiosPrivate";
+import { useAuth } from "@/features/auth/AuthProvider";
+import { useRefreshToken } from "@/hooks/useAxiosPrivate";
 
 // ---------------------------
 // 1️⃣ COMPONENT: PersistLogin

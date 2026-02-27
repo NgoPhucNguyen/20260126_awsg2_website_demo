@@ -2,8 +2,8 @@ import "./Navbar.css";
 
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
-import { useAuth } from "../../features/auth/AuthProvider";
-import { useCart } from "../../context/CartProvider";
+import { useAuth } from "@/features/auth/AuthProvider";
+import { useCart } from "@/context/CartProvider";
 
 // Icons
 import { FiShoppingCart, FiGlobe, FiSettings, FiUser } from "react-icons/fi";
@@ -55,11 +55,6 @@ const Navbar = () => {
         auth?.roles?.includes(ADMIN_ROLE_ID), 
         [auth?.roles]
     );
-
-    
-
-
-
     // --- 🛡️ SMART LOGIN TRIGGER ---
     useEffect(() => {
         if (searchParams.get("login") === "true") {
@@ -117,7 +112,7 @@ const Navbar = () => {
 
                     {isLoggedIn ? (
                         <NavbarDropdown 
-                            user={auth?.user} 
+                            accountName={auth?.accountName} 
                             isAdmin={isAdmin} 
                             onLogout={handleLogout} 
                         />
