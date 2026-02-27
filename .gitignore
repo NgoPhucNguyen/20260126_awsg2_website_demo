@@ -4,7 +4,7 @@ node_modules
 dist
 build
 .DS_Store
-
+\public\images\products
 *.pem
 setup-db.js
 database_sql.txt
