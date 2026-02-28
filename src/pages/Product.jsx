@@ -2,9 +2,10 @@
 import axios from "../api/axios";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useCart } from "../context/CartProvider";
-import ProductFilter from "../components/ProductComponents/ProductFilter";
-import ProductCard from "../components/ProductComponents/ProductCard";
+import { useCart } from "@/context/CartProvider";
+import { getImageUrl } from "@/utils/getImageUrl";
+import ProductFilter from "@/components/ProductComponents/ProductFilter";
+import ProductCard from "@/components/ProductComponents/ProductCard";
 import "./Product.css";
 
 // 🛠️ HELPER: Extract Variant Label
@@ -70,7 +71,7 @@ const Product = () => {
                             // Specific Variant Data
                             size: variantLabel,
                             price: variant.unitPrice, 
-                            image: variant.images?.[0]?.imageUrl || "https://via.placeholder.com/300",
+                            image: getImageUrl(variant.images?.[0]?.imageUrl),
                         };
                     });
                 });
