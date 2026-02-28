@@ -3,8 +3,109 @@
 
 export const products = [
   {
-    "name": "Winter Melon Cleanser",
-    "nameVn": "Gel bí đao rửa mặt",
+    "name": "Sữa Rửa Mặt Vichy Dạng Gel Làm Sạch Sâu & Giảm Nhờn",
+    "nameVn": "",
+    "brandId": "brand-vichy",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Sữa Rửa Mặt Vichy Từ Đất Sét Và Đá Khoáng Núi Lửa",
+    "nameVn": "",
+    "brandId": "brand-vichy",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Hoa Hồng Klairs có mùi Dành Cho Da Nhạy Cảm",
+    "nameVn": "",
+    "brandId": "brand-klairs",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Tẩy Trang Simple Làm Sạch Trang Điểm",
+    "nameVn": "",
+    "brandId": "brand-simple",
+    "categoryId": 2,
+    "description": "Brightens skin, fades dark spots.",
+    "ingredient": "Tinh bột nghệ, chiết xuất yến mạch, vitamin B3",
+    "skinType": "All skin types",
+    "isActive": true,
+    "variants": [
+      {
+        "sku": "CC-TN-30",
+        "specification": {
+          "volume": "30ml",
+          "packaging": "Small Jar"
+        },
+        "unitPrice": 145000,
+        "thumbnailUrl": "/images/products/turmeric-30.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "/images/products/turmeric-30-front.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      },
+      {
+        "sku": "CC-TN-100",
+        "specification": {
+          "volume": "100ml",
+          "packaging": "Large Jar"
+        },
+        "unitPrice": 345000,
+        "thumbnailUrl": "/images/products/turmeric-100.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "/images/products/turmeric-100-front.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Sữa Rửa Mặt CeraVe Sạch Sâu Cho Da Thường Đến Da Dầu",
+    "nameVn": "",
+    "brandId": "brand-cerave",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Sữa Rửa Mặt CeraVe Cho Da Thường Đến Khô",
+    "nameVn": "",
+    "brandId": "brand-cerave",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Gel bí đao rửa mặt",
+    "nameVn": "",
     "brandId": "brand-cocoon",
     "categoryId": 2,
     "description": "Cleanse dirt and excess oil, reduce blackheads.",
@@ -54,49 +155,477 @@ export const products = [
     ]
   },
   {
-    "name": "Hung Yen Turmeric Face Mask",
-    "nameVn": "Mặt nạ nghệ Hưng Yên",
+    "name": "Dầu Tẩy Trang Cocoon Chiết Xuất Hoa Hồng",
+    "nameVn": "",
     "brandId": "brand-cocoon",
-    "categoryId": 3,
-    "description": "Brightens skin, fades dark spots.",
-    "ingredient": "Tinh bột nghệ, chiết xuất yến mạch, vitamin B3",
-    "skinType": "All skin types",
+    "categoryId": 2,
+    "description": "1",
+    "ingredient": "1",
+    "skinType": "1",
     "isActive": true,
     "variants": [
       {
-        "sku": "CC-TN-30",
+        "sku": "CC-HH-140",
         "specification": {
-          "volume": "30ml",
-          "packaging": "Small Jar"
+          "volume": "140ml",
+          "packaging": "Bottle"
         },
-        "unitPrice": 145000,
-        "thumbnailUrl": "/images/products/turmeric-30.jpg",
+        "unitPrice": 100000,
+        "thumbnailUrl": "",
         "slug": null,
-        "images": [
-          {
-            "imageUrl": "/images/products/turmeric-30-front.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      },
-      {
-        "sku": "CC-TN-100",
-        "specification": {
-          "volume": "100ml",
-          "packaging": "Large Jar"
-        },
-        "unitPrice": 345000,
-        "thumbnailUrl": "/images/products/turmeric-100.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "/images/products/turmeric-100-front.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
+        "images": []
       }
     ]
+  },
+  {
+    "name": "Nước Tẩy Trang Cocoon Sen Hậu Giang Cho Da Rất Nhạy Cảm",
+    "nameVn": "",
+    "brandId": "brand-cocoon",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "1",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Toner Klairs Hỗ Trợ Làm Sáng Da PDRN Thuần Chay",
+    "nameVn": "",
+    "brandId": "brand-klairs",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Toner Pyunkang Yul Cấp Ẩm, Làm Dịu Da ",
+    "nameVn": "",
+    "brandId": "brand-pyukhang yul",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Cân Bằng Cocoon Sen Hậu Giang Làm Dịu Da Nhạy Cảm",
+    "nameVn": "",
+    "brandId": "brand-cocoon",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Cân Bằng Cocoon Bí Đao Giảm Dầu & Mụn",
+    "nameVn": "",
+    "brandId": "brand-cocoon",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Cân Bằng Cocoon Chiết Xuất Từ Nghệ Hưng Yên",
+    "nameVn": "",
+    "brandId": "brand-cocoon",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Toner Eucerin Dành Cho Da Nhờn Mụn",
+    "nameVn": "",
+    "brandId": "brand-eucerin",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Toner Eucerin Dưỡng Ẩm Cho Da Nhạy Cảm",
+    "nameVn": "",
+    "brandId": "brand-eucerin",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Dưỡng Eucerin Làm Sáng Và Cấp Ẩm Cho Da",
+    "nameVn": "",
+    "brandId": "brand-eucerin",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Tẩy Trang L'Oreal Tươi Mát Cho Da Dầu, Hỗn Hợp",
+    "nameVn": "",
+    "brandId": "brand-loreal",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "1",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Tẩy Trang Garnier Làm Sạch Sâu Lớp Trang Điểm",
+    "nameVn": "",
+    "brandId": "brand-garnier",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "1",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Tẩy Trang Garnier Dành Cho Da Nhạy Cảm",
+    "nameVn": "",
+    "brandId": "brand-garnier",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "1",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Tẩy Trang Garnier Vitamin C Làm Sáng Da",
+    "nameVn": "",
+    "brandId": "brand-garnier",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "1",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Tẩy Trang Garnier Làm Sạch Tế Bào Da Chết ",
+    "nameVn": "",
+    "brandId": "brand-garnier",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm",
+    "nameVn": "",
+    "brandId": "brand-bioderma",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Tẩy Trang Bioderma Dành Cho Da Dầu & Hỗn Hợp",
+    "nameVn": "",
+    "brandId": "brand-bioderma",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm",
+    "nameVn": "",
+    "brandId": "brand-bioderma",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Tẩy Trang Bioderma Dành Cho Da Dầu & Hỗn Hợp",
+    "nameVn": "",
+    "brandId": "brand-bioderma",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Dầu Tẩy Trang Bioderma Hỗ Trợ Sạch Sâu Dịu Nhẹ ",
+    "nameVn": "",
+    "brandId": "brand-bioderma",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Tẩy Trang La Roche-Posay Dành Cho Da Nhạy Cảm",
+    "nameVn": "",
+    "brandId": "brand-La roche-posay",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Combo La Roche-Posay Làm Sạch Sâu Cho Da Dầu Mụn",
+    "nameVn": "",
+    "brandId": "brand-La roche-posay",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "[Mini] Nước Tẩy Trang La Roche-Posay Cho Da Dầu, Nhạy Cảm",
+    "nameVn": "",
+    "brandId": "brand-La roche-posay",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Gel Rửa Mặt La Roche-Posay Dành Cho Da Dầu, Nhạy Cảm",
+    "nameVn": "",
+    "brandId": "brand-La roche-posay",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Gel Rửa Mặt & Tắm La Roche-Posay Làm Sạch & Giảm Mụn",
+    "nameVn": "",
+    "brandId": "brand-La roche-posay",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Túi Refill Gel Rửa Mặt La Roche-Posay Cho Da Dầu, Nhạy Cảm",
+    "nameVn": "",
+    "brandId": "brand-La roche-posay",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Sữa Rửa Mặt La Roche-Posay Cho Da Hỗn Hợp & Da Dầu",
+    "nameVn": "",
+    "brandId": "brand-La roche-posay",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Gel Rửa Mặt La Roche-Posay Mờ Thâm, Sáng Da ",
+    "nameVn": "",
+    "brandId": "brand-La roche-posay",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Kem Rửa Mặt Hada Labo Sạch Sâu Dưỡng Ẩm",
+    "nameVn": "",
+    "brandId": "brand-hada labo",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Kem Rửa Mặt Hada Labo Sạch Sâu, Dưỡng Sáng Da",
+    "nameVn": "",
+    "brandId": "brand-hada labo",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Kem Rửa Mặt Hada Labo Dưỡng Chuyên Biệt Ngừa Lão Hóa",
+    "nameVn": "",
+    "brandId": "brand-hada labo",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Bọt Rửa Mặt Hada Labo Dưỡng Ẩm Cho Mọi Loại Da",
+    "nameVn": "",
+    "brandId": "brand-hada labo",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Tẩy Trang L'Oreal Làm Sạch Sâu Cho Da Dầu",
+    "nameVn": "",
+    "brandId": "brand-loreal",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "1",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Tẩy Trang L'Oreal Căng Mịn Da",
+    "nameVn": "",
+    "brandId": "brand-loreal",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "1",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "[Mini] Nước Tẩy Trang L'Oreal Làm Sạch Sâu Cho Da Dầu ",
+    "nameVn": "",
+    "brandId": "brand-loreal",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "1",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Tẩy Trang L'Oreal Dưỡng Ẩm Cho Da Thường, Khô ",
+    "nameVn": "",
+    "brandId": "brand-loreal",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "1",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Tẩy Trang Garnier Dành Cho Da Dầu Và Mụn",
+    "nameVn": "",
+    "brandId": "brand-garnier",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "1",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Sữa Rửa Mặt CeraVe Làm Sạch & Tẩy Tế Bào Chết Dịu Nhẹ",
+    "nameVn": "",
+    "brandId": "brand-cerave",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Sữa Rửa Mặt Cerave Cho Da Dầu Mụn",
+    "nameVn": "",
+    "brandId": "brand-cerave",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô",
+    "nameVn": "",
+    "brandId": "brand-cerave",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Cân Bằng La Roche-Posay Cho Da Thường, Nhạy Cảm",
+    "nameVn": "",
+    "brandId": "brand-La roche-posay",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Nước Hoa Hồng Klairs Không Mùi Cho Da Nhạy Cảm",
+    "nameVn": "",
+    "brandId": "brand-klairs",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": []
   }
 ];
