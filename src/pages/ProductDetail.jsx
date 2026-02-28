@@ -1,12 +1,12 @@
 import { useEffect, useState, useMemo } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import axios from "../api/axios";
-import { useCart } from "../context/CartProvider";
-
+import axios from "@/api/axios";
+import { useCart } from "@/context/CartProvider";
+import { getImageUrl } from "@/utils/getImageUrl";
 // Components
-import ProductImageGallery from "../components/ProductImageGallery";
-import ProductSlider from "../components/ProductSlider";
-import ProductReviews from "../components/ProductReviews";
+import ProductImageGallery from "@/components/ProductImageGallery";
+import ProductSlider from "@/components/ProductSlider";
+import ProductReviews from "@/components/ProductReviews";
 import "./ProductDetail.css";
 
 
@@ -104,7 +104,13 @@ const ProductDetail = () => {
     // --- CALCULATIONS ---
     
     const currentVariantLabel = useMemo(() => getVariantLabel(selectedVariant), [selectedVariant]);
-    const displayImages = selectedVariant?.images || [];
+    // ✅ NEW: Map through all images and format their URLs for the Gallery!
+    const displayImages = useMemo(() => {
+        return (selectedVariant?.images || []).map(img => ({
+            ...img,
+            imageUrl: getImageUrl(img.imageUrl)
+        }));
+    }, [selectedVariant]);
 
     // --- HANDLERS ---
     const handleAddToCart = () => {
