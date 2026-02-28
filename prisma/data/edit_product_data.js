@@ -38,7 +38,7 @@ export const products = [
   {
     "name": "Nước Tẩy Trang Simple Làm Sạch Trang Điểm",
     "nameVn": "",
-    "brandId": "brand-simple",
+    "brandId": "brand-anessa",
     "categoryId": 2,
     "description": "Brightens skin, fades dark spots.",
     "ingredient": "Tinh bột nghệ, chiết xuất yến mạch, vitamin B3",
@@ -389,7 +389,7 @@ export const products = [
   {
     "name": "Nước Tẩy Trang La Roche-Posay Dành Cho Da Nhạy Cảm",
     "nameVn": "",
-    "brandId": "brand-La roche-posay",
+    "brandId": "brand-larocheposay",
     "categoryId": 2,
     "description": null,
     "ingredient": "",
@@ -400,7 +400,7 @@ export const products = [
   {
     "name": "Combo La Roche-Posay Làm Sạch Sâu Cho Da Dầu Mụn",
     "nameVn": "",
-    "brandId": "brand-La roche-posay",
+    "brandId": "brand-larocheposay",
     "categoryId": 2,
     "description": null,
     "ingredient": "",
@@ -411,7 +411,7 @@ export const products = [
   {
     "name": "[Mini] Nước Tẩy Trang La Roche-Posay Cho Da Dầu, Nhạy Cảm",
     "nameVn": "",
-    "brandId": "brand-La roche-posay",
+    "brandId": "brand-larocheposay",
     "categoryId": 2,
     "description": null,
     "ingredient": "",
@@ -422,7 +422,7 @@ export const products = [
   {
     "name": "Gel Rửa Mặt La Roche-Posay Dành Cho Da Dầu, Nhạy Cảm",
     "nameVn": "",
-    "brandId": "brand-La roche-posay",
+    "brandId": "brand-larocheposay",
     "categoryId": 2,
     "description": null,
     "ingredient": "",
@@ -433,7 +433,7 @@ export const products = [
   {
     "name": "Gel Rửa Mặt & Tắm La Roche-Posay Làm Sạch & Giảm Mụn",
     "nameVn": "",
-    "brandId": "brand-La roche-posay",
+    "brandId": "brand-larocheposay",
     "categoryId": 2,
     "description": null,
     "ingredient": "",
@@ -444,7 +444,7 @@ export const products = [
   {
     "name": "Túi Refill Gel Rửa Mặt La Roche-Posay Cho Da Dầu, Nhạy Cảm",
     "nameVn": "",
-    "brandId": "brand-La roche-posay",
+    "brandId": "brand-larocheposay",
     "categoryId": 2,
     "description": null,
     "ingredient": "",
@@ -455,7 +455,7 @@ export const products = [
   {
     "name": "Sữa Rửa Mặt La Roche-Posay Cho Da Hỗn Hợp & Da Dầu",
     "nameVn": "",
-    "brandId": "brand-La roche-posay",
+    "brandId": "brand-larocheposay",
     "categoryId": 2,
     "description": null,
     "ingredient": "",
@@ -466,7 +466,7 @@ export const products = [
   {
     "name": "Gel Rửa Mặt La Roche-Posay Mờ Thâm, Sáng Da ",
     "nameVn": "",
-    "brandId": "brand-La roche-posay",
+    "brandId": "brand-larocheposay",
     "categoryId": 2,
     "description": null,
     "ingredient": "",
@@ -477,7 +477,7 @@ export const products = [
   {
     "name": "Kem Rửa Mặt Hada Labo Sạch Sâu Dưỡng Ẩm",
     "nameVn": "",
-    "brandId": "brand-hada labo",
+    "brandId": "brand-hadalabo",
     "categoryId": 2,
     "description": null,
     "ingredient": "",
@@ -488,7 +488,7 @@ export const products = [
   {
     "name": "Kem Rửa Mặt Hada Labo Sạch Sâu, Dưỡng Sáng Da",
     "nameVn": "",
-    "brandId": "brand-hada labo",
+    "brandId": "brand-hadalabo",
     "categoryId": 2,
     "description": null,
     "ingredient": "",
@@ -499,7 +499,7 @@ export const products = [
   {
     "name": "Kem Rửa Mặt Hada Labo Dưỡng Chuyên Biệt Ngừa Lão Hóa",
     "nameVn": "",
-    "brandId": "brand-hada labo",
+    "brandId": "brand-hadalabo",
     "categoryId": 2,
     "description": null,
     "ingredient": "",
@@ -510,7 +510,7 @@ export const products = [
   {
     "name": "Bọt Rửa Mặt Hada Labo Dưỡng Ẩm Cho Mọi Loại Da",
     "nameVn": "",
-    "brandId": "brand-hada labo",
+    "brandId": "brand-hadalabo",
     "categoryId": 2,
     "description": null,
     "ingredient": "",
@@ -609,7 +609,7 @@ export const products = [
   {
     "name": "Nước Cân Bằng La Roche-Posay Cho Da Thường, Nhạy Cảm",
     "nameVn": "",
-    "brandId": "brand-La roche-posay",
+    "brandId": "brand-larocheposay",
     "categoryId": 2,
     "description": null,
     "ingredient": "",
