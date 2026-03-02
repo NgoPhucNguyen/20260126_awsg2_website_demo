@@ -1,7 +1,5 @@
-// server/controllers/productController.js
-import { PrismaClient } from '@prisma/client';
+import prisma from '../prismaClient.js';
 
-const prisma = new PrismaClient();
 // Get product from DB 
 export const getProducts = async (req, res) => {
   try {
