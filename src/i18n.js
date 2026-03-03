@@ -12,8 +12,8 @@ i18n
       en: { translation: enLang },
       vi: { translation: viLang }
     },
-    lng: 'en', // Default language when the app loads
-    fallbackLng: 'en', // If a translation is missing, use English
+    lng: 'vi', // Default language when the app loads
+    fallbackLng: 'vi', // If a translation is missing, use English
     interpolation: {
       escapeValue: false // React already protects from XSS attacks
     }
