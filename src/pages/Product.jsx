@@ -65,7 +65,10 @@ const Product = () => {
                             id: product.id, 
                             // Unique Info for THIS card
                             variantId: variant.id, // 👈 Key for Cart
+                            // Name if nameVn empty -> default name ( English )
                             name: `${product.name} - ${variantLabel}`, 
+                            nameVn: product.nameVn ? `${product.nameVn} - ${variantLabel}` : `${product.name} - ${variantLabel}`,
+
                             brand: product.brand?.name,
                             description: product.description,
                             // Specific Variant Data

@@ -4,10 +4,10 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/features/auth/AuthProvider";
 import { useCart } from "@/context/CartProvider";
-
+// Translate 
+import { useTranslation } from "react-i18next";
 // Icons
 import { FiShoppingCart, FiGlobe, FiSettings, FiUser } from "react-icons/fi";
-
 // Sub-components (Organized in the same folder)
 import NavbarSearch from "./NavbarSearch";
 import NavbarDropdown from "./NavbarDropdown";
@@ -17,6 +17,8 @@ import NavbarModals from "./NavbarModals";
 const ADMIN_ROLE_ID = 5150;
 
 const Navbar = () => {
+    const { t, i18n } = useTranslation();
+    
     const { auth, logout } = useAuth();
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
@@ -29,7 +31,6 @@ const Navbar = () => {
         contact: false 
     });
 
-    const [language, setLanguage] = useState('EN');
     
     // ---2nd CALLBACKS (Handlers) ---
     const openModal = useCallback((name) => {
@@ -71,7 +72,11 @@ const Navbar = () => {
             openModal('login');
         }
     }, [searchParams, setSearchParams, openModal]);
-
+    //The new global toggle function
+    const toggleLanguage = () => {
+        const newLang = i18n.language === 'en' ? 'vi' : 'en';
+        i18n.changeLanguage(newLang);
+    };
 
     return (
         <>
@@ -79,8 +84,10 @@ const Navbar = () => {
                 {/* 🏠 LEFT SECTION: Brand & Admin */}
                 <div className="nav-links-left">
                     <NavLink to="/" className="brand-link">
-                        Aphrodite
+                        {/* 👇 The slash tells Vite to look directly in the public/ folder! */}
+                        <img src="/rectang.jpg" alt="Aphrodite Logo" className="brand-logo" />
                     </NavLink>
+                    
                     {isAdmin && (
                         <NavLink to="/admin" className="nav-btn admin-btn">
                             <FiSettings />
@@ -97,8 +104,8 @@ const Navbar = () => {
                         Contact
                     </button>
 
-                    <button className="lang-btn" onClick={() => setLanguage(l => l === 'EN' ? 'VI' : 'EN')}>
-                        <FiGlobe /> <span>{language}</span>
+                    <button className="lang-btn" onClick={toggleLanguage}>
+                        <FiGlobe /> <span>{i18n.language.toUpperCase()}</span>
                     </button>
 
                     <NavLink to="/cart" className="nav-btn cart-nav-btn">

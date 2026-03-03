@@ -28,19 +28,26 @@
 }
 
 /* The "Aphrodite" Text */
+/* 1. Ensure the link wrapper acts nicely with the image */
 .brand-link {
-  font-family: "Playfair Display", serif; /* The elegant font */
-  font-size: 2rem;
-  font-weight: 500;
-  color: #c6a87c; /* The specific GOLD color from your image */
-  text-decoration: none;
-  letter-spacing: -0.02em;
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center; /* Centers the logo vertically */
+    justify-content: center;
+    text-decoration: none;
+    padding: 0; /* Removes any padding that might push the image off-center */
 }
 
-.brand-link:hover {
-  opacity: 0.8;
+/* 2. Control the image size so it doesn't break the navbar */
+.brand-logo {
+    height: 100px; /* 👈 Adjust this number based on how tall your navbar is! */
+    width: auto;  /* Keeps the original aspect ratio */
+    object-fit: contain; /* Ensures the image is never stretched or squished */
+    transition: transform 0.2s ease-in-out; /* Smooth animation setup */
+}
+
+/* Optional: Add a subtle hover effect to make it feel premium */
+.brand-link:hover .brand-logo {
+    transform: scale(1.05); /* Slightly zooms in when the user hovers over the logo */
 }
 
 /* Admin Gear Icon */

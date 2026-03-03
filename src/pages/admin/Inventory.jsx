@@ -4,7 +4,6 @@ import { FaBoxOpen, FaPlus, FaTrash, FaPenToSquare, FaMagnifyingGlass, FaRotateL
 import axios from "@/api/axios";
 import AddProductModal from "@/components/AddProductModal";
 import "./Inventory.css"; 
-import "./Users.css"; 
 
 const Inventory = () => {
     const [products, setProducts] = useState([]);

@@ -22,7 +22,7 @@ import Unauthorized from './features/auth/Unauthorized';
 
 // 🆕 ADMIN IMPORTS
 import AdminLayout from './components/AdminLayout'; // The Shell (Sidebar)
-import Users from './pages/admin/Users';           // The User Table
+import Customers from './pages/admin/Customers';           // The User Table
 import Inventory from './pages/admin/Inventory';
 
 
@@ -73,10 +73,10 @@ function App() {
                 {/* 1. PARENT: The Sidebar Shell */}
                 <Route path="admin" element={<AdminLayout />}>
                     {/* 2. DEFAULT: Redirect /admin -> /admin/users */}
-                    <Route index element={<Navigate to="users" replace />} />
+                    <Route index element={<Navigate to="customers" replace />} />
 
                     {/* 3. CHILDREN: The Content */}
-                    <Route path="users" element={<Users />} />
+                    <Route path="customers" element={<Customers />} />
                     <Route path="inventory" element={<Inventory />} />
                     <Route path="analytics" element={<Analytics />} />
                 </Route>

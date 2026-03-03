@@ -20,9 +20,9 @@ const AdminLayout = () => {
                 </div>
 
                 <nav className="sidebar-menu">
-                    <NavLink to="users" className="menu-item">
+                    <NavLink to="customers" className="menu-item">
                         <FaUsers size={20} />
-                        {!isCollapsed && <span>Users</span>}
+                        {!isCollapsed && <span>Customers</span>}
                     </NavLink>
                     <NavLink to="inventory" className="menu-item">
                         <FaBoxOpen size={20} />
