@@ -1,7 +1,25 @@
 // prisma/brand_data.js
+// Total 19 brands
 export const brands = [
+  { id: 'brand-anessa', name: 'Anessa' },
+  { id: 'brand-bioderma', name: 'Bioderma' },
+  { id: 'brand-bnbg', name: 'BNBG' },
+  { id: 'brand-caryophy', name: 'Caryophy' },
+  { id: 'brand-cerave', name: 'CeraVe US' },
   { id: 'brand-cocoon', name: 'Cocoon Vietnam' },
-  { id: 'brand-maybelline', name: 'Maybelline New York' },
-  { id: 'brand-loreal', name: 'L\'Oreal Paris' },
-  { id: 'brand-laroche', name: 'La Roche-Posay' }
+  { id: 'brand-dAlba', name: 'd\'Alba' },
+  { id: 'brand-eucerin', name: 'Eucerin-Germany' },
+  { id: 'brand-garnier', name: 'Garnier France' },
+  { id: 'brand-hadalabo', name: 'Hada Labo Japan' },
+  { id: 'brand-innisfree', name: 'Innisfree' },
+  { id: 'brand-klairs', name: 'Klairs Korea' },
+  { id: 'brand-larocheposay', name: 'La roche-posay France' },
+  { id: 'brand-loreal', name: 'L\'Oréal Paris' },
+  { id: 'brand-naruko', name: 'Naruko' },
+  { id: 'brand-naruko', name: 'Naruko' },
+  { id: 'brand-naruko', name: 'Naruko' },
+  { id: 'brand-paulachoice', name: 'Paula\'s choice' },
+  { id: 'brand-pyukhang yul', name: 'Pyunkhang Yul Korea' },
+  { id: 'brand-surmedic', name: 'Surmedic' },
+  { id: 'brand-vichy', name: 'Vichy France' },
 ];

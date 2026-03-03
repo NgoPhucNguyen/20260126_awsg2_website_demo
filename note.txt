@@ -1,3 +1,12 @@
+// 2/ March/ 2026 :  
+// 1/ March/ 2026 : 
+
+
+!IMPORTANT : /home/ubuntu/20260126_awsg2_website_demo/prisma/data/product_data.js
+// Phải có dấu chấm cuối command
+scp -i "myshop-key.pem" ubuntu@52.36.205.93:/home/ubuntu/20260126_awsg2_website_demo/prisma/data/product_data.js .
+
+
 27/02 : schema change : account_name -> accountName
 --> Normally fix all things related (AUTHITENCATION)
 

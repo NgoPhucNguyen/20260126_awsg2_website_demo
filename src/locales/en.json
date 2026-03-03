@@ -1,0 +1,22 @@
+{
+  "productCard": {
+    "add": "Add"
+  },
+  "customers": {
+    "title": "Customer Management",
+    "subtitle": "View and manage member accounts",
+    "syncing": "Syncing data...",
+    "searchPlaceholder": "Search by name or email...",
+    "colAccount": "Account",
+    "colEmail": "Email",
+    "colTier": "Tier",
+    "colStatus": "Status",
+    "level": "Level",
+    "active": "Active",
+    "inactive": "Inactive",
+    "noMatch": "No users found matching",
+    "noCustomers": "No customers found.",
+    "showMore": "Show More",
+    "errorFetch": "Failed to load customer database."
+  }
+}

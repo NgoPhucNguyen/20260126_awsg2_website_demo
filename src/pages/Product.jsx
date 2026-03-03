@@ -2,9 +2,10 @@
 import axios from "../api/axios";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useCart } from "../context/CartProvider";
-import ProductFilter from "../components/ProductComponents/ProductFilter";
-import ProductCard from "../components/ProductComponents/ProductCard";
+import { useCart } from "@/context/CartProvider";
+import { getImageUrl } from "@/utils/getImageUrl";
+import ProductFilter from "@/components/ProductComponents/ProductFilter";
+import ProductCard from "@/components/ProductComponents/ProductCard";
 import "./Product.css";
 
 // 🛠️ HELPER: Extract Variant Label
@@ -64,13 +65,16 @@ const Product = () => {
                             id: product.id, 
                             // Unique Info for THIS card
                             variantId: variant.id, // 👈 Key for Cart
+                            // Name if nameVn empty -> default name ( English )
                             name: `${product.name} - ${variantLabel}`, 
+                            nameVn: product.nameVn ? `${product.nameVn} - ${variantLabel}` : `${product.name} - ${variantLabel}`,
+
                             brand: product.brand?.name,
                             description: product.description,
                             // Specific Variant Data
                             size: variantLabel,
                             price: variant.unitPrice, 
-                            image: variant.images?.[0]?.imageUrl || "https://via.placeholder.com/300",
+                            image: getImageUrl(variant.images?.[0]?.imageUrl),
                         };
                     });
                 });

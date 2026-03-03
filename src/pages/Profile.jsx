@@ -78,7 +78,7 @@ const Profile = () => {
                 lastName: profileData?.lastName || '',
                 phoneNumber: profileData?.phoneNumber || '',
                 gender: profileData?.gender || '',
-                birthday: profileData?.birthday ? newData(profileData.birthday).toISOString().split('T')[0] : ''
+                birthday: profileData?.birthday ? new Date(profileData.birthday).toISOString().split('T')[0] : ''
             });
         }
         setIsEditing(!isEditing);
@@ -106,6 +106,10 @@ const Profile = () => {
 
                 <div className="profile-info">
                     {/* Read-Only Auth Data */}
+                    <div className="info-group">
+                        <label>Email 📧</label>
+                        <p>{profileData?.mail || "No email on file"}</p>
+                    </div>
                     
                     <div className="info-group">
                         <label>Account_name 👤</label>
@@ -171,6 +175,25 @@ const Profile = () => {
                             />
                         ) : (
                             <p>{profileData?.lastName || "Not provided"}</p>
+                        )}
+                    </div>
+                    
+                    <div className="info-group">
+                        <label>Birthday 🎂</label>
+                        {isEditing ? (
+                            <input 
+                                type="date" 
+                                name="birthday" 
+                                value={editForm.birthday} 
+                                onChange={handleInputChange} 
+                                className="profile-input"
+                            />
+                        ) : (
+                            <p>
+                                {profileData?.birthday 
+                                    ? new Date(profileData.birthday).toLocaleDateString() 
+                                    : "Not provided"}
+                            </p>
                         )}
                     </div>
 

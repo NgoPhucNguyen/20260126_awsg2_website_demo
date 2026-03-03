@@ -1,0 +1,22 @@
+{
+  "productCard": {
+    "add": "Thêm"
+  },
+  "customers": {
+    "title": "Quản lý Khách hàng",
+    "subtitle": "Xem và quản lý tài khoản thành viên",
+    "syncing": "Đang đồng bộ dữ liệu...",
+    "searchPlaceholder": "Tìm kiếm theo tên hoặc email...",
+    "colAccount": "Tài khoản",
+    "colEmail": "Email",
+    "colTier": "Hạng",
+    "colStatus": "Trạng thái",
+    "level": "Cấp",
+    "active": "Hoạt động",
+    "inactive": "Bị khóa",
+    "noMatch": "Không tìm thấy người dùng nào khớp với",
+    "noCustomers": "Không có khách hàng nào.",
+    "showMore": "Xem thêm",
+    "errorFetch": "Không thể tải cơ sở dữ liệu khách hàng."
+  }
+}
