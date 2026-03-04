@@ -1,50 +1,53 @@
-import { useState, useRef, useEffect } from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import { FiUser, FiLogOut } from "react-icons/fi";
+import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { FiSearch, FiX } from "react-icons/fi";
+import { useTranslation } from "react-i18next";
+import './NavbarSearch.css';
 
-// 👇 1. Changed "accountName" to "user" to match Navbar.jsx
-const NavbarDropdown = ({ accountName, isAdmin, onLogout }) => { 
-    const [isOpen, setIsOpen] = useState(false);
-    const dropdownRef = useRef(null);
-    const location = useLocation();
-    
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setIsOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
+const NavbarSearch = () => {
+    const { t } = useTranslation();
+    const [searchTerm, setSearchTerm] = useState("");
+    const [isExpanded, setIsExpanded] = useState(false);
+    const inputRef = useRef(null);
+    const navigate = useNavigate();
 
-    // Close menu when we navigate
-    useEffect(() => setIsOpen(false), [location.pathname]);
+    const handleSearch = (e) => {
+        if (e.key === 'Enter' && searchTerm.trim()) {
+            navigate(`/?search=${searchTerm}`);
+            setIsExpanded(false); // Auto-close after searching
+            setSearchTerm("");    // Clear the input
+        }
+    };
+
+    const toggleSearch = () => {
+        setIsExpanded(!isExpanded);
+        // Automatically focus the keyboard on the input field when opened
+        if (!isExpanded) {
+            setTimeout(() => inputRef.current?.focus(), 100);
+        }
+    };
 
     return (
-        <div className="menu-item" ref={dropdownRef} style={{ position: 'relative' }}>
-            <button className="nav-btn" onClick={() => setIsOpen(!isOpen)}>
-                <FiUser /> 
-                {/* Optional: You can put {user} right here on the button if you want it always visible! */}
-            </button>
-            
-            {isOpen && (
-                <div className="dropdown-menu">
-                    <div className="user-info">
-                        {/* 👇 2. Changed this to just render the 'user' string directly! */}
-                        <p className="user-name">{accountName || "Ghost User "}</p> 
-                        <span className="user-role">{isAdmin ? "Admin" : "Member"}</span>
-                    </div>
-                    <hr />
-                    <NavLink to="/profile">Profile Info</NavLink>
-                    <NavLink to="/history">Purchase History</NavLink>
-                    <button className="logout-text-btn" onClick={onLogout}>
-                        <FiLogOut /> Sign Out
-                    </button>
-                </div>
-            )}
+        // 🌟 The 'active' class here is the secret to the mobile overlay!
+        <div className={`nav-search-container ${isExpanded ? 'active' : ''}`}>
+            <div className={`search-wrapper ${isExpanded ? 'expanded' : ''}`}>
+                <FiSearch className="search-icon" onClick={toggleSearch} />
+                
+                <input 
+                    ref={inputRef}
+                    type="text" 
+                    placeholder="Tìm sản phẩm, thương hiệu..." /* You can put this in your i18n JSON later! */
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyDown={handleSearch}
+                />
+                
+                {isExpanded && (
+                    <FiX className="close-icon" onClick={toggleSearch} />
+                )}
+            </div>
         </div>
     );
 };
 
-export default NavbarDropdown;
+export default NavbarSearch;
