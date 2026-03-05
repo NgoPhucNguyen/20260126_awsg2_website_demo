@@ -19,7 +19,6 @@ export const CartProvider = ({ children }) => {
         localStorage.setItem("shopping-cart", JSON.stringify(cartItems));
     }, [cartItems]);
 
-    // addToCart
     // addToCart (FIXED)
     const addToCart = (product) => {
         setCartItems((prevItems) => {
@@ -67,13 +66,15 @@ export const CartProvider = ({ children }) => {
             )
         );
     };
-
+    const setCartData = (newCartItems) => {
+        setCartItems(newCartItems);
+    };
     // 💰 Calculate Totals
     const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
     const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
 
     return (
-        <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity, totalPrice, totalItems }}>
+        <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity, setCartData, totalPrice, totalItems }}>
             {children}
         </CartContext.Provider>
     );

@@ -3,17 +3,6 @@
 
 export const products = [
   {
-    "name": "",
-    "nameVn": "Nước Tẩy Trang La Roche-Posay Cho Da Dầu, Nhạy Cảm",
-    "brandId": "brand-larocheposay",
-    "categoryId": 7,
-    "description": null,
-    "ingredient": "",
-    "skinType": "Da dầu/Da nhạy cảm",
-    "isActive": true,
-    "variants": []
-  },
-  {
     "name": "Sensibio H2O",
     "nameVn": "Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm",
     "brandId": "brand-bioderma",
@@ -22,18 +11,41 @@ export const products = [
     "ingredient": "Aqua/Water/Eau, Peg-6 Caprylic/Capric Glycerides, Fructooligosaccharides, Mannitol, Xylitol, Rhamnose, Cucumis Sativus (Cucumber) Fruit Extract, Propylene Glycol, Cetrimonium Bromide, Disodium Edta",
     "skinType": "Da nhạy cảm",
     "isActive": true,
-    "variants": []
-  },
-  {
-    "name": "",
-    "nameVn": "Nước Tẩy Trang La Roche-Posay Dành Cho Da Nhạy Cảm",
-    "brandId": "brand-larocheposay",
-    "categoryId": 7,
-    "description": null,
-    "ingredient": "",
-    "skinType": "Da nhạy cảm",
-    "isActive": true,
-    "variants": []
+    "variants": [
+      {
+        "sku": "BDM-TT-100",
+        "specification": {
+          "volume": "100ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 204000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      },
+      {
+        "sku": "BDM-TT-250",
+        "specification": {
+          "volume": "250ml",
+          "packaging": "Medium Bottle"
+        },
+        "unitPrice": 361000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      },
+      {
+        "sku": "BDM-TT-500",
+        "specification": {
+          "volume": "500ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 380000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      }
+    ]
   },
   {
     "name": "Gel Rửa Mặt La Roche-Posay Dành Cho Da Dầu, Nhạy Cảm",
@@ -74,16 +86,11 @@ export const products = [
           "packaging": "Small Bottle"
         },
         "unitPrice": 93000,
-        "thumbnailUrl": "images/products/Nước Tẩy Trang Bí Đao Cocoon 140Ml.jpg",
+        "thumbnailUrl": "",
         "slug": null,
         "images": [
           {
-            "imageUrl": "images/products/Dầu Tẩy Trang Hoa Hồng Cocoon 140Ml.jpg",
-            "displayOrder": 1,
-            "altText": "FrontView"
-          },
-          {
-            "imageUrl": "images/products/Dầu Tẩy Trang Hoa Hồng Cocoon 310ml.jpg",
+            "imageUrl": "",
             "displayOrder": 1,
             "altText": "Front View"
           }
@@ -96,33 +103,17 @@ export const products = [
           "packaging": "Large Bottle"
         },
         "unitPrice": 179000,
-        "thumbnailUrl": "images/products/Nước Tẩy Trang Bí Đao Cocoon 500ml.jpg",
+        "thumbnailUrl": "",
         "slug": null,
         "images": [
           {
-            "imageUrl": "images/products/Nước Tẩy Trang Bí Đao Cocoon 500ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          },
-          {
-            "imageUrl": "images/products/Nước Tẩy Trang Bí Đao Cocoon 140Ml.jpg",
+            "imageUrl": "",
             "displayOrder": 1,
             "altText": "Front View"
           }
         ]
       }
     ]
-  },
-  {
-    "name": "Nước Tẩy Trang La Roche-Posay Cho Da Dầu, Nhạy Cảm",
-    "nameVn": "Nước Tẩy Trang La Roche-Posay Cho Da Dầu, Nhạy Cảm",
-    "brandId": "brand-larocheposay",
-    "categoryId": 7,
-    "description": null,
-    "ingredient": "",
-    "skinType": "Da dầu/Da nhạy cảm",
-    "isActive": true,
-    "variants": []
   },
   {
     "name": "Sébium H2O",
@@ -133,7 +124,47 @@ export const products = [
     "ingredient": "Water (Aqua), Peg-6 Caprylic/Capric Glycerides, Sodium Citrate , Zinc Gluconate, Copper Sulfate, Ginkgo Biloba Extract – Chiết Xuất Lá Bạch Quả, Mannitol, Xylitol, Rhamnose, Fructooligosaccharides, Propylene Glycol, Citric Acid, Disodium Edta, Cetrimonium Bromide, Fragrance (Parfum)",
     "skinType": "Da dầu/Da hỗn hợp",
     "isActive": true,
-    "variants": []
+    "variants": [
+      {
+        "sku": "BDM-TT-500",
+        "specification": {
+          "volume": "500ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 345000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      },
+      {
+        "sku": "BDM-TT-250",
+        "specification": {
+          "volume": "250ml",
+          "packaging": "Medium Bottle"
+        },
+        "unitPrice": 336000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      },
+      {
+        "sku": "BDM-TT-100",
+        "specification": {
+          "volume": "100ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 204000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
   },
   {
     "name": "Sensibio Micellar Cleansing Oil",
@@ -144,7 +175,19 @@ export const products = [
     "ingredient": "Ethylhexyl Palmitate, Brassica Campestris (Rapeseed) Seed Oil, Polyglyceryl-4 Oleate, Aqua/Water/Eau, Sodium Pca, Propanediol, Caprylic/Capric Triglyceride, Benzotriazolyl Dodecyl P-Cresol, Tocopherol, Helianthus Annuus (Sunflower) Seed Oil, Laminaria Ochroleuca Extract, Stearyl Glycyrrhetinate",
     "skinType": "Da thường",
     "isActive": true,
-    "variants": []
+    "variants": [
+      {
+        "sku": "BDM-TT-150",
+        "specification": {
+          "volume": "150ml",
+          "packaging": "Pump Bottle"
+        },
+        "unitPrice": 443000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      }
+    ]
   },
   {
     "name": "Sensibio H2O Lingettes (Wipes)",
@@ -155,7 +198,19 @@ export const products = [
     "ingredient": "Water (Aqua), Peg-6 Caprylic/Capric Glycerides, Cucumis Sativus (Cucumber) Fruit Extract, Mannitol, Xylitol, Rhamnose, Fructooligosaccharides, Propylene Glycol, Disodium Edta, Cetrimonium Bromide",
     "skinType": "Da nhạy cảm",
     "isActive": true,
-    "variants": []
+    "variants": [
+      {
+        "sku": "BDM-TT-25",
+        "specification": {
+          "volume": "25 sheets",
+          "packaging": "Soft Pack"
+        },
+        "unitPrice": 187000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      }
+    ]
   },
   {
     "name": "",
@@ -212,32 +267,38 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "sku": "CC-TT-SHG-500",
-        "specification": {
-          "volume": "500ml",
-          "packaging": "Large Bottle"
-        },
-        "unitPrice": 206000,
-        "thumbnailUrl": "images/products/Nước Tẩy Trang Sen Hậu Giang Cocoon Dành Cho Da Rất Nhạy Cảm 500ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/products/Nước Tẩy Trang Cocoon Sen Hậu Giang Cho Da Rất Nhạy Cảm 140ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      },
-      {
         "sku": "CC-TT-SHG-140",
         "specification": {
           "volume": "140ml",
           "packaging": "Small Bottle"
         },
         "unitPrice": 152000,
-        "thumbnailUrl": "images/products/Nước Tẩy Trang Cocoon Sen Hậu Giang Cho Da Rất Nhạy Cảm 140ml.jpg",
+        "thumbnailUrl": "",
         "slug": null,
-        "images": []
+        "images": [
+          {
+            "imageUrl": "",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      },
+      {
+        "sku": "CC-TT-SHG-500",
+        "specification": {
+          "volume": "500ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 206000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
       }
     ]
   },
@@ -252,13 +313,13 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "sku": "LR-TT-SS-DD-400",
+        "sku": "LR-TT-400",
         "specification": {
           "volume": "400ml",
           "packaging": "Large Bottle"
         },
-        "unitPrice": 128000,
-        "thumbnailUrl": "/images/products/winter-melon-310.jpg",
+        "unitPrice": 165000,
+        "thumbnailUrl": "",
         "slug": null,
         "images": []
       }
@@ -460,7 +521,19 @@ export const products = [
     "ingredient": "Aqua / Water, Peg-7 Caprylic/Capric Glycerides, Poloxamer 124, Poloxamer 184, Peg-6 Caprylic/Capric Glycerides, Glycerin, Polysorbate 80, Disodium Edta, Bht, Myrtrimonium Bromide, Parfum / Fragrance",
     "skinType": "Da nhạy cảm",
     "isActive": true,
-    "variants": []
+    "variants": [
+      {
+        "sku": "LRP-TT-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 358000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      }
+    ]
   },
   {
     "name": "",
@@ -691,30 +764,7 @@ export const products = [
     "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
-    "variants": [
-      {
-        "sku": "CC-TN-100",
-        "specification": {
-          "volume": "100ml",
-          "packaging": "Large Jar"
-        },
-        "unitPrice": 345000,
-        "thumbnailUrl": "",
-        "slug": null,
-        "images": []
-      },
-      {
-        "sku": "CC-TN-30",
-        "specification": {
-          "volume": "30ml",
-          "packaging": "Small Jar"
-        },
-        "unitPrice": 100000,
-        "thumbnailUrl": "",
-        "slug": null,
-        "images": []
-      }
-    ]
+    "variants": []
   },
   {
     "name": "Sữa Rửa Mặt Hada Labo Dưỡng Sáng Cao Cấp",
@@ -749,26 +799,38 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "sku": "CC-TT-HH-140",
-        "specification": {
-          "volume": "140ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 141000,
-        "thumbnailUrl": "images/products/Dầu Tẩy Trang Hoa Hồng Cocoon 140Ml.jpg",
-        "slug": null,
-        "images": []
-      },
-      {
         "sku": "CC-TT-HH-310",
         "specification": {
           "volume": "310ml",
           "packaging": "Large Bottle"
         },
         "unitPrice": 223000,
-        "thumbnailUrl": "images/products/Dầu Tẩy Trang Hoa Hồng Cocoon 310ml.jpg",
+        "thumbnailUrl": "",
         "slug": null,
-        "images": []
+        "images": [
+          {
+            "imageUrl": "",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      },
+      {
+        "sku": "CC-TT-HH-140",
+        "specification": {
+          "volume": "140ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 141000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Cocoon/Nước tẩy trang hoa hồng 140ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Cocoon/Nước tẩy trang hoa hồng 140ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
       }
     ]
   },
@@ -784,6 +846,17 @@ export const products = [
     "variants": []
   },
   {
+    "name": "",
+    "nameVn": "Mặt Nạ Tẩy Tế Bào Chết innisfree Từ Lúa Mạch Xanh",
+    "brandId": "brand-innisfree",
+    "categoryId": 6,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": []
+  },
+  {
     "name": "Micellar Water 3-in-1 Moisturizing Even For Sensitive Skin",
     "nameVn": "Nước Tẩy Trang L'Oreal Dưỡng Ẩm Cho Da Thường, Khô",
     "brandId": "brand-loreal",
@@ -792,7 +865,19 @@ export const products = [
     "ingredient": " Aqua / Water, Cyclopentasiloxane, Isohexadecane, Potassium Phosphate, Sodium Chloride, Dipotassium Phosphate, Disodium Edta, Decyl Glucoside, Hexylene Glycol, Polyaminopropyl Biguanide, CI 61565 / Green 6",
     "skinType": "Da khô/Da hỗn hợp",
     "isActive": true,
-    "variants": []
+    "variants": [
+      {
+        "sku": "LR-TT-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 168000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      }
+    ]
   },
   {
     "name": "",
@@ -913,30 +998,7 @@ export const products = [
     "ingredient": "",
     "skinType": "Da thường, Nhạy cảm",
     "isActive": true,
-    "variants": [
-      {
-        "sku": "CC-BD-140",
-        "specification": {
-          "volume": "140ml",
-          "packaging": "Bottle"
-        },
-        "unitPrice": 195000,
-        "thumbnailUrl": "",
-        "slug": null,
-        "images": []
-      },
-      {
-        "sku": "CC-BD-310",
-        "specification": {
-          "volume": "310ml",
-          "packaging": "Pump Bottle"
-        },
-        "unitPrice": 295000,
-        "thumbnailUrl": "",
-        "slug": null,
-        "images": []
-      }
-    ]
+    "variants": []
   },
   {
     "name": "",
@@ -947,30 +1009,7 @@ export const products = [
     "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
-    "variants": [
-      {
-        "sku": "CC-BD-140",
-        "specification": {
-          "volume": "140ml",
-          "packaging": "Bottle"
-        },
-        "unitPrice": 195000,
-        "thumbnailUrl": "/images/products/winter-melon-140.jpg",
-        "slug": null,
-        "images": []
-      },
-      {
-        "sku": "CC-BD-310",
-        "specification": {
-          "volume": "310ml",
-          "packaging": "Pump Bottle"
-        },
-        "unitPrice": 295000,
-        "thumbnailUrl": "/images/products/winter-melon-310.jpg",
-        "slug": null,
-        "images": []
-      }
-    ]
+    "variants": []
   },
   {
     "name": "",
@@ -981,19 +1020,7 @@ export const products = [
     "ingredient": "",
     "skinType": "Da dầu",
     "isActive": true,
-    "variants": [
-      {
-        "sku": "CC-HH-140",
-        "specification": {
-          "volume": "140ml",
-          "packaging": "Bottle"
-        },
-        "unitPrice": 100000,
-        "thumbnailUrl": "",
-        "slug": null,
-        "images": []
-      }
-    ]
+    "variants": []
   },
   {
     "name": "Micellar Water 3-in-1 Deep Cleansing Even For Sensitive Skin",
@@ -1004,7 +1031,19 @@ export const products = [
     "ingredient": "Aqua / Water, Hexylene Glycol, Glycerin, Rosa Gallica Flower Extract, Sorbitol, Poloxamer 184, Disodium Cocoamphodiacetate, Disodium Edta, Propylene Glycol, BHT , Polyaminopropyl Biguanide",
     "skinType": "Da thường",
     "isActive": true,
-    "variants": []
+    "variants": [
+      {
+        "sku": "LR-TT-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 164000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      }
+    ]
   },
   {
     "name": "",
@@ -1037,19 +1076,7 @@ export const products = [
     "ingredient": "",
     "skinType": "Da Nhạy cảm",
     "isActive": true,
-    "variants": [
-      {
-        "sku": "CC-HH-140",
-        "specification": {
-          "volume": "140ml",
-          "packaging": "Bottle"
-        },
-        "unitPrice": 100000,
-        "thumbnailUrl": "",
-        "slug": null,
-        "images": []
-      }
-    ]
+    "variants": []
   },
   {
     "name": "Dermopure Clinical Purifying Toner",
@@ -1394,17 +1421,6 @@ export const products = [
   },
   {
     "name": "",
-    "nameVn": "Mặt Nạ Tẩy Tế Bào Chết innisfree Từ Lúa Mạch Xanh",
-    "brandId": "brand-innisfree",
-    "categoryId": 6,
-    "description": null,
-    "ingredient": "",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": []
-  },
-  {
-    "name": "",
     "nameVn": "Dung Dịch Tẩy Da Chết Paula’s Choice 2% BHA ",
     "brandId": "brand-paulachoice",
     "categoryId": 6,
@@ -1412,30 +1428,7 @@ export const products = [
     "ingredient": "",
     "skinType": "Da dầu/Da hỗn hợp",
     "isActive": true,
-    "variants": [
-      {
-        "sku": "CC-TN-30",
-        "specification": {
-          "volume": "30ml",
-          "packaging": "Small Jar"
-        },
-        "unitPrice": 145000,
-        "thumbnailUrl": "/images/products/turmeric-30.jpg",
-        "slug": null,
-        "images": []
-      },
-      {
-        "sku": "CC-TN-100",
-        "specification": {
-          "volume": "100ml",
-          "packaging": "Large Jar"
-        },
-        "unitPrice": 345000,
-        "thumbnailUrl": "/images/products/turmeric-100.jpg",
-        "slug": null,
-        "images": []
-      }
-    ]
+    "variants": []
   },
   {
     "name": "Sữa Rửa Mặt CeraVe Cho Da Thường Đến Khô",
@@ -1459,24 +1452,24 @@ export const products = [
     "isActive": true,
     "variants": [
       {
+        "sku": "CC-TT-HH-140",
+        "specification": {
+          "volume": "140ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 137000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      },
+      {
         "sku": "CC-TT-HH-310",
         "specification": {
           "volume": "310ml",
           "packaging": "Large Bottle"
         },
         "unitPrice": 205000,
-        "thumbnailUrl": "/images/products/turmeric-100.jpg",
-        "slug": null,
-        "images": []
-      },
-      {
-        "sku": "CC-TT-HH-140",
-        "specification": {
-          "volume": "140ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 155000,
-        "thumbnailUrl": "/images/products/winter-melon-140.jpg",
+        "thumbnailUrl": "",
         "slug": null,
         "images": []
       }
@@ -1491,7 +1484,30 @@ export const products = [
     "ingredient": " Aqua / Water, Cyclopentasiloxane, Isohexadecane, Potassium Phosphate, Sodium Chloride, Dipotassium Phosphate, Disodium Edta, Decyl Glucoside, Hexylene Glycol, Polyaminopropyl Biguanide, CI 61565 / Green 6",
     "skinType": "Da dầu/Da hỗn hợp",
     "isActive": true,
-    "variants": []
+    "variants": [
+      {
+        "sku": "LR-TT-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 179000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      },
+      {
+        "sku": "LR-TT-95",
+        "specification": {
+          "volume": "95ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 29000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      }
+    ]
   },
   {
     "name": "Micellar Cleansing Water For Oily & Acne-Prone Skin New",
@@ -1502,7 +1518,30 @@ export const products = [
     "ingredient": "Aqua / Water, Cyclopentasiloxane, Isohexadecane, Argania Spinosa Oil / Argania Spinosa Kernel Oil, Benzyl Alcohol, Benzyl Salicylate, Butyl Methoxydibenzoylmethane, Ci 60725 / Violet 2, Decyl Glucoside, Dipotassium Phosphate, Disodium Edta, Ethylhexyl Methoxycinnamate, Geraniol, Haematococcus Pluvialis / Haematococcus Pluvialis Extract, Hexylene Glycol, Limonene, Linalool, Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate, Polyaminopropyl Biguanide, Potassium Phosphate, Sodium Chloride, Parfum / Fragrance",
     "skinType": "Da dầu/Da hỗn hợp",
     "isActive": true,
-    "variants": []
+    "variants": [
+      {
+        "sku": "GN-TT-125",
+        "specification": {
+          "volume": "125ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 65000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      },
+      {
+        "sku": "GN-TT-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 129000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      }
+    ]
   },
   {
     "name": "Micellar Oil Infused Cleansing Water",
@@ -1513,7 +1552,30 @@ export const products = [
     "ingredient": "Aqua / Water, Cyclopentasiloxane, Isohexadecane, Argania Spinosa Oil / Argania Spinosa Kernel Oil, Benzyl Alcohol, Benzyl Salicylate, Butyl Methoxydibenzoylmethane, Ci 60725 / Violet 2, Decyl Glucoside, Dipotassium Phosphate, Disodium Edta, Ethylhexyl Methoxycinnamate, Geraniol, Haematococcus Pluvialis / Haematococcus Pluvialis Extract, Hexylene Glycol, Limonene, Linalool, Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate, Polyaminopropyl Biguanide, Potassium Phosphate, Sodium Chloride, Parfum / Fragrance",
     "skinType": "Da khô/Da hỗn hợp",
     "isActive": true,
-    "variants": []
+    "variants": [
+      {
+        "sku": "GN-TT-125",
+        "specification": {
+          "volume": "125ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 80000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      },
+      {
+        "sku": "GN-TT-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 159000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      }
+    ]
   },
   {
     "name": "Micellar Cleansing Water For Sensitive Skin",
@@ -1524,7 +1586,30 @@ export const products = [
     "ingredient": "Aqua / Water, Cyclopentasiloxane, Isohexadecane, Argania Spinosa Oil / Argania Spinosa Kernel Oil, Benzyl Alcohol, Benzyl Salicylate, Butyl Methoxydibenzoylmethane, Ci 60725 / Violet 2, Decyl Glucoside, Dipotassium Phosphate, Disodium Edta, Ethylhexyl Methoxycinnamate, Geraniol, Haematococcus Pluvialis / Haematococcus Pluvialis Extract, Hexylene Glycol, Limonene, Linalool, Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate, Polyaminopropyl Biguanide, Potassium Phosphate, Sodium Chloride, Parfum / Fragrance",
     "skinType": "Da nhạy cảm",
     "isActive": true,
-    "variants": []
+    "variants": [
+      {
+        "sku": "GN-TT-125",
+        "specification": {
+          "volume": "125ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 65000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      },
+      {
+        "sku": "GN-TT-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 139000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      }
+    ]
   },
   {
     "name": "Micellar Cleansing Water Vitamin C",
@@ -1535,7 +1620,19 @@ export const products = [
     "ingredient": "Aqua / Water, Cyclopentasiloxane, Isohexadecane, Argania Spinosa Oil / Argania Spinosa Kernel Oil, Benzyl Alcohol, Benzyl Salicylate, Butyl Methoxydibenzoylmethane, Ci 60725 / Violet 2, Decyl Glucoside, Dipotassium Phosphate, Disodium Edta, Ethylhexyl Methoxycinnamate, Geraniol, Haematococcus Pluvialis / Haematococcus Pluvialis Extract, Hexylene Glycol, Limonene, Linalool, Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate, Polyaminopropyl Biguanide, Potassium Phosphate, Sodium Chloride, Parfum / Fragrance",
     "skinType": "Da thường",
     "isActive": true,
-    "variants": []
+    "variants": [
+      {
+        "sku": "BN-TT-VTMC-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 139000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      }
+    ]
   },
   {
     "name": "Micellar Exfoliating Water 1% PHA+AHA",
@@ -1546,7 +1643,19 @@ export const products = [
     "ingredient": "Aqua / Water, Cyclopentasiloxane, Isohexadecane, Argania Spinosa Oil / Argania Spinosa Kernel Oil, Benzyl Alcohol, Benzyl Salicylate, Butyl Methoxydibenzoylmethane, Ci 60725 / Violet 2, Decyl Glucoside, Dipotassium Phosphate, Disodium Edta, Ethylhexyl Methoxycinnamate, Geraniol, Haematococcus Pluvialis / Haematococcus Pluvialis Extract, Hexylene Glycol, Limonene, Linalool, Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate, Polyaminopropyl Biguanide, Potassium Phosphate, Sodium Chloride, Parfum / Fragrance",
     "skinType": "Da thường",
     "isActive": true,
-    "variants": []
+    "variants": [
+      {
+        "sku": "GN-TT-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 146000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      }
+    ]
   },
   {
     "name": "Revitalift Hyaluronic Acid Hydrating Micellar Water",
@@ -1557,7 +1666,30 @@ export const products = [
     "ingredient": "Aqua / Water, Hexylene Glycol, Glycerin, Rosa Gallica Flower Extract, Sorbitol, Poloxamer 184, Disodium Cocoamphodiacetate, Disodium Edta, Propylene Glycol, BHT , Polyaminopropyl Biguanide",
     "skinType": "Da thường",
     "isActive": true,
-    "variants": []
+    "variants": [
+      {
+        "sku": "LR-TT-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 209000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      },
+      {
+        "sku": "LR-TT-95",
+        "specification": {
+          "volume": "95ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 29000,
+        "thumbnailUrl": "",
+        "slug": null,
+        "images": []
+      }
+    ]
   },
   {
     "name": "Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô",
@@ -1567,6 +1699,28 @@ export const products = [
     "description": null,
     "ingredient": "Aqua / Water / Eau, Glycerin, Sodium Methyl Cocoyl Taurate, Coco-Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Pca, Ppg-5-Ceteth-20, Peg-100 Stearate, Peg-150 Pentaerythrityl Tetrastearate, Peg-6 Caprylic/Capric Glycerides, Peg-30 Dipolyhydroxystearate, Ci 77891 / Titanium Dioxide, Aspartic Acid, Ceramide Np, Ceramide Ap, Ceramide Eop, Sorbitan Isostearate, Carbomer, Glycol Distearate, Glyceryl Stearate, Glyceryl Oleate, Glycine, Trideceth-6, Cetearyl Alcohol, Behentrimonium Methosulfate, Threonine, Sodium Hydroxide, Salicylic Acid, Sodium Pca, Sodium Lactate, Arginine, Sodium Lauroyl Lactylate, Serine, Sodium Benzoate, Valine, Sodium Hyaluronate, Proline, Isoleucine, Cholesterol, Phenoxyethanol, Alanine, Phenylalanine, Coconut Acid, Coco-Glucoside, Chlorphenesin, Disodium Edta, Hydroxyethyl Urea, Citric Acid, Hydroxyethyl Acrylate/Sodium Acryloyldimethyl Taurate Copolymer, Caprylyl Glycol, Phytosphingosine, Xanthan Gum, Histidine, Acrylates/C10-30 Alkyl Acrylate Crosspolymer, Polyquaternium-53, Polyquaternium-39, Polysorbate 60, Ethylhexylglycerin, Benzoic Acid",
     "skinType": "Da thường/Mọi loại da",
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Gel Rửa Mặt Hada Labo Dưỡng Ẩm Cho Da Nhạy Cảm",
+    "nameVn": "Gel Rửa Mặt Hada Labo Dưỡng Ẩm Cho Da Nhạy Cảm",
+    "brandId": "brand-hadalabo",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "Water, Disodium Cocoyl Glutamate, Laureth-6 Carboxylic Acid, Cocamide DEA, Glycerin, Pentylene Glycol, Acrylates Copolymer, Coco-Betaine, PEG-150 Pentaerythrityl Tetrastearate, PPG-2 Hydroxyethyl Cocamide, Sodium Hyaluronate (HA), Hydrolyzed Sodium Hyaluronate (Nano HA), Lactococcus/Hyaluronic Acid Ferment Filtrate (Fermented HA), Sodium Acetylated Hyaluronate (Super HA), Panthenol, Citric Acid, Polyquaternium-7, Polyquaternium-39, Phenoxyethanol, Sodium Hydroxide, Disodium EDTA, Sodium Chloride, Sodium Metabisulfite, Butylene Glycol, Sodium Citrate, Sodium Benzoate, Pelargonium Graveolens Oil",
+    "skinType": "Da nhạy cảm",
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "name": "Sữa Rửa Mặt Vichy Từ Đất Sét Và Đá Khoáng Núi Lửa",
+    "nameVn": "Sữa Rửa Mặt Vichy Từ Đất Sét Và Đá Khoáng Núi Lửa",
+    "brandId": "brand-vichy",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "Salicylic Acid, Probiotic Fraction",
+    "skinType": "Da dầu/Hỗn hợp dầu",
     "isActive": true,
     "variants": []
   },
@@ -1670,34 +1824,12 @@ export const products = [
     "variants": []
   },
   {
-    "name": "Gel Rửa Mặt Hada Labo Dưỡng Ẩm Cho Da Nhạy Cảm",
-    "nameVn": "Gel Rửa Mặt Hada Labo Dưỡng Ẩm Cho Da Nhạy Cảm",
-    "brandId": "brand-hadalabo",
-    "categoryId": 5,
-    "description": null,
-    "ingredient": "Water, Disodium Cocoyl Glutamate, Laureth-6 Carboxylic Acid, Cocamide DEA, Glycerin, Pentylene Glycol, Acrylates Copolymer, Coco-Betaine, PEG-150 Pentaerythrityl Tetrastearate, PPG-2 Hydroxyethyl Cocamide, Sodium Hyaluronate (HA), Hydrolyzed Sodium Hyaluronate (Nano HA), Lactococcus/Hyaluronic Acid Ferment Filtrate (Fermented HA), Sodium Acetylated Hyaluronate (Super HA), Panthenol, Citric Acid, Polyquaternium-7, Polyquaternium-39, Phenoxyethanol, Sodium Hydroxide, Disodium EDTA, Sodium Chloride, Sodium Metabisulfite, Butylene Glycol, Sodium Citrate, Sodium Benzoate, Pelargonium Graveolens Oil",
-    "skinType": "Da nhạy cảm",
-    "isActive": true,
-    "variants": []
-  },
-  {
     "name": "Sữa Rửa Mặt Vichy Dạng Gel Làm Sạch Sâu & Giảm Nhờn",
     "nameVn": "Sữa Rửa Mặt Vichy Dạng Gel Làm Sạch Sâu & Giảm Nhờn",
     "brandId": "brand-vichy",
     "categoryId": 5,
     "description": null,
     "ingredient": "Aqua / Water, Sodium Laureth Sulfate, Peg-8, Coco-Betaine, Hexylene Glycol, Sodium Chloride, Peg-120 Methyl Glucose Dioleate, Ci 19140 / Yellow 5, Ci 42053 / Green 3, Glycolic Acid, Triethanolamine, Salicylic Acid, Sodium Benzoate, Sodium Hydroxide, Dipotassium Glycyrrhizate, Caprylyl Glycol, Capryloyl Salicylic Acid, Citric Acid, Parfum / Fragrance",
-    "skinType": "Da dầu/Hỗn hợp dầu",
-    "isActive": true,
-    "variants": []
-  },
-  {
-    "name": "Sữa Rửa Mặt Vichy Từ Đất Sét Và Đá Khoáng Núi Lửa",
-    "nameVn": "Sữa Rửa Mặt Vichy Từ Đất Sét Và Đá Khoáng Núi Lửa",
-    "brandId": "brand-vichy",
-    "categoryId": 5,
-    "description": null,
-    "ingredient": "Salicylic Acid, Probiotic Fraction",
     "skinType": "Da dầu/Hỗn hợp dầu",
     "isActive": true,
     "variants": []
@@ -1711,19 +1843,7 @@ export const products = [
     "ingredient": "Purified Water (Aqua), Cocamidopropyl Hydroxysultaine, Glycerin, Sodium Lauroyl Sarcosinate, Peg-150 Pentaerythrityl Tetrastearate (And) Peg-6 Caprylic/Capric Glycerides, Niacinamide, Propylene Glycol, Sodium Methyl Cocoyl Taurate, Ceramide 3, Ceramide 6-Ii, Ceramide 1, Hyaluronic Acid, Cholesterol, Sodium Chloride, Phytosphingosine, Citric Acid, Edetate Disodium Dihydrate, Sodium Lauroyl Lactylate, Methylparaben, Propylparaben, Carbomer, Xanthan Gum",
     "skinType": "Da dầu/Hỗn hợp dầu",
     "isActive": true,
-    "variants": [
-      {
-        "sku": "CC-HH-140",
-        "specification": {
-          "volume": "140ml",
-          "packaging": "Bottle"
-        },
-        "unitPrice": 100000,
-        "thumbnailUrl": "",
-        "slug": null,
-        "images": []
-      }
-    ]
+    "variants": []
   },
   {
     "name": "Sữa Rửa Mặt CeraVe Sạch Sâu Cho Da Thường Đến Da Dầu",

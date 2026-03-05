@@ -18,11 +18,10 @@ const ADMIN_ROLE_ID = 5150;
 
 const Navbar = () => {
     const { t, i18n } = useTranslation();
-    
     const { auth, logout } = useAuth();
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
-    const { totalItems } = useCart();
+    const { totalItems, setCartData } = useCart();
 
     // --- STATE ---
     const [modals, setModals] = useState({ 
@@ -43,6 +42,7 @@ const Navbar = () => {
 
     const handleLogout = useCallback(async () => {
         try {
+            setCartData([]); // Clear cart data on logout
             await logout();
             navigate('/');
         } catch (error) {
