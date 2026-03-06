@@ -86,8 +86,8 @@ const ProductDetail = () => {
             history = history.filter(p => p.id !== product.id);
             history.unshift({
                 id: product.id,
-                name: product.name,
-                brandName: product.brand?.name,
+                name: product.nameVn || product.name,
+                brandName: product.brand?.nameVn || product.brand?.name || "Unknown",
                 image: selectedVariant.images?.[0]?.imageUrl || "https://via.placeholder.com/300",
                 price: selectedVariant.unitPrice
             });
@@ -117,7 +117,7 @@ const ProductDetail = () => {
         if (!product || !selectedVariant) return;
         addToCart({
             id: product.id,
-            name: product.name,                       
+            name: product.nameVn || product.name,                       
             price: selectedVariant.unitPrice,
             image: displayImages[0]?.imageUrl,
             variantId: selectedVariant.id,
@@ -138,8 +138,8 @@ const ProductDetail = () => {
                 </div>
 
                 <div className="detail-info-section">
-                    <h1 className="product-title">{product.name}</h1>
-                    <div className="product-brand">Brand: <span>{product.brand?.name}</span></div>
+                    <h1 className="product-title">{product.nameVn || product.name}</h1>
+                    <div className="product-brand">Brand: <span>{product.brand?.nameVn || product.brand?.name || "Unknown"}</span></div>
 
                     <div className="product-price">
                         {selectedVariant ? formatPrice(selectedVariant.unitPrice) : "Contact"}

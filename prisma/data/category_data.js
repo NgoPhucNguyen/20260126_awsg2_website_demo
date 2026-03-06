@@ -9,5 +9,5 @@ export const categories = [
   { id: 5, name: 'Cleaners', nameVn: 'Sửa rửa mặt', categoryLevel: 2, parentId: 1 },
   { id: 6, name: 'Facial Exfoliator', nameVn: 'Tẩy tế bào chết', categoryLevel: 2, parentId: 1 },
   { id: 7, name: 'Makeup Remover', nameVn: 'Tẩy trang mặt', categoryLevel: 2, parentId: 1 },
-  { id: 8, name: 'Balancing Water', nameVn: 'Nước cân bằng', categoryLevel: 2, parentId: 1 },
+  { id: 8, name: 'Toner', nameVn: 'Nước cân bằng', categoryLevel: 2, parentId: 1 },
 ];
