@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import axios from "@/api/axios";
 import { useCart } from "@/context/CartProvider";
 import { getImageUrl } from "@/utils/getImageUrl";
@@ -7,6 +7,7 @@ import { getImageUrl } from "@/utils/getImageUrl";
 import ProductImageGallery from "@/components/ProductImageGallery";
 import ProductSlider from "@/components/ProductSlider";
 import ProductReviews from "@/components/ProductReviews";
+import AnalyzeSkinBtn from "@/components/AnalyzeSkinBtn/AnalyzeSkinBtn";
 import "./ProductDetail.css";
 
 
@@ -30,7 +31,6 @@ const formatPrice = (price) =>
 const ProductDetail = () => {
     const { id } = useParams();
     const { addToCart } = useCart();
-    
     // --- STATE ---
     const [product, setProduct] = useState(null);
     const [selectedVariant, setSelectedVariant] = useState(null);
@@ -38,7 +38,8 @@ const ProductDetail = () => {
     const [recentProducts, setRecentProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const location = useLocation();
+    const navigate = useNavigate(); // For programmatic navigation (e.g. after adding to cart)
+    const location = useLocation(); // To read query params for variant pre-selection
 
     // --- 1. FETCH DATA ---
     useEffect(() => {
@@ -78,18 +79,20 @@ const ProductDetail = () => {
 
     // --- 2. RECORD HISTORY ---
     useEffect(() => {
-        if (!product || !selectedVariant) return;
+        if (!product) return;
 
         const addToHistory = () => {
             let history = JSON.parse(localStorage.getItem("recentlyViewed")) || [];
-            
+            // Remove existing entry for this product to avoid duplicates
             history = history.filter(p => p.id !== product.id);
+
             history.unshift({
                 id: product.id,
                 name: product.nameVn || product.name,
                 brandName: product.brand?.nameVn || product.brand?.name || "Unknown",
-                image: selectedVariant.images?.[0]?.imageUrl || "https://via.placeholder.com/300",
-                price: selectedVariant.unitPrice
+                // Fallback to the first product image instead of the active variant image
+                image: product.variants?.[0]?.images?.[0]?.imageUrl || "https://via.placeholder.com/300",
+                price: product.variants?.[0]?.unitPrice || 0
             });
 
             if (history.length > 5) history.pop();
@@ -99,7 +102,7 @@ const ProductDetail = () => {
         };
 
         addToHistory();
-    }, [product, selectedVariant]); 
+    }, [product?.id]); 
 
     // --- CALCULATIONS ---
     
@@ -141,6 +144,14 @@ const ProductDetail = () => {
                     <h1 className="product-title">{product.nameVn || product.name}</h1>
                     <div className="product-brand">Brand: <span>{product.brand?.nameVn || product.brand?.name || "Unknown"}</span></div>
 
+                    {/* 👇 ADD THIS NEW BLOCK RIGHT HERE 👇 */}
+                    {product.skinType && (
+                        <div className="product-skintype" style={{ marginBottom: "1rem", color: "#555", fontSize: "0.95rem" }}>
+                            <span style={{ fontWeight: "600" }}>Phù hợp cho:</span> {product.skinType}
+                        </div>
+                    )}
+                    {/* 👆 END OF NEW BLOCK 👆 */}
+
                     <div className="product-price">
                         {selectedVariant ? formatPrice(selectedVariant.unitPrice) : "Contact"}
                     </div>
@@ -158,7 +169,10 @@ const ProductDetail = () => {
                                     <button
                                         key={variant.id}
                                         className={`variant-btn ${selectedVariant?.id === variant.id ? 'active' : ''}`}
-                                        onClick={() => setSelectedVariant(variant)}
+                                        onClick={() => {
+                                            setSelectedVariant(variant);
+                                            navigate(`?variant=${variant.id}`, { replace: true });
+                                        }}
                                     >
                                         {/* ✅ Updated call here */}
                                         {getVariantLabel(variant)}
@@ -174,17 +188,19 @@ const ProductDetail = () => {
 
                     <div className="action-buttons">
                         <button className="add-cart-btn" onClick={handleAddToCart}>
-                            ADD TO BAG
+                            ADD
                         </button>
                     </div>
                 </div>
+            <AnalyzeSkinBtn /> 
+
             </div>
 
             <div className="product-bottom-section">
-                <ProductSlider title="You Might Also Like" products={relatedProducts} />
+                <ProductSlider title="Bạn có thể sẽ thích" products={relatedProducts} />
                 
                 {recentProducts.length > 0 && (
-                    <ProductSlider title="Recently Viewed" products={recentProducts} />
+                    <ProductSlider title="Các sản phẩm bạn đã xem" products={recentProducts} />
                 )}
 
                 <ProductReviews productId={id} />

@@ -1,7 +1,8 @@
 export const getImageUrl = (imagePath) => {
     // 1️⃣ Fallback for missing database data
-    if (!imagePath) return 'https://via.placeholder.com/300?text=No+Image';
-
+    if (typeof imagePath !== 'string' || !imagePath) {
+        return 'https://via.placeholder.com/300?text=No+Image';
+    }   
     // 2️⃣ If it's already a full web URL, don't touch it
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
         return imagePath;

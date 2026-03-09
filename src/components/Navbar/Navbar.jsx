@@ -106,10 +106,12 @@ const Navbar = () => {
                     <button className="nav-btn" onClick={() => openModal('contact')}>
                         Contact
                     </button>
-
-                    <button className="lang-btn" onClick={toggleLanguage}>
+                    
+                    {/* Nếu muốn mở thì chỉ cần xóa gạch ✅*/}
+                    {/* <button className="lang-btn" onClick={toggleLanguage}>
                         <FiGlobe /> <span>{i18n.language.toUpperCase()}</span>
-                    </button>
+                    </button> */}
+
 
                     <NavLink to="/cart" className="nav-btn cart-nav-btn">
                         <div className="icon-wrapper">

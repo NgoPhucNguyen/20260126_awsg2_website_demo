@@ -26,7 +26,11 @@ const Product = () => {
     const location = useLocation();
 
     const [products, setProducts] = useState([]);
-    const [filterOptions, setFilterOptions] = useState({ brands: [], categories: [] });
+    const [filterOptions, setFilterOptions] = useState({ 
+        brands: [], 
+        categories: [],
+        skinTypes : [] 
+    });
     const [loading, setLoading] = useState(true);
 
     // 1. Fetch Attributes for Filters (Brands, Categories, etc.)
@@ -71,6 +75,7 @@ const Product = () => {
 
                             brand: product.brand?.name,
                             description: product.description,
+                            skinType: product.skinType,
                             // Specific Variant Data
                             size: variantLabel,
                             price: variant.unitPrice, 
@@ -92,13 +97,15 @@ const Product = () => {
 
     return (
         <div className="product-page-container">
-            <ProductFilter filterOptions={filterOptions} />
-
             <main className="product-main">
                 <header className="product-header">
-                    <h1>Our Collection</h1>
-                    {/* Count now reflects total options, not just products */}
-                    <p>{products.length} options available</p> 
+                    <div className="header-titles">
+                        <h1>Sản Phẩm</h1>
+                        <p>{products.length} tùy chọn có sẵn</p> 
+                    </div>
+                    <div className="header-actions">
+                        <ProductFilter filterOptions={filterOptions} />
+                    </div>
                 </header>
 
                 {loading ? <div className="loading">Loading...</div> : (

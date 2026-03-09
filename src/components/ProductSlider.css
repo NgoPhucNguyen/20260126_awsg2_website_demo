@@ -28,6 +28,35 @@
     display: none;
 }
 
+/* 📱 ONLY hide scrollbar on screens smaller than 768px (Mobile/Tablet) */
+@media (max-width: 768px) {
+    .slider-grid {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge */
+    }
+    .slider-grid::-webkit-scrollbar {
+        display: none; /* Chrome/Safari */
+    }
+}
+
+/* 💻 Customize the desktop scrollbar so it looks elegant, not clunky */
+@media (min-width: 769px) {
+    .slider-grid::-webkit-scrollbar {
+        height: 8px; /* Slim scrollbar */
+    }
+    .slider-grid::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+        border-radius: 4px;
+    }
+    .slider-grid::-webkit-scrollbar-thumb {
+        background: #ccc; 
+        border-radius: 4px;
+    }
+    .slider-grid::-webkit-scrollbar-thumb:hover {
+        background: #888; 
+    }
+}
+
 .slider-card {
     flex: 0 0 220px; /* FIXED WIDTH: Each card stays 220px wide */
     scroll-snap-align: start; /* Snap point */
@@ -82,13 +111,15 @@
 .slider-name {
     font-size: 0.95rem;
     margin-bottom: 8px;
-    /* Allow 2 lines instead of 1 for better readability */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     white-space: normal;
-    height: 2.4rem; /* Keeps height consistent */
+    
+    /* 🛠️ THE FIX: Math! 1.2rem * 2 lines = exactly 2.4rem */
+    line-height: 1.2rem; 
+    height: 2.4rem; 
 }
 
 .slider-price {

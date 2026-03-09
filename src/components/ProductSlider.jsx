@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import "./ProductSlider.css";
-
+import { getImageUrl } from "@/utils/getImageUrl";
 const getVariantLabel = (variant) => {
     if (!variant?.specification) return "";
     try {
@@ -27,11 +27,12 @@ const ProductSlider = ({ title, products }) => {
         {products.map(product => {
           // 1. Identify the default variant to display
           const defaultVariant = product.variants?.[0];
-          
+          console.log("Product:", product.nameVn, "Default Variant:", defaultVariant);
           // 2. Extract price/image/label (Handles both API data and LocalStorage history data)
           const price = defaultVariant?.unitPrice || product.price || 0;
-          const image = defaultVariant?.images?.[0]?.imageUrl || product.image || "https://via.placeholder.com/300";
-          const brandName = product.brand?.name || product.brandName;
+          const rawImageUrl = defaultVariant?.images?.[0]?.imageUrl || product.image;
+          const image = rawImageUrl ? getImageUrl(rawImageUrl) : "https://via.placeholder.com/300";
+          const brandName = product.brand?.nameVn || product.brandName;
           const variantId = defaultVariant?.id || product.variantId;
           const label = defaultVariant ? getVariantLabel(defaultVariant) : "";
 
@@ -43,12 +44,12 @@ const ProductSlider = ({ title, products }) => {
                 className="slider-link"
               >
                 <div className="slider-image">
-                  <img src={image} alt={product.name} />
+                  <img src={image} alt={product.nameVn} />
                 </div>
                 <div className="slider-info">
                   {brandName && <span className="slider-brand">{brandName}</span>}
                   <h3 className="slider-name">
-                    {product.name} {label && <small>({label})</small>}
+                    {product.nameVn} {label && <small>({label})</small>}
                   </h3>
                   <div className="slider-price">{formatPrice(price)}</div>
                 </div>

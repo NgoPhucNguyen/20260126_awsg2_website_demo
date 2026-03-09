@@ -80,7 +80,7 @@ const Inventory = () => {
         // 3. Map it to match the table's format
         const mappedProduct = {
             id: newProduct.id,
-            name: newProduct.name,
+            name: newProduct.nameVn,
             category: categoryName,
             price: mainVariant.unitPrice || 0,
             stock: stock,
@@ -124,7 +124,7 @@ const Inventory = () => {
 
     // 🔎 Search Filter
     const filteredProducts = products.filter(product => 
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+        product.nameVn.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     // 💰 Price Formatter
