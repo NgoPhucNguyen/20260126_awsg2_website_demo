@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
     const logout = async () => {
         // 1. Clear the local React state immediately for a fast UI response
         setAuth({});
-        
+        // Gọi hàm setCartData([]) từ useCart, HOẶC dọn local storage trực tiếp:
         try {
             // 2. Tell the backend to kill the cookie and session
             // Note: We use the full /api/auth path we set up in the controller

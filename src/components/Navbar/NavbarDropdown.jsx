@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { FiUser, FiLogOut } from "react-icons/fi";
-
+import "./NavbarDropdown.css";
 // 👇 1. Changed "accountName" to "user" to match Navbar.jsx
 const NavbarDropdown = ({ accountName, isAdmin, onLogout }) => { 
     const [isOpen, setIsOpen] = useState(false);

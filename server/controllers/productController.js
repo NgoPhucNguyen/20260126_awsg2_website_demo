@@ -44,8 +44,11 @@ export const getProducts = async (req, res) => {
       whereClause.categoryId = { in: categoryId.split(',').map(Number) }; // Convert to Int
     }
     if (skinType) {
-      whereClause.skinType = skinType;
-    }
+    whereClause.skinType = {
+        contains: skinType,
+        mode: 'insensitive' // Ignore uppercase/lowercase!
+    };
+    }   
 
     // --- Filter: Price Range (The Tricky Part) ---
     // Find products where AT LEAST ONE variant fits the price range
@@ -103,16 +106,13 @@ export const getFilterAttributes = async (req, res) => {
       prisma.brand.findMany({ select: { id: true, name: true } }),
       prisma.category.findMany({ select: { id: true, name: true, nameVn: true } }),
       // Group by skinType to get unique values
-      prisma.product.groupBy({
-        by: ['skinType'],
-        where: { skinType: { not: null } }
-      })
     ]);
+    const targetSkinTypes = ["da thường", "da nhạy cảm", "da khô", "da dầu", "da mụn"];
 
     res.json({
       brands,
       categories,
-      skinTypes: skinTypes.map(item => item.skinType)
+      skinTypes: targetSkinTypes
     });
   } catch (error) {
     console.error(error);
@@ -151,31 +151,55 @@ export const getRelatedProducts = async (req, res) => {
   try {
     const id = Number(req.params.id);
     
-    // 1. Get current product's category
+    // 1️⃣ Get current product's category AND skinType
     const currentProduct = await prisma.product.findUnique({
       where: { id },
-      select: { categoryId: true }
+      select: { categoryId: true, skinType: true } // 👈 Added skinType here!
     });
 
     if (!currentProduct) return res.json([]);
 
-    // 2. Find 4 other products in same category
+    // 2️⃣ Define our target keywords and check for matches
+    const targetKeywords = ["da thường", "da nhạy cảm", "da khô", "da dầu", "da mụn"];
+    const currentSkinString = (currentProduct.skinType || "").toLowerCase();
+    
+    const matchedKeywords = targetKeywords.filter(keyword => 
+      currentSkinString.includes(keyword)
+    );
+
+    // 3️⃣ Build the dynamic database query (The "Where" Clause)
+    let whereClause = {
+      NOT: { id: id }, // Don't show the current product again
+      isActive: true   // Safety check: only show active products
+    };
+
+    if (matchedKeywords.length > 0) {
+      // ✅ If it has a specific skin type, find others with the SAME skin type
+      whereClause.OR = matchedKeywords.map(keyword => ({
+        skinType: {
+          contains: keyword,
+          mode: 'insensitive' // Ignore uppercase/lowercase typos from admins!
+        }
+      }));
+    } else {
+      // 🔄 Fallback: If no skin type matches, just use the category like you originally did!
+      whereClause.categoryId = currentProduct.categoryId;
+    }
+
+    // 4️⃣ Fetch the actual products
     const related = await prisma.product.findMany({
-      where: {
-        categoryId: currentProduct.categoryId,
-        NOT: { id: id } // Don't show the current product again
-      },
-      take: 4,
+      where: whereClause,
+      take: 20,
       include: {
         variants: {
           include: { images: true },
-          take: 1 // We only need 1 variant for the card
+          take: 1 // Perfect! Keep this.
         },
         brand: true
       }
     });
-
-    res.json(related);
+    const randomizedProducts = shuffleArray(related).slice(0, 8);
+    res.json(randomizedProducts);
   } catch (error) {
     console.error(error);
     res.json([]); // Return empty array on error, don't crash
@@ -254,10 +278,10 @@ export const createProduct = async (req, res) => {
                 }
             });
         }
-
-        const imageRecords = imageUrls.map((url, index) => ({
+        const safeImageUrls = Array.isArray(imageUrls) ? imageUrls : [];
+        const imageRecords = safeImageUrls.map((url, index) => ({
             imageUrl: url,
-            displayOrder: index + 1, // 1st image is 1, 2nd is 2...
+            displayOrder: index + 1,
             altText: `${name} image ${index + 1}`
         }));
 
@@ -279,7 +303,7 @@ export const createProduct = async (req, res) => {
                     create: [{
                         sku: sku || `SKU-${Date.now()}`, 
                         unitPrice: Number(unitPrice),
-                        thumbnailUrl: imageUrls[0] || "",
+                        thumbnailUrl: safeImageUrls[0] || "",
                         specification: { packaging: "Standard" }, 
                         
                         // Nest the High-Res Image creation

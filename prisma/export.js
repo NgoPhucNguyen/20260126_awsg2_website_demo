@@ -10,6 +10,7 @@ async function main() {
   // 1. Fetch all products, leaving out the "id"
   const rawProducts = await prisma.product.findMany({
     select: {
+      id: true, 
       name: true,
       nameVn: true,
       brandId: true, 
@@ -20,6 +21,8 @@ async function main() {
       isActive: true,
       variants: {
         select: {
+          // Export the id also, so that we can nuke the db
+          id: true,
           sku: true,
           specification: true,
           unitPrice: true,

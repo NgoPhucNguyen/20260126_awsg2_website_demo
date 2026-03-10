@@ -1,10 +1,18 @@
 /* src/components/ProductFilter.css */
 
 .filter-sidebar {
-    background: #f9f9f9;
-    padding: 1.5rem;
-    border-radius: 8px;
-    height: fit-content;
+    position: fixed;
+    top: 0;
+    left: -100%; /* Hide completely off the left side of screen */
+    width: 80%;
+    max-width: 350px;
+    height: 100vh;
+    background: #fff;
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 2rem;
+    transition: left 0.3s ease-in-out; /* Smooth slide animation */
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
 }
 
 .filter-group {
@@ -26,6 +34,77 @@
     cursor: pointer;
     font-size: 0.9rem;
 }
+
+/* 🛡️ The new wrapper takes the stretch, and pushes the button to the left */
+.filter-toggle-wrapper {
+    margin-bottom: 20px;
+    display: block;
+    
+}
+
+/* 🎛️ Your clean button CSS (No fit-content hacks needed!) */
+.filter-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #000;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.close-filter-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: block;
+}
+
+/* 🚪 The Hidden Sidebar Drawer (Applies to all screens!) */
+.filter-sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%; /* Hide completely off the left side of screen */
+    width: 80%;
+    max-width: 350px;
+    height: 100vh;
+    background: #fff;
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 2rem;
+    transition: left 0.3s ease-in-out;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+/* ✨ When isOpen is true, this triggers the slide-in! */
+.filter-sidebar.open {
+    left: 0; 
+}
+
+/* 🌑 The dim background behind the menu */
+.filter-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+/* --- SLIDER & INPUTS --- */
+/* ... keep your existing slider and inputs CSS down here ... */
 
 /* --- SLIDER & INPUTS --- */
 .price-slider-container {
@@ -79,6 +158,14 @@
 
 .separator {
     color: #999;
+}
+
+/* 🌟 NEW: The class we extracted from JSX */
+.price-formatted {
+    font-size: 0.8rem;
+    color: #666;
+    text-align: center;
+    margin: 5px 0;
 }
 
 .apply-btn {

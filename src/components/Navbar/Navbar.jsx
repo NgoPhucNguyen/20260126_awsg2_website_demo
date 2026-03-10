@@ -12,17 +12,16 @@ import { FiShoppingCart, FiGlobe, FiSettings, FiUser } from "react-icons/fi";
 import NavbarSearch from "./NavbarSearch";
 import NavbarDropdown from "./NavbarDropdown";
 import NavbarModals from "./NavbarModals";
-
+import NavbarHamburger from "./NavbarHamburger";
 
 const ADMIN_ROLE_ID = 5150;
 
 const Navbar = () => {
     const { t, i18n } = useTranslation();
-    
     const { auth, logout } = useAuth();
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
-    const { totalItems } = useCart();
+    const { totalItems, setCartData } = useCart();
 
     // --- STATE ---
     const [modals, setModals] = useState({ 
@@ -43,6 +42,7 @@ const Navbar = () => {
 
     const handleLogout = useCallback(async () => {
         try {
+            setCartData([]); // Clear cart data on logout
             await logout();
             navigate('/');
         } catch (error) {
@@ -78,9 +78,12 @@ const Navbar = () => {
         i18n.changeLanguage(newLang);
     };
 
+    const [isMobileOpen, setIsMobileOpen] = useState(false);
+
     return (
         <>
             <nav className="navbar" role="navigation">
+
                 {/* 🏠 LEFT SECTION: Brand & Admin */}
                 <div className="nav-links-left">
                     <NavLink to="/" className="brand-link">
@@ -99,14 +102,16 @@ const Navbar = () => {
                 <NavbarSearch />
 
                 {/* 🛒 RIGHT SECTION: Actions & Account */}
-                <div className="nav-links-right">
+                <div className={`nav-links-right ${isMobileOpen ? 'mobile-active' : ''}`}>
                     <button className="nav-btn" onClick={() => openModal('contact')}>
                         Contact
                     </button>
-
-                    <button className="lang-btn" onClick={toggleLanguage}>
+                    
+                    {/* Nếu muốn mở thì chỉ cần xóa gạch ✅*/}
+                    {/* <button className="lang-btn" onClick={toggleLanguage}>
                         <FiGlobe /> <span>{i18n.language.toUpperCase()}</span>
-                    </button>
+                    </button> */}
+
 
                     <NavLink to="/cart" className="nav-btn cart-nav-btn">
                         <div className="icon-wrapper">
@@ -132,6 +137,12 @@ const Navbar = () => {
                         </button>
                     )}
                 </div>
+
+                {/* 👇 Drop your clean, new component here! */}
+                <NavbarHamburger 
+                    isOpen={isMobileOpen} 
+                    toggle={() => setIsMobileOpen(!isMobileOpen)} 
+                />
             </nav>
 
             {/* 📦 MODAL MANAGER: Handles Login, Register, and Contact */}

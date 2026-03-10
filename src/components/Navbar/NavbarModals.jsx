@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Login from "@/features/auth/login/Login";
 import Register from "@/features/auth/register/Register";
-
+import './NavbarModals.css';
 // --- CONTACT MODAL SUB-COMPONENT ---
 const ContactModal = ({ isOpen, onClose }) => {
     const [message, setMessage] = useState('');

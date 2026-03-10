@@ -1,8 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
-
-@import url('https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Cherry+Swash:wght@400;700&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 :root {
   /* COLORS */
   --bg-primary: #ffffff;
@@ -13,13 +10,13 @@
   --border-color: #e7e5e4;
   --space-md: clamp(1rem, 3vw, 2.5rem);
   /* Used for body text (clean, easy to read) */
-  --font-body: 'Lato', sans-serif; 
+  --font-body: 'Nunito'; 
   
   /* Used for elegant headings */
-  --font-heading:  'Playfair Display', serif;
+  --font-heading:  'Inter';
   
   /* Used for ultra-luxury accents or italics */
-  --font-accent: 'Cormorant Garamond', serif; 
+  --font-accent: 'Nunito', sans-serif; 
 }
 
 /* Apply the default body font globally */

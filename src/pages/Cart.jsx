@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../features/auth/AuthProvider"; 
-import { useCart } from "../context/CartProvider"; 
+import { useAuth } from "@/features/auth/AuthProvider"; 
+import { useCart } from "@/context/CartProvider"; 
 import { FiTrash2, FiMinus, FiPlus, FiArrowLeft, FiShoppingBag } from "react-icons/fi"; 
 import "./Cart.css"; 
 
