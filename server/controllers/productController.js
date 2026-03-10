@@ -1,19 +1,4 @@
-// server/controllers/productController.js
-import { PrismaClient } from '@prisma/client';
-
-// Initialize Prisma Client
-const prisma = new PrismaClient(); 
-
-// 🃏 HELPER: Fisher-Yates Array Shuffle Algorithm
-const shuffleArray = (array) => {
-    let shuffled = [...array]; // Copy the array so we don't mutate the original
-    for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-};
-
+import prisma from '../prismaClient.js';
 
 // Get product from DB 
 export const getProducts = async (req, res) => {
