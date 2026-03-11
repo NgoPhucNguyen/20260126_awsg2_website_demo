@@ -24,6 +24,8 @@ import Unauthorized from './features/auth/Unauthorized';
 import AdminLayout from './components/AdminLayout'; // The Shell (Sidebar)
 import Customers from './pages/admin/Customers';           // The User Table
 import Inventory from './pages/admin/Inventory';
+import Coupons from './pages/admin/Coupons';            // Coupon Management
+import Promotions from './pages/admin/Promotions';      // Promotion Management
 
 
 const Analytics = () => <div className="fade-in" style={{padding: '2rem'}}><h2>📈 Analytics Dashboard</h2><p>Coming soon...</p></div>;
@@ -78,6 +80,8 @@ function App() {
                     {/* 3. CHILDREN: The Content */}
                     <Route path="customers" element={<Customers />} />
                     <Route path="inventory" element={<Inventory />} />
+                    <Route path="coupons" element={<Coupons />} />
+                    <Route path="promotions" element={<Promotions />} />
                     <Route path="analytics" element={<Analytics />} />
                 </Route>
             </Route>
