@@ -13,7 +13,7 @@ const LOGIN_URL = '/api/auth/login';
 const Login = ({ onClose, onSwitchToRegister }) => {
     const { setAuth } = useAuth();
     const { showToast } = useToast();
-    const { cartItems, setCartData } = useCart();
+    const { cartItems, syncWithDatabase } = useCart();
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/"; 
@@ -76,28 +76,10 @@ const Login = ({ onClose, onSwitchToRegister }) => {
             const fetchedName = response?.data?.accountName;
             
             setAuth({ accountName: fetchedName, roles, accessToken });
-            // 🌟 LOGIC GỘP GIỎ HÀNG (MERGE CART) Ở ĐÂY 🌟
-            try {
-                // Gọi API đồng bộ với Backend, gửi kèm giỏ hàng hiện tại
-                const syncResponse = await axios.post('/api/cart/sync', 
-                    { localCart: cartItems },
-                    { 
-                        headers: { 
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${accessToken}` // Phải có token mới biết user nào
-                        }
-                    }
-                );
-                
-                // Cập nhật lại Context bằng giỏ hàng chuẩn từ DB
-                if(syncResponse.data.mergedCart) {
-                    setCartData(syncResponse.data.mergedCart);
-                }
-            } catch (syncErr) {
-                console.error("Không thể đồng bộ giỏ hàng", syncErr);
-            }
-            // 🌟 KẾT THÚC LOGIC MERGE 🌟
 
+            // After successful login, sync local cart with database cart
+            await syncWithDatabase(cartItems, accessToken);
+            
             setAccountName('');
             setPwd('');
             showToast(`Welcome back, ${fetchedName}!`);

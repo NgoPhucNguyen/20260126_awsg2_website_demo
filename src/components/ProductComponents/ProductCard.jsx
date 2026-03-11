@@ -1,22 +1,20 @@
 // src/components/ProductCard.jsx
 import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next'; // 🌟 1. Import the translation hook
-import { FiShoppingBag } from "react-icons/fi";
+import { FiShoppingBag, FiLoader } from "react-icons/fi";
+import { useCart } from "@/context/CartProvider";
 import "./ProductCard.css";
 
-const ProductCard = ({ product, addToCart }) => {
+const ProductCard = ({ product }) => {
     // 🌟 2. Grab the translation function (t) and the active language (i18n)
     const { t, i18n } = useTranslation(); 
-
-    // 🌟 3. THE MAGIC: Check the language and pick the right database column!
-    // We use `|| product.name` as a safety fallback just in case nameVn is blank in the database.
+    
+    const { addToCart, isAdding } = useCart();
+    
     const displayName = i18n.language === 'vi' ? (product.nameVn || product.name) : product.name;
 
     const formatPrice = (price) => {
-        return new Intl.NumberFormat('vi-VN', { 
-            style: 'currency', 
-            currency: 'VND' 
-        }).format(price);
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
     };
 
     return (
@@ -53,14 +51,19 @@ const ProductCard = ({ product, addToCart }) => {
                 
                 {/* 👇 The new 3D Layered Button */}
                 <button 
-                    className="btn-3d-circle" 
-                    onClick={() => addToCart(product)}
+                    className={`btn-3d-circle ${isAdding ? 'btn-disabled' : ''}`} // Add CSS class if adding
+                    onClick={(e) => {
+                        e.preventDefault(); // Stop the Link from triggering if they click the button!
+                        addToCart(product);
+                    }}
+                    disabled={isAdding} // 🔒 Lock the button
                     aria-label={t('productCard.add')}
                 >
                     <span className="btn-shadow"></span>
                     <span className="btn-edge"></span>
                     <div className="btn-front">
-                        <FiShoppingBag />
+                        {/* 🌟 Show Spinner if adding, else show Bag */}
+                        {isAdding ? <span className="btn-spinner"></span> : <FiShoppingBag />}
                     </div>
                 </button>
             </div>

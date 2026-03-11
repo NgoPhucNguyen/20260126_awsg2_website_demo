@@ -138,6 +138,19 @@
     font-size: 1.1rem;
 }
 
+.disabled-btn { opacity: 0.5; cursor: not-allowed; }
+
+/* 🌟 Max Quantity Warning Text */
+.max-qty-warning {
+    font-size: 0.75rem; /* Make it small */
+    color: #d9534f; /* A soft red color, or change to your brand color */
+    margin-top: 4px;
+    text-align: center;
+    font-style: italic;
+    max-width: 120px; /* Keeps it neatly wrapped under the buttons */
+    line-height: 1.2;
+}
+
 /* STICKY SUMMARY */
 .cart-summary-wrapper {
     position: relative;

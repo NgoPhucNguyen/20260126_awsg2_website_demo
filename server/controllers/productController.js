@@ -42,13 +42,22 @@ export const getProducts = async (req, res) => {
     }
     if (categoryId) {
       whereClause.categoryId = { in: categoryId.split(',').map(Number) }; // Convert to Int
-    }
+    }  
     if (skinType) {
-    whereClause.skinType = {
-        contains: skinType,
-        mode: 'insensitive' // Ignore uppercase/lowercase!
-    };
-    }   
+        // 1. Split the URL string into an array: ["da dầu", "da mụn"]
+        const selectedSkins = skinType.split(','); 
+
+        // 2. We use 'AND' here so we don't accidentally overwrite your 'search' logic!
+        whereClause.AND = whereClause.AND || [];
+        whereClause.AND.push({
+            OR: selectedSkins.map(skin => ({
+                skinType: {
+                    contains: skin.trim(),
+                    mode: 'insensitive' // Still ignores uppercase/lowercase!
+                }
+            }))
+        });
+    } 
 
     // --- Filter: Price Range (The Tricky Part) ---
     // Find products where AT LEAST ONE variant fits the price range
@@ -119,6 +128,7 @@ export const getFilterAttributes = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch attributes' });
   }
 };
+
 export const getProductById = async (req, res) => {
   try {
     const { id } = req.params;

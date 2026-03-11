@@ -8,6 +8,7 @@ import customerRoutes from './customerRoutes.js';
 import uploadRoutes from './uploadRoutes.js';
 import paymentRoutes from './paymentRoutes.js';
 import profileRoutes from './profileRoutes.js'; 
+import cartRoutes from './cartRoutes.js'; // Import cart routes
 import couponRoutes from './couponRoutes.js';
 import promotionRoutes from './promotionRoutes.js';
 import categoryRoutes from './categoryRoute.js';
@@ -18,6 +19,7 @@ const router = express.Router();
 router.use('/auth', authRoutes);
 router.use('/categories', categoryRoutes);
 router.use('/products', productRoutes);
+router.use('/cart', cartRoutes); // Mount cart routes under /api/cart
 router.use('/customers', customerRoutes);
 router.use('/coupons', couponRoutes);
 router.use('/promotions', promotionRoutes);

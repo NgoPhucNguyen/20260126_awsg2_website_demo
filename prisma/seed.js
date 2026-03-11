@@ -1,6 +1,6 @@
 // prisma/seed.js
 import { PrismaClient } from '@prisma/client';
-import { products } from './data/edit_product_data.js'; // Or your edit file
+import { products } from './data/edit_product_data.js'; 
 import { brands } from './data/brand_data.js';
 import { categories } from './data/category_data.js';
 const prisma = new PrismaClient();
@@ -18,8 +18,9 @@ async function main() {
   await prisma.productImage.deleteMany({});
   await prisma.productVariant.deleteMany({});
   await prisma.product.deleteMany({});
-  await prisma.category.deleteMany({}); // Add this to clear old categories
+  await prisma.category.deleteMany({});
   await prisma.brand.deleteMany({});
+  await prisma.warehouse.deleteMany({}); // 🌟 NEW: Clear warehouses too!
   console.log('✅ Old products and all related data safely cleared.');
 
   // 2. SEED BRANDS (The Loop)
@@ -28,7 +29,7 @@ async function main() {
     await prisma.brand.upsert({
       where: { id: brand.id },
       update: {},
-      create: brand // This injects { id: '...', name: '...' } automatically
+      create: brand 
     });
   }
   console.log(`✅ ${brands.length} Brands created.`);
@@ -44,7 +45,23 @@ async function main() {
   }
   console.log(`✅ ${categories.length} Categories created.`);
 
-  // 🚀 3. Loop through the data file and create the products
+  // 🏭 4. CREATE A DEFAULT WAREHOUSE
+  // (We must have a warehouse to hold our 10,000 inventory items!)
+  console.log('🏭 Creating Default Warehouse...');
+  const defaultWarehouse = await prisma.warehouse.create({
+    data: {
+      name: "Main Warehouse (Default)",
+      fullAddress: "123 Default Street, Default District, Default City",
+      province: "Default City",
+      district: "Default District",
+      ward: "Default Ward",
+      streetAddress: "123 Default Street"
+    }
+  });
+  console.log(`✅ Warehouse created with ID: ${defaultWarehouse.id}`);
+
+  // 🚀 5. Loop through the data file and create the products
+  console.log('📦 Seeding Products and Inventory...');
   for (const prod of products) {
     const formattedVariants = prod.variants.map((variant) => ({
       sku: variant.sku,
@@ -54,6 +71,15 @@ async function main() {
       slug: variant.slug,
       images: {
         create: variant.images
+      },
+      // 🌟 NEW: Inject 10,000 stock directly into the default warehouse
+      inventories: {
+        create: [
+          {
+            warehouseId: defaultWarehouse.id,
+            quantity: 10000
+          }
+        ]
       }
     }));
 

@@ -106,7 +106,7 @@ const Product = () => {
                     <div className="header-actions">
                         <ProductFilter filterOptions={filterOptions} />
                     </div>
-                </header>
+            </header>
 
                 {loading ? <div className="loading">Loading...</div> : (
                     <div className="product-grid">

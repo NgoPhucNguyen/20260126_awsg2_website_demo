@@ -30,7 +30,7 @@ const formatPrice = (price) =>
 
 const ProductDetail = () => {
     const { id } = useParams();
-    const { addToCart } = useCart();
+    const { addToCart, isAdding } = useCart();
     // --- STATE ---
     const [product, setProduct] = useState(null);
     const [selectedVariant, setSelectedVariant] = useState(null);
@@ -117,10 +117,11 @@ const ProductDetail = () => {
 
     // --- HANDLERS ---
     const handleAddToCart = () => {
-        if (!product || !selectedVariant) return;
+        if (!product || !selectedVariant || isAdding) return; // Prevent spam clicks
         addToCart({
             id: product.id,
-            name: product.nameVn || product.name,                       
+            name: product.name, // Keep original name for backend consistency
+            nameVn : product.nameVn || product.name,
             price: selectedVariant.unitPrice,
             image: displayImages[0]?.imageUrl,
             variantId: selectedVariant.id,
@@ -187,8 +188,18 @@ const ProductDetail = () => {
                     </div>
 
                     <div className="action-buttons">
-                        <button className="add-cart-btn" onClick={handleAddToCart}>
-                            ADD
+                        <button 
+                            className={`add-cart-btn ${isAdding ? 'btn-loading' : ''}`} 
+                            onClick={handleAddToCart}
+                            disabled={isAdding} // 🔒 Physically lock the button
+                        >
+                            {isAdding ? (
+                                <>
+                                    <span className="btn-spinner"></span> Đang thêm...
+                                </>
+                            ) : (
+                                "THÊM VÀO GIỎ"
+                            )}
                         </button>
                     </div>
                 </div>
