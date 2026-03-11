@@ -1,7 +1,7 @@
 // src/components/AdminLayout.jsx
 import { useState } from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
-import { FaBars, FaUsers, FaBoxOpen, FaChartLine, FaArrowRightFromBracket } from 'react-icons/fa6';
+import { FaBars, FaUsers, FaBoxOpen, FaChartLine, FaArrowRightFromBracket, FaTicket, FaFire } from 'react-icons/fa6';
 import "./AdminLayout.css" 
 
 const AdminLayout = () => {
@@ -27,6 +27,14 @@ const AdminLayout = () => {
                     <NavLink to="inventory" className="menu-item">
                         <FaBoxOpen size={20} />
                         {!isCollapsed && <span>Inventory</span>}
+                    </NavLink>
+                    <NavLink to="coupons" className="menu-item">
+                        <FaTicket size={20} />
+                        {!isCollapsed && <span>Coupons</span>}
+                    </NavLink>
+                    <NavLink to="promotions" className="menu-item">
+                        <FaFire size={20} />
+                        {!isCollapsed && <span>Promotions</span>}
                     </NavLink>
                     <NavLink to="analytics" className="menu-item">
                         <FaChartLine size={20} />
