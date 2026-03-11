@@ -44,29 +44,29 @@ model Warehouse {
 // --- QUẢN LÝ NGƯỜI DÙNG & NHÂN VIÊN ---
 
 model Customer {
-  id           String    @id @default(uuid())
-  firstName    String?   @map("first_name")
-  lastName     String?   @map("last_name")
-  accountName  String    @map("accountName")
-  mail         String    @unique
-  phoneNumber  String?   @map("phone_number") @db.VarChar(10)
-  passwordHash String    @map("password_hash")
+  id           String               @id @default(uuid())
+  firstName    String?              @map("first_name")
+  lastName     String?              @map("last_name")
+  accountName  String               @map("accountName")
+  mail         String               @unique
+  phoneNumber  String?              @map("phone_number") @db.VarChar(10)
+  passwordHash String               @map("password_hash")
   // Stores the long-lived session token
-  refreshToken String?   @map("refresh_token") 
-  avatarUrl    String?   @map("avatar_url")
-  isActive     Boolean   @default(true) @map("is_active")
-  gender       String?   @db.VarChar(10)
-  birthday     DateTime? @db.Date
-  skinProfile  Json?     @map("skin_profile")
+  refreshToken String?              @map("refresh_token")
+  avatarUrl    String?              @map("avatar_url")
+  isActive     Boolean              @default(true) @map("is_active")
+  gender       String?              @db.VarChar(10)
+  birthday     DateTime?            @db.Date
+  skinProfile  Json?                @map("skin_profile")
   tier         Int?
-  createdAt    DateTime  @default(now()) @map("created_at")
-  addressId    String?   @map("address_id")
+  createdAt    DateTime             @default(now()) @map("created_at")
+  addressId    String?              @map("address_id")
   //user forgot password
-  resetTokens  PasswordResetToken[] 
-  
+  resetTokens  PasswordResetToken[]
 
-  address Address? @relation(fields: [addressId], references: [id])
-  carts   Cart[]
+  address     Address?      @relation(fields: [addressId], references: [id])
+  carts       Cart[]
+  CouponUsage CouponUsage[]
 
   @@map("customer")
 }
@@ -79,6 +79,7 @@ model PasswordResetToken {
   expiresAt  DateTime @map("expires_at")
   // Link only to Customer for now
   customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
   @@map("password_reset_token")
 }
 
@@ -114,7 +115,7 @@ model Brand {
 
 model Category {
   id            Int     @id @default(autoincrement())
-  name          String  @db.Char(255)
+  name          String  
   nameVn        String  @map("name_vn")
   slug          String?
   parentId      Int?    @map("parent_id")
@@ -180,25 +181,53 @@ model ProductImage {
 // --- QUẢN LÝ KHUYẾN MÃI ---
 
 model Coupon {
-  id          String     @id @default(uuid())
+  id          String         @id @default(uuid())
   description String?
-  code        String     @unique
-  type        CouponType
+  code        String         @unique
+  type        CouponType // [PERCENTAGE, FIXED]
+  category    CouponCategory // [SHIPPING, ORDER]
   value       Float
   rule        Json
-  createdAt   DateTime   @default(now()) @map("create_at")
-  expireAt    DateTime   @map("expire_at")
-  usageLimit  Int        @map("usage_limit")
+  createdAt   DateTime       @default(now()) @map("create_at")
+  expireAt    DateTime       @map("expire_at")
+  usageLimit  Int            @map("usage_limit")
 
-  shippingCarts Cart[] @relation("ShippingCoupon")
-  couponCarts   Cart[] @relation("MainCoupon")
+  shippingCarts Cart[]        @relation("ShippingCoupon")
+  couponCarts   Cart[]        @relation("MainCoupon")
+  CouponUsage   CouponUsage[]
 
   @@map("coupon")
+}
+
+enum CouponCategory {
+  SHIPPING
+  ORDER
 }
 
 enum CouponType {
   PERCENTAGE // Giảm theo %
   FIXED // Giảm một số tiền cụ thể (ví dụ: trừ 50k)
+}
+
+model CouponUsage {
+  id         String       @id @default(uuid())
+  couponId   String       @map("coupon_id")
+  customerId String       @map("customer_id")
+  usedAt     DateTime     @map("used_at")
+  status     CouponStatus // [ACTIVE, EXPIRED, USED_UP, INACTIVE]
+  remaning   Int
+
+  coupon   Coupon   @relation(fields: [couponId], references: [id])
+  customer Customer @relation(fields: [customerId], references: [id])
+
+  @@map("coupon_usage")
+}
+
+enum CouponStatus {
+  ACTIVE
+  EXPIRED
+  USED_UP
+  INACTIVE
 }
 
 model Promotion {
