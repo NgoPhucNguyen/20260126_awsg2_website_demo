@@ -8,12 +8,19 @@ import customerRoutes from './customerRoutes.js';
 import uploadRoutes from './uploadRoutes.js';
 import paymentRoutes from './paymentRoutes.js';
 import profileRoutes from './profileRoutes.js'; 
+import couponRoutes from './couponRoutes.js';
+import promotionRoutes from './promotionRoutes.js';
+import categoryRoutes from './categoryRoute.js';
+
 const router = express.Router();
 
 // --- MOUNT ROUTES ---
 router.use('/auth', authRoutes);
+router.use('/categories', categoryRoutes);
 router.use('/products', productRoutes);
 router.use('/customers', customerRoutes);
+router.use('/coupons', couponRoutes);
+router.use('/promotions', promotionRoutes);
 
 router.use('/upload', uploadRoutes);
 router.use('/payment', paymentRoutes);
