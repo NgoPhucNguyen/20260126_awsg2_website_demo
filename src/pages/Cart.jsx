@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/features/auth/AuthProvider"; 
 import { useCart } from "@/context/CartProvider"; 
+import { getImageUrl } from "@/utils/getImageUrl";
 import { FiTrash2, FiMinus, FiPlus, FiArrowLeft, FiShoppingBag } from "react-icons/fi"; 
+
 import "./Cart.css"; 
 
 const Cart = () => {
@@ -14,7 +16,8 @@ const Cart = () => {
         removeFromCart, 
         updateQuantity, 
         totalPrice, 
-        totalItems 
+        totalItems,
+        isUpdating
     } = useCart(); 
 
     // 🇻🇳 HELPER: Format VND
@@ -24,7 +27,7 @@ const Cart = () => {
 
     const handleCheckout = () => {
     if (!auth?.accessToken) {
-        // ✅ Change: Add a query parameter instead of a new path
+        // ✅ Change: Add a query parameter instead of \a new path
         navigate('/cart?login=true'); 
     } else {
         console.log("Processing Checkout...", cartItems);
@@ -48,9 +51,9 @@ const Cart = () => {
     return (
         <div className="cart-page">
             <div className="cart-header">
-                <h1>Your Bag <span>({totalItems} items)</span></h1>
+                <h1>Giỏ hàng <span>({totalItems} sản phẩm)</span></h1>
                 <button className="back-link" onClick={() => navigate('/')}>
-                    <FiArrowLeft /> Continue Shopping
+                    <FiArrowLeft /> Tiếp tục mua sắm
                 </button>
             </div>
             
@@ -64,15 +67,15 @@ const Cart = () => {
                                 
                                 {/* Product Image */}
                                 <div className="item-image-wrapper">
-                                    <img src={item.image} alt={item.name} className="item-image" />
+                                    <img src={getImageUrl(item.image)} alt={item.nameVn} className="item-image" />
                                 </div>
 
                                 {/* Details */}
                                 <div className="item-info">
                                     <div className="item-meta">
-                                        <h3>{item.name}</h3>
+                                        <h3>{item.nameVn}</h3>
                                         {/* Show Size if available */}
-                                        {item.size && <span className="item-variant">Size: {item.size}</span>}
+                                        {item.size && <span className="item-variant">Dung tích: {item.size}</span>}
                                     </div>
                                     <p className="item-price">{formatPrice(item.price)}</p>
                                 </div>
@@ -80,25 +83,41 @@ const Cart = () => {
                                 {/* Controls */}
                                 <div className="item-controls">
                                     <div className="quantity-wrapper">
-                                        {/* ✅ FIX 2: Pass variantId to updateQuantity */}
+                                        
+                                        {/* MINUS BUTTON */}
                                         <button 
                                             onClick={() => updateQuantity(item.id, item.variantId, -1)}
-                                            disabled={item.quantity <= 1}
+                                            // 🔒 Disable if updating, OR if quantity is 1
+                                            disabled={isUpdating || item.quantity <= 1} 
+                                            className={isUpdating ? "disabled-btn" : ""}
                                         >
                                             <FiMinus />
                                         </button>
                                         
                                         <span>{item.quantity}</span>
                                         
-                                        <button onClick={() => updateQuantity(item.id, item.variantId, 1)}>
+                                        {/* PLUS BUTTON */}
+                                        <button 
+                                            onClick={() => updateQuantity(item.id, item.variantId, 1)}
+                                            // 🔒 Disable if updating, OR if hitting max limit
+                                            disabled={isUpdating || item.quantity >= 5}
+                                            className={isUpdating ? "disabled-btn" : ""}
+                                        >
                                             <FiPlus />
                                         </button>
                                     </div>
                                     
-                                    {/* ✅ FIX 3: Pass variantId to removeFromCart */}
+                                    {item.quantity >= 5 && (
+                                        <div className="max-qty-warning">
+                                            Số lượng tối đa cho mỗi sản phẩm trong 1 lần mua là 5
+                                        </div>
+                                    )}
+
+                                    {/* TRASH BUTTON */}
                                     <button 
                                         className="remove-btn" 
                                         onClick={() => removeFromCart(item.id, item.variantId)}
+                                        disabled={isUpdating} // Optionally lock the trash too!
                                     >
                                         <FiTrash2 />
                                     </button>

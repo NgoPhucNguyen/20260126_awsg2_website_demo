@@ -8,11 +8,13 @@ import customerRoutes from './customerRoutes.js';
 import uploadRoutes from './uploadRoutes.js';
 import paymentRoutes from './paymentRoutes.js';
 import profileRoutes from './profileRoutes.js'; 
+import cartRoutes from './cartRoutes.js'; // Import cart routes
 const router = express.Router();
 
 // --- MOUNT ROUTES ---
 router.use('/auth', authRoutes);
 router.use('/products', productRoutes);
+router.use('/cart', cartRoutes); // Mount cart routes under /api/cart
 router.use('/customers', customerRoutes);
 
 router.use('/upload', uploadRoutes);

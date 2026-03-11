@@ -101,7 +101,7 @@ const ProductFilter = ({ filterOptions }) => {
                                 checked={isChecked('categoryId', cat.id)}
                                 onChange={() => handleCheckboxChange('categoryId', cat.id)}
                             />
-                            {cat.name}
+                            {cat.nameVn}
                         </label>
                     ))}
                 </div>
