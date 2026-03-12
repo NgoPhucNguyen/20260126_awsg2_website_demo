@@ -3,11 +3,10 @@ import prisma from '../prismaClient.js';
 // GET LIST OF COUPONS
 export const getCoupons = async (req, res) => {
   try {
-    const coupons = await prisma.coupon.findMany({
-      orderBy: { createdAt: 'desc' }
-    });
+    const coupons = await prisma.coupon.findMany();
     res.json(coupons);
   } catch (error) {
+    console.error("❌ Prisma fetch error:", error); // Added detailed logging
     res.status(500).json({ error: error.message });
   }
 };
@@ -122,18 +121,27 @@ export const deleteCoupon = async (req, res) => {
 export const validateCoupon = async (req, res) => {
   try {
     const { code, orderTotal } = req.body;
+    const userId = req.user?.id; // Important if rules are per-user
 
     const coupon = await prisma.coupon.findUnique({
-      where: { code }
+      where: { code: code.toUpperCase() },
+      include: { 
+        _count: { select: { CouponUsage: true } } // Get global usage count
+      }
     });
 
+    // 1. Check if coupon exists
     if (!coupon) {
       return res.status(404).json({ valid: false, message: 'Mã coupon không tồn tại' });
     }
 
-    // check expiration date
+    // 2. Check expiration
     if (new Date() > coupon.expireAt) {
       return res.status(400).json({ valid: false, message: 'Mã coupon đã hết hạn' });
+    }
+    // 3. Check usage limit (global)
+    if (coupon._count.CouponUsage >= coupon.usageLimit) {
+      return res.status(400).json({ valid: false, message: 'Mã coupon đã hết lượt sử dụng' });
     }
 
     // check minimum order value
@@ -141,11 +149,19 @@ export const validateCoupon = async (req, res) => {
     if (orderTotal < rule.minOrderValue) {
       return res.status(400).json({
         valid: false,
-        message: `Hóa đơn tối thiểu là ${rule.minOrderValue * 1000}đ`
+        message: `Hóa đơn tối thiểu phải từ ${new Intl.NumberFormat('vi-VN').format(rule.minOrderValue)}đ`
       });
     }
 
-    res.json({ valid: true, coupon });
+    res.json({ 
+        valid: true, 
+        coupon: {
+            code: coupon.code,
+            type: coupon.type,
+            value: coupon.value,
+            category: coupon.category
+        }
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

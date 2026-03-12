@@ -22,6 +22,27 @@ const getVariantLabel = (variant) => {
         return variant.sku || "Standard";
     }
 };
+// Add this helper function to calculate the active promotion
+const getEffectivePrice = (variant) => {
+    const originalPrice = variant.unitPrice;
+    if (!variant.promotions || variant.promotions.length === 0) return { price: originalPrice, isSale: false };
+
+    // Get the first active promotion (simplified logic)
+    const promo = variant.promotions[0].promotion;
+    const now = new Date();
+    
+    if (new Date(promo.startTime) <= now && new Date(promo.endTime) >= now) {
+        const discountValue = promo.type === 'PERCENTAGE' 
+            ? (originalPrice * promo.value) / 100 
+            : promo.value;
+        return { 
+            price: Math.max(0, originalPrice - discountValue), 
+            original: originalPrice,
+            isSale: true 
+        };
+    }
+    return { price: originalPrice, isSale: false };
+};
 
 // --- HELPER: Format Currency ---
 const formatPrice = (price) => 
@@ -41,6 +62,8 @@ const ProductDetail = () => {
     const navigate = useNavigate(); // For programmatic navigation (e.g. after adding to cart)
     const location = useLocation(); // To read query params for variant pre-selection
 
+    
+    
     // --- 1. FETCH DATA ---
     useEffect(() => {
         const loadPageData = async () => {
@@ -115,14 +138,20 @@ const ProductDetail = () => {
         }));
     }, [selectedVariant]);
 
+    const effective = useMemo(() => {
+        return selectedVariant ? getEffectivePrice(selectedVariant) : { price: 0, isSale: false };
+    }, [selectedVariant]);
+
     // --- HANDLERS ---
     const handleAddToCart = () => {
         if (!product || !selectedVariant || isAdding) return; // Prevent spam clicks
         addToCart({
             id: product.id,
-            name: product.name, // Keep original name for backend consistency
+            name: product.name,
             nameVn : product.nameVn || product.name,
-            price: selectedVariant.unitPrice,
+            price: effective.price,
+            originalPrice: effective.original,
+            isSale: effective.isSale,
             image: displayImages[0]?.imageUrl,
             variantId: selectedVariant.id,
             size: currentVariantLabel //variant
@@ -154,7 +183,19 @@ const ProductDetail = () => {
                     {/* 👆 END OF NEW BLOCK 👆 */}
 
                     <div className="product-price">
-                        {selectedVariant ? formatPrice(selectedVariant.unitPrice) : "Contact"}
+                        {effective.isSale ? (
+                            <>
+                                <span className="current-price">{formatPrice(effective.price)}</span>
+                                <span className="original-price" style={{ textDecoration: 'line-through', fontSize: '0.9rem', color: '#999', marginLeft: '10px' }}>
+                                    {formatPrice(effective.original)}
+                                </span>
+                                <span className="sale-badge">
+                                    -{selectedVariant?.promotions?.[0]?.promotion?.value}%
+                                </span>
+                            </>
+                        ) : (
+                            formatPrice(selectedVariant.unitPrice)
+                        )}
                     </div>
 
                     <div className="product-description">

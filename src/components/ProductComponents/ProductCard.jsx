@@ -25,9 +25,15 @@ const ProductCard = ({ product }) => {
                 className="card-link"
             >
                 <div className="card-image">
-                    {/* 🌟 4. Update the alt text for better SEO/Accessibility */}
                     <img src={product.image} alt={displayName} />
                     {product.brand && <span className="brand-tag">{product.brand}</span>}
+                    
+                    {/* 🌟 ADD THIS: The Sale Badge */}
+                    {product.isSale && (
+                        <span className="sale-badge-overlay">
+                            -{product.discountValue}{product.discountType === 'PERCENTAGE' ? '%' : 'đ'}
+                        </span>
+                    )}
                 </div>
                 
                 <div className="card-info">
@@ -47,24 +53,32 @@ const ProductCard = ({ product }) => {
 
             {/* 2. ACTION AREA */}
             <div className="card-footer">
-                <span className="price">{formatPrice(product.price)}</span>
+                <div className="price-container">
+                    {product.isSale ? (
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <span className="price sale-price" style={{ color: '#d32f2f', fontWeight: '700' }}>
+                                {formatPrice(product.price)}
+                            </span>
+                            <span className="original-price-strike" style={{ textDecoration: 'line-through', fontSize: '0.85rem', color: '#999' }}>
+                                {formatPrice(product.originalPrice)}
+                            </span>
+                        </div>
+                    ) : (
+                        <span className="price">{formatPrice(product.price)}</span>
+                    )}
+                </div>
                 
                 {/* 👇 The new 3D Layered Button */}
                 <button 
-                    className={`btn-3d-circle ${isAdding ? 'btn-disabled' : ''}`} // Add CSS class if adding
+                    className={`btn-add-cart ${isAdding ? 'btn-disabled' : ''}`} 
                     onClick={(e) => {
-                        e.preventDefault(); // Stop the Link from triggering if they click the button!
+                        e.preventDefault();
                         addToCart(product);
                     }}
-                    disabled={isAdding} // 🔒 Lock the button
+                    disabled={isAdding}
                     aria-label={t('productCard.add')}
                 >
-                    <span className="btn-shadow"></span>
-                    <span className="btn-edge"></span>
-                    <div className="btn-front">
-                        {/* 🌟 Show Spinner if adding, else show Bag */}
-                        {isAdding ? <span className="btn-spinner"></span> : <FiShoppingBag />}
-                    </div>
+                    {isAdding ? <span className="btn-spinner"></span> : <FiShoppingBag />}
                 </button>
             </div>
         </div>

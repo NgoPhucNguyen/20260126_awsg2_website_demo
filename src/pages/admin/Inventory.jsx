@@ -36,6 +36,7 @@ const Inventory = () => {
                     return {
                         id: product.id,
                         name: product.name,
+                        nameVn: product.nameVn || product.name,
                         category: product.category?.name || "Uncategorized",
                         price: mainVariant.unitPrice,
                         stock: variantStock, 
@@ -80,7 +81,8 @@ const Inventory = () => {
         // 3. Map it to match the table's format
         const mappedProduct = {
             id: newProduct.id,
-            name: newProduct.nameVn,
+            name: newProduct.name,
+            nameVn: newProduct.nameVn || newProduct.name,
             category: categoryName,
             price: mainVariant.unitPrice || 0,
             stock: stock,
@@ -123,9 +125,11 @@ const Inventory = () => {
     };
 
     // 🔎 Search Filter
-    const filteredProducts = products.filter(product => 
-        product.nameVn.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredProducts = products.filter(product => {
+        // Fallback to empty string if nameVn happens to be missing to prevent crashes
+        const searchTarget = product.nameVn || product.name || ""; 
+        return searchTarget.toLowerCase().includes(searchTerm.toLowerCase());
+    });
 
     // 💰 Price Formatter
     const formatPrice = (price) => {
@@ -153,30 +157,28 @@ const Inventory = () => {
             {/* Header */}
             <header className="inventory-header">
                 <div>
-                    <h2>📦 Product Inventory</h2>
-                    <p className="admin-subtitle">Manage your cosmetics catalog</p>
+                    <h2>Kho Sản Phẩm</h2>
+                    <p className="admin-subtitle">Quản lý danh mục mỹ phẩm</p>
                 </div>
                 <div className="header-actions">
                     <button
                         className={`btn-toggle ${isViewingArchived ? 'btn-toggle-archived' : 'btn-toggle-active'}`}
                         onClick={() => setIsViewingArchived(!isViewingArchived)}
                     >
-                        {isViewingArchived ? "<- Back to Active" : "🗑️ View Archived"}
+                        {isViewingArchived ? "Quay lại sản phẩm đang bán" : "Xem sản phẩm đã lưu trữ"}
                     </button>
 
-                    {/* Change your Add New Product button to look like this: */}
                     <button className="btn-add" onClick={() => setIsAddModalOpen(true)}>
-                        <FaPlus /> Add New Product
+                        <FaPlus /> Thêm sản phẩm mới
                     </button>
                 </div>
             </header>
 
             {/* Search Bar */}
             <div className="search-container">
-                <FaMagnifyingGlass className="search-icon" />
                 <input 
                     type="text" 
-                    placeholder="Search products..." 
+                    placeholder="Tìm kiếm sản phẩm..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="search-input"
@@ -191,18 +193,18 @@ const Inventory = () => {
             />
             {/* Table */}
             {isLoading ? (
-                <div className="loading-container"><div className="spinner"></div><p>Loading inventory...</p></div>
+                <div className="loading-container"><div className="spinner"></div><p>Đang tải kho ...</p></div>
             ) : (
                 <div className="table-responsive">
                     <table className="users-table">
                         <thead>
                              <tr>
                                 <th>ID</th>
-                                <th>Product Name</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Stock Status</th>
-                                <th>Actions</th>
+                                <th>Sản Phẩm</th>
+                                <th>Loại</th>
+                                <th>Giá</th>
+                                <th>Tồn Kho</th>
+                                <th>Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -213,7 +215,7 @@ const Inventory = () => {
                                         <td>
                                             <div className="product-cell">
                                                 <div className="img-placeholder"><FaBoxOpen size={20}/></div>
-                                                {product.name}
+                                                {product.nameVn}
                                             </div>
                                         </td>
                                         <td><span className="badge tier-1">{product.category}</span></td>

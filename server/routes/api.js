@@ -17,9 +17,11 @@ const router = express.Router();
 
 // --- MOUNT ROUTES ---
 router.use('/auth', authRoutes);
-router.use('/categories', categoryRoutes);
 router.use('/products', productRoutes);
 router.use('/cart', cartRoutes); // Mount cart routes under /api/cart
+
+// Admin routes
+router.use('/categories', categoryRoutes);
 router.use('/customers', customerRoutes);
 router.use('/coupons', couponRoutes);
 router.use('/promotions', promotionRoutes);

@@ -1,3 +1,5 @@
+import { useState } from "react";
+import axios from "@/api/axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/features/auth/AuthProvider"; 
 import { useCart } from "@/context/CartProvider"; 
@@ -9,7 +11,9 @@ import "./Cart.css";
 const Cart = () => {
     const { auth } = useAuth();
     const navigate = useNavigate();
-    
+    const [couponCode, setCouponCode] = useState("");
+    const [appliedCoupon, setAppliedCoupon] = useState(null);
+    const [couponError, setCouponError] = useState("");
     // 🔌 CONNECT TO GLOBAL CONTEXT
     const { 
         cartItems, 
@@ -19,6 +23,29 @@ const Cart = () => {
         totalItems,
         isUpdating
     } = useCart(); 
+
+    const handleApplyCoupon = async () => {
+    try {
+        const res = await axios.post('/api/coupons/validate', { 
+            code: couponCode, 
+            orderValue: totalPrice 
+        });
+        setAppliedCoupon(res.data); // Returns { type: 'FIXED', value: 50000, etc }
+        setCouponError("");
+    } catch (err) {
+        setCouponError(err.response?.data?.message || "Invalid Coupon");
+        setAppliedCoupon(null);
+    }
+    };
+
+    // Calculation
+    const discountAmount = appliedCoupon ? (
+        appliedCoupon.type === 'PERCENTAGE' 
+        ? (totalPrice * appliedCoupon.value) / 100 
+        : appliedCoupon.value
+    ) : 0;
+
+    const finalPrice = totalPrice - discountAmount;
 
     // 🇻🇳 HELPER: Format VND
     const formatPrice = (price) => {
@@ -33,7 +60,9 @@ const Cart = () => {
         console.log("Processing Checkout...", cartItems);
         alert("Proceeding to Payment Gateway...");
     }
-};
+    };
+
+
 
     if (cartItems.length === 0) {
         return (
@@ -71,14 +100,26 @@ const Cart = () => {
                                 </div>
 
                                 {/* Details */}
-                                <div className="item-info">
-                                    <div className="item-meta">
-                                        <h3>{item.nameVn}</h3>
-                                        {/* Show Size if available */}
-                                        {item.size && <span className="item-variant">Dung tích: {item.size}</span>}
-                                    </div>
-                                    <p className="item-price">{formatPrice(item.price)}</p>
+                                {/* Inside the cartItems.map in Cart.jsx */}
+                            <div className="item-info">
+                                <div className="item-meta">
+                                    <h3>{item.nameVn}</h3>
+                                    {item.size && <span className="item-variant">Dung tích: {item.size}</span>}
                                 </div>
+                                
+                                {/* 🌟 Highlight the sale price if the item came from a promotion */}
+                                {/* Inside Cart.jsx item mapping */}
+                                <div className="item-price-wrapper">
+                                    <p className="item-price" style={{ color: item.isSale ? '#d32f2f' : '#444' }}>
+                                        {formatPrice(item.price)}
+                                    </p>
+                                    {item.isSale && item.originalPrice && (
+                                        <p className="item-original-price" style={{ textDecoration: 'line-through', fontSize: '0.85rem', color: '#999', margin: '2px 0 0 0' }}>
+                                            {formatPrice(item.originalPrice)}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
 
                                 {/* Controls */}
                                 <div className="item-controls">
@@ -133,33 +174,56 @@ const Cart = () => {
                 </div>
 
                 {/* 💳 RIGHT: Order Summary */}
-                <div className="cart-summary-wrapper">
-                    <div className="cart-summary">
-                        <h3>Order Summary</h3>
-                        
-                        <div className="summary-row">
-                            <span>Subtotal</span>
-                            <span>{formatPrice(totalPrice)}</span>
+                <div className="cart-summary">
+                    <h3>Order Summary</h3>
+                    
+                    {/* 🎟️ Coupon Section */}
+                    <div className="coupon-section">
+                        <div className="coupon-input-wrapper">
+                            <input 
+                                type="text" 
+                                placeholder="Mã giảm giá" 
+                                value={couponCode} 
+                                onChange={(e) => setCouponCode(e.target.value.toUpperCase())} 
+                            />
+                            <button onClick={handleApplyCoupon} disabled={!couponCode}>Áp dụng</button>
                         </div>
-                        <div className="summary-row">
-                            <span>Shipping</span>
-                            <span className="free-text">Free</span>
+                        {couponError && <p className="error-text">{couponError}</p>}
+                        {appliedCoupon && <p className="success-text">✅ Đã áp dụng mã: {appliedCoupon.code}</p>}
+                    </div>
+
+                    {/* 📊 Price Rows */}
+                    <div className="summary-row">
+                        <span>Tạm tính</span>
+                        <span>{formatPrice(totalPrice)}</span>
+                    </div>
+
+                    {/* 📉 Show Discount Row only if a coupon is applied */}
+                    {discountAmount > 0 && (
+                        <div className="summary-row discount">
+                            <span>Giảm giá</span>
+                            <span className="minus-text">-{formatPrice(discountAmount)}</span>
                         </div>
-                        
-                        <div className="divider"></div>
-                        
-                        <div className="summary-row total">
-                            <span>Total</span>
-                            <span>{formatPrice(totalPrice)}</span>
-                        </div>
-                        
-                        <button className="checkout-btn" onClick={handleCheckout}>
-                            CHECKOUT
-                        </button>
-                        
-                        <div className="secure-note">
-                            🔒 Secure Checkout
-                        </div>
+                    )}
+
+                    <div className="summary-row">
+                        <span>Vận chuyển</span>
+                        <span className="free-text">Miễn phí</span>
+                    </div>
+                    
+                    <div className="divider"></div>
+                    
+                    <div className="summary-row total">
+                        <span>Tổng cộng</span>
+                        <span>{formatPrice(finalPrice)}</span>
+                    </div>
+                    
+                    <button className="checkout-btn" onClick={handleCheckout}>
+                        CHECKOUT
+                    </button>
+                    
+                    <div className="secure-note">
+                        🔒 Secure Checkout
                     </div>
                 </div>
             </div>
