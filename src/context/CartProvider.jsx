@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useContext, useEffect, useMemo } from "react";
 import { useToast } from  './ToastProvider';
 import axios from "@/api/axios";
 import { useAuth } from "@/features/auth/AuthProvider";
@@ -17,7 +17,8 @@ export const CartProvider = ({ children }) => {
         const savedCart = localStorage.getItem("shopping-cart");
         return savedCart ? JSON.parse(savedCart) : [];
     });
-
+    
+    
     // 3. Save to LocalStorage (Runs every time cartItems changes)
     
     // 🌟 NEW: Sync Function to Merge Local Cart with Database Cart
@@ -183,8 +184,17 @@ export const CartProvider = ({ children }) => {
     const setCartData = (newCartItems) => {
         setCartItems(newCartItems);
     };
+
+    const clearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem("shopping-cart");
+    };
+
+    const totalPrice = useMemo(() => {
+    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+    }, [cartItems]);
+
     // 💰 Calculate Totals
-    const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
     const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
 
     return (

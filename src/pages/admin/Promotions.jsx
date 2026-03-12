@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import axios from '../../api/axios';
+import axios from '@/api/axios';
 import './Promotions.css';
 
 const API_PROMOTIONS = '/api/promotions';
@@ -347,7 +347,7 @@ const Promotions = () => {
       <div className="promotions-header">
         <h1>Quản lý Khuyến Mãi</h1>
         <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-          ➕ Tạo Khuyến Mãi Mới
+          Tạo Khuyến Mãi Mới
         </button>
       </div>
 
@@ -541,7 +541,7 @@ const Promotions = () => {
 
               <div className="form-actions">
                 <button type="submit" className="btn btn-success" disabled={submitting}>
-                  {submitting ? 'Đang lưu...' : (editingId ? 'Lưu Thay Đổi' : '➕ Tạo Khuyến Mãi')}
+                  {submitting ? 'Đang lưu...' : (editingId ? 'Lưu Thay Đổi' : 'Tạo Khuyến Mãi')}
                 </button>
                 <button type="button" className="btn btn-secondary" onClick={resetForm} disabled={submitting}>
                   Hủy

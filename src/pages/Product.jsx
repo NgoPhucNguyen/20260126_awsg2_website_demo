@@ -63,7 +63,25 @@ const Product = () => {
                     .filter(variant => variant.unitPrice >= min && variant.unitPrice <= max)
                     .map(variant => {
                         const variantLabel = getVariantLabel(variant);
-                        
+                // Check for active promotion on this variant
+                const now = new Date();
+                // Find the first active promotion (if any)
+                const activePromo = variant.promotions?.find(p => {
+                    const promo = p.promotion;
+                    return new Date(promo.startTime) <= now && new Date(promo.endTime) >= now;
+                })?.promotion;
+                // Calculate final price after promotion (if applicable)
+                let finalPrice = variant.unitPrice;
+                let isSale = false;
+
+                if (activePromo) {
+                    const discount = activePromo.type === 'PERCENTAGE' 
+                        ? (finalPrice * activePromo.value) / 100 
+                        : activePromo.value;
+                    finalPrice = Math.max(0, finalPrice - discount);
+                    isSale = true;
+                }
+
                         return {
                             // Link Info (Both cards go to same Product Detail page)
                             id: product.id, 
@@ -78,7 +96,13 @@ const Product = () => {
                             skinType: product.skinType,
                             // Specific Variant Data
                             size: variantLabel,
-                            price: variant.unitPrice, 
+                            // Price Logic (with Promotion if active)
+                            price: finalPrice, 
+                            originalPrice: variant.unitPrice,
+                            isSale: isSale,
+                            discountValue: activePromo?.value,
+                            discountType: activePromo?.type,
+                            //images (take first image of variant, if exists)
                             image: getImageUrl(variant.images?.[0]?.imageUrl),
                         };
                     });

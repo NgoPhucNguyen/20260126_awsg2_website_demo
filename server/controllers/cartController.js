@@ -42,30 +42,56 @@ export const syncCart = async (req, res) => {
 
         // 🌟 RULE 3: MERGE LOCAL CART VÀO DATABASE CART
         if (localCart && localCart.length > 0) {
+            const now = new Date();
             for (const localItem of localCart) {
-                // Tìm xem món này đã có trong DB chưa
-                const existingDetail = await prisma.orderDetail.findFirst({
-                    where: {
-                        orderId: dbCart.id,
-                        productVariantId: localItem.variantId
+                // 🔍 NEW: Look up the variant AND its active promotions
+                const variant = await prisma.productVariant.findUnique({
+                    where: { id: Number(localItem.variantId) },
+                    include: {
+                        promotions: {
+                            include: { promotion: true },
+                            where: {
+                                promotion: {
+                                    startTime: { lte: now },
+                                    endTime: { gte: now }
+                                }
+                            }
+                        }
                     }
                 });
 
+                if (!variant) continue;
+
+                // 💰 Calculate the REAL current price
+                let currentPrice = variant.unitPrice;
+                if (variant.promotions.length > 0) {
+                    const promo = variant.promotions[0].promotion;
+                    const discount = promo.type === 'PERCENTAGE' 
+                        ? (currentPrice * promo.value) / 100 
+                        : promo.value;
+                    currentPrice = Math.max(0, currentPrice - discount);
+                }
+                // 🌟 THE FIX: Use upsert logic to either update existing item or create new one
+                const existingDetail = await prisma.orderDetail.findFirst({
+                    where: { orderId: dbCart.id, productVariantId: variant.id }
+                });
+                // 🐛 BUG FIX: This is where the actual database update happens! We either increment quantity or create a new record.
                 if (existingDetail) {
-                    // Nếu có rồi -> Cộng dồn số lượng
                     await prisma.orderDetail.update({
                         where: { id: existingDetail.id },
-                        data: { quantity: existingDetail.quantity + localItem.quantity }
+                        data: { 
+                            quantity: existingDetail.quantity + localItem.quantity,
+                            unitPrice: currentPrice // ✅ Sync to the LATEST price
+                        }
                     });
                 } else {
-                    // Nếu chưa có -> Tạo mới vào DB
                     await prisma.orderDetail.create({
                         data: {
                             orderId: dbCart.id,
-                            productVariantId: localItem.variantId,
+                            productVariantId: variant.id,
                             quantity: localItem.quantity,
-                            originalPrice: localItem.price,
-                            unitPrice: localItem.price
+                            originalPrice: variant.unitPrice, // 👈 Original base price
+                            unitPrice: currentPrice           // 👈 Actual price user pays
                         }
                     });
                 }
@@ -86,10 +112,13 @@ export const syncCart = async (req, res) => {
         const formattedCart = finalCart.orderDetails.map(detail => ({
             id: detail.variant.productId,
             variantId: detail.productVariantId,
-            name: detail.variant.product.nameVn,
+            nameVn: detail.variant.product.nameVn || detail.variant.product.name,
+            // Price logic: We want to show the price that the user is actually paying (after promotion), not the original price
             price: detail.unitPrice,
+            originalPrice: detail.originalPrice,
+            isSale: detail.unitPrice < detail.originalPrice,
             quantity: detail.quantity,
-            // ... map các trường image/size nếu cần ...
+            // For simplicity, we take the first image of the variant as the thumbnail
             image: detail.variant.thumbnailUrl, 
             specification: detail.variant.specification,
             size: detail.variant.specification?.size || detail.variant.specification?.volume || null
@@ -107,7 +136,7 @@ export const syncCart = async (req, res) => {
 export const addCartItem = async (req, res) => {
     try {
         const userId = req.user.id;
-        const { variantId, quantity, price } = req.body;
+        const { variantId, quantity } = req.body;
 
         // 1. Find or Create DRAFT cart
         let dbCart = await prisma.cart.findFirst({
@@ -122,9 +151,26 @@ export const addCartItem = async (req, res) => {
 
         // 🌟 FORCE TYPES TO INTEGER TO PREVENT PRISMA CRASHES
         const safeVariantId = Number(variantId);
-        const safePrice = Number(price);
         const safeQuantity = Number(quantity);
 
+        const variant = await prisma.productVariant.findUnique({
+            where: { id: safeVariantId },
+            include: {
+                promotions: {
+                    include: { promotion: true },
+                    where: { promotion: { startTime: { lte: new Date() }, endTime: { gte: new Date() } } }
+                }
+            }
+        });
+
+        if (!variant) return res.status(404).json({ error: "Product not found" });
+
+        let realPrice = variant.unitPrice;
+        if (variant.promotions.length > 0) {
+            const promo = variant.promotions[0].promotion;
+            const discount = promo.type === 'PERCENTAGE' ? (realPrice * promo.value) / 100 : promo.value;
+            realPrice = realPrice - discount;
+        }
         // 2. Check if item already exists in the cart
         const existingDetail = await prisma.orderDetail.findFirst({
             where: { orderId: dbCart.id, productVariantId: safeVariantId }
@@ -134,7 +180,10 @@ export const addCartItem = async (req, res) => {
             // ✅ ATOMIC INCREMENT
             await prisma.orderDetail.update({
                 where: { id: existingDetail.id },
-                data: { quantity: { increment: safeQuantity } } 
+                data: { 
+                    quantity: { increment: safeQuantity },
+                    unitPrice: realPrice // ✅ Always update to the latest price
+            } 
             });
         } else {
             // ✅ CREATE NEW ITEM
@@ -143,8 +192,8 @@ export const addCartItem = async (req, res) => {
                     orderId: dbCart.id,
                     productVariantId: safeVariantId,
                     quantity: safeQuantity,
-                    originalPrice: safePrice,
-                    unitPrice: safePrice
+                    originalPrice: variant.unitPrice,
+                    unitPrice: realPrice
                 }
             });
         }

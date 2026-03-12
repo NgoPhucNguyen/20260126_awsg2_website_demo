@@ -36,6 +36,8 @@
     border-bottom: 1px solid #f5f5f5;
 }
 
+
+
 .card-image img {
     max-width: 100%;
     max-height: 100%;
@@ -58,6 +60,22 @@
     border-radius: 4px;
     font-weight: 600;
     text-transform: uppercase;
+}
+
+/* Update the Badge */
+.sale-badge-overlay {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background-color: #8A1C31; /* 🌹 Deep Velvet Ruby instead of bright red */
+    color: white;
+    font-size: 0.75rem; /* Slightly smaller for elegance */
+    font-weight: 800;
+    padding: 6px 12px; /* More padding makes it look like a premium tag */
+    border-radius: 20px; /* Pill-shape instead of a square box */
+    z-index: 2;
+    box-shadow: 0 4px 10px rgba(138, 28, 49, 0.2); /* Colored shadow for glow */
+    letter-spacing: 0.5px;
 }
 
 .card-info {
@@ -98,104 +116,104 @@
     border-top: 1px solid #f9f9f9;
 }
 
-.price {
-    /* Kept exactly as your original! */
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: #000;
+/* 🌟 Price Wrapper Styling */
+.price-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-/* --- THE 3D CIRCLE BUTTON CONTAINER --- */
-.btn-3d-circle {
-    position: relative;
-    border: none;
-    background: transparent;
-    padding: 0;
-    outline: none;
-    cursor: pointer;
-    /* 📐 Force a perfect circle */
-    width: 44px;
+.price-wrapper-sale {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Update the Prices */
+.price.discounted {
+    color: #8A1C31; /* Match the ruby badge */
+    font-weight: 800;
+    font-size: 1.15rem;
+}
+
+.price.original.strike {
+    color: #a8a29e; /* Softer grey from your theme */
+    text-decoration: line-through;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* ========================================================= */
+/* 🛍️ LUXURY RECTANGULAR ADD-TO-CART BUTTON                 */
+/* ========================================================= */
+
+.btn-add-cart {
+    /* Dimensions: A wide, substantial rectangle */
+    min-width: 60px; 
     height: 44px;
-}
-
-/* 🌑 Layer 1: The Shadow */
-.btn-3d-circle .btn-shadow {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.20);
-    border-radius: 50%; /* Perfect circle */
-    transform: translateY(2px);
-    transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
-}
-
-/* 🥇 Layer 2: The 3D Edge (The dark sides of the button) */
-.btn-3d-circle .btn-edge {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    /* A rich, dark gold gradient to make it look cylindrical */
-    background: linear-gradient(
-        to left,
-        #947533 0%,
-        #b38e40 8%,
-        #b38e40 92%,
-        #947533 100%
-    );
-}
-
-/* ✨ Layer 3: The Front Face (Where the icon lives) */
-.btn-3d-circle .btn-front {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    padding: 0 15px;
+    
+    /* Layout */
     display: flex;
     align-items: center;
     justify-content: center;
+    
+    /* Elegant Dark Gold Color */
+    background-color: #E6C27A; 
+    color: #000000;
     font-size: 1.25rem;
-    color: white;
-    background: #cca858; /* Your main Aphrodite Gold */
+    
+    /* Shape & Borders: Sharp and modern with a tiny rounding */
+    border: 1px solid #E6C27A;
+    border-radius: 4px; 
+    outline: none;
+    cursor: pointer;
+    
+    /* Very subtle luxury shadow (not abused) */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    
+    /* Smooth fade for all interactions */
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* 🖱️ Hover State: Swaps to Dark Theme color */
+.btn-add-cart:hover:not(.btn-disabled) {
+    background-color: #1c1917; /* Dark Charcoal Black */
+    border-color: #1c1917;
+    color: #ffffff; /* Icon turns into your accent yellow! */
+    
+    /* Gentle lift on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* 👇 Active (Click) State */
+.btn-add-cart:active:not(.btn-disabled) {
+    transform: translateY(0); /* Drops back down */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* 🔒 Disabled/Loading State */
+.btn-add-cart.btn-disabled {
+    background-color: #f5f5f5;
+    border-color: #e0e0e0;
+    color: #a8a29e;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Fix for the spinner to ensure it centers correctly */
+.btn-add-cart .btn-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid #fff;
     border-radius: 50%;
-    /* Pushes the face UP to reveal the edge below it */
-    transform: translateY(-4px);
-    transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1), background 250ms;
+    animation: spin 1s linear infinite;
 }
 
-/* ========================================================= */
-/* 🖱️ HOVER & ACTIVE ANIMATIONS                              */
-/* ========================================================= */
-
-/* When hovered, it floats slightly higher */
-.btn-3d-circle:hover .btn-shadow {
-    transform: translateY(4px);
-    transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
-}
-
-.btn-3d-circle:hover .btn-front {
-    transform: translateY(-6px);
-    background: #d4b56a; /* Brightens up slightly */
-    transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5), background 250ms;
-}
-
-/* When clicked, it squishes down instantly! */
-.btn-3d-circle:active .btn-shadow {
-    transform: translateY(1px);
-    transition: transform 34ms;
-}
-
-.btn-3d-circle:active .btn-front {
-    transform: translateY(-1px); /* Pushes down into the edge */
-    transition: transform 34ms;
-}
-
-/* Prevent the icon from being accidentally highlighted */
-.btn-3d-circle .btn-front svg {
-    user-select: none;
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

@@ -343,9 +343,9 @@ const Coupons = () => {
   return (
     <div className="coupons-container">
       <div className="coupons-header">
-        <h1>🎟️ Quản lý Coupon</h1>
+        <h1>Quản Lý Mã Giảm Giá</h1>
         <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-          ➕ Tạo Coupon Mới
+          Tạo Coupon Mới
         </button>
       </div>
 
@@ -361,7 +361,7 @@ const Coupons = () => {
         <div className="modal-overlay">
           <div className="modal-content modal-large">
             <div className="modal-header">
-              <h2>{editingId ? '✏️ Sửa Coupon' : '➕ Tạo Coupon Mới'}</h2>
+              <h2>{editingId ? 'Sửa Coupon' : 'Tạo Coupon Mới'}</h2>
               <button className="close-btn" onClick={resetForm}>✕</button>
             </div>
 

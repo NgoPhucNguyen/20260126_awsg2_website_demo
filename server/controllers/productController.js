@@ -95,7 +95,12 @@ export const getProducts = async (req, res) => {
         variants: {
           include: {
             images: true, // Get images to show thumbnail
-            inventories: true
+            inventories: true,
+            promotions: {
+                include: {
+                    promotion: true
+                }
+            }
           }
         }
       }
@@ -140,7 +145,12 @@ export const getProductById = async (req, res) => {
         category: true,
         variants: {
           include: {
-            images: true // Important: Get images for each variant
+            images: true, // Important: Get images for each variant
+            promotions: {
+                include: {
+                    promotion: true
+                }
+            }
           }
         }
       }
