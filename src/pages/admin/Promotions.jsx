@@ -187,13 +187,14 @@ const Promotions = () => {
 
     try {
       setSubmitting(true);
-
+      const safeStartTime = new Date(formData.startTime).toISOString();
+      const safeEndTime = new Date(formData.endTime).toISOString();
       const submitData = {
         type: formData.type,
         value: parseFloat(formData.value),
         description: formData.description.trim(),
-        startTime: formData.startTime,
-        endTime: formData.endTime,
+        startTime: safeStartTime,
+        endTime: safeEndTime,
         rule: {
           minOrderValue: parseInt(formData.rule?.minOrderValue || 0),
           maxDiscountValue: parseInt(formData.rule?.maxDiscountValue || 0),

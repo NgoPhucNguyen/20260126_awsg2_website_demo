@@ -1,0 +1,60 @@
+/* src/components/Skeleton/ProductDetailSkeleton.css */
+
+.skeleton-pulse {
+    background: #f6f7f8;
+    background: linear-gradient(to right, #f6f7f8 8%, #edeef1 38%, #f6f7f8 54%);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+    border-radius: 4px;
+}
+
+.skeleton-detail-container {
+    display: grid;
+    /* This matches your actual ProductDetail layout */
+    grid-template-columns: 1fr 1fr; 
+    gap: 3rem;
+}
+
+/* Image Section */
+.skel-main-img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.skel-thumbnail-row {
+    display: flex;
+    gap: 10px;
+}
+
+.skel-thumb {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+}
+
+/* Info Section */
+.skel-line {
+    height: 16px;
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.skel-title { height: 32px; width: 70%; margin-bottom: 20px; }
+.skel-brand { height: 14px; width: 40%; margin-bottom: 15px; }
+.skel-skintype { height: 14px; width: 50%; margin-bottom: 30px; }
+.skel-price { height: 28px; width: 30%; margin-bottom: 30px; }
+
+.skel-desc-block {
+    margin-bottom: 30px;
+}
+
+.skel-options { height: 40px; width: 60%; margin-bottom: 30px; }
+.skel-btn-large { height: 50px; width: 100%; border-radius: 4px; margin-top: 20px; }
+
+@media (max-width: 768px) {
+    .skeleton-detail-container {
+        grid-template-columns: 1fr;
+    }
+}
