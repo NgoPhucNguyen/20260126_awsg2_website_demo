@@ -4,7 +4,7 @@ import { FaXmark, FaCloudArrowUp, FaSpinner } from "react-icons/fa6";
 import "./AddProductModal.css";
 
 const AddProductModal = ({ isOpen, onClose, onSuccess, filterOptions }) => {
-    // 1️⃣ Form State
+    // Form State
     const [formData, setFormData] = useState({
         name: "",
         nameVn: "",
@@ -18,7 +18,7 @@ const AddProductModal = ({ isOpen, onClose, onSuccess, filterOptions }) => {
         sku: ""
     });
 
-    // 2️⃣ Image State
+    // Image State
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -35,7 +35,7 @@ const AddProductModal = ({ isOpen, onClose, onSuccess, filterOptions }) => {
         setSelectedFiles(Array.from(e.target.files));
     };
 
-    // 🚀 THE MASTER SUBMIT FUNCTION
+    // THE MASTER SUBMIT FUNCTION
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
@@ -71,7 +71,7 @@ const AddProductModal = ({ isOpen, onClose, onSuccess, filterOptions }) => {
                 ingredient: formData.ingredient,
                 skinType: formData.skinType,
                 sku: formData.sku,
-                imageUrls: uploadedUrls // 👈 Pass the array of AWS URLs!
+                imageUrls: uploadedUrls // Pass the array of AWS URLs!
             };
 
             // STEP C: Send to your Prisma Backend
@@ -85,7 +85,7 @@ const AddProductModal = ({ isOpen, onClose, onSuccess, filterOptions }) => {
 
         } catch (error) {
             console.error("Error creating product:", error);
-            alert("❌ Failed to create product. Check console.");
+            alert("Failed to create product.");
         } finally {
             setIsSubmitting(false);
         }
@@ -93,13 +93,13 @@ const AddProductModal = ({ isOpen, onClose, onSuccess, filterOptions }) => {
 
     return (
         <div className="inline-add-panel">
-            {/* 📌 1. HEADER */}
+            {/* HEADER */}
             <div className="panel-header">
                 <h2>✨ Add New Product</h2>
                 <button type="button" className="btn-close" onClick={onClose}><FaXmark /></button>
             </div>
 
-            {/* 📜 2. THE FORM GRID */}
+            {/* THE FORM GRID */}
             <form id="add-product-form" onSubmit={handleSubmit} className="product-form">
                 
                 <div className="form-group full-width">
@@ -177,7 +177,7 @@ const AddProductModal = ({ isOpen, onClose, onSuccess, filterOptions }) => {
                 </div>
             </form>
 
-            {/* 📌 3. PANEL ACTIONS */}
+            {/* PANEL ACTIONS */}
             <div className="panel-actions">
                 <button type="button" className="btn-cancel" onClick={onClose} disabled={isSubmitting}>
                     Cancel
