@@ -3,14 +3,20 @@ import { useLocation, useParams, useNavigate } from "react-router-dom";
 import axios from "@/api/axios";
 import { useCart } from "@/context/CartProvider";
 import { getImageUrl } from "@/utils/getImageUrl";
+
 // Components
 import ProductImageGallery from "@/components/ProductImageGallery";
 import ProductSlider from "@/components/ProductSlider";
 import ProductReviews from "@/components/ProductReviews";
 import AnalyzeSkinBtn from "@/components/AnalyzeSkinBtn/AnalyzeSkinBtn";
+
+// Layout Components
+import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
+import ProductDetailSkeleton from "@/components/Skeleton/ProductDetailSkeleton"; 
+
 import "./ProductDetail.css";
 
-
+// 🛠️ HÀM HỖ TRỢ: Lấy tên hiển thị của biến thể (Ví dụ: 400ml, 50ml)
 const getVariantLabel = (variant) => {
     if (!variant?.specification) return "Standard";
     try {
@@ -22,12 +28,13 @@ const getVariantLabel = (variant) => {
         return variant.sku || "Standard";
     }
 };
-// Add this helper function to calculate the active promotion
+
+// 🛠️ HÀM HỖ TRỢ: Tính toán giá sau khi áp dụng khuyến mãi (nếu có)
 const getEffectivePrice = (variant) => {
     const originalPrice = variant.unitPrice;
     if (!variant.promotions || variant.promotions.length === 0) return { price: originalPrice, isSale: false };
 
-    // Get the first active promotion (simplified logic)
+    // Lấy chương trình khuyến mãi đầu tiên đang trong thời gian áp dụng
     const promo = variant.promotions[0].promotion;
     const now = new Date();
     
@@ -44,7 +51,7 @@ const getEffectivePrice = (variant) => {
     return { price: originalPrice, isSale: false };
 };
 
-// --- HELPER: Format Currency ---
+// 🛠️ HÀM HỖ TRỢ: Định dạng tiền tệ VNĐ
 const formatPrice = (price) => 
     new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
 
@@ -52,73 +59,130 @@ const formatPrice = (price) =>
 const ProductDetail = () => {
     const { id } = useParams();
     const { addToCart, isAdding } = useCart();
-    // --- STATE ---
+    
+    // --- KHAI BÁO STATE ---
     const [product, setProduct] = useState(null);
     const [selectedVariant, setSelectedVariant] = useState(null);
     const [relatedProducts, setRelatedProducts] = useState([]);
     const [recentProducts, setRecentProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const navigate = useNavigate(); // For programmatic navigation (e.g. after adding to cart)
-    const location = useLocation(); // To read query params for variant pre-selection
+    
+    const navigate = useNavigate();
+    const location = useLocation();
 
-    
-    
-    // --- 1. FETCH DATA ---
+    // --- 1. LẤY DỮ LIỆU SẢN PHẨM ---
     useEffect(() => {
         const loadPageData = async () => {
             setLoading(true);
             try {
+                // Gọi API lấy chi tiết sản phẩm
                 const response = await axios.get(`/api/products/${id}`);
                 const apiData = response.data; 
                 setProduct(apiData);
-                
-                if (apiData.variants?.length > 0) {
-                    const searchParams = new URLSearchParams(location.search);
-                    const variantIdFromUrl = Number(searchParams.get("variant"));
-                    
-                    const preSelected = apiData.variants.find(v => v.id === variantIdFromUrl);
-                    
-                    // Default to URL variant OR the first variant in the list
-                    setSelectedVariant(preSelected || apiData.variants[0]);
-                }
 
+                // Kiểm tra URL xem người dùng có đang chọn một biến thể cụ thể không
+                const searchParams = new URLSearchParams(location.search);
+                const variantIdFromUrl = Number(searchParams.get("variant"));
+                const preSelected = apiData.variants.find(v => v.id === variantIdFromUrl);
+                
+                // Mặc định chọn biến thể từ URL, nếu không có thì lấy biến thể đầu tiên
+                setSelectedVariant(preSelected || apiData.variants[0]);
+                
+                // Lấy danh sách sản phẩm liên quan ("Bạn có thể sẽ thích")
                 try {
                     const { data: relatedData } = await axios.get(`/api/products/${id}/related`);
-                    setRelatedProducts(relatedData);
-                } catch (e) { console.warn("Related products failed", e); }
+                    
+                    // Format lại dữ liệu sản phẩm liên quan để truyền vào Slider
+                    const formattedRelated = relatedData.flatMap(prod => {
+                        if (!prod.variants || prod.variants.length === 0) return [];
+                        
+                        const variant = prod.variants[0]; 
+                        const variantLabel = getVariantLabel(variant);
+                        
+                        const now = new Date();
+                        const activePromo = variant.promotions?.find(p => {
+                            const promo = p.promotion;
+                            return new Date(promo.startTime) <= now && new Date(promo.endTime) >= now;
+                        })?.promotion;
+
+                        let finalPrice = variant.unitPrice;
+                        let isSale = false;
+
+                        if (activePromo) {
+                            const discount = activePromo.type === 'PERCENTAGE' 
+                                ? (finalPrice * activePromo.value) / 100 
+                                : activePromo.value;
+                            finalPrice = Math.max(0, finalPrice - discount);
+                            isSale = true;
+                        }
+
+                        return {
+                            id: prod.id, 
+                            variantId: variant.id, 
+                            name: `${prod.name} - ${variantLabel}`, 
+                            nameVn: prod.nameVn ? `${prod.nameVn} - ${variantLabel}` : `${prod.name} - ${variantLabel}`,
+                            brand: prod.brand?.nameVn || prod.brand?.name,
+                            description: prod.description,
+                            skinType: prod.skinType,
+                            size: variantLabel,
+                            price: finalPrice, 
+                            originalPrice: variant.unitPrice,
+                            isSale: isSale,
+                            discountValue: activePromo?.value,
+                            discountType: activePromo?.type,
+                            image: getImageUrl(variant.images?.[0]?.imageUrl),
+                            stock: variant.stock || 0
+                        };
+                    });
+
+                    setRelatedProducts(formattedRelated);
+                } catch (e) { 
+                    console.warn("Lỗi tải sản phẩm liên quan:", e); 
+                }
 
             } catch (err) {
                 console.error(err);
-                setError("Product not found");
+                setError("Không tìm thấy sản phẩm");
             } finally {
                 setLoading(false);
             }
         };
 
         loadPageData();
-        window.scrollTo(0, 0); 
-    }, [id, location.search]);
+        window.scrollTo(0, 0); // Cuộn lên đầu trang khi chuyển sản phẩm
+    }, [id]); 
 
-    // --- 2. RECORD HISTORY ---
+    // --- 2. CHUYỂN ĐỔI BIẾN THỂ NHANH (Không cần load lại trang) ---
+    useEffect(() => {
+        if (product && product.variants) {
+            const searchParams = new URLSearchParams(location.search);
+            const variantIdFromUrl = Number(searchParams.get("variant"));
+            if (variantIdFromUrl) {
+                const newVariant = product.variants.find(v => v.id === variantIdFromUrl);
+                if (newVariant) setSelectedVariant(newVariant);
+            }
+        }
+    }, [location.search, product]);
+
+    // --- 3. LƯU LỊCH SỬ XEM SẢN PHẨM VÀO LOCAL STORAGE ---
     useEffect(() => {
         if (!product) return;
 
         const addToHistory = () => {
             let history = JSON.parse(localStorage.getItem("recentlyViewed")) || [];
-            // Remove existing entry for this product to avoid duplicates
-            history = history.filter(p => p.id !== product.id);
+            history = history.filter(p => p.id !== product.id); // Tránh trùng lặp
 
             history.unshift({
                 id: product.id,
-                name: product.nameVn || product.name,
+                name: product.name,
+                nameVn: product.nameVn || product.name,
                 brandName: product.brand?.nameVn || product.brand?.name || "Unknown",
-                // Fallback to the first product image instead of the active variant image
                 image: product.variants?.[0]?.images?.[0]?.imageUrl || "https://via.placeholder.com/300",
                 price: product.variants?.[0]?.unitPrice || 0
             });
 
-            if (history.length > 5) history.pop();
+            if (history.length > 5) history.pop(); // Chỉ lưu 5 sản phẩm gần nhất
             localStorage.setItem("recentlyViewed", JSON.stringify(history));
             
             setRecentProducts(history.filter(p => p.id !== product.id));
@@ -127,10 +191,10 @@ const ProductDetail = () => {
         addToHistory();
     }, [product?.id]); 
 
-    // --- CALCULATIONS ---
-    
+    // --- 4. TÍNH TOÁN DỮ LIỆU HIỂN THỊ TRÊN GIAO DIỆN ---
     const currentVariantLabel = useMemo(() => getVariantLabel(selectedVariant), [selectedVariant]);
-    // ✅ NEW: Map through all images and format their URLs for the Gallery!
+    
+    // Lấy ảnh của biến thể đang chọn
     const displayImages = useMemo(() => {
         return (selectedVariant?.images || []).map(img => ({
             ...img,
@@ -138,13 +202,18 @@ const ProductDetail = () => {
         }));
     }, [selectedVariant]);
 
+    // Tính giá cuối cùng (đã trừ khuyến mãi)
     const effective = useMemo(() => {
         return selectedVariant ? getEffectivePrice(selectedVariant) : { price: 0, isSale: false };
     }, [selectedVariant]);
 
-    // --- HANDLERS ---
+    // 🌟 Kiểm tra tình trạng kho hàng
+    const currentStock = selectedVariant?.stock || 0;
+    const isOutOfStock = currentStock === 0;
+
+    // --- 5. XỬ LÝ SỰ KIỆN THÊM VÀO GIỎ HÀNG ---
     const handleAddToCart = () => {
-        if (!product || !selectedVariant || isAdding) return; // Prevent spam clicks
+        if (!product || !selectedVariant || isAdding || isOutOfStock) return; // Chặn click nếu đang tải hoặc hết hàng
         addToCart({
             id: product.id,
             name: product.name,
@@ -154,58 +223,72 @@ const ProductDetail = () => {
             isSale: effective.isSale,
             image: displayImages[0]?.imageUrl,
             variantId: selectedVariant.id,
-            size: currentVariantLabel //variant
+            size: currentVariantLabel 
         });
     };
 
-    // --- RENDER ---
-    if (loading) return <div className="loading">Loading...</div>;
-    if (error) return <div className="error">{error}</div>;
+    // --- RENDER GIAO DIỆN ---
+    if (loading) return <ProductDetailSkeleton />;
+    if (error) return <div className="error-message">{error}</div>;
 
     return (
         <div className="product-detail-page"> 
+            
+            {/* THUYẾT MINH ĐƯỜNG DẪN (BREADCRUMB) */}
+            <div className="breadcrumb-wrapper">
+                <Breadcrumb paths={[
+                    { name: 'Trang chủ', url: '/' },
+                    { 
+                        name: product.category?.nameVn || product.category?.name || 'Sản phẩm', 
+                        url: `/?categoryId=${product.categoryId}` 
+                    },
+                    { name: product.nameVn || product.name, url: '#' }
+                ]} />
+            </div>
+
             <div className="product-detail-container">
                 
+                {/* TRÁI: Khu vực hiển thị ảnh */}
                 <div className="detail-image-section">
                     <ProductImageGallery images={displayImages} />
                 </div>
 
+                {/* PHẢI: Thông tin chi tiết sản phẩm */}
                 <div className="detail-info-section">
                     <h1 className="product-title">{product.nameVn || product.name}</h1>
-                    <div className="product-brand">Brand: <span>{product.brand?.nameVn || product.brand?.name || "Unknown"}</span></div>
+                    <div className="product-brand">Thương hiệu: <span>{product.brand?.nameVn || product.brand?.name || "Đang cập nhật"}</span></div>
 
-                    {/* 👇 ADD THIS NEW BLOCK RIGHT HERE 👇 */}
+                    {/* Loại da phù hợp */}
                     {product.skinType && (
-                        <div className="product-skintype" style={{ marginBottom: "1rem", color: "#555", fontSize: "0.95rem" }}>
-                            <span style={{ fontWeight: "600" }}>Phù hợp cho:</span> {product.skinType}
+                        <div className="product-skintype">
+                            <span>Phù hợp cho:</span> {product.skinType}
                         </div>
                     )}
-                    {/* 👆 END OF NEW BLOCK 👆 */}
 
+                    {/* Khu vực Giá tiền */}
                     <div className="product-price">
                         {effective.isSale ? (
                             <>
                                 <span className="current-price">{formatPrice(effective.price)}</span>
-                                <span className="original-price" style={{ textDecoration: 'line-through', fontSize: '0.9rem', color: '#999', marginLeft: '10px' }}>
-                                    {formatPrice(effective.original)}
-                                </span>
+                                <span className="original-price">{formatPrice(effective.original)}</span>
                                 <span className="sale-badge">
                                     -{selectedVariant?.promotions?.[0]?.promotion?.value}%
                                 </span>
                             </>
                         ) : (
-                            formatPrice(selectedVariant.unitPrice)
+                            <span>{formatPrice(selectedVariant.unitPrice)}</span>
                         )}
                     </div>
 
+                    {/* Mô tả ngắn */}
                     <div className="product-description">
                         <p>{product.description}</p>
                     </div>
                     
-                    {/* 📏 Variant Buttons */}
+                    {/* Nút chọn Biến thể (Variants) */}
                     {product.variants?.length > 0 && (
                         <div className="variant-selector">
-                            <span className="label">Options:</span>
+                            <span className="label">Lựa chọn:</span>
                             <div className="variant-options">
                                 {product.variants.map((variant) => (
                                     <button
@@ -216,38 +299,43 @@ const ProductDetail = () => {
                                             navigate(`?variant=${variant.id}`, { replace: true });
                                         }}
                                     >
-                                        {/* ✅ Updated call here */}
                                         {getVariantLabel(variant)}
                                     </button>
                                 ))}
                             </div>
                         </div>
                     )}
-                    
-                    <div className="stock-status">
-                        <span className="status-dot green"></span> In Stock
+
+                    {/* Trạng thái kho (Động dựa theo isOutOfStock) */}
+                    <div className={`stock-status ${isOutOfStock ? 'out-of-stock' : 'in-stock'}`}>
+                        <span className="status-dot"></span> 
+                        {isOutOfStock ? 'Đã hết hàng' : 'Còn hàng'}
                     </div>
 
+                    {/* Nút thêm vào giỏ hàng */}
                     <div className="action-buttons">
                         <button 
-                            className={`add-cart-btn ${isAdding ? 'btn-loading' : ''}`} 
+                            className={`add-cart-btn ${isAdding ? 'btn-loading' : ''} ${isOutOfStock ? 'btn-disabled' : ''}`} 
                             onClick={handleAddToCart}
-                            disabled={isAdding} // 🔒 Physically lock the button
+                            disabled={isAdding || isOutOfStock} 
                         >
                             {isAdding ? (
                                 <>
                                     <span className="btn-spinner"></span> Đang thêm...
                                 </>
+                            ) : isOutOfStock ? (
+                                "ĐÃ HẾT HÀNG"
                             ) : (
                                 "THÊM VÀO GIỎ"
                             )}
                         </button>
                     </div>
                 </div>
-            <AnalyzeSkinBtn /> 
 
+                <AnalyzeSkinBtn /> 
             </div>
 
+            {/* DƯỚI: Các Slider đề xuất */}
             <div className="product-bottom-section">
                 <ProductSlider title="Bạn có thể sẽ thích" products={relatedProducts} />
                 

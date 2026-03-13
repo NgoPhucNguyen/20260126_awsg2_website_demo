@@ -1,11 +1,13 @@
 // src/pages/Product.jsx
 import axios from "../api/axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useCart } from "@/context/CartProvider";
 import { getImageUrl } from "@/utils/getImageUrl";
 import ProductFilter from "@/components/ProductComponents/ProductFilter";
 import ProductCard from "@/components/ProductComponents/ProductCard";
+import ProductCardSkeleton from "@/components/Skeleton/ProductCardSkeleton";
+import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import "./Product.css";
 
 // 🛠️ HELPER: Extract Variant Label
@@ -24,7 +26,7 @@ const getVariantLabel = (variant) => {
 const Product = () => {
     const { addToCart } = useCart();
     const location = useLocation();
-
+    const gridRef = useRef(null);
     const [products, setProducts] = useState([]);
     const [filterOptions, setFilterOptions] = useState({ 
         brands: [], 
@@ -32,6 +34,16 @@ const Product = () => {
         skinTypes : [] 
     });
     const [loading, setLoading] = useState(true);
+
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 24; // How many products per page? (8 fits nicely in a 4-column 3-column 2-column grid)
+
+    // RESET PAGE ON FILTER CHANGE
+    // If the customer searches or changes a filter, we must send them back to page 1
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [location.search]);
 
     // 1. Fetch Attributes for Filters (Brands, Categories, etc.)
     useEffect(() => {
@@ -104,6 +116,7 @@ const Product = () => {
                             discountType: activePromo?.type,
                             //images (take first image of variant, if exists)
                             image: getImageUrl(variant.images?.[0]?.imageUrl),
+                            stock : variant.stock
                         };
                     });
                 });
@@ -119,9 +132,26 @@ const Product = () => {
         return () => controller.abort();
     }, [location.search]);
 
+
+    // CALCULATE THE SLICE FOR THE CURRENT PAGE
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    // THIS is the array we will actually map over in the HTML!
+    const currentProducts = products.slice(indexOfFirstItem, indexOfLastItem); 
+    const totalPages = Math.ceil(products.length / itemsPerPage);
+
+    // Function to change page and scroll smoothly back to the top
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+        // 🌟 Scroll to the grid smoothly
+        if (gridRef.current) {
+            gridRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
+
     return (
         <div className="product-page-container">
-            <main className="product-main">
+            <main className="product-main" ref={gridRef}>
                 <header className="product-header">
                     <div className="header-titles">
                         <h1>Sản Phẩm</h1>
@@ -132,18 +162,52 @@ const Product = () => {
                     </div>
             </header>
 
-                {loading ? <div className="loading">Loading...</div> : (
-                    <div className="product-grid">
-                        {products.length > 0 ? products.map((item) => (
-                            <ProductCard 
-                                // ⚠️ IMPORTANT: Use variantId as Key now (since product.id repeats)
-                                key={item.variantId} 
-                                product={item} 
-                                addToCart={addToCart} 
-                            />
-                        )) : (
-                            <div className="no-results">No products match your filter.</div>
-                        )}
+                <div className="product-grid">
+                    {loading ? (
+                        // 🦴 Show 24 Skeletons while waiting for API
+                        [...Array(itemsPerPage)].map((_, index) => (
+                            <ProductCardSkeleton key={`skeleton-${index}`} />
+                        ))
+                    ) : currentProducts.length > 0 ? (
+                        // 📦 Show real products when ready
+                        currentProducts.map((item) => (
+                            <ProductCard key={item.variantId} product={item} />
+                        ))
+                    ) : (
+                        <div className="no-results">Không tìm thấy sản phẩm nào.</div>
+                    )}
+                </div>
+
+                {/* PAGINATION UI CONTROLS */}
+                {!loading && totalPages > 1 && (
+                    <div className="pagination-container">
+                        <button 
+                            className="page-nav-btn"
+                            disabled={currentPage === 1} 
+                            onClick={() => paginate(currentPage - 1)}
+                        >
+                            &laquo; Trước
+                        </button>
+
+                        <div className="page-numbers">
+                            {[...Array(totalPages)].map((_, i) => (
+                                <button 
+                                    key={i + 1} 
+                                    className={`page-num-btn ${currentPage === i + 1 ? 'active' : ''}`} 
+                                    onClick={() => paginate(i + 1)}
+                                >
+                                    {i + 1}
+                                </button>
+                            ))}
+                        </div>
+
+                        <button 
+                            className="page-nav-btn"
+                            disabled={currentPage === totalPages} 
+                            onClick={() => paginate(currentPage + 1)}
+                        >
+                            Sau &raquo;
+                        </button>
                     </div>
                 )}
             </main>

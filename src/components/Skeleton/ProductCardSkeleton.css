@@ -1,0 +1,65 @@
+/* src/components/Skeleton/ProductCardSkeleton.css */
+/* Remove hover effects for the skeleton */
+.skeleton-card:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* The sweeping gradient animation */
+.skeleton-anim {
+    background: #f6f7f8;
+    background: linear-gradient(to right, #f6f7f8 8%, #edeef1 38%, #f6f7f8 54%);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+    border-radius: 4px;
+}
+
+@keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+}
+
+/* Match the Image Area */
+.skeleton-card .card-image {
+    height: 220px; /* Matches your ProductCard CSS */
+    width: 100%;
+    padding: 0;
+    border-radius: 8px 8px 0 0;
+}
+
+/* Match the Text Area */
+.skel-title {
+    height: 20px;
+    width: 85%;
+    margin-bottom: 12px;
+}
+
+.skel-skin-type {
+    height: 14px;
+    width: 50%;
+    margin-bottom: 12px;
+}
+
+.skel-desc {
+    height: 12px;
+    width: 100%;
+    margin-bottom: 6px;
+}
+
+.skel-desc.short {
+    width: 70%;
+    margin-bottom: 16px;
+}
+
+/* Match the Footer Area */
+.skel-price {
+    height: 24px;
+    width: 80px;
+}
+
+/* Match your new rectangular button */
+.skel-btn {
+    height: 44px;
+    width: 60px;
+    border-radius: 4px;
+}

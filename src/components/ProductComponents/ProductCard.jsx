@@ -1,48 +1,65 @@
 // src/components/ProductCard.jsx
 import { Link } from "react-router-dom";
-import { useTranslation } from 'react-i18next'; // 🌟 1. Import the translation hook
-import { FiShoppingBag, FiLoader } from "react-icons/fi";
+import { useTranslation } from 'react-i18next';
+import { FiShoppingBag, FiLoader } from "react-icons/fi"; // FiLoader hiện chưa dùng đến
 import { useCart } from "@/context/CartProvider";
 import "./ProductCard.css";
 
 const ProductCard = ({ product }) => {
-    // 🌟 2. Grab the translation function (t) and the active language (i18n)
+    // Khởi tạo đa ngôn ngữ và giỏ hàng
     const { t, i18n } = useTranslation(); 
-    
     const { addToCart, isAdding } = useCart();
     
+    // Lấy tên sản phẩm theo ngôn ngữ đang chọn
     const displayName = i18n.language === 'vi' ? (product.nameVn || product.name) : product.name;
-
+    
+    // Hàm định dạng tiền tệ sang VND
     const formatPrice = (price) => {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
     };
+    
+    // Biến kiểm tra tình trạng kho
+    const isOutOfStock = product.stock === 0;
 
     return (
-        <div className="product-card">
-            {/* 1. WRAP CLICKABLE AREAS IN LINK */}
+        // Thêm class động để làm mờ toàn bộ card nếu hết hàng
+        <div className={`product-card ${isOutOfStock ? 'is-out-of-stock-card' : ''}`}>
+            
+            {/* Vùng có thể click để xem chi tiết sản phẩm */}
             <Link 
                 to={`/product/${product.id}?variant=${product.variantId}`} 
                 className="card-link"
             >
+                {/* 1. KHU VỰC HÌNH ẢNH */}
                 <div className="card-image">
-                    <img src={product.image} alt={displayName} />
+                    <img 
+                        src={product.image} 
+                        alt={displayName} 
+                        className={isOutOfStock ? "grayscale-img" : ""}
+                    />
+                    
+                    {/* Nhãn Thương hiệu */}
                     {product.brand && <span className="brand-tag">{product.brand}</span>}
                     
-                    {/* 🌟 ADD THIS: The Sale Badge */}
-                    {product.isSale && (
+                    {/* Lớp phủ & Nhãn nổi (Chỉ hiển thị 1 trong 2) */}
+                    {isOutOfStock ? (
+                        <div className="out-of-stock-overlay">
+                            <span>Đã hết hàng</span>
+                        </div>
+                    ) : product.isSale && (
                         <span className="sale-badge-overlay">
                             -{product.discountValue}{product.discountType === 'PERCENTAGE' ? '%' : 'đ'}
                         </span>
                     )}
                 </div>
                 
+                {/* 2. KHU VỰC THÔNG TIN */}
                 <div className="card-info">
-                    {/* 🌟 5. Inject the dynamic translated name */}
                     <h3>{displayName}</h3>
 
-                    {/* Skin Type */}
+                    {/* Loại da phù hợp */}
                     {product.skinType && (
-                        <div style={{ fontSize: "0.8rem", color: "#d4af37", marginBottom: "8px", fontWeight: "600" }}>
+                        <div className="skin-type-tag">
                             Phù hợp: {product.skinType}
                         </div>
                     )}
@@ -51,15 +68,15 @@ const ProductCard = ({ product }) => {
                 </div>
             </Link>
 
-            {/* 2. ACTION AREA */}
+            {/* 3. KHU VỰC HÀNH ĐỘNG (Giá & Nút thêm giỏ) */}
             <div className="card-footer">
                 <div className="price-container">
                     {product.isSale ? (
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <span className="price sale-price" style={{ color: '#d32f2f', fontWeight: '700' }}>
+                        <div className="price-wrapper-sale">
+                            <span className="price sale-price">
                                 {formatPrice(product.price)}
                             </span>
-                            <span className="original-price-strike" style={{ textDecoration: 'line-through', fontSize: '0.85rem', color: '#999' }}>
+                            <span className="price original-price-strike">
                                 {formatPrice(product.originalPrice)}
                             </span>
                         </div>
@@ -68,15 +85,16 @@ const ProductCard = ({ product }) => {
                     )}
                 </div>
                 
-                {/* 👇 The new 3D Layered Button */}
+                {/* Nút Thêm vào giỏ */}
                 <button 
-                    className={`btn-add-cart ${isAdding ? 'btn-disabled' : ''}`} 
+                    className={`btn-add-cart ${isAdding || isOutOfStock ? 'btn-disabled' : ''}`} 
                     onClick={(e) => {
-                        e.preventDefault();
-                        addToCart(product);
+                        e.preventDefault(); // Ngăn chuyển trang khi bấm nút
+                        if (!isOutOfStock) addToCart(product);
                     }}
-                    disabled={isAdding}
-                    aria-label={t('productCard.add')}
+                    disabled={isAdding || isOutOfStock}
+                    aria-label={t('productCard.add', 'Thêm vào giỏ')}
+                    title={isOutOfStock ? "Sản phẩm đã hết hàng" : "Thêm vào giỏ"}
                 >
                     {isAdding ? <span className="btn-spinner"></span> : <FiShoppingBag />}
                 </button>
