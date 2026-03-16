@@ -1,31 +1,80 @@
 // src/components/ProductSlider.jsx
 import { Link } from "react-router-dom";
+// 1. Thêm useRef và useState
+import { useRef, useState } from "react"; 
 import "./ProductSlider.css";
 import { getImageUrl } from "@/utils/getImageUrl";
 
 const ProductSlider = ({ title, products }) => {
+  // --- STATE CHUỘT (DRAG TO SCROLL) ---
+  const sliderRef = useRef(null);
+  const [isMouseDown, setIsMouseDown] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
   if (!products || products.length === 0) return null;
 
   const formatPrice = (price) => 
     new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
 
+  // --- LOGIC XỬ LÝ KÉO CHUỘT ---
+  const handleMouseDown = (e) => {
+    setIsMouseDown(true);
+    setIsDragging(false); // Chỉ bật dragging khi thực sự di chuyển chuột
+    // Lấy tọa độ X lúc bắt đầu click chuột
+    setStartX(e.pageX - sliderRef.current.offsetLeft);
+    // Lưu lại vị trí thanh cuộn hiện tại
+    setScrollLeft(sliderRef.current.scrollLeft);
+  };
+
+  const handleMouseLeave = () => {
+    setIsMouseDown(false); // Tắt trạng thái click khi chuột rời khỏi vùng slider
+    setIsDragging(false); // Tắt kéo khi chuột rời khỏi vùng slider
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false); // Tắt kéo khi nhả chuột
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return; // Nếu không click giữ thì không làm gì cả
+    e.preventDefault(); // Ngăn trình duyệt bôi đen chữ hoặc kéo hình ảnh
+    
+    const x = e.pageX - sliderRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5; // Tốc độ trượt (nhân 1.5 để lướt nhanh hơn)
+    if (Math.abs(walk) > 5) { // Chỉ coi là dragging nếu di chuyển đủ xa (tránh nhầm lẫn với click đơn thuần)
+      setIsDragging(true);
+    }
+    sliderRef.current.scrollLeft = scrollLeft - walk;
+  };
+  const handleLinkClick = (e) => {
+    if (isDragging) {
+      e.preventDefault(); // Ngăn Link chuyển trang nếu người dùng chỉ đang lướt (kéo chuột)
+    }
+    setIsDragging(false); // Reset trạng thái dragging sau khi click
+  };
+
+
   return (
     <div className="product-slider-section">
       <h2 className="slider-title">{title}</h2>
       
-      <div className="slider-grid">
+      {/* 2. GẮN SỰ KIỆN CHUỘT VÀO CONTAINER */}
+      <div 
+        className={`slider-grid ${isDragging ? 'dragging' : ''}`}
+        ref={sliderRef}
+        onMouseDown={handleMouseDown}
+        onMouseLeave={handleMouseLeave}
+        onMouseUp={handleMouseUp}
+        onMouseMove={handleMouseMove}
+      >
         {products.map(product => {
-          // 1. All data is already flattened! Just read it directly.
           const finalPrice = product.price || 0;
           const originalPrice = product.originalPrice || finalPrice;
           const isSale = product.isSale || false;
-          
-          // 🌟 NEW: Check if out of stock
-          // Because recentProducts comes from LocalStorage, it might not have 'stock' saved yet.
-          // We safely default to false if stock is undefined so old history doesn't break.
           const isOutOfStock = product.stock === 0;
 
-          // Format the discount badge if it exists
           let discountBadge = null;
           if (isSale && product.discountValue) {
               discountBadge = product.discountType === 'PERCENTAGE' 
@@ -33,7 +82,6 @@ const ProductSlider = ({ title, products }) => {
                   : `-${formatPrice(product.discountValue)}`;
           }
 
-          // 2. Safely handle the image
           const rawImageUrl = product.image;
           const image = rawImageUrl 
             ? (rawImageUrl.startsWith('http') ? rawImageUrl : getImageUrl(rawImageUrl)) 
@@ -44,30 +92,14 @@ const ProductSlider = ({ title, products }) => {
           const label = product.size || "";
 
           return (
-            <div key={`${product.id}-${variantId || Math.random()}`} className="slider-card" style={{ position: 'relative' }}>
+            <div key={`${product.id}-${variantId || Math.random()}`} className="slider-card">
               
-              {/* 🌟 THE LUXURY RED SALE BADGE */}
-              {isSale && discountBadge && (
-                  <span className="sale-badge-overlay" style={{ 
-                      position: 'absolute', top: '10px', right: '10px', 
-                      backgroundColor: '#8A1C31', color: 'white', padding: '4px 8px', 
-                      borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold', zIndex: 2 
-                  }}>
-                      {discountBadge}
-                  </span>
-              )}
-              
-              {/* 🌟 OUT OF STOCK OVERLAY */}
               {isOutOfStock ? (
-                  <div className="out-of-stock-overlay">
-                      <span>Đã hết hàng</span>
+                  <div className="slider-out-of-stock">
+                      <span>Hết hàng</span>
                   </div>
               ) : isSale && discountBadge ? (
-                  <span className="sale-badge-overlay" style={{ 
-                      position: 'absolute', top: '10px', right: '10px', 
-                      backgroundColor: '#8A1C31', color: 'white', padding: '4px 8px', 
-                      borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold', zIndex: 2 
-                  }}>
+                  <span className="slider-sale-badge">
                       {discountBadge}
                   </span>
               ) : null}
@@ -75,29 +107,38 @@ const ProductSlider = ({ title, products }) => {
               <Link 
                 to={`/product/${product.id}${variantId ? `?variant=${variantId}` : ''}`} 
                 className="slider-link"
+                onClick={handleLinkClick}  /* Gọi đúng hàm bảo vệ */
+                draggable="false"          /* Khóa tính năng kéo ảnh rác của trình duyệt */
               >
                 <div className="slider-image">
-                  <img src={image} alt={product.nameVn || product.name} />
+                  {/* Bổ sung draggable="false" cho chính tấm ảnh luôn cho chắc ăn */}
+                  <img 
+                    src={image} 
+                    alt={product.nameVn || product.name} 
+                    loading="lazy" 
+                    draggable="false" 
+                  />
                 </div>
+                
                 <div className="slider-info">
                   {brandName && <span className="slider-brand">{brandName}</span>}
-                  <h3 className="slider-name">
+                  
+                  <h3 className="slider-name" title={product.nameVn || product.name}>
                     {product.nameVn || product.name} {label && <small>({label})</small>}
                   </h3>
                   
-                  {/* 🌟 THE STRIKETHROUGH PRICE */}
-                  <div className="slider-price-container" style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '5px' }}>
+                  <div className="slider-price-container">
                       {isSale ? (
                           <>
-                              <span style={{ color: '#8A1C31', fontWeight: 'bold', fontSize: '1.1rem' }}>
+                              <span className="slider-price-sale">
                                   {formatPrice(finalPrice)}
                               </span>
-                              <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '0.85rem' }}>
+                              <span className="slider-price-original">
                                   {formatPrice(originalPrice)}
                               </span>
                           </>
                       ) : (
-                          <span className="slider-price" style={{ fontWeight: 'bold', fontSize: '1.1rem', color: '#1c1917' }}>
+                          <span className="slider-price-regular">
                               {formatPrice(finalPrice)}
                           </span>
                       )}

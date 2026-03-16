@@ -33,7 +33,6 @@ const ROLES = { 'User': 2001, 'Admin': 5150 };
 function App() {
     return (
         /* Bọc toàn bộ trong một class để quản lý layout tổng thể */
-        <div className="app-container">
             <Routes>
                 {/* 🌍 PUBLIC ROUTES (Nằm ngoài hệ thống Layout chính nếu cần tràn viền) */}
                 <Route path="unauthorized" element={<Unauthorized />} />
@@ -80,7 +79,6 @@ function App() {
                     </Route>
                 </Route>
             </Routes>
-        </div>
     );
 }
 

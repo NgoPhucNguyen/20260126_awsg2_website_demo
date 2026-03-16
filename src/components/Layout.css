@@ -4,16 +4,13 @@
   flex-direction: column;
   min-height: 100vh;
   background-color: var(--bg-primary);
-  /* Chống rung màn hình khi thanh scroll xuất hiện */
-  overflow-y: overlay; 
-  position: sticky;
 }
 
 /* --- HEADER (NAVBAR) --- */
 .app-header {
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 10000;
   width: 100%;
   background-color: var(--bg-primary);
   /* Thêm đổ bóng nhẹ để phân biệt với nội dung khi cuộn */

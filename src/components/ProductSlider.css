@@ -1,143 +1,246 @@
+/* src/components/ProductSlider.css */
+
 .product-slider-section {
-    margin-top: 4rem;
-    padding: 2rem 0; /* Changed for better edge-to-edge scrolling */
-    border-top: 1px solid #eee;
-    overflow: hidden; /* Prevent horizontal scrollbar on the whole page */
+    /* 📏 Khoảng cách linh hoạt so với các khối phía trên */
+    margin-top: clamp(2rem, 5vw, 4rem);
+    padding: clamp(1.5rem, 3vw, 2.5rem) 0; 
+    border-top: 1px solid var(--border-color, #eee);
+    overflow: hidden; 
 }
 
 .slider-title {
-    font-size: 1.5rem;
-    margin-bottom: 2rem;
-    text-align: left; /* Often looks more professional for sliders */
-    font-weight: 600;
-    padding-left: 10px;
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    margin-bottom: clamp(1rem, 3vw, 2rem);
+    text-align: left; 
+    font-weight: 700;
+    color: var(--text-primary, #1c1917);
+    /* 📏 Căn lề đồng bộ với padding của slider-grid bên dưới */
+    padding-left: clamp(16px, 3vw, 24px);
+}
+
+
+/* ========================================================= */
+/* KỸ THUẬT LƯỚT CHUỘT TRÊN DESKTOP (DRAG TO SCROLL)         */
+/* ========================================================= */
+
+.slider-grid {
+    /* Đổi con trỏ thành hình bàn tay mở */
+    cursor: grab; 
+}
+
+.slider-grid.dragging {
+    /* Đổi con trỏ thành hình bàn tay nắm lại khi đang click giữ */
+    cursor: grabbing; 
+    
+    /* 🛑 QUAN TRỌNG: Tạm tắt snap khi đang kéo để chuột di chuyển mượt mà không bị khựng */
+    scroll-snap-type: none; 
+}
+
+/* 🛑 QUAN TRỌNG: Ngăn chặn click nhầm vào sản phẩm khi người dùng chỉ đang muốn kéo thanh trượt */
+.slider-grid.dragging .slider-card {
+    pointer-events: none; 
+    user-select: none;
+}
+
+/* Ẩn bớt hiệu ứng hover khi đang lướt cho đỡ rối mắt */
+.slider-grid.dragging .slider-card:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: var(--border-color, #f0f0f0);
 }
 
 .slider-grid {
-    display: flex; /* Changed from Grid to Flex for horizontal scrolling */
-    gap: 1.5rem;
-    overflow-x: auto; /* Enable horizontal scroll */
-    padding: 10px;
-    scroll-snap-type: x mandatory; /* Makes scrolling "snap" to items */
-    scrollbar-width: none; /* Hide scrollbar for Firefox */
-    -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+    display: flex; 
+    gap: clamp(1rem, 2vw, 1.5rem);
+    overflow-x: auto; 
+    padding: 10px clamp(16px, 3vw, 24px); /* Tạo khoảng trống ở 2 đầu thanh trượt */
+    scroll-snap-type: x mandatory; 
+    scroll-behavior: smooth;
+    
+    /* Ẩn scrollbar cho Firefox và IE */
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
 }
 
-/* Hide scrollbar for Chrome/Safari */
+/* Ẩn scrollbar cho Chrome/Safari trên Mobile */
 .slider-grid::-webkit-scrollbar {
     display: none;
 }
 
-/* 📱 ONLY hide scrollbar on screens smaller than 768px (Mobile/Tablet) */
-@media (max-width: 768px) {
-    .slider-grid {
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none; /* IE/Edge */
-    }
-    .slider-grid::-webkit-scrollbar {
-        display: none; /* Chrome/Safari */
-    }
-}
-
-/* 💻 Customize the desktop scrollbar so it looks elegant, not clunky */
+/* 💻 Tùy chỉnh Scrollbar thanh lịch chỉ hiển thị trên Desktop */
 @media (min-width: 769px) {
     .slider-grid::-webkit-scrollbar {
-        height: 8px; /* Slim scrollbar */
+        display: block;
+        height: 6px; 
     }
     .slider-grid::-webkit-scrollbar-track {
         background: #f1f1f1; 
         border-radius: 4px;
+        margin: 0 clamp(16px, 3vw, 24px); /* Thụt lề scrollbar */
     }
     .slider-grid::-webkit-scrollbar-thumb {
-        background: #ccc; 
+        background: #d4d4d4; 
         border-radius: 4px;
     }
     .slider-grid::-webkit-scrollbar-thumb:hover {
-        background: #888; 
+        background: #a3a3a3; 
     }
 }
 
+/* ========================================================= */
+/* THẺ SẢN PHẨM BÊN TRONG SLIDER                             */
+/* ========================================================= */
 .slider-card {
-    flex: 0 0 220px; /* FIXED WIDTH: Each card stays 220px wide */
-    scroll-snap-align: start; /* Snap point */
-    border: 1px solid #f0f0f0;
-    border-radius: 8px;
+    /* 🚀 PHÉP THUẬT: Tự động là 160px trên Mobile, lớn dần đến 220px trên Desktop */
+    flex: 0 0 clamp(160px, 35vw, 220px); 
+    
+    scroll-snap-align: start; 
+    border: 1px solid var(--border-color, #f0f0f0);
+    border-radius: clamp(6px, 1vw, 8px);
     overflow: hidden;
-    transition: all 0.3s ease;
-    background: white;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    background: #ffffff;
+    position: relative; /* Chuẩn bị cho nhãn Sale */
+    
+    display: flex;
+    flex-direction: column;
 }
 
 .slider-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    border-color: var(--accent-yellow, #d4af37); /* Uses your brand gold if defined */
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    border-color: var(--accent-yellow, #d4af37); 
 }
 
 .slider-link {
     text-decoration: none;
     color: inherit;
-    display: block;
+    display: flex;
+    flex-direction: column;
     height: 100%;
 }
 
 .slider-image {
-    height: 180px;
-    padding: 1rem;
+    /* 📏 Ép chiều cao ảnh linh hoạt */
+    height: clamp(140px, 20vh, 180px);
+    padding: clamp(0.75rem, 1.5vw, 1rem);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #fff;
+    background: #fcfcfc;
+    border-bottom: 1px solid #f9f9f9;
 }
 
 .slider-image img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
+    mix-blend-mode: multiply; /* Xóa nền trắng của ảnh */
+    transition: transform 0.4s ease;
 }
 
+.slider-card:hover .slider-image img {
+    transform: scale(1.05);
+}
+
+/* ========================================================= */
+/* NHÃN (BADGES & OVERLAYS)                                  */
+/* ========================================================= */
+.slider-sale-badge {
+    position: absolute;
+    top: clamp(6px, 1vw, 10px);
+    right: clamp(6px, 1vw, 10px);
+    background-color: #991b1b; /* Đỏ đô */
+    color: white;
+    padding: clamp(3px, 0.8vw, 4px) clamp(6px, 1vw, 8px);
+    border-radius: 4px;
+    font-size: clamp(0.7rem, 1vw, 0.8rem);
+    font-weight: 700;
+    z-index: 2;
+    box-shadow: 0 2px 6px rgba(153, 27, 27, 0.2);
+}
+
+.slider-out-of-stock {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+}
+
+.slider-out-of-stock span {
+    background-color: rgba(28, 25, 23, 0.85);
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: clamp(0.75rem, 1vw, 0.85rem);
+    font-weight: 700;
+}
+
+/* ========================================================= */
+/* TEXT & THÔNG TIN                                          */
+/* ========================================================= */
 .slider-info {
-    padding: 1rem;
-    text-align: left; /* Aligned left for a more premium look */
+    padding: clamp(0.75rem, 1.5vw, 1rem);
+    text-align: left; 
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .slider-brand {
-    font-size: 0.75rem;
+    font-size: clamp(0.65rem, 1vw, 0.75rem);
     color: #888;
     text-transform: uppercase;
-    display: block;
-    margin-bottom: 5px;
+    font-weight: 600;
+    margin-bottom: 4px;
 }
 
 .slider-name {
-    font-size: 0.95rem;
-    margin-bottom: 8px;
+    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    margin: 0 0 8px 0;
+    color: #1c1917;
+    font-weight: 600;
+    line-height: 1.4;
+    
+    /* Cắt chữ mượt mà thay vì fix height cứng ngắc */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    white-space: normal;
-    
-    /* 🛠️ THE FIX: Math! 1.2rem * 2 lines = exactly 2.4rem */
-    line-height: 1.2rem; 
-    height: 2.4rem; 
 }
 
-.slider-price {
+.slider-name small {
+    color: #888;
+    font-weight: normal;
+}
+
+/* CỤM GIÁ TIỀN */
+.slider-price-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: auto; /* Đẩy giá xuống đáy thẻ */
+}
+
+.slider-price-regular {
     font-weight: 700;
-    color: #000;
-    font-size: 1rem;
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    color: #1c1917;
 }
 
-@media (max-width: 768px) {
-    .slider-card {
-        flex: 0 0 160px; /* Smaller cards on mobile */
-    }
-    
-    .slider-image {
-        height: 140px;
-    }
-
-    .slider-name {
-        font-size: 0.85rem;
-    }
+.slider-price-sale {
+    font-weight: 700;
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    color: #dc2626; /* Đỏ tươi */
 }
+
+.slider-price-original {
+    text-decoration: line-through;
+    color: #a8a29e;
+    font-size: clamp(0.75rem, 1vw, 0.85rem);
+    font-weight: 500;
+}
+
