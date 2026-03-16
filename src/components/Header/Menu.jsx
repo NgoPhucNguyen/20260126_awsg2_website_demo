@@ -1,7 +1,7 @@
-// src/components/NavbarHamburger.jsx
-import './NavbarHamburger.css';
+// src/components/Menu.jsx
+import './Menu.css';
 
-const NavbarHamburger = ({ isOpen, toggle }) => {
+const Menu = ({ isOpen, toggle }) => {
   return (
     <label className="hamburger">
       <input 
@@ -17,4 +17,4 @@ const NavbarHamburger = ({ isOpen, toggle }) => {
   );
 };
 
-export default NavbarHamburger;
+export default Menu;

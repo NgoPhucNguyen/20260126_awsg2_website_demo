@@ -1,3 +1,4 @@
+// src/components/ProductComponents/ProductFilter.jsx
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Slider from 'rc-slider';
@@ -12,6 +13,20 @@ const ProductFilter = ({ filterOptions }) => {
     const MIN_PRICE = 10000; 
     const MAX_PRICE = 10000000; 
     const [priceRange, setPriceRange] = useState([MIN_PRICE, MAX_PRICE]);
+
+    // 🛑 CHỨC NĂNG MỚI: Khóa cuộn trang khi mở Filter
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden'; // Chặn cuộn
+        } else {
+            document.body.style.overflow = 'unset'; // Mở lại cuộn
+        }
+        
+        // Cleanup function (Tránh lỗi khi Component bị unmount đột ngột)
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen]);
 
     useEffect(() => {
         const min = Number(searchParams.get('minPrice')) || MIN_PRICE;
@@ -51,7 +66,7 @@ const ProductFilter = ({ filterOptions }) => {
         newParams.set('minPrice', priceRange[0]);
         newParams.set('maxPrice', priceRange[1]);
         setSearchParams(newParams);
-        setIsOpen(false);
+        setIsOpen(false); // Tự động đóng Filter sau khi áp dụng
     };
 
     const formatVND = (value) => {
@@ -60,121 +75,118 @@ const ProductFilter = ({ filterOptions }) => {
 
     return (
         <>
-            {/* 🇻🇳 Translated Button */}
             <div className="filter-toggle-wrapper">
-                <button className="filter-toggle-btn" onClick={() => setIsOpen(!isOpen)}>
+                <button className="filter-toggle-btn" onClick={() => setIsOpen(true)}>
                     <FiFilter /> Bộ lọc
                 </button>
             </div>
 
+            {/* Sidebar Trượt */}
             <aside className={`filter-sidebar ${isOpen ? 'open' : ''}`}>
                 
                 <div className="filter-header">
-                    <h2>Bộ lọc</h2>
-                    <button className="close-filter-btn" onClick={() => setIsOpen(false)}>
+                    <h2>Bộ Lọc Sản Phẩm</h2>
+                    <button className="close-filter-btn" onClick={() => setIsOpen(false)} aria-label="Đóng bộ lọc">
                         <FiX />
                     </button>
                 </div>
 
-                {/* 🇻🇳 Translated: Thương hiệu */}
-                <div className="filter-group">
-                    <h3>Thương hiệu</h3>
-                    {filterOptions.brands.map(brand => (
-                        <label key={brand.id} className="filter-checkbox">
-                            <input 
-                                type="checkbox" 
-                                checked={isChecked('brandId', brand.id)}
-                                onChange={() => handleCheckboxChange('brandId', brand.id)}
-                            />
-                            {brand.name}
-                        </label>
-                    ))}
-                </div>
-
-                {/* 🇻🇳 Translated: Danh mục */}
-                <div className="filter-group">
-                    <h3>Danh mục</h3>
-                    {filterOptions.categories.map(cat => (
-                        <label key={cat.id} className="filter-checkbox">
-                            <input 
-                                type="checkbox" 
-                                checked={isChecked('categoryId', cat.id)}
-                                onChange={() => handleCheckboxChange('categoryId', cat.id)}
-                            />
-                            {cat.nameVn}
-                        </label>
-                    ))}
-                </div>
-
-                {/* Loại da */}
-                {filterOptions.skinTypes && filterOptions.skinTypes.length > 0 && (
+                <div className="filter-scrollable-content">
                     <div className="filter-group">
-                        <h3>Loại da</h3>
-                        {filterOptions.skinTypes.map((skin, index) => (
-                            <label key={`skin-${index}`} className="filter-checkbox">
+                        <h3>Thương hiệu</h3>
+                        {filterOptions.brands.map(brand => (
+                            <label key={brand.id} className="filter-checkbox">
                                 <input 
                                     type="checkbox" 
-                                    checked={isChecked('skinType', skin)}
-                                    onChange={() => handleCheckboxChange('skinType', skin)}
+                                    checked={isChecked('brandId', brand.id)}
+                                    onChange={() => handleCheckboxChange('brandId', brand.id)}
                                 />
-                                {skin}
+                                <span className="checkbox-text">{brand.name}</span>
                             </label>
                         ))}
                     </div>
-                )}
 
-                {/* 🇻🇳 Translated: Khoảng giá */}
-                <div className="filter-group">
-                    <h3>Khoảng giá</h3>
-                    <div className="price-slider-container">
-                        <Slider 
-                            range 
-                            min={0} 
-                            max={MAX_PRICE} 
-                            step={50000} 
-                            value={priceRange} 
-                            onChange={setPriceRange}
-                            trackStyle={[{ backgroundColor: '#333', height: 4 }]}
-                            handleStyle={[
-                                { borderColor: '#333', backgroundColor: '#fff', opacity: 1 }, 
-                                { borderColor: '#333', backgroundColor: '#fff', opacity: 1 }
-                            ]}
-                            railStyle={{ backgroundColor: '#ddd', height: 4 }}
-                        />
+                    <div className="filter-group">
+                        <h3>Danh mục</h3>
+                        {filterOptions.categories.map(cat => (
+                            <label key={cat.id} className="filter-checkbox">
+                                <input 
+                                    type="checkbox" 
+                                    checked={isChecked('categoryId', cat.id)}
+                                    onChange={() => handleCheckboxChange('categoryId', cat.id)}
+                                />
+                                <span className="checkbox-text">{cat.nameVn}</span>
+                            </label>
+                        ))}
+                    </div>
 
-                        <div className="price-inputs">
-                            <div className="input-wrapper">
-                                <input 
-                                    type="number" 
-                                    value={priceRange[0]} 
-                                    step={10000}
-                                    onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
-                                />
-                            </div>
-                            <span className="separator">-</span>
-                            <div className="input-wrapper">
-                                <input 
-                                    type="number" 
-                                    value={priceRange[1]} 
-                                    step={10000}
-                                    onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
-                                />
-                            </div>
+                    {filterOptions.skinTypes && filterOptions.skinTypes.length > 0 && (
+                        <div className="filter-group">
+                            <h3>Loại da</h3>
+                            {filterOptions.skinTypes.map((skin, index) => (
+                                <label key={`skin-${index}`} className="filter-checkbox">
+                                    <input 
+                                        type="checkbox" 
+                                        checked={isChecked('skinType', skin)}
+                                        onChange={() => handleCheckboxChange('skinType', skin)}
+                                    />
+                                    <span className="checkbox-text">{skin}</span>
+                                </label>
+                            ))}
                         </div>
-                        
-                        {/* 🧹 CSS MOVED TO CLASS: price-formatted */}
-                        <p className="price-formatted">
-                            {formatVND(priceRange[0])} - {formatVND(priceRange[1])}
-                        </p>
+                    )}
 
-                        {/* 🇻🇳 Translated Apply Button */}
-                        <button className="apply-btn" onClick={handlePriceApply}>
-                            ÁP DỤNG
-                        </button>
+                    <div className="filter-group price-filter-group">
+                        <h3>Khoảng giá</h3>
+                        <div className="price-slider-container">
+                            <Slider 
+                                range 
+                                min={0} 
+                                max={MAX_PRICE} 
+                                step={50000} 
+                                value={priceRange} 
+                                onChange={setPriceRange}
+                                trackStyle={[{ backgroundColor: '#1c1917', height: 4 }]}
+                                handleStyle={[
+                                    { borderColor: '#1c1917', backgroundColor: '#fff', opacity: 1, border: 'solid 2px' }, 
+                                    { borderColor: '#1c1917', backgroundColor: '#fff', opacity: 1, border: 'solid 2px' }
+                                ]}
+                                railStyle={{ backgroundColor: '#e5e5e5', height: 4 }}
+                            />
+
+                            <div className="price-inputs">
+                                <div className="input-wrapper">
+                                    <input 
+                                        type="number" 
+                                        value={priceRange[0]} 
+                                        step={10000}
+                                        onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
+                                    />
+                                </div>
+                                <span className="separator">-</span>
+                                <div className="input-wrapper">
+                                    <input 
+                                        type="number" 
+                                        value={priceRange[1]} 
+                                        step={10000}
+                                        onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
+                                    />
+                                </div>
+                            </div>
+                            
+                            <p className="price-formatted">
+                                {formatVND(priceRange[0])} - {formatVND(priceRange[1])}
+                            </p>
+
+                            <button className="apply-btn" onClick={handlePriceApply}>
+                                ÁP DỤNG GIÁ
+                            </button>
+                        </div>
                     </div>
                 </div>
             </aside>
 
+            {/* Lớp phủ màn hình: Click vào đây cũng đóng Filter */}
             {isOpen && <div className="filter-overlay" onClick={() => setIsOpen(false)}></div>}
         </>
     );

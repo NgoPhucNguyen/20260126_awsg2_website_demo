@@ -1,31 +1,28 @@
 // src/components/ProductCard.jsx
 import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { FiShoppingBag, FiLoader } from "react-icons/fi"; // FiLoader hiện chưa dùng đến
 import { useCart } from "@/context/CartProvider";
 import "./ProductCard.css";
 
+// 🎨 Import Font Awesome chuẩn Tree-shaking
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBagShopping, faSpinner } from '@fortawesome/free-solid-svg-icons';
+
 const ProductCard = ({ product }) => {
-    // Khởi tạo đa ngôn ngữ và giỏ hàng
     const { t, i18n } = useTranslation(); 
     const { addToCart, isAdding } = useCart();
     
-    // Lấy tên sản phẩm theo ngôn ngữ đang chọn
     const displayName = i18n.language === 'vi' ? (product.nameVn || product.name) : product.name;
     
-    // Hàm định dạng tiền tệ sang VND
     const formatPrice = (price) => {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
     };
     
-    // Biến kiểm tra tình trạng kho
     const isOutOfStock = product.stock === 0;
 
     return (
-        // Thêm class động để làm mờ toàn bộ card nếu hết hàng
-        <div className={`product-card ${isOutOfStock ? 'is-out-of-stock-card' : ''}`}>
+        <div className={`product-card ${isOutOfStock ? 'out-of-stock-card' : ''}`}>
             
-            {/* Vùng có thể click để xem chi tiết sản phẩm */}
             <Link 
                 to={`/product/${product.id}?variant=${product.variantId}`} 
                 className="card-link"
@@ -36,15 +33,14 @@ const ProductCard = ({ product }) => {
                         src={product.image} 
                         alt={displayName} 
                         className={isOutOfStock ? "grayscale-img" : ""}
+                        loading="lazy" /* Tối ưu hiệu suất tải ảnh */
                     />
                     
-                    {/* Nhãn Thương hiệu */}
                     {product.brand && <span className="brand-tag">{product.brand}</span>}
                     
-                    {/* Lớp phủ & Nhãn nổi (Chỉ hiển thị 1 trong 2) */}
                     {isOutOfStock ? (
                         <div className="out-of-stock-overlay">
-                            <span>Đã hết hàng</span>
+                            <span>Hết Hàng</span>
                         </div>
                     ) : product.isSale && (
                         <span className="sale-badge-overlay">
@@ -55,9 +51,8 @@ const ProductCard = ({ product }) => {
                 
                 {/* 2. KHU VỰC THÔNG TIN */}
                 <div className="card-info">
-                    <h3>{displayName}</h3>
+                    <h3 className="product-card-title" title={displayName}>{displayName}</h3>
 
-                    {/* Loại da phù hợp */}
                     {product.skinType && (
                         <div className="skin-type-tag">
                             Phù hợp: {product.skinType}
@@ -76,7 +71,7 @@ const ProductCard = ({ product }) => {
                             <span className="price sale-price">
                                 {formatPrice(product.price)}
                             </span>
-                            <span className="price original-price-strike">
+                            <span className="original-price-strike">
                                 {formatPrice(product.originalPrice)}
                             </span>
                         </div>
@@ -85,18 +80,21 @@ const ProductCard = ({ product }) => {
                     )}
                 </div>
                 
-                {/* Nút Thêm vào giỏ */}
                 <button 
                     className={`btn-add-cart ${isAdding || isOutOfStock ? 'btn-disabled' : ''}`} 
                     onClick={(e) => {
-                        e.preventDefault(); // Ngăn chuyển trang khi bấm nút
+                        e.preventDefault(); 
                         if (!isOutOfStock) addToCart(product);
                     }}
                     disabled={isAdding || isOutOfStock}
                     aria-label={t('productCard.add', 'Thêm vào giỏ')}
                     title={isOutOfStock ? "Sản phẩm đã hết hàng" : "Thêm vào giỏ"}
                 >
-                    {isAdding ? <span className="btn-spinner"></span> : <FiShoppingBag />}
+                    {isAdding ? (
+                        <FontAwesomeIcon icon={faSpinner} spin className="btn-spinner" />
+                    ) : (
+                        <FontAwesomeIcon icon={faBagShopping} />
+                    )}
                 </button>
             </div>
         </div>

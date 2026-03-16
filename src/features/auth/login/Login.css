@@ -1,0 +1,354 @@
+/* src/features/auth/login/Login.css */
+
+/* ========================================================= */
+/* 0. BIẾN CỤC BỘ DÀNH RIÊNG CHO FORM (THEME VARIABLES)      */
+/* ========================================================= */
+:root {
+    --login-bg: #ffffff;
+    --login-text-main: #1c1917;
+    --login-text-muted: #57534e;
+    --login-border: #e7e5e4;
+    --login-primary: #1c1917; /* Đen tuyền sang trọng */
+    --login-accent: #E6C27A;  /* Vàng Aphrodite */
+    --login-hover: #c6a87c;
+    --login-error-bg: #fee2e2;
+    --login-error-text: #991b1b;
+}
+
+/* ========================================================= */
+/* 1. LỚP PHỦ NỀN (MODAL OVERLAY)                            */
+/* ========================================================= */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px); /* Blur mạnh hơn để tập trung vào form */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    
+    /* 🛡️ Tránh dính mép trên mobile */
+    padding: clamp(1rem, 3vw, 2rem); 
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ========================================================= */
+/* 2. KHUNG FORM CHÍNH (LOGIN CONTAINER)                     */
+/* ========================================================= */
+.login-container {
+    background-color: var(--login-bg);
+    width: 100%;
+    
+    /* 📏 Width linh hoạt: Trên iPhone tự ép 100%, trên PC tối đa 420px */
+    max-width: clamp(320px, 90vw, 420px); 
+    
+    /* 📏 Padding động: Co giãn từ 24px (Mobile) lên 40px (Desktop) */
+    padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.5rem, 5vw, 3rem); 
+    
+    border: 1px solid var(--login-border);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1); 
+    border-radius: clamp(12px, 2vw, 20px);
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    animation: formSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes formSlideUp {
+    from { transform: translateY(30px) scale(0.98); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* --- NÚT ĐÓNG (CLOSE BUTTON) --- */
+.close-modal-btn {
+    position: absolute;
+    /* 📐 Định vị thông minh bám theo góc */
+    top: clamp(12px, 2vw, 20px);
+    right: clamp(12px, 2vw, 20px);
+    
+    background: transparent;
+    border: none;
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    color: #9ca3af;
+    cursor: pointer;
+    
+    /* Hitbox an toàn cho cảm ứng (Apple HIG) */
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.close-modal-btn:hover {
+    color: var(--login-text-main);
+    background-color: #f3f4f6;
+}
+
+/* ========================================================= */
+/* 3. TYPOGRAPHY & HEADER                                    */
+/* ========================================================= */
+.login-container h1 {
+    font-family: var(--font-heading, 'Inter', sans-serif);
+    font-size: clamp(1.4rem, 4vw, 1.8rem); /* Chữ tự động bóp nhỏ trên iPhone SE */
+    color: var(--login-text-main);
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.auth-subtitle {
+    color: var(--login-text-muted);
+    font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+    margin-bottom: clamp(1.5rem, 4vw, 2rem);
+    text-align: center;
+}
+
+/* ========================================================= */
+/* 4. FORM FIELDS (INPUTS & LABELS)                          */
+/* ========================================================= */
+.login-container form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-container label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: clamp(0.75rem, 1.2vw, 0.85rem);
+    color: var(--login-text-main);
+    display: block;
+}
+
+.login-container input[type="text"], 
+.login-container input[type="password"] {
+    /* 📏 Kích thước input linh hoạt */
+    padding: clamp(10px, 2vh, 14px) 16px;
+    margin-bottom: clamp(1rem, 2vh, 1.25rem);
+    
+    border: 1.5px solid var(--login-border);
+    border-radius: 8px;
+    background: #fafafa;
+    width: 100%;
+    
+    /* Font size 16px (1rem) cực kỳ quan trọng trên iOS để tránh bị zoom màn hình khi gõ */
+    font-size: clamp(1rem, 1.5vw, 1.05rem); 
+    color: var(--login-text-main);
+
+    box-sizing: border-box;
+    height: clamp(44px, 6vh, 50px);
+
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.login-container input:focus {
+    outline: none;
+    border-color: var(--login-accent); /* Focus viền vàng Aphrodite */
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(230, 194, 122, 0.15);
+}
+
+/* ========================================================= */
+/* 5. TOGGLE MẬT KHẨU (EYE ICON)                             */
+/* ========================================================= */
+.password-input-wrapper {
+    position: relative; 
+    width: 100%;
+    margin-bottom: clamp(1rem, 2vh, 1.25rem); /* Khoảng cách dưới input để đủ chỗ cho icon */
+}
+
+.password-input-wrapper input {
+    /* Đè margin để tránh khoảng trống kép */
+    margin-bottom: 0 !important;
+    padding-right: 48px !important; /* Chừa không gian rộng rãi cho icon con mắt */
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: 8px;
+    
+    /* 🎯 BÂY GIỜ TOÁN HỌC TRỞ NÊN SIÊU ĐƠN GIẢN VÀ CHÍNH XÁC 100% */
+    top: 50%;
+    transform: translateY(-50%);
+    
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--login-text-muted); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    z-index: 100;
+}
+
+.password-toggle-icon:hover {
+    color: var(--login-text-main);
+    background-color: #f3f4f6;
+}
+
+/* Ẩn con mắt mặc định của Edge/IE */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+/* ========================================================= */
+/* 6. THANH HÀNH ĐỘNG (GHI NHỚ & QUÊN MẬT KHẨU)              */
+/* ========================================================= */
+.form-actions {
+    display: flex;
+    flex-wrap: wrap; /* Rớt dòng nếu màn hình quá chật (VD: Galaxy Fold 280px) */
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: clamp(1.25rem, 3vw, 1.75rem);
+    margin-top: -0.25rem; 
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--login-primary); /* Đổi màu checkbox mặc định */
+    cursor: pointer;
+    margin: 0;
+}
+
+.checkbox-group label {
+    margin: 0 !important;
+    font-size: clamp(0.85rem, 1.2vw, 0.9rem) !important;
+    font-weight: 500 !important;
+    cursor: pointer;
+}
+
+.forgot-password-link {
+    background: none;
+    border: none;
+    justify-content: end;
+    color: var(--login-text-muted);
+    font-size: clamp(0.85rem, 1.2vw, 0.9rem);
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.forgot-password-link:hover {
+    color: var(--login-primary);
+    text-decoration: underline;
+}
+
+/* ========================================================= */
+/* 7. NÚT ĐĂNG NHẬP CHÍNH                                    */
+/* ========================================================= */
+.auth-btn {
+    padding: clamp(12px, 2.5vh, 16px);
+    background-color: var(--login-primary);
+    color: white;
+    font-weight: 700;
+    font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
+}
+
+.auth-btn:hover {
+    background-color: var(--login-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(198, 168, 124, 0.3);
+}
+
+.auth-btn:active {
+    transform: scale(0.98); 
+}
+
+/* ========================================================= */
+/* 8. FOOTER (CHUYỂN SANG ĐĂNG KÝ)                           */
+/* ========================================================= */
+.auth-footer {
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+    text-align: center;
+    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    color: var(--login-text-muted);
+}
+
+.switch-btn {
+    background: none;
+    border: none;
+    color: var(--login-primary);
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 6px;
+    padding: 0;
+    font-size: inherit;
+    transition: color 0.2s;
+}
+
+.switch-btn:hover {
+    color: var(--login-hover);
+    text-decoration: underline;
+}
+
+/* ========================================================= */
+/* 9. QUẢN LÝ LỖI (ERROR HANDLING UI)                        */
+/* ========================================================= */
+
+/* Khung báo lỗi server đỏ bự */
+.generalErr {
+    background-color: var(--login-error-bg);
+    color: var(--login-error-text);
+    padding: clamp(10px, 2vw, 12px); 
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
+    width: 100%;
+    text-align: center;
+    font-size: clamp(0.85rem, 1.2vw, 0.9rem);
+    font-weight: 600;
+    border: 1px solid rgba(153, 27, 27, 0.2);
+    animation: modalFadeIn 0.3s ease-in;
+}
+
+.offscreen {
+    position: absolute;
+    left: -9999px;
+}
+
+/* Lỗi Input (Đỏ viền) */
+.login-container input.input-error {
+    border-color: var(--login-error-text) !important;
+    background-color: #fffafb; 
+}
+
+/* Chữ báo lỗi dưới input */
+.field-error-text {
+    color: var(--login-error-text);
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: -8px; /* Kéo text lên sát input bị lỗi */
+    margin-bottom: 12px;
+    display: block;
+    animation: modalFadeIn 0.2s ease-in-out;
+}

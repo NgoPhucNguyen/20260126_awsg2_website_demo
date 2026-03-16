@@ -1,12 +1,15 @@
 // src/features/auth/login/Login.jsx
-import '../auth.css'; 
-import { FiX, FiEye, FiEyeOff } from "react-icons/fi"; 
+import './Login.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useRef, useState, useEffect } from 'react';
 import { useAuth } from '@/features/auth/AuthProvider'; 
 import { useToast } from '@/context/ToastProvider';
 import { useCart } from '@/context/CartProvider';
 import axios from '@/api/axios';
+
+// 🎨 1. CHỈ IMPORT FONT AWESOME CHUẨN TREE-SHAKING
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const LOGIN_URL = '/api/auth/login';
 
@@ -93,10 +96,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
             } else if (err.response?.status === 400) {
                 setGeneralErr('Missing Account Name or Password');
             } else if (err.response?.status === 401) {
-                // 4️⃣ Handle "Wrong Password" specifically
                 setPwdErr('Incorrect Password or Account Name'); 
-                // Note: For security, it's often better not to say WHICH one is wrong, 
-                // but if you want specific UI, this is how you do it.
             } else {
                 setGeneralErr('Login Failed');
             }
@@ -114,7 +114,8 @@ const Login = ({ onClose, onSwitchToRegister }) => {
             <div className="login-container" onClick={(e) => e.stopPropagation()}>
                 
                 <button className="close-modal-btn" onClick={onClose}>
-                    <FiX />
+                    {/* 🎨 2. SỬ DỤNG FONT AWESOME CHO NÚT ĐÓNG */}
+                    <FontAwesomeIcon icon={faXmark} />
                 </button>
 
                 <p 
@@ -125,11 +126,11 @@ const Login = ({ onClose, onSwitchToRegister }) => {
                     {generalErr}
                 </p>
                 
-                <h1>Welcome Back</h1>
-                <p className="auth-subtitle">Please sign in to continue</p>
+                <h1>Xin Chào</h1>
+                <p className="auth-subtitle">Đăng nhập để tiếp tục</p>
                 
                 <form onSubmit={handleSubmit} noValidate>
-                    <label htmlFor="accountName">Email or Account Name</label>
+                    <label htmlFor="accountName">Tên Tài Khoản hoặc Email</label>
                     <input
                         type="text"
                         id="accountName"
@@ -141,9 +142,8 @@ const Login = ({ onClose, onSwitchToRegister }) => {
                     />
                     {accountNameErr && <span className="field-error-text">{accountNameErr}</span>}
 
-                    <label htmlFor="password">Password:</label>
+                    <label htmlFor="password">Mật Khẩu</label>
                     
-                    {/* ✨ ONLY CHANGE: Wrapped input + Added Icon Button */}
                     <div className="password-input-wrapper">
                         <input
                             type={showPwd ? "text" : "password"} 
@@ -157,9 +157,10 @@ const Login = ({ onClose, onSwitchToRegister }) => {
                             type="button" 
                             className="password-toggle-icon"
                             onClick={() => setShowPwd(!showPwd)}
-                            tabIndex="-1" // Optional: prevents tabbing to the eye icon itself
+                            tabIndex="-1" 
                         >
-                            {showPwd ? <FiEyeOff /> : <FiEye />}
+                            {/* 🎨 3. SỬ DỤNG FONT AWESOME CHO NÚT MẮT */}
+                            <FontAwesomeIcon icon={showPwd ? faEyeSlash : faEye} />
                         </button>
                     </div>
                     {pwdErr && <span className="field-error-text">{pwdErr}</span>}
@@ -172,7 +173,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
                                 onChange={(e) => setRemember(e.target.checked)}
                                 checked={remember}
                             />
-                            <label htmlFor="remember">Remember Me</label>
+                            <label htmlFor="remember">Ghi Nhớ Tôi</label>
                         </div>
 
                         <button 
@@ -180,17 +181,19 @@ const Login = ({ onClose, onSwitchToRegister }) => {
                             onClick={handleForgotClick} 
                             className="forgot-password-link"
                         >
-                            Forgot password?
+                            Quên Mật Khẩu?
                         </button>
                     </div>
 
-                    <button className="auth-btn" type="submit">Sign In</button>
+                    <button className="auth-btn" type="submit">
+                        Đăng Nhập
+                    </button>
                 </form>
                 
                 <p className="auth-footer">
-                    Need an Account?
+                    Tạo tài khoản ?
                     <button onClick={onSwitchToRegister} className="switch-btn">
-                        Sign Up
+                        Đăng ký
                     </button>
                 </p>
             </div>

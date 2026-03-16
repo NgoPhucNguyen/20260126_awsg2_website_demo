@@ -1,0 +1,157 @@
+/* ========================================================= */
+/* 1. LỚP PHỦ NỀN (OVERLAY)                                  */
+/* ========================================================= */
+.contact-modal-overlay {
+    position: fixed;
+    inset: 0; /* Cách viết ngắn gọn thay cho top: 0, left: 0, right: 0, bottom: 0 */
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    
+    /* 🛡️ Bảo vệ iPhone: Đảm bảo Modal không bao giờ chạm sát viền màn hình vật lý */
+    padding: clamp(1rem, 3vw, 2rem); 
+}
+
+/* ========================================================= */
+/* 2. KHUNG MODAL (THE BOX)                                  */
+/* ========================================================= */
+.contact-modal-box {
+    background: var(--bg-primary, #ffffff);
+    width: 100%;
+    /* Trên Laptop là 500px, trên iPhone tự co lại nhờ width 100% của overlay */
+    max-width: 500px;
+    
+    /* 📏 Trục Padding: iPhone SE (24px) -> iPad/Laptop (40px) */
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    
+    /* 📏 Trục Border-Radius: iPhone SE (12px) -> Laptop (20px) */
+    border-radius: clamp(12px, 2vw, 20px);
+    
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+    position: relative;
+    text-align: center;
+    
+    /* Hiệu ứng nảy (Pop) mượt mà khi Modal xuất hiện */
+    animation: modalPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPopIn {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ========================================================= */
+/* 3. TYPOGRAPHY & CLOSE BUTTON                              */
+/* ========================================================= */
+.modal-title {
+    font-size: clamp(1.25rem, 2vw + 0.5rem, 1.75rem);
+    margin-bottom: 0.5rem;
+    color: var(--text-primary, #1c1917);
+}
+
+.modal-subtitle {
+    font-size: clamp(0.85rem, 1vw + 0.2rem, 1rem);
+    color: var(--text-secondary, #57534e);
+    margin-bottom: clamp(1rem, 3vw, 1.5rem);
+}
+
+.close-btn {
+    position: absolute;
+    /* 📐 Định vị động: Xê dịch tỷ lệ thuận với padding của Box */
+    top: clamp(12px, 2vw, 24px);
+    right: clamp(12px, 2vw, 24px);
+    
+    background: none;
+    border: none;
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    color: #999;
+    cursor: pointer;
+    
+    /* Hitbox an toàn cho ngón tay trên mobile (chuẩn Apple HIG) */
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.close-btn:hover {
+    color: var(--text-primary, #1a1a1a);
+    background-color: #f3f4f6;
+}
+
+/* ========================================================= */
+/* 4. FORM FIELDS (TEXTAREA)                                 */
+/* ========================================================= */
+.modal-textarea {
+    width: 100%;
+    /* 📏 Đảm bảo khung nhập không quá lùn trên Desktop và không quá chiếm chỗ trên iPhone */
+    min-height: clamp(100px, 15vh, 140px);
+    padding: clamp(0.75rem, 1.5vw, 1rem);
+    
+    border: 1px solid var(--border-color, #e5e5e5);
+    border-radius: clamp(8px, 1vw, 12px);
+    resize: vertical; /* Chỉ cho phép kéo dãn theo chiều dọc */
+    font-family: inherit;
+    font-size: clamp(0.9rem, 1vw + 0.2rem, 1rem);
+    color: var(--text-primary);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal-textarea:focus {
+    outline: none;
+    border-color: var(--accent-yellow, #E6C27A);
+    box-shadow: 0 0 0 3px rgba(230, 194, 122, 0.15);
+}
+
+/* ========================================================= */
+/* 5. CỤM NÚT BẤM (SMART GRID LAYOUT)                        */
+/* ========================================================= */
+.modal-actions {
+    margin-top: clamp(1.25rem, 3vw, 1.75rem);
+    
+    /* 🚀 BÍ QUYẾT GRID KHÔNG CẦN MEDIA QUERY: 
+       - Nếu màn hình đủ rộng (>240px tổng cộng), 2 nút đứng ngang hàng.
+       - Nếu màn hình quá hẹp (iPhone cũ), chúng tự động rớt thành cột dọc.
+    */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: clamp(0.75rem, 2vw, 1rem);
+}
+
+.send-btn, .cancel-btn {
+    padding: clamp(0.75rem, 1.5vw, 1rem);
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: clamp(0.9rem, 1vw, 1rem);
+    cursor: pointer;
+    transition: opacity 0.2s, background-color 0.2s;
+}
+
+.send-btn {
+    background-color: var(--text-primary, #1c1917);
+    color: #ffffff;
+    border: none;
+}
+
+.send-btn:hover { opacity: 0.9; }
+
+.cancel-btn {
+    background-color: transparent;
+    color: var(--text-secondary, #57534e);
+    border: 1px solid var(--border-color, #e5e5e5);
+    /* Đảo thứ tự: Đặt nút Cancel lên trước nút Send nếu rớt thành cột trên Mobile */
+    order: -1; 
+}
+
+.cancel-btn:hover { background-color: #f9fafb; }
+
+/* Desktop override: Trả lại thứ tự chuẩn (Cancel nằm bên phải) */
+@media (min-width: 480px) {
+    .cancel-btn { order: 1; }
+}

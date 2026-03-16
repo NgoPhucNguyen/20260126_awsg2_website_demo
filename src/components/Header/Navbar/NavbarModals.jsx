@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Login from "@/features/auth/login/Login";
 import Register from "@/features/auth/register/Register";
 import './NavbarModals.css';
+
 // --- CONTACT MODAL SUB-COMPONENT ---
 const ContactModal = ({ isOpen, onClose }) => {
     const [message, setMessage] = useState('');
@@ -10,7 +11,7 @@ const ContactModal = ({ isOpen, onClose }) => {
         const handleEscape = (e) => { if (e.key === 'Escape') onClose(); };
         if (isOpen) {
             document.addEventListener('keydown', handleEscape);
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden'; // Chặn cuộn trang nền
         }
         return () => {
             document.removeEventListener('keydown', handleEscape);
@@ -28,21 +29,24 @@ const ContactModal = ({ isOpen, onClose }) => {
     };
 
     return (
-        <div className="contact-modal-overlay" onClick={onClose}>
+        /* Thêm aria-modal và role để đạt chuẩn Accessibility (a11y) */
+        <div className="contact-modal-overlay" onClick={onClose} aria-modal="true" role="dialog">
             <div className="contact-modal-box" onClick={(e) => e.stopPropagation()}>
                 <div className="modal-header">
-                    <h3>Contact Us</h3>
-                    <button onClick={onClose} className="close-btn">✕</button>
+                    <h3 className="modal-title">Contact Us</h3>
+                    <button onClick={onClose} className="close-btn" aria-label="Đóng hộp thoại">✕</button>
                 </div>
                 
                 <form onSubmit={handleSubmit}>
-                    <p>Email: support@aphrodite.com</p>
+                    <p className="modal-subtitle">Email: support@aphrodite.com</p>
                     <textarea
+                        className="modal-textarea"
                         placeholder="How can we help?"
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         rows={4}
                         required
+                        aria-label="Nội dung tin nhắn"
                     />
                     <div className="modal-actions">
                         <button type="submit" className="send-btn">Send</button>
@@ -58,23 +62,18 @@ const ContactModal = ({ isOpen, onClose }) => {
 const NavbarModals = ({ modals, closeModals, openModal }) => {
     return (
         <>
-            {/* LOGIN MODAL */}
             {modals.login && (
                 <Login 
                     onClose={closeModals} 
                     onSwitchToRegister={() => openModal('register')} 
                 />
             )}
-
-            {/* REGISTER MODAL */}
             {modals.register && (
                 <Register 
                     onClose={closeModals} 
                     onSwitchToLogin={() => openModal('login')} 
                 />
             )}
-
-            {/* CONTACT MODAL */}
             <ContactModal 
                 isOpen={modals.contact} 
                 onClose={closeModals} 

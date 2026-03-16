@@ -1,18 +1,15 @@
 import "./Navbar.css";
-
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/features/auth/AuthProvider";
 import { useCart } from "@/context/CartProvider";
-// Translate 
 import { useTranslation } from "react-i18next";
-// Icons
-import { FiShoppingCart, FiGlobe, FiSettings, FiUser } from "react-icons/fi";
-// Sub-components (Organized in the same folder)
-import NavbarSearch from "./NavbarSearch";
+// Bổ sung FiMessageCircle cho icon Contact trên mobile
+import { FiShoppingCart, FiSettings, FiUser, FiMessageCircle } from "react-icons/fi";
+
+import NavbarSearch from "./NavbarSearch"; // Component Search của bạn
 import NavbarDropdown from "./NavbarDropdown";
 import NavbarModals from "./NavbarModals";
-import NavbarHamburger from "./NavbarHamburger";
 
 const ADMIN_ROLE_ID = 5150;
 
@@ -23,15 +20,10 @@ const Navbar = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const { totalItems, setCartData } = useCart();
 
-    // --- STATE ---
     const [modals, setModals] = useState({ 
-        login: false, 
-        register: false, 
-        contact: false 
+        login: false, register: false, contact: false 
     });
 
-    
-    // ---2nd CALLBACKS (Handlers) ---
     const openModal = useCallback((name) => {
         setModals({ login: false, register: false, contact: false, [name]: true });
     }, []);
@@ -42,53 +34,42 @@ const Navbar = () => {
 
     const handleLogout = useCallback(async () => {
         try {
-            setCartData([]); // Clear cart data on logout
+            setCartData([]); 
             await logout();
             navigate('/');
         } catch (error) {
             console.error('Logout failed:', error);
         }
-    }, [logout, navigate]);
+    }, [logout, navigate, setCartData]);
 
-    // --- MEMOIZED VALUES ---
     const isLoggedIn = useMemo(() => !!auth?.accessToken, [auth?.accessToken]);
-    const isAdmin = useMemo(() => 
-        auth?.roles?.includes(ADMIN_ROLE_ID), 
-        [auth?.roles]
-    );
-    // --- 🛡️ SMART LOGIN TRIGGER ---
+    const isAdmin = useMemo(() => auth?.roles?.includes(ADMIN_ROLE_ID), [auth?.roles]);
+
     useEffect(() => {
         if (searchParams.get("login") === "true") {
-            // 1. Create a copy of the current params
             const newParams = new URLSearchParams(searchParams);
-            
-            // 2. Delete the 'login' key so it doesn't loop or stay in URL
             newParams.delete("login");
-            
-            // 3. Update URL without refreshing page
             setSearchParams(newParams, { replace: true });
-            
-            // 4. Open the modal
             openModal('login');
         }
     }, [searchParams, setSearchParams, openModal]);
-    //The new global toggle function
-    const toggleLanguage = () => {
-        const newLang = i18n.language === 'en' ? 'vi' : 'en';
-        i18n.changeLanguage(newLang);
-    };
 
     const [isMobileOpen, setIsMobileOpen] = useState(false);
 
     return (
         <>
+            {/* Thẻ nav bọc ngoài cùng sẽ là Flex Container có khả năng Wrap */}
             <nav className="navbar" role="navigation">
 
-                {/* 🏠 LEFT SECTION: Brand & Admin */}
+                {/* 🏠 LEFT SECTION: Brand Logo & Admin */}
                 <div className="nav-links-left">
-                    <NavLink to="/" className="brand-link">
-                        {/* 👇 The slash tells Vite to look directly in the public/ folder! */}
-                        <img src="/rectang.jpg" alt="Aphrodite Logo" className="brand-logo" />
+                    <NavLink to="/" className="brand-link" aria-label="Trang chủ">
+                        <picture>
+                            {/* Mobile: Hiển thị icon vỏ sò */}
+                            <source media="(max-width: 768px)" srcSet="/src/assets/shell-icon.png" />
+                            {/* Desktop: Hiển thị Logo chữ ngang */}
+                            <img src="/src/assets/bigbrandlogo.jpg" alt="Aphrodite Logo" className="brand-logo" />
+                        </picture>
                     </NavLink>
                     
                     {isAdmin && (
@@ -98,30 +79,31 @@ const Navbar = () => {
                     )}
                 </div>
 
-                {/* 🔍 MIDDLE SECTION: Search Bar */}
-                <NavbarSearch />
+                {/* 🔍 MIDDLE SECTION: Search Bar (Sẽ tự rớt xuống dòng trên Mobile nhờ CSS) */}
+                {/* Lưu ý: Container của NavbarSearch cần class .nav-search-container */}
+                <div className="nav-search-container">
+                    <NavbarSearch/>
+                </div>
 
-                {/* 🛒 RIGHT SECTION: Actions & Account */}
+                {/* 🛒 RIGHT SECTION: Actions (Contact, Cart, Account) */}
                 <div className={`nav-links-right ${isMobileOpen ? 'mobile-active' : ''}`}>
-                    <button className="nav-btn" onClick={() => openModal('contact')}>
-                        Contact
-                    </button>
                     
-                    {/* Nếu muốn mở thì chỉ cần xóa gạch ✅*/}
-                    {/* <button className="lang-btn" onClick={toggleLanguage}>
-                        <FiGlobe /> <span>{i18n.language.toUpperCase()}</span>
-                    </button> */}
+                    {/* Nút Contact: Icon trên Mobile, Chữ trên Desktop */}
+                    <button className="nav-btn action-btn" onClick={() => openModal('contact')}>
+                        <FiMessageCircle/> 
+                        <span className="nav-text hide-on-mobile">Liên hệ</span>
+                    </button>
 
-
-                    <NavLink to="/cart" className="nav-btn cart-nav-btn">
+                    {/* Nút Giỏ hàng: Thêm text trên Desktop */}
+                    <NavLink to="/cart" className="nav-btn action-btn cart-nav-btn">
                         <div className="icon-wrapper">
                             <FiShoppingCart />
-                            {totalItems > 0 && (
-                                <span className="cart-badge">{totalItems}</span>
-                            )}
+                            {totalItems > 0 && <span className="cart-badge">{totalItems}</span>}
                         </div>
+                        <span className="nav-text hide-on-mobile">Giỏ hàng</span>
                     </NavLink>
 
+                    {/* Nút Tài khoản */}
                     {isLoggedIn ? (
                         <NavbarDropdown 
                             accountName={auth?.accountName} 
@@ -129,28 +111,18 @@ const Navbar = () => {
                             onLogout={handleLogout} 
                         />
                     ) : (
-                        <button 
-                            className="nav-btn login-trigger" 
-                            onClick={() => openModal('login')}
-                        >
+                        <button className="nav-btn action-btn login-trigger" onClick={() => openModal('login')}>
                             <FiUser />
+                            <div className="auth-text-wrapper">
+                                {/* Mobile hiển thị chữ ngắn, Desktop hiển thị chữ dài */}
+                                <span className="nav-text">Đăng nhập</span>
+                            </div>
                         </button>
                     )}
                 </div>
-
-                {/* 👇 Drop your clean, new component here! */}
-                <NavbarHamburger 
-                    isOpen={isMobileOpen} 
-                    toggle={() => setIsMobileOpen(!isMobileOpen)} 
-                />
             </nav>
 
-            {/* 📦 MODAL MANAGER: Handles Login, Register, and Contact */}
-            <NavbarModals 
-                modals={modals} 
-                closeModals={closeModals} 
-                openModal={openModal} 
-            />
+            <NavbarModals modals={modals} closeModals={closeModals} openModal={openModal} />
         </>
     );
 };

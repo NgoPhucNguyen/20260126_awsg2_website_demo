@@ -1,0 +1,291 @@
+/* src/features/auth/register/Register.css */
+
+/* ========================================================= */
+/* 0. BIẾN CỤC BỘ (THEME VARIABLES)                          */
+/* ========================================================= */
+:root {
+    --reg-bg: #ffffff;
+    --reg-text-main: #1c1917;
+    --reg-text-muted: #57534e;
+    --reg-border: #e7e5e4;
+    --reg-primary: #1c1917;
+    --reg-accent: #E6C27A;
+    --reg-hover: #c6a87c;
+    --reg-error-bg: #fee2e2;
+    --reg-error-text: #991b1b;
+}
+
+/* ========================================================= */
+/* 1. OVERLAY & CONTAINER                                    */
+/* ========================================================= */
+.register-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    padding: clamp(1rem, 3vw, 2rem); 
+    animation: regModalFadeIn 0.3s ease-out;
+}
+
+@keyframes regModalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.register-container {
+    background-color: var(--reg-bg);
+    width: 100%;
+    /* Form Đăng ký có 3 ô input nên ta nới rộng nó ra một tí xíu so với Login (420px -> 440px) */
+    max-width: clamp(320px, 90vw, 440px); 
+    padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.5rem, 5vw, 3rem); 
+    border: 1px solid var(--reg-border);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1); 
+    border-radius: clamp(12px, 2vw, 20px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    animation: regFormSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes regFormSlideUp {
+    from { transform: translateY(30px) scale(0.98); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* Nút Đóng */
+.register-close-btn {
+    position: absolute;
+    top: clamp(12px, 2vw, 20px);
+    right: clamp(12px, 2vw, 20px);
+    background: transparent;
+    border: none;
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    color: #9ca3af;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.register-close-btn:hover {
+    color: var(--reg-text-main);
+    background-color: #f3f4f6;
+}
+
+/* ========================================================= */
+/* 2. TYPOGRAPHY                                             */
+/* ========================================================= */
+.register-title {
+    font-family: var(--font-heading, 'Inter', sans-serif);
+    font-size: clamp(1.4rem, 4vw, 1.8rem); 
+    color: var(--reg-text-main);
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.register-subtitle {
+    color: var(--reg-text-muted);
+    font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+    margin-bottom: clamp(1.5rem, 4vw, 2rem);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ========================================================= */
+/* 3. FORM FIELDS                                            */
+/* ========================================================= */
+.register-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.register-form label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: clamp(0.75rem, 1.2vw, 0.85rem);
+    color: var(--reg-text-main);
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.register-form input[type="text"], 
+.register-form input[type="email"],
+.register-form input[type="password"] {
+    padding: clamp(10px, 2vh, 14px) 16px;
+    margin-bottom: clamp(1rem, 2vh, 1.25rem);
+    border: 1.5px solid var(--reg-border);
+    border-radius: 8px;
+    background: #fafafa;
+    width: 100%;
+    font-size: clamp(1rem, 1.5vw, 1.05rem); 
+    color: var(--reg-text-main);
+    
+    /* Chống Layout Shift khi gõ mật khẩu */
+    box-sizing: border-box;
+    height: clamp(44px, 6vh, 50px); 
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.register-form input:focus {
+    outline: none;
+    border-color: var(--reg-accent);
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(230, 194, 122, 0.15);
+}
+
+/* ========================================================= */
+/* 4. TOGGLE MẬT KHẨU (EYE ICON) - FIXED LAYOUT SHIFT        */
+/* ========================================================= */
+.register-password-wrapper {
+    position: relative; 
+    width: 100%;
+    margin-bottom: clamp(1rem, 2vh, 1.25rem); 
+}
+
+.register-password-wrapper input {
+    margin-bottom: 0 !important; 
+    padding-right: 48px !important; 
+}
+
+.register-toggle-icon {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--reg-text-muted); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+}
+
+.register-toggle-icon:hover {
+    color: var(--reg-text-main);
+    background-color: #f3f4f6;
+}
+
+/* ========================================================= */
+/* 5. NÚT ĐĂNG KÝ (SUBMIT BUTTON)                            */
+/* ========================================================= */
+.register-submit-btn {
+    padding: clamp(12px, 2.5vh, 16px);
+    background-color: var(--reg-primary);
+    color: white;
+    font-weight: 700;
+    font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: clamp(0.5rem, 2vh, 1rem); /* Form đăng ký dài hơn, thêm khoảng nghỉ cho nút */
+}
+
+.register-submit-btn:hover {
+    background-color: var(--reg-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(198, 168, 124, 0.3);
+}
+
+.register-submit-btn:active {
+    transform: scale(0.98); 
+}
+
+/* ========================================================= */
+/* 6. FOOTER (CHUYỂN SANG ĐĂNG NHẬP)                         */
+/* ========================================================= */
+.register-footer-text {
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+    text-align: center;
+    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    color: var(--reg-text-muted);
+}
+
+.register-switch-btn {
+    background: none;
+    border: none;
+    color: var(--reg-primary);
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 6px;
+    padding: 0;
+    font-size: inherit;
+    transition: color 0.2s;
+}
+
+.register-switch-btn:hover {
+    color: var(--reg-hover);
+    text-decoration: underline;
+}
+
+/* ========================================================= */
+/* 7. XỬ LÝ LỖI (ERROR STATES)                               */
+/* ========================================================= */
+.register-general-err {
+    background-color: var(--reg-error-bg);
+    color: var(--reg-error-text);
+    padding: clamp(10px, 2vw, 12px); 
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
+    width: 100%;
+    text-align: center;
+    font-size: clamp(0.85rem, 1.2vw, 0.9rem);
+    font-weight: 600;
+    border: 1px solid rgba(153, 27, 27, 0.2);
+    animation: regModalFadeIn 0.3s ease-in;
+}
+
+.register-offscreen {
+    position: absolute;
+    left: -9999px;
+}
+
+.register-form input.register-input-error {
+    border-color: var(--reg-error-text) !important;
+    background-color: #fffafb; 
+}
+
+.register-field-error {
+    color: var(--reg-error-text);
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: -8px;
+    margin-bottom: 12px;
+    display: block;
+    animation: regModalFadeIn 0.2s ease-in-out;
+}
+
+/* ========================================================= */
+/* 8. SUCCESS SECTION (SAU KHI ĐĂNG KÝ THÀNH CÔNG)           */
+/* ========================================================= */
+.register-success-section {
+    text-align: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1rem, 4vw, 2rem) 0;
+    animation: regModalFadeIn 0.4s ease;
+}

@@ -1,0 +1,163 @@
+/* ========================================================= */
+/* 1. NAVBAR CONTAINER - SMART FLEX-WRAP                       */
+/* ========================================================= */
+.navbar {
+    background-color: var(--bg-primary, #ffffff);
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap; /* 🛑 Cực kỳ quan trọng: Cho phép Search rớt dòng trên Mobile */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    /*CĂn giữa theo chiều ngang */
+    
+    justify-content: space-between;
+    padding: clamp(0.5rem, 1.5vw, 1rem) clamp(1rem, 3vw, 2rem);
+    border-bottom: 1px solid var(--border-color, #e5e5e5);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* ========================================================= */
+/* 2. CÁC PHÂN VÙNG (LEFT, MIDDLE, RIGHT) TRÊN DESKTOP     */
+/* ========================================================= */
+.nav-links-left {
+    order: 1; /* Nằm bên trái */
+    display: flex;
+    align-items: center;
+    gap: clamp(0.5rem, 1vw, 1rem);
+}
+
+/* Áp dụng cho class nằm bên trong component NavbarSearch */
+.nav-search-container {
+    order: 2; /* Nằm ở giữa trên Desktop */
+    flex: 1;
+    max-width: 500px;
+    margin: 0 clamp(1rem, 3vw, 2rem);
+}
+
+.nav-links-right {
+    order: 3; /* Nằm bên phải */
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.nav-text {
+    font-size: clamp(0.85rem, 1vw + 0.5rem, 0.95rem);
+    color: var(--text-primary, #1a1a1a);
+    font-weight: 500;
+}
+
+/* ========================================================= */
+/* 3. LOGO & CHÚ THÍCH TEXT (TYPOGRAPHY & SIZING)          */
+/* ========================================================= */
+.brand-logo {
+    height: clamp(32px, 5vh, 45px);
+    width: auto;
+    object-fit: contain;
+}
+
+/* --- 1. CHUẨN HÓA NÚT HÀNH ĐỘNG (ACTION BUTTON) --- */
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Đảm bảo icon nằm chính giữa nút */
+    gap: 8px; 
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-primary);
+    padding: 8px; /* Tạo vùng chạm (hitbox) đủ rộng cho ngón tay */
+    transition: color 0.2s ease;
+}     
+
+/* --- 2. WRAPPER RIÊNG CHO ICON (BÍ QUYẾT CĂN CHỈNH) --- */
+.icon-wrapper {
+    position: relative; /* 💡 Đây là "mỏ neo" cho số đỏ (Badge) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0; /* Loại bỏ khoảng trống thừa bên dưới icon */
+}
+
+/* --- 3. ĐỊNH DẠNG ICON SVG --- */
+.action-btn svg {
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem); /* Co giãn theo màn hình */
+    stroke-width: 2px; /* Độ đậm của icon chuyên nghiệp hơn */
+}
+
+
+/* --- 4. GIỎ HÀNG: SỐ ĐỎ (RED BADGE) --- */
+.cart-badge {
+    position: absolute;
+    /* 🧮 Tinh chỉnh tọa độ bằng calc() để nó nằm đè lên góc phải icon */
+    top: calc(-1 * clamp(4px, 1vw, 8px)); 
+    right: calc(-1 * clamp(4px, 1vw, 8px));
+    
+    background-color: #ef4444; /* Màu đỏ nổi bật */
+    color: #ffffff;
+    
+    /* 📏 Kích thước hình tròn */
+    min-width: clamp(16px, 1.5vw, 20px);
+    height: clamp(16px, 1.5vw, 20px);
+    
+    border-radius: 50%; /* Tạo hình tròn hoàn hảo */
+    font-size: 0.7rem;
+    font-weight: 800;
+    
+    /* 🎯 Căn giữa con số bên trong vòng tròn */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Viền trắng nhẹ để số tách biệt khỏi icon đen phía dưới */
+    border: 2px solid var(--bg-primary, #ffffff);
+}
+
+/* ========================================================= */
+/* 4. UTILITY CLASSES CHO VIỆC ẨN/HIỆN                       */
+/* ========================================================= */
+.hide-on-desktop {
+    display: none !important;
+}
+
+.hide-on-mobile {
+    display: flex !important;
+}
+
+/* ========================================================= */
+/* 📱 MOBILE VIEW (iPhone SE / iPhone 8 / < 768px)           */
+/* ========================================================= */
+@media screen and (max-width: 768px) {
+    
+    /* Đảo ngược logic ẩn/hiện */
+    .hide-on-mobile { display: none !important; }
+    .hide-on-desktop { display: flex !important; }
+
+    /* Thu hẹp khoảng cách giữa các icon để chứa vừa màn hình 320px */
+    .nav-links-left {
+        order: 1; /* Vẫn nằm bên trái trên mobile */
+        gap: clamp(0.25rem, 2vw, 0.75rem);
+    }
+    .nav-links-right {
+        order: 2; /* Đảm bảo vẫn nằm bên phải trên mobile */
+        gap: clamp(0.5rem, 3vw, 1rem);
+    }
+    /* 🛑 KỸ THUẬT RỚT DÒNG CHO THANH SEARCH */
+    .nav-search-container {
+        order: 4; /* Đẩy thanh tìm kiếm xuống hàng cuối cùng */
+        flex : 0 0 100%;
+        width: 100%; /* Chiếm trọn 100% chiều ngang màn hình */
+        max-width: 100%;
+        margin: 2px 0 0 0; /* Khoảng cách giữa dòng trên (Logo) và dòng dưới (Search) */
+    }
+
+    
+    /* Thiết kế riêng cụm Đăng nhập trên mobile để chữ không bị lệch */
+    .auth-text-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+}

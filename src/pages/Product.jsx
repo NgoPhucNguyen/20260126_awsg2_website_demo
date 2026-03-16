@@ -7,8 +7,7 @@ import { getImageUrl } from "@/utils/getImageUrl";
 import ProductFilter from "@/components/ProductComponents/ProductFilter";
 import ProductCard from "@/components/ProductComponents/ProductCard";
 import ProductCardSkeleton from "@/components/Skeleton/ProductCardSkeleton";
-import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
-import "./Product.css";
+import "./Product.css"; // Xóa Breadcrumb import vì không thấy dùng trong return
 
 // 🛠️ HELPER: Extract Variant Label
 const getVariantLabel = (variant) => {
@@ -35,17 +34,15 @@ const Product = () => {
     });
     const [loading, setLoading] = useState(true);
 
-
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 24; // How many products per page? (8 fits nicely in a 4-column 3-column 2-column grid)
+    const itemsPerPage = 24; 
 
     // RESET PAGE ON FILTER CHANGE
-    // If the customer searches or changes a filter, we must send them back to page 1
     useEffect(() => {
         setCurrentPage(1);
     }, [location.search]);
 
-    // 1. Fetch Attributes for Filters (Brands, Categories, etc.)
+    // 1. Fetch Attributes for Filters
     useEffect(() => {
         axios.get('/api/products/attributes')
             .then(res => setFilterOptions(res.data))
@@ -65,56 +62,45 @@ const Product = () => {
                 const query = new URLSearchParams(location.search);
                 const min = query.get('minPrice') ? Number(query.get('minPrice')) : 0;
                 const max = query.get('maxPrice') ? Number(query.get('maxPrice')) : 99999999;
-                // 🔄 NEW LOGIC: Create a card for EVERY variant
-                // If a product has 2 variants, this creates 2 cards.
+
                 const formattedData = response.data.flatMap(product => {
-                    // Check if product has variants
                     if (!product.variants || product.variants.length === 0) return [];
 
                     return product.variants
                     .filter(variant => variant.unitPrice >= min && variant.unitPrice <= max)
                     .map(variant => {
                         const variantLabel = getVariantLabel(variant);
-                // Check for active promotion on this variant
-                const now = new Date();
-                // Find the first active promotion (if any)
-                const activePromo = variant.promotions?.find(p => {
-                    const promo = p.promotion;
-                    return new Date(promo.startTime) <= now && new Date(promo.endTime) >= now;
-                })?.promotion;
-                // Calculate final price after promotion (if applicable)
-                let finalPrice = variant.unitPrice;
-                let isSale = false;
+                        const now = new Date();
+                        const activePromo = variant.promotions?.find(p => {
+                            const promo = p.promotion;
+                            return new Date(promo.startTime) <= now && new Date(promo.endTime) >= now;
+                        })?.promotion;
+                        
+                        let finalPrice = variant.unitPrice;
+                        let isSale = false;
 
-                if (activePromo) {
-                    const discount = activePromo.type === 'PERCENTAGE' 
-                        ? (finalPrice * activePromo.value) / 100 
-                        : activePromo.value;
-                    finalPrice = Math.max(0, finalPrice - discount);
-                    isSale = true;
-                }
+                        if (activePromo) {
+                            const discount = activePromo.type === 'PERCENTAGE' 
+                                ? (finalPrice * activePromo.value) / 100 
+                                : activePromo.value;
+                            finalPrice = Math.max(0, finalPrice - discount);
+                            isSale = true;
+                        }
 
                         return {
-                            // Link Info (Both cards go to same Product Detail page)
                             id: product.id, 
-                            // Unique Info for THIS card
-                            variantId: variant.id, // 👈 Key for Cart
-                            // Name if nameVn empty -> default name ( English )
+                            variantId: variant.id, 
                             name: `${product.name} - ${variantLabel}`, 
                             nameVn: product.nameVn ? `${product.nameVn} - ${variantLabel}` : `${product.name} - ${variantLabel}`,
-
                             brand: product.brand?.name,
                             description: product.description,
                             skinType: product.skinType,
-                            // Specific Variant Data
                             size: variantLabel,
-                            // Price Logic (with Promotion if active)
                             price: finalPrice, 
                             originalPrice: variant.unitPrice,
                             isSale: isSale,
                             discountValue: activePromo?.value,
                             discountType: activePromo?.type,
-                            //images (take first image of variant, if exists)
                             image: getImageUrl(variant.images?.[0]?.imageUrl),
                             stock : variant.stock
                         };
@@ -132,22 +118,60 @@ const Product = () => {
         return () => controller.abort();
     }, [location.search]);
 
-
     // CALCULATE THE SLICE FOR THE CURRENT PAGE
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    // THIS is the array we will actually map over in the HTML!
     const currentProducts = products.slice(indexOfFirstItem, indexOfLastItem); 
     const totalPages = Math.ceil(products.length / itemsPerPage);
 
-    // Function to change page and scroll smoothly back to the top
+    const generatePagination = () => {
+        // Nếu số trang quá ít (ví dụ <= 5), hiện tất cả, không cần 3 chấm
+        if (totalPages <= 5) {
+            return Array.from({ length: totalPages }, (_, i) => i + 1);
+        }
+
+        // Trên Mobile, ta muốn thu gọn tối đa. delta = 1 nghĩa là hiện 1 trang trước và sau trang hiện tại
+        const delta = 1; 
+        const range = [];
+
+        // Tính toán khoảng giữa
+        for (
+            let i = Math.max(2, currentPage - delta); 
+            i <= Math.min(totalPages - 1, currentPage + delta); 
+            i++
+        ) {
+            range.push(i);
+        }
+
+        // Chèn 3 chấm vào đầu nếu có khoảng cách
+        if (currentPage - delta > 2) {
+            range.unshift("...");
+        }
+        
+        // Chèn 3 chấm vào cuối nếu có khoảng cách
+        if (currentPage + delta < totalPages - 1) {
+            range.push("...");
+        }
+
+        // Luôn nhét trang 1 vào đầu và trang cuối vào đuôi
+        range.unshift(1);
+        range.push(totalPages);
+
+        return range;
+    };
     const paginate = (pageNumber) => {
+        // Chống lỗi nếu người dùng cố tình click vào dấu 3 chấm
+        if (pageNumber === "...") return; 
+
         setCurrentPage(pageNumber);
-        // 🌟 Scroll to the grid smoothly
+        
+        // Cuộn trang mượt mà lên đầu danh sách sản phẩm, TRỪ HAO đi chiều cao của Navbar (khoảng 100px)
         if (gridRef.current) {
-            gridRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const yOffset = gridRef.current.getBoundingClientRect().top + window.scrollY - 100;
+            window.scrollTo({ top: yOffset, behavior: 'smooth' });
         }
     };
+
 
     return (
         <div className="product-page-container">
@@ -160,16 +184,14 @@ const Product = () => {
                     <div className="header-actions">
                         <ProductFilter filterOptions={filterOptions} />
                     </div>
-            </header>
+                </header>
 
                 <div className="product-grid">
                     {loading ? (
-                        // 🦴 Show 24 Skeletons while waiting for API
                         [...Array(itemsPerPage)].map((_, index) => (
                             <ProductCardSkeleton key={`skeleton-${index}`} />
                         ))
                     ) : currentProducts.length > 0 ? (
-                        // 📦 Show real products when ready
                         currentProducts.map((item) => (
                             <ProductCard key={item.variantId} product={item} />
                         ))
@@ -190,14 +212,23 @@ const Product = () => {
                         </button>
 
                         <div className="page-numbers">
-                            {[...Array(totalPages)].map((_, i) => (
-                                <button 
-                                    key={i + 1} 
-                                    className={`page-num-btn ${currentPage === i + 1 ? 'active' : ''}`} 
-                                    onClick={() => paginate(i + 1)}
-                                >
-                                    {i + 1}
-                                </button>
+                            {/* 🚀 GỌI HÀM THÔNG MINH THAY VÌ VÒNG LẶP TOÀN BỘ */}
+                            {generatePagination().map((item, index) => (
+                                item === "..." ? (
+                                    // Render thẻ 3 chấm
+                                    <span key={`ellipsis-${index}`} className="page-ellipsis">
+                                        ...
+                                    </span>
+                                ) : (
+                                    // Render nút bấm số trang
+                                    <button 
+                                        key={item} 
+                                        className={`page-num-btn ${currentPage === item ? 'active' : ''}`} 
+                                        onClick={() => paginate(item)}
+                                    >
+                                        {item}
+                                    </button>
+                                )
                             ))}
                         </div>
 
