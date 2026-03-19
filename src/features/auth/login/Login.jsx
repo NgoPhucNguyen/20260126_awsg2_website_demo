@@ -21,25 +21,25 @@ const Login = ({ onClose, onSwitchToRegister }) => {
     const location = useLocation();
     const from = location.state?.from?.pathname || "/"; 
 
-    const accountRef = useRef();
+    const emailRef = useRef();
     const errRef = useRef();
 
     const [remember, setRemember] = useState(false);
-    const [accountName, setAccountName] = useState('');
+    const [email, setEmail] = useState('');
     const [pwd, setPwd] = useState('');
 
-    const [accountNameErr, setAccountNameErr] = useState('');
+    const [emailErr, setEmailErr] = useState('');
     const [pwdErr, setPwdErr] = useState('');
     const [generalErr, setGeneralErr] = useState('');
 
     const [showPwd, setShowPwd] = useState(false);
 
-    useEffect(() => { accountRef.current.focus(); }, [])
+    useEffect(() => { emailRef.current.focus(); }, [])
 
     useEffect(() => { 
-        setAccountNameErr(''); 
+        setEmailErr(''); 
         setGeneralErr('');
-    }, [accountName]);
+    }, [email]);
     
     useEffect(() => { 
             setPwdErr(''); 
@@ -52,22 +52,22 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
         let isValid = true;
 
-        if (!accountName) {
-            setAccountNameErr("Account name is required");
+        if (!email) {
+            setEmailErr("Vui lòng nhập Email");
             isValid = false;
         }
         
         if (!pwd) {
-            setPwdErr("Password is required");
+            setPwdErr("Vui lòng nhập mật khẩu");
             isValid = false;
         }
 
         if (!isValid) return;
 
         try {
-            
             const response = await axios.post(LOGIN_URL,
-                JSON.stringify({ accountName, pwd, remember }),
+                // 🚀 Gửi trường 'mail' thay vì 'accountName'
+                JSON.stringify({ mail: email, pwd, remember }),
                 {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true
@@ -76,33 +76,33 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
             const accessToken = response?.data?.accessToken;
             const roles = response?.data?.roles;
-            const fetchedName = response?.data?.accountName;
+            const fetchedName = response?.data?.accountName; 
             
+            // Giữ nguyên logic setAuth để App vẫn hiển thị Tên của khách hàng
             setAuth({ accountName: fetchedName, roles, accessToken });
 
-            // After successful login, sync local cart with database cart
             await syncWithDatabase(cartItems, accessToken);
             
-            setAccountName('');
+            setEmail('');
             setPwd('');
-            showToast(`Welcome back, ${fetchedName}!`);
+            showToast(`Chào mừng trở lại, ${fetchedName}!`);
             
             if (onClose) setTimeout(() => onClose(), 50); 
             else navigate(from, { replace: true });
             
         } catch (err) {
             if (!err?.response) {
-                setGeneralErr('No Server Response PLEASE ');
+                setGeneralErr('Không có phản hồi từ máy chủ');
             } else if (err.response?.status === 400) {
-                setGeneralErr('Missing Account Name or Password');
+                setGeneralErr('Thiếu Email hoặc Mật khẩu');
             } else if (err.response?.status === 401) {
-                setPwdErr('Incorrect Password or Account Name'); 
+                setPwdErr('Email hoặc Mật khẩu không chính xác'); 
             } else {
-                setGeneralErr('Login Failed');
+                setGeneralErr('Đăng nhập thất bại');
             }
             if(errRef.current) errRef.current.focus();
         }
-    }
+    };
         
     const handleForgotClick = () => {
         if (onClose) onClose(); 
@@ -130,17 +130,17 @@ const Login = ({ onClose, onSwitchToRegister }) => {
                 <p className="auth-subtitle">Đăng nhập để tiếp tục</p>
                 
                 <form onSubmit={handleSubmit} noValidate>
-                    <label htmlFor="accountName">Tên Tài Khoản hoặc Email</label>
+                    <label htmlFor="email"> Email</label>
                     <input
                         type="text"
-                        id="accountName"
-                        ref={accountRef}
+                        id="email"
+                        ref={emailRef}
                         autoComplete="username"
-                        onChange={(e) => setAccountName(e.target.value)}
-                        value={accountName}
-                        className={accountNameErr ? "input-error" : ""} 
+                        onChange={(e) => setEmail(e.target.value)}
+                        value={email}
+                        className={emailErr ? "input-error" : ""} 
                     />
-                    {accountNameErr && <span className="field-error-text">{accountNameErr}</span>}
+                    {emailErr && <span className="field-error-text">{emailErr}</span>}
 
                     <label htmlFor="password">Mật Khẩu</label>
                     
@@ -191,9 +191,9 @@ const Login = ({ onClose, onSwitchToRegister }) => {
                 </form>
                 
                 <p className="auth-footer">
-                    Tạo tài khoản ?
+                    Chưa có tài khoản?
                     <button onClick={onSwitchToRegister} className="switch-btn">
-                        Đăng ký
+                        Đăng ký ngay
                     </button>
                 </p>
             </div>

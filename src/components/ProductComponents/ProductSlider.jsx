@@ -1,6 +1,4 @@
-// src/components/ProductSlider.jsx
 import { Link } from "react-router-dom";
-// 1. Thêm useRef và useState
 import { useRef, useState } from "react"; 
 import "./ProductSlider.css";
 import { getImageUrl } from "@/utils/getImageUrl";
@@ -18,51 +16,53 @@ const ProductSlider = ({ title, products }) => {
   const formatPrice = (price) => 
     new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
 
-  // --- LOGIC XỬ LÝ KÉO CHUỘT ---
+  // --- LOGIC XỬ LÝ KÉO CHUỘT (ĐÃ FIX LỖI KẸT SCROLL) ---
   const handleMouseDown = (e) => {
     setIsMouseDown(true);
-    setIsDragging(false); // Chỉ bật dragging khi thực sự di chuyển chuột
-    // Lấy tọa độ X lúc bắt đầu click chuột
+    setIsDragging(false); 
     setStartX(e.pageX - sliderRef.current.offsetLeft);
-    // Lưu lại vị trí thanh cuộn hiện tại
     setScrollLeft(sliderRef.current.scrollLeft);
   };
 
   const handleMouseLeave = () => {
-    setIsMouseDown(false); // Tắt trạng thái click khi chuột rời khỏi vùng slider
-    setIsDragging(false); // Tắt kéo khi chuột rời khỏi vùng slider
+    setIsMouseDown(false);
+    setIsDragging(false); 
   };
 
   const handleMouseUp = () => {
-    setIsDragging(false); // Tắt kéo khi nhả chuột
+    setIsMouseDown(false); 
   };
 
   const handleMouseMove = (e) => {
-    if (!isDragging) return; // Nếu không click giữ thì không làm gì cả
-    e.preventDefault(); // Ngăn trình duyệt bôi đen chữ hoặc kéo hình ảnh
+    if (!isMouseDown) return;
+    e.preventDefault(); 
     
     const x = e.pageX - sliderRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5; // Tốc độ trượt (nhân 1.5 để lướt nhanh hơn)
-    if (Math.abs(walk) > 5) { // Chỉ coi là dragging nếu di chuyển đủ xa (tránh nhầm lẫn với click đơn thuần)
+    const walk = (x - startX) * 1; // Tăng tốc độ cuộn lên một chút cho mượt
+    
+    if (Math.abs(walk) > 5) {
       setIsDragging(true);
     }
+    
+    // Gắn giá trị mới cho thanh cuộn
     sliderRef.current.scrollLeft = scrollLeft - walk;
   };
+
   const handleLinkClick = (e) => {
     if (isDragging) {
-      e.preventDefault(); // Ngăn Link chuyển trang nếu người dùng chỉ đang lướt (kéo chuột)
+      e.preventDefault();
+      e.stopPropagation(); // Cắt đứt hoàn toàn sự kiện click nếu đang kéo
     }
-    setIsDragging(false); // Reset trạng thái dragging sau khi click
+    setIsDragging(false);
   };
-
 
   return (
     <div className="product-slider-section">
       <h2 className="slider-title">{title}</h2>
       
-      {/* 2. GẮN SỰ KIỆN CHUỘT VÀO CONTAINER */}
+      {/* GẮN SỰ KIỆN VÀO ĐÚNG THẺ GRID */}
       <div 
-        className={`slider-grid ${isDragging ? 'dragging' : ''}`}
+        className={`slider-grid ${isMouseDown ? 'active' : ''} ${isDragging ? 'dragging' : ''}`}
         ref={sliderRef}
         onMouseDown={handleMouseDown}
         onMouseLeave={handleMouseLeave}
@@ -104,14 +104,14 @@ const ProductSlider = ({ title, products }) => {
                   </span>
               ) : null}
 
+              {/* THẺ LINK ĐƯỢC BẢO VỆ */}
               <Link 
                 to={`/product/${product.id}${variantId ? `?variant=${variantId}` : ''}`} 
                 className="slider-link"
-                onClick={handleLinkClick}  /* Gọi đúng hàm bảo vệ */
-                draggable="false"          /* Khóa tính năng kéo ảnh rác của trình duyệt */
+                onClick={handleLinkClick}  
+                draggable="false"          
               >
                 <div className="slider-image">
-                  {/* Bổ sung draggable="false" cho chính tấm ảnh luôn cho chắc ăn */}
                   <img 
                     src={image} 
                     alt={product.nameVn || product.name} 
@@ -143,7 +143,6 @@ const ProductSlider = ({ title, products }) => {
                           </span>
                       )}
                   </div>
-                  
                 </div>
               </Link>
             </div>

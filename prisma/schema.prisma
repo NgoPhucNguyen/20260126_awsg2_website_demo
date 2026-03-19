@@ -213,9 +213,9 @@ model CouponUsage {
   id         String       @id @default(uuid())
   couponId   String       @map("coupon_id")
   customerId String       @map("customer_id")
-  usedAt     DateTime     @map("used_at")
+  usedAt     DateTime?     @map("used_at")
   status     CouponStatus // [ACTIVE, EXPIRED, USED_UP, INACTIVE]
-  remaning   Int
+  remaining   Int
 
   coupon   Coupon   @relation(fields: [couponId], references: [id])
   customer Customer @relation(fields: [customerId], references: [id])

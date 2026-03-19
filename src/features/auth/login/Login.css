@@ -8,8 +8,8 @@
     --login-text-main: #1c1917;
     --login-text-muted: #57534e;
     --login-border: #e7e5e4;
-    --login-primary: #1c1917; /* Đen tuyền sang trọng */
-    --login-accent: #E6C27A;  /* Vàng Aphrodite */
+    --login-primary: #1c1917; 
+    --login-accent: #E6C27A;  
     --login-hover: #c6a87c;
     --login-error-bg: #fee2e2;
     --login-error-text: #991b1b;
@@ -22,13 +22,11 @@
     position: fixed;
     inset: 0;
     background-color: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(8px); /* Blur mạnh hơn để tập trung vào form */
+    backdrop-filter: blur(8px); 
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 2000;
-    
-    /* 🛡️ Tránh dính mép trên mobile */
     padding: clamp(1rem, 3vw, 2rem); 
     animation: modalFadeIn 0.3s ease-out;
 }
@@ -44,16 +42,15 @@
 .login-container {
     background-color: var(--login-bg);
     width: 100%;
-    
-    /* 📏 Width linh hoạt: Trên iPhone tự ép 100%, trên PC tối đa 420px */
+    /* 📏 Ép khung: Rộng tối thiểu 320px, lý tưởng 90vw, tối đa 420px */
     max-width: clamp(320px, 90vw, 420px); 
     
-    /* 📏 Padding động: Co giãn từ 24px (Mobile) lên 40px (Desktop) */
-    padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.5rem, 5vw, 3rem); 
+    /* 📏 Padding linh hoạt: Tăng dần theo chiều ngang màn hình (vw) */
+    padding: clamp(1.5rem, 5vw, 2.5rem) clamp(1.5rem, 6vw, 3rem); 
     
     border: 1px solid var(--login-border);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1); 
-    border-radius: clamp(12px, 2vw, 20px);
+    border-radius: clamp(12px, 3vw, 20px);
     
     display: flex;
     flex-direction: column;
@@ -70,19 +67,19 @@
 /* --- NÚT ĐÓNG (CLOSE BUTTON) --- */
 .close-modal-btn {
     position: absolute;
-    /* 📐 Định vị thông minh bám theo góc */
-    top: clamp(12px, 2vw, 20px);
-    right: clamp(12px, 2vw, 20px);
+    top: clamp(12px, 3vw, 20px);
+    right: clamp(12px, 3vw, 20px);
     
     background: transparent;
     border: none;
-    font-size: clamp(1.2rem, 2vw, 1.5rem);
     color: #9ca3af;
     cursor: pointer;
     
-    /* Hitbox an toàn cho cảm ứng (Apple HIG) */
-    width: 36px;
-    height: 36px;
+    /* 📏 Nút đóng tự động to ra trên màn hình lớn để dễ click */
+    width: clamp(32px, 8vw, 40px);
+    height: clamp(32px, 8vw, 40px);
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    
     display: flex;
     align-items: center;
     justify-content: center;
@@ -100,17 +97,17 @@
 /* ========================================================= */
 .login-container h1 {
     font-family: var(--font-heading, 'Inter', sans-serif);
-    font-size: clamp(1.4rem, 4vw, 1.8rem); /* Chữ tự động bóp nhỏ trên iPhone SE */
+    font-size: clamp(1.5rem, 5vw, 2rem); 
     color: var(--login-text-main);
-    margin-bottom: 0.5rem;
+    margin-bottom: clamp(0.25rem, 1vw, 0.5rem);
     font-weight: 700;
     text-align: center;
 }
 
 .auth-subtitle {
     color: var(--login-text-muted);
-    font-size: clamp(0.8rem, 1.5vw, 0.9rem);
-    margin-bottom: clamp(1.5rem, 4vw, 2rem);
+    font-size: clamp(0.85rem, 2vw, 0.95rem);
+    margin-bottom: clamp(1.5rem, 5vw, 2rem);
     text-align: center;
 }
 
@@ -125,36 +122,35 @@
 
 .login-container label {
     font-weight: 600;
-    margin-bottom: 8px;
-    font-size: clamp(0.75rem, 1.2vw, 0.85rem);
+    margin-bottom: clamp(6px, 1.5vw, 8px);
+    font-size: clamp(0.8rem, 1.5vw, 0.9rem);
     color: var(--login-text-main);
     display: block;
 }
 
 .login-container input[type="text"], 
 .login-container input[type="password"] {
-    /* 📏 Kích thước input linh hoạt */
-    padding: clamp(10px, 2vh, 14px) 16px;
-    margin-bottom: clamp(1rem, 2vh, 1.25rem);
+    /* 🛑 Thay vì dùng vh, ta dùng vw cho padding để tránh lỗi khi bàn phím ảo bật lên */
+    padding: clamp(12px, 3vw, 16px) clamp(12px, 3vw, 16px);
+    margin-bottom: clamp(1rem, 3vw, 1.25rem);
     
     border: 1.5px solid var(--login-border);
     border-radius: 8px;
     background: #fafafa;
     width: 100%;
-    
-    /* Font size 16px (1rem) cực kỳ quan trọng trên iOS để tránh bị zoom màn hình khi gõ */
-    font-size: clamp(1rem, 1.5vw, 1.05rem); 
-    color: var(--login-text-main);
-
     box-sizing: border-box;
-    height: clamp(44px, 6vh, 50px);
+    
+    /* 🛡️ QUAN TRỌNG: Font-size min phải là 16px để iOS Safari không tự động Zoom màn hình */
+    font-size: clamp(16px, 2vw, 18px); 
+    color: var(--login-text-main);
+    height: clamp(48px, 6vw, 56px); /* Đảm bảo hitbox đủ lớn cho ngón tay */
 
     transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .login-container input:focus {
     outline: none;
-    border-color: var(--login-accent); /* Focus viền vàng Aphrodite */
+    border-color: var(--login-accent); 
     background: #ffffff;
     box-shadow: 0 0 0 4px rgba(230, 194, 122, 0.15);
 }
@@ -165,20 +161,18 @@
 .password-input-wrapper {
     position: relative; 
     width: 100%;
-    margin-bottom: clamp(1rem, 2vh, 1.25rem); /* Khoảng cách dưới input để đủ chỗ cho icon */
+    margin-bottom: clamp(1rem, 3vw, 1.25rem); 
 }
 
 .password-input-wrapper input {
-    /* Đè margin để tránh khoảng trống kép */
     margin-bottom: 0 !important;
-    padding-right: 48px !important; /* Chừa không gian rộng rãi cho icon con mắt */
+    /* Chừa chỗ cho icon con mắt tự co giãn */
+    padding-right: clamp(40px, 10vw, 50px) !important; 
 }
 
 .password-toggle-icon {
     position: absolute;
-    right: 8px;
-    
-    /* 🎯 BÂY GIỜ TOÁN HỌC TRỞ NÊN SIÊU ĐƠN GIẢN VÀ CHÍNH XÁC 100% */
+    right: clamp(4px, 1vw, 8px);
     top: 50%;
     transform: translateY(-50%);
     
@@ -190,10 +184,11 @@
     align-items: center;
     justify-content: center;
     
-    width: 36px;
-    height: 36px;
+    /* 📏 Cục Hitbox của icon cũng phải co giãn */
+    width: clamp(32px, 8vw, 40px);
+    height: clamp(32px, 8vw, 40px);
     border-radius: 50%;
-    font-size: 1.2rem;
+    font-size: clamp(1.1rem, 2.5vw, 1.3rem);
     z-index: 100;
 }
 
@@ -202,7 +197,6 @@
     background-color: #f3f4f6;
 }
 
-/* Ẩn con mắt mặc định của Edge/IE */
 input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear {
     display: none;
@@ -213,31 +207,33 @@ input[type="password"]::-ms-clear {
 /* ========================================================= */
 .form-actions {
     display: flex;
-    flex-wrap: wrap; /* Rớt dòng nếu màn hình quá chật (VD: Galaxy Fold 280px) */
+    flex-wrap: wrap; 
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin-bottom: clamp(1.25rem, 3vw, 1.75rem);
+    margin-bottom: clamp(1.5rem, 4vw, 2rem);
     margin-top: -0.25rem; 
+    gap: 10px; /* Thêm gap khi bị rớt dòng trên màn cực nhỏ */
 }
 
 .checkbox-group {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: clamp(6px, 1.5vw, 8px);
 }
 
 .checkbox-group input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    accent-color: var(--login-primary); /* Đổi màu checkbox mặc định */
+    /* 📏 Checkbox to hơn trên màn lớn, dễ bấm hơn */
+    width: clamp(16px, 3vw, 20px);
+    height: clamp(16px, 3vw, 20px);
+    accent-color: var(--login-primary); 
     cursor: pointer;
     margin: 0;
 }
 
 .checkbox-group label {
     margin: 0 !important;
-    font-size: clamp(0.85rem, 1.2vw, 0.9rem) !important;
+    font-size: clamp(0.85rem, 1.5vw, 0.95rem) !important;
     font-weight: 500 !important;
     cursor: pointer;
 }
@@ -245,9 +241,11 @@ input[type="password"]::-ms-clear {
 .forgot-password-link {
     background: none;
     border: none;
-    justify-content: end;
+    margin-left: auto;
+    text-align: right;
+    transform: translateX(10px); /* Đẩy link ra xa checkbox hơn */
     color: var(--login-text-muted);
-    font-size: clamp(0.85rem, 1.2vw, 0.9rem);
+    font-size: clamp(0.85rem, 1.5vw, 0.95rem);
     font-weight: 500;
     cursor: pointer;
     padding: 0;
@@ -263,16 +261,17 @@ input[type="password"]::-ms-clear {
 /* 7. NÚT ĐĂNG NHẬP CHÍNH                                    */
 /* ========================================================= */
 .auth-btn {
-    padding: clamp(12px, 2.5vh, 16px);
+    padding: clamp(12px, 3vw, 16px);
     background-color: var(--login-primary);
     color: white;
     font-weight: 700;
-    font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+    font-size: clamp(1rem, 2vw, 1.125rem);
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     width: 100%;
+    height: clamp(48px, 6vw, 56px);
 }
 
 .auth-btn:hover {
@@ -289,9 +288,9 @@ input[type="password"]::-ms-clear {
 /* 8. FOOTER (CHUYỂN SANG ĐĂNG KÝ)                           */
 /* ========================================================= */
 .auth-footer {
-    margin-top: clamp(1.5rem, 3vw, 2rem);
+    margin-top: clamp(1.5rem, 4vw, 2rem);
     text-align: center;
-    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    font-size: clamp(0.85rem, 1.5vw, 0.95rem);
     color: var(--login-text-muted);
 }
 
@@ -315,17 +314,15 @@ input[type="password"]::-ms-clear {
 /* ========================================================= */
 /* 9. QUẢN LÝ LỖI (ERROR HANDLING UI)                        */
 /* ========================================================= */
-
-/* Khung báo lỗi server đỏ bự */
 .generalErr {
     background-color: var(--login-error-bg);
     color: var(--login-error-text);
-    padding: clamp(10px, 2vw, 12px); 
+    padding: clamp(10px, 2.5vw, 14px); 
     border-radius: 8px;
-    margin-bottom: 1.25rem;
+    margin-bottom: clamp(1rem, 3vw, 1.25rem);
     width: 100%;
     text-align: center;
-    font-size: clamp(0.85rem, 1.2vw, 0.9rem);
+    font-size: clamp(0.85rem, 1.5vw, 0.95rem);
     font-weight: 600;
     border: 1px solid rgba(153, 27, 27, 0.2);
     animation: modalFadeIn 0.3s ease-in;
@@ -336,18 +333,16 @@ input[type="password"]::-ms-clear {
     left: -9999px;
 }
 
-/* Lỗi Input (Đỏ viền) */
 .login-container input.input-error {
     border-color: var(--login-error-text) !important;
     background-color: #fffafb; 
 }
 
-/* Chữ báo lỗi dưới input */
 .field-error-text {
     color: var(--login-error-text);
-    font-size: 0.8rem;
+    font-size: clamp(0.75rem, 1.2vw, 0.85rem);
     font-weight: 600;
-    margin-top: -8px; /* Kéo text lên sát input bị lỗi */
+    margin-top: -8px; 
     margin-bottom: 12px;
     display: block;
     animation: modalFadeIn 0.2s ease-in-out;

@@ -1,0 +1,209 @@
+/* src/components/AdminComponent/AssignCouponModal.css */
+
+.assign-coupon-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(10px, 2vw, 20px);
+    z-index: 1000;
+    font-family: var(--font-body, 'Inter', sans-serif);
+}
+
+.assign-coupon-content {
+    background: #ffffff;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px; /* Nhỏ gọn vì chỉ có 1 ô input */
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    animation: assignSlideUp 0.3s ease-out;
+}
+
+@keyframes assignSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.assign-coupon-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.assign-coupon-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #1c1917;
+    font-weight: 700;
+}
+
+.assign-coupon-code {
+    color: #cca858;
+    font-family: monospace;
+    font-size: 1.1rem;
+    padding-left: 6px;
+}
+
+.assign-coupon-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #9ca3af;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.assign-coupon-close-btn:hover { color: #1c1917; }
+
+.assign-coupon-subtitle {
+    color: #6b7280;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.assign-coupon-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.assign-coupon-success {
+    background: #dcfce3;
+    color: #166534;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.assign-coupon-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.assign-coupon-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #374151;
+}
+
+.assign-coupon-required { color: #dc2626; }
+
+.assign-coupon-input {
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+}
+
+.assign-coupon-input:focus { 
+    border-color: #cca858; 
+    box-shadow: 0 0 0 3px rgba(204, 168, 88, 0.15);
+}
+
+.assign-coupon-input.input-error { border-color: #dc2626; }
+
+/* AUTOCOMPLETE DROPDOWN */
+.assign-coupon-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 6px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    max-height: 220px;
+    overflow-y: auto;
+    z-index: 50;
+    list-style: none;
+    padding: 0;
+}
+
+.assign-coupon-suggestions li {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f3f4f6;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.assign-coupon-suggestions li:last-child { border-bottom: none; }
+.assign-coupon-suggestions li:hover { background-color: #fdfaf3; }
+
+.assign-coupon-suggestion-name {
+    font-weight: 700;
+    color: #1c1917;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+.assign-coupon-suggestion-detail {
+    color: #6b7280;
+    font-size: 0.85rem;
+}
+
+.assign-coupon-no-suggestion {
+    padding: 16px;
+    color: #9ca3af;
+    text-align: center;
+    font-style: italic;
+    cursor: default;
+}
+
+.assign-coupon-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e5e5;
+}
+
+.assign-coupon-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.assign-coupon-btn-primary {
+    background-color: #1c1917;
+    color: #cca858;
+}
+
+.assign-coupon-btn-primary:hover:not(:disabled) {
+    background-color: #333333;
+    transform: translateY(-2px);
+}
+
+.assign-coupon-btn-secondary {
+    background-color: #e5e7eb;
+    color: #4b5563;
+}
+
+.assign-coupon-btn-secondary:hover:not(:disabled) {
+    background-color: #d1d5db;
+}

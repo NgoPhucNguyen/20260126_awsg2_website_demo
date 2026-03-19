@@ -1,8 +1,9 @@
 // src/pages/admin/Inventory.jsx
 import { useState, useEffect } from "react";
-import { FaBoxOpen, FaPlus, FaTrash, FaPenToSquare, FaMagnifyingGlass, FaRotateLeft } from "react-icons/fa6";
+import { FaBoxOpen, FaPlus, FaTrash, FaPenToSquare, FaRotateLeft } from "react-icons/fa6";
 import axios from "@/api/axios";
-import AddProductModal from "@/components/AddProductModal";
+import AddProductModal from "@/components/AdminComponent/AddProductModal";
+import { getImageUrl } from "@/utils/getImageUrl";
 import "./Inventory.css"; 
 
 const Inventory = () => {
@@ -33,6 +34,9 @@ const Inventory = () => {
                         return total + inventoryItem.quantity;
                     }, 0) || 0;
                     
+                    const rawImageUrl = mainVariant.images?.[0]?.imageUrl || mainVariant.thumbnailUrl;
+                    const finalImage = rawImageUrl ? getImageUrl(rawImageUrl) : "https://via.placeholder.com/40?text=No+Img";
+
                     return {
                         id: product.id,
                         name: product.name,
@@ -40,6 +44,7 @@ const Inventory = () => {
                         category: product.category?.name || "Uncategorized",
                         price: mainVariant.unitPrice,
                         stock: variantStock, 
+                        image: finalImage,
                     };
                 });
 
@@ -86,6 +91,7 @@ const Inventory = () => {
             category: categoryName,
             price: mainVariant.unitPrice || 0,
             stock: stock,
+            image: mainVariant.images?.[0]?.imageUrl ? getImageUrl(mainVariant.images[0].imageUrl) : "https://via.placeholder.com/40?text=No+Img",
         };
 
         // 4. Push it to the very top of the table!
@@ -212,12 +218,17 @@ const Inventory = () => {
                                 filteredProducts.map((product) => (
                                     <tr key={product.id}>
                                         <td className="col-id">#{product.id}</td>
-                                        <td>
-                                            <div className="product-cell">
-                                                <div className="img-placeholder"><FaBoxOpen size={20}/></div>
-                                                {product.nameVn}
-                                            </div>
-                                        </td>
+                                            <td className="product-info-cell">
+                                                <img className="inventory-product-img"
+                                                    src={product.image} 
+                                                    alt={product.nameVn} 
+                                                    // Dự phòng nếu ảnh bị lỗi (404)
+                                                    onError={(e) => { e.target.src = 'https://via.placeholder.com/45?text=Lỗi' }}
+                                                />
+                                                <span className="product-name" title={product.nameVn}>
+                                                    {product.nameVn}
+                                                </span>
+                                            </td>
                                         <td><span className="badge tier-1">{product.category}</span></td>
                                         
                                         {/* 🎯 Applied the formatPrice function here! */}

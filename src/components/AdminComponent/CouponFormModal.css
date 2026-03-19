@@ -1,0 +1,281 @@
+/* src/components/AdminComponent/CouponFormModal.css */
+
+.coupon-form-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(10px, 2vw, 20px);
+    z-index: 1000;
+    font-family: var(--font-body, 'Inter', sans-serif);
+}
+
+.coupon-form-modal-content {
+    background: #ffffff;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    animation: formModalSlideUp 0.3s ease-out;
+}
+
+@keyframes formModalSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.coupon-form-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.coupon-form-modal-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #1c1917;
+    font-weight: 700;
+}
+
+.coupon-form-modal-close-icon {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #9ca3af;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 4px;
+}
+
+.coupon-form-modal-close-icon:hover {
+    color: #1c1917;
+}
+
+.coupon-form-modal-error-banner {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+/* Các section trong form */
+.coupon-form-modal-grid {
+    display: flex;
+    flex-direction: column;
+}
+
+.coupon-form-modal-section {
+    margin-bottom: 24px;
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #f3f4f6;
+}
+
+.coupon-form-modal-section-title {
+    margin: 0 0 16px;
+    font-size: 1rem;
+    color: #cca858;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+.coupon-form-modal-row-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+/* Các input fields */
+.coupon-form-modal-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.coupon-form-modal-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #374151;
+}
+
+.coupon-form-modal-required-star {
+    color: #dc2626;
+}
+
+.coupon-form-modal-input-field {
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s;
+    width: 100%;
+    font-family: inherit;
+    background-color: #ffffff;
+}
+
+.coupon-form-modal-input-field:focus {
+    border-color: #cca858;
+    box-shadow: 0 0 0 3px rgba(204, 168, 88, 0.15);
+}
+
+.coupon-form-modal-input-field.input-error {
+    border-color: #dc2626;
+    background-color: #fef2f2;
+}
+
+.coupon-form-modal-input-field:disabled {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.coupon-form-modal-field-error {
+    color: #dc2626;
+    font-size: 0.8rem;
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+/* Checkbox */
+.coupon-form-modal-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    color: #374151;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.coupon-form-modal-checkbox-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #1c1917;
+}
+
+/* Danh sách Biến thể (Variants) */
+.coupon-form-modal-variant-selector {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.coupon-form-modal-hint-text {
+    font-size: 0.85rem;
+    color: #6b7280;
+    font-style: italic;
+}
+
+.coupon-form-modal-selected-variants {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.coupon-form-modal-variant-tag {
+    background: #fdfaf3;
+    color: #856404;
+    border: 1px solid #cca858;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.coupon-form-modal-variant-tag button {
+    border: none;
+    background: transparent;
+    color: #856404;
+    cursor: pointer;
+    padding: 0;
+    font-size: 1rem;
+    transition: transform 0.1s;
+}
+
+.coupon-form-modal-variant-tag button:hover {
+    transform: scale(1.2);
+}
+
+/* Nút bấm (Buttons) */
+.coupon-form-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e5e5;
+}
+
+.coupon-form-modal-btn {
+    padding: clamp(10px, 1.5vw, 12px) clamp(16px, 2vw, 24px);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+}
+
+.coupon-form-modal-btn-primary {
+    background-color: #1c1917;
+    color: #cca858;
+}
+
+.coupon-form-modal-btn-primary:hover:not(:disabled) {
+    background-color: #333333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.coupon-form-modal-btn-secondary {
+    background-color: #e5e7eb;
+    color: #4b5563;
+}
+
+.coupon-form-modal-btn-secondary:hover:not(:disabled) {
+    background-color: #d1d5db;
+}
+
+.coupon-form-modal-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media screen and (max-width: 640px) {
+    .coupon-form-modal-footer {
+        flex-direction: column;
+    }
+    .coupon-form-modal-btn {
+        width: 100%;
+    }
+    .coupon-form-modal-variant-selector {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

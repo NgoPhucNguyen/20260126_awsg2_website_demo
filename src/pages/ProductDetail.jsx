@@ -10,9 +10,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBagShopping, faSpinner, faWandMagicSparkles  } from '@fortawesome/free-solid-svg-icons';
 
 // Components
-import ProductImageGallery from "@/components/ProductImageGallery";
-import ProductSlider from "@/components/ProductSlider";
-import ProductReviews from "@/components/ProductReviews";
+import ProductImageGallery from "@/components/ProductComponents/ProductImageGallery";
+import ProductSlider from "@/components/ProductComponents/ProductSlider";
+import ProductReviews from "@/components/ProductComponents/ProductReviews";
 
 // Layout Components
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";

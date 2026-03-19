@@ -1,182 +1,271 @@
-/* 🌟 Base Container & Card Layout */
-.profile-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 80vh;
-    padding: 2rem;
-    background-color: #fbfbfb; /* Very soft off-white for a clean look */
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-}
+/* src/pages/Profile.css */
 
-.profile-card {
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Soft, elegant shadow */
+/* ========================================================= */
+/* 1. KHUNG CHỨA TỔNG THỂ (FILL PAGE)                        */
+/* ========================================================= */
+.profile-wrapper {
     width: 100%;
-    max-width: 650px;
-    padding: 2.5rem;
-    border-top: 5px solid #d4af37; /* Premium Gold Accent */
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-body, 'Nunito', sans-serif);
 }
 
-/* ✨ Typography & Headers */
-.profile-title {
-    text-align: center;
-    color: #222222;
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    letter-spacing: 1px;
+.profile-dashboard-card {
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: clamp(12px, 2vw, 24px);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    padding: clamp(1.5rem, 4vw, 3.5rem);
+    border-top: clamp(4px, 0.5vw, 6px) solid #cca858;
 }
 
-.error-msg {
-    background-color: #fff0f0;
-    color: #d8000c;
-    padding: 10px;
-    border-radius: 5px;
-    text-align: center;
-    font-weight: bold;
-    border-left: 4px solid #d8000c;
-    margin-bottom: 1.5rem;
+/* ========================================================= */
+/* 2. KHU VỰC TIÊU ĐỀ & AVATAR                               */
+/* ========================================================= */
+.profile-header-section {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.2rem, 3vw, 2.5rem);
+    margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
 }
 
-/* 👤 The Avatar */
-.profile-avatar {
-    width: 90px;
-    height: 90px;
-    background: #222222; /* Charcoal Black */
-    color: #d4af37; /* Gold */
+.profile-avatar-circle {
+    width: clamp(70px, 10vw, 100px);
+    height: clamp(70px, 10vw, 100px);
+    background-color: #1c1917;
+    color: #cca858;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2.5rem;
-    margin: 0 auto 2rem;
-    font-weight: bold;
-    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3); /* Subtle gold glow */
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    flex-shrink: 0;
 }
 
-/* 🗂️ The Data Grid */
-.profile-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Two columns for a clean dashboard look */
-    gap: 1.5rem 2rem;
-    margin-bottom: 2rem;
-}
-
-.info-group {
+.profile-header-text {
     display: flex;
     flex-direction: column;
+    gap: clamp(4px, 1vw, 8px);
 }
 
-.info-group label {
-    font-size: 0.85rem;
-    color: #888888;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 0.5rem;
+.profile-heading-main {
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    color: #1c1917;
+    margin: 0;
+    font-weight: 800;
+    font-family: var(--font-heading, 'Inter', sans-serif);
+}
+
+.profile-heading-sub {
+    font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+    color: #6b7280;
+    margin: 0;
+}
+
+.profile-alert-error {
+    background-color: #fef2f2;
+    color: #dc2626;
+    padding: clamp(12px, 1.5vw, 16px);
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: clamp(0.9rem, 1.2vw, 1rem);
+    border-left: 4px solid #dc2626;
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.profile-text-loading {
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    color: #6b7280;
+    text-align: center;
+    padding: 3rem;
+}
+
+/* ========================================================= */
+/* 3. ĐIỀU HƯỚNG TAB (NEW)                                   */
+/* ========================================================= */
+.profile-tab-navigation {
+    display: flex;
+    gap: clamp(1rem, 3vw, 2rem);
+    border-bottom: 2px solid var(--border-color, #f3f4f6);
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.profile-tab-btn {
+    background: none;
+    border: none;
+    padding: clamp(10px, 1.5vw, 14px) 0;
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    font-weight: 700;
+    color: #9ca3af;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.profile-tab-btn:hover {
+    color: #1c1917;
+}
+
+.profile-tab-btn-active {
+    color: #1c1917;
+}
+
+/* Đường kẻ dưới gạch chạy hiệu ứng */
+.profile-tab-btn-active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #cca858;
+    border-radius: 3px 3px 0 0;
+}
+
+/* ========================================================= */
+/* 4. LƯỚI THÔNG TIN (FULL WIDTH GRID)                       */
+/* ========================================================= */
+.profile-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(clamp(280px, 30vw, 380px), 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    /* Hiệu ứng chuyển Tab mượt mà */
+    animation: profileFadeIn 0.4s ease;
+}
+
+@keyframes profileFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.profile-input-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.profile-input-label {
+    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    color: #4b5563;
+    font-weight: 700;
+    margin-bottom: clamp(6px, 1vw, 10px);
+}
+
+.profile-value-static {
+    font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+    color: #1c1917;
+    margin: 0;
+    padding: clamp(12px, 1.5vw, 16px);
+    background-color: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid transparent; 
+    font-weight: 500;
+    width: 100%;
+    word-break: break-word;
+}
+
+/* Highlight đặc biệt cho ô Full Address */
+.profile-value-highlight {
+    background-color: #fdfaf3;
+    border-left: 4px solid #cca858;
+    color: #856404;
     font-weight: 600;
 }
 
-/* 📏 Aligning Text and Inputs Perfectly */
-.info-group p {
-    font-size: 1.05rem;
-    color: #333333;
-    margin: 0;
-    padding: 0.6rem 0.8rem;
-    background-color: #f9f9f9;
-    border-radius: 6px;
-    border: 1px solid transparent; /* Keeps the height identical to the input boxes */
-}
-
-.profile-input {
-    padding: 0.6rem 0.8rem;
-    border: 1px solid #cccccc;
-    border-radius: 6px;
-    font-size: 1.05rem;
-    color: #222222;
-    transition: all 0.3s ease;
+.profile-input-field {
+    width: 100%;
+    padding: clamp(12px, 1.5vw, 16px);
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+    color: #1c1917;
+    transition: all 0.2s ease;
     background-color: #ffffff;
+    font-family: inherit;
 }
 
-.profile-input:focus {
-    border-color: #d4af37; /* Gold focus ring */
+.profile-input-field:focus {
+    border-color: #cca858;
     outline: none;
-    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+    box-shadow: 0 0 0 3px rgba(204, 168, 88, 0.15);
 }
 
-/* 🛡️ Badges */
-.role-badge {
-    display: inline-block;
-    background-color: #d4af37;
-    color: #ffffff !important; /* Override the p tag color */
-    padding: 4px 12px;
+.profile-input-select {
+    cursor: pointer;
+    appearance: none; 
+    background-image: linear-gradient(45deg, transparent 50%, #4b5563 50%), linear-gradient(135deg, #4b5563 50%, transparent 50%);
+    background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+}
+
+.profile-badge-wrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.profile-badge-role {
+    display: inline-flex;
+    background-color: #cca858;
+    color: #ffffff;
+    padding: clamp(6px, 1vw, 8px) clamp(16px, 2vw, 20px);
     border-radius: 20px;
-    font-size: 0.9rem !important;
-    font-weight: bold;
-    text-align: center;
-    width: fit-content;
+    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    font-weight: 700;
 }
 
-/* 🔘 Action Buttons */
-.profile-actions {
+/* ========================================================= */
+/* 5. KHU VỰC NÚT HÀNH ĐỘNG                                  */
+/* ========================================================= */
+.profile-action-area {
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: flex-end; 
+    gap: clamp(12px, 2vw, 16px);
+    border-top: 1px solid var(--border-color, #f3f4f6);
+    padding-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.profile-btn-action {
+    padding: clamp(12px, 1.5vw, 16px) clamp(24px, 3vw, 40px);
+    font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    border: none;
     display: flex;
     justify-content: center;
-    gap: 1rem;
-    margin-top: 1rem;
+    align-items: center;
 }
 
-button {
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s, transform 0.1s;
-    border: none;
+@media screen and (max-width: 640px) {
+    .profile-action-area {
+        justify-content: center;
+    }
+    .profile-btn-action {
+        width: 100%;
+    }
+    .profile-tab-btn {
+        flex: 1;
+        text-align: center;
+    }
 }
 
-button:disabled {
+.profile-btn-action:disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
 
-button:active:not(:disabled) {
-    transform: scale(0.98); /* Satisfying click effect */
-}
+.profile-btn-edit { background-color: #1c1917; color: #cca858; }
+.profile-btn-edit:hover { background-color: #000000; }
 
-.edit-profile-btn {
-    background-color: #222222;
-    color: #d4af37;
-    width: 100%;
-}
+.profile-btn-primary { background-color: #cca858; color: #ffffff; }
+.profile-btn-primary:hover:not(:disabled) { background-color: #b5952f; }
 
-.edit-profile-btn:hover {
-    background-color: #000000;
-}
-
-.save-btn {
-    background-color: #d4af37;
-    color: #ffffff;
-    flex: 1;
-}
-
-.save-btn:hover:not(:disabled) {
-    background-color: #c19b2e;
-}
-
-.cancel-btn {
-    background-color: #eeeeee;
-    color: #555555;
-    flex: 1;
-}
-
-.cancel-btn:hover:not(:disabled) {
-    background-color: #dddddd;
-}
-
-/* 📱 Mobile Responsiveness */
-@media (max-width: 600px) {
-    .profile-info {
-        grid-template-columns: 1fr; /* Stack into a single column on phones */
-    }
-}
+.profile-btn-secondary { background-color: #f3f4f6; color: #4b5563; }
+.profile-btn-secondary:hover:not(:disabled) { background-color: #e5e7eb; }

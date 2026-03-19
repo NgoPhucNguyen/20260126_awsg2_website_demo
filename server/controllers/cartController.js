@@ -288,3 +288,41 @@ export const updateCartItemQuantity = async (req, res) => {
         res.status(500).json({ error: "Failed to update quantity" });
     }
 };
+
+
+
+export const getCustomerCoupons = async (req, res) => {
+    try {
+        // Lấy ID của khách hàng đang đăng nhập từ Middleware (Giả sử là req.user.id)
+        // Lưu ý: Middleware xác thực (verifyToken) của bạn phải được chạy trước hàm này
+        const customerId = req.user?.id;
+
+        if (!customerId) {
+            return res.status(401).json({ message: "Vui lòng đăng nhập để xem ví Voucher." });
+        }
+
+        const myVouchers = await prisma.couponUsage.findMany({
+            where: {
+                customerId: customerId,
+                status: 'ACTIVE',       // Chỉ lấy mã đang kích hoạt
+                remaining: { gt: 0 },   // Phải còn ít nhất 1 lượt sử dụng
+                coupon: {
+                    expireAt: { gt: new Date() } // Mã chưa qua thời gian hết hạn
+                }
+            },
+            include: {
+                coupon: true // Kéo theo toàn bộ thông tin gốc của Coupon (code, type, value, expireAt...)
+            },
+            orderBy: {
+                coupon: {
+                    expireAt: 'asc' // Sắp xếp: Mã nào sắp hết hạn thì đẩy lên đầu để ưu tiên dùng trước
+                }
+            }
+        });
+
+        res.json(myVouchers);
+    } catch (error) {
+        console.error("[ERROR] getCustomerCoupons:", error);
+        res.status(500).json({ message: "Lỗi hệ thống khi tải ví Voucher." });
+    }
+};
