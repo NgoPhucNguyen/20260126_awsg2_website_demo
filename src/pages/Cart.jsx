@@ -171,8 +171,16 @@ const Cart = () => {
         if (!auth?.accessToken) {
             navigate('/cart?login=true'); 
         } else {
-            console.log("Processing Checkout...", cartItems);
-            alert("Proceeding to Payment Gateway...");
+            // 🚀 CHUYỂN HƯỚNG VÀ TRUYỀN DỮ LIỆU SANG CHECKOUT
+            navigate('/checkout', { 
+                state: { 
+                    couponCode: appliedCoupon?.code || null,
+                    orderDiscount,
+                    shippingDiscount,
+                    finalShippingFee,
+                    finalPrice
+                } 
+            });
         }
     };
 

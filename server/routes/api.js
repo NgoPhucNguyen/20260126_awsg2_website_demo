@@ -12,6 +12,7 @@ import cartRoutes from './cartRoutes.js'; // Import cart routes
 import couponRoutes from './couponRoutes.js';
 import promotionRoutes from './promotionRoutes.js';
 import categoryRoutes from './categoryRoute.js';
+import orderRoutes from './orderRoutes.js'; // Import order routes
 
 const router = express.Router();
 
@@ -19,7 +20,7 @@ const router = express.Router();
 router.use('/auth', authRoutes);
 router.use('/products', productRoutes);
 router.use('/cart', cartRoutes); // Mount cart routes under /api/cart
-
+router.use('/orders', orderRoutes); // Mount order routes under /api/orders
 // Admin routes
 router.use('/categories', categoryRoutes);
 router.use('/customers', customerRoutes);

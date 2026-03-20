@@ -6,15 +6,17 @@ import Product from './pages/Product';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import Profile from './pages/Profile';
-import History from './pages/History';
+import History from './pages/CustomerHistory';
 import AnalyzeSkin from './pages/AnalyzeSkin';
 import PaymentResult from './pages/Payment';
 import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/ForgotPassword';
+
 import PaymentMoMo from './components/Payment/PaymentMoMo'; 
 import Layout from './components/Layout'; 
 import Unauthorized from './features/auth/Unauthorized';
 import { PersistLogin, RequireAuth } from './features/auth/AuthRoutes';
+import Checkout from './pages/Checkout';
 
 // Admin Imports
 import AdminLayout from './components/AdminComponent/AdminLayout';
@@ -54,6 +56,7 @@ function App() {
                     <Route path="cart" element={<Cart />} />
                     <Route path="analyze-skin" element={<AnalyzeSkin />} />
                     <Route path="payment-result" element={<PaymentResult />} />
+                    <Route path="checkout" element={<Checkout />} />
                     
                     {/* Dev Test Route */}
                     <Route path="test-payment" element={
