@@ -327,19 +327,29 @@ export const verifyVnpayReturn = async (req, res) => {
         let vnp_Params = req.query;
 
         let secureHash = vnp_Params['vnp_SecureHash'];
-        delete vnp_Params['vnp_SecureHash'];
-        delete vnp_Params['vnp_SecureHashType'];
+        
+        // Cần copy ra một object mới để đảm bảo tính toàn vẹn khi sort
+        let signDataParams = Object.assign({}, vnp_Params);
+        delete signDataParams['vnp_SecureHash'];
+        delete signDataParams['vnp_SecureHashType']; 
 
-        vnp_Params = sortObject(vnp_Params);
+        signDataParams = sortObject(signDataParams);
 
         let secretKey = process.env.VNP_HASH_SECRET;
-        let signData = qs.stringify(vnp_Params, { encode: false });
+        
+        // 🚀 FIX LỖI CHỮ KÝ: Dùng đúng chuẩn của VNPAY
+        let signData = qs.stringify(signDataParams, { encode: false });
         let hmac = crypto.createHmac("sha512", secretKey);
         let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");
 
         if (secureHash === signed) {
             const responseCode = vnp_Params['vnp_ResponseCode'];
             const orderIdStr = vnp_Params['vnp_TxnRef']; 
+
+            // 🚀 FIX LỖI 500 SLICE: Kiểm tra độ dài trước khi cắt
+            if (!orderIdStr || orderIdStr.length < 32) {
+                return res.status(400).json({ message: "Mã đơn hàng không hợp lệ!" });
+            }
 
             // Khôi phục lại UUID chuẩn
             const orderId = `${orderIdStr.slice(0,8)}-${orderIdStr.slice(8,12)}-${orderIdStr.slice(12,16)}-${orderIdStr.slice(16,20)}-${orderIdStr.slice(20)}`;
@@ -354,7 +364,6 @@ export const verifyVnpayReturn = async (req, res) => {
                 
             } else {
                 // ❌ THẤT BẠI HOẶC HỦY: Trả lại tồn kho và Hủy đơn
-                // 1. Tìm đơn hàng kèm chi tiết sản phẩm và voucher
                 const failedOrder = await prisma.cart.findUnique({
                     where: { id: orderId },
                     include: { orderDetails: true }
@@ -365,7 +374,6 @@ export const verifyVnpayReturn = async (req, res) => {
                     await prisma.$transaction(async (tx) => {
                         // Trả lại tồn kho cho từng sản phẩm
                         for (const item of failedOrder.orderDetails) {
-                            // Tìm 1 kho bất kỳ đang chứa sản phẩm này để cộng lại (Do bạn đang dùng 1 kho default)
                             const inventory = await tx.inventory.findFirst({
                                 where: { productVariantId: item.productVariantId }
                             });
@@ -379,7 +387,7 @@ export const verifyVnpayReturn = async (req, res) => {
                         }
 
                         // Trả lại lượt dùng Voucher (Nếu có)
-                    if (failedOrder.couponId) {
+                        if (failedOrder.couponId) {
                             const usage = await tx.couponUsage.findFirst({
                                 where: { couponId: failedOrder.couponId, customerId: failedOrder.customerId }
                             });
@@ -389,7 +397,7 @@ export const verifyVnpayReturn = async (req, res) => {
                                     data: { remaining: { increment: 1 }, status: 'ACTIVE' }
                                 });
                             }
-                    }
+                        }
 
                         // Cuối cùng: Hủy đơn hàng
                         await tx.cart.update({
@@ -402,6 +410,7 @@ export const verifyVnpayReturn = async (req, res) => {
                 return res.status(200).json({ message: "Giao dịch bị hủy hoặc thất bại", code: responseCode });
             }
         } else {
+            console.error("Sai chữ ký VNPAY. Chuỗi ký gốc:", secureHash, "Chuỗi băm:", signed);
             return res.status(400).json({ message: "Chữ ký không hợp lệ (Bị giả mạo)!" });
         }
     } catch (error) {

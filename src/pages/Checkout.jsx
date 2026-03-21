@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/features/auth/AuthProvider"; 
 import { useCart } from "@/context/CartProvider"; 
@@ -54,10 +54,11 @@ const Checkout = () => {
     const [paymentMethod, setPaymentMethod] = useState("COD");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
-
+    
+    const isSuccessRef = useRef(false);
     // 1. CHẶN VÀO TRANG NẾU GIỎ TRỐNG
     useEffect(() => {
-        if (cartItems.length === 0) {
+        if (cartItems.length === 0 && !isSuccessRef.current) {
             navigate('/');
         }
     }, [cartItems, navigate]);
@@ -193,16 +194,18 @@ const Checkout = () => {
                 headers: { Authorization: `Bearer ${auth.accessToken}` }
             });
 
-            if (response.data.paymentUrl) {if (response.data.paymentUrl) {
+            if (response.data.paymentUrl) {
+                isSuccessRef.current = true;
                 clearCart(); 
                 // "Bế" khách hàng ném sang trang web của VNPAY
                 window.location.href = response.data.paymentUrl; 
             } else {
-                // Nếu là COD thì chạy logic cũ
+                isSuccessRef.current = true;
+                // Nếu KHÔNG có paymentUrl (Tức là COD) -> Sang trang Success
                 clearCart();
                 navigate('/order-success', { state: { method: 'COD' } });
-                }
             }
+            
         } catch (error) {
             setErrorMsg(error.response?.data?.message || "Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.");
         } finally {

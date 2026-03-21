@@ -17,21 +17,25 @@ const OrderSuccess = () => {
     const isCod = location.state?.method === 'COD';
 
     useEffect(() => {
+        let isMounted = true;
+
         if (isCod) {
             setStatus('success');
             setMessage('Đặt hàng thành công! Đơn hàng của bạn sẽ được giao sớm nhất.');
-            return;
+            return; // Dừng lại, không chạy đoạn VNPay bên dưới
         }
 
-        // Nếu có tham số vnp_ResponseCode trên URL, tức là đến từ VNPay
+        // Nếu không phải COD, kiểm tra tham số VNPay
         const vnp_ResponseCode = searchParams.get('vnp_ResponseCode');
         
         if (vnp_ResponseCode) {
             const verifyPayment = async () => {
                 try {
-                    // Gọi Backend để kiểm tra chữ ký và cập nhật DB
+                    // Gọi API gửi nguyên cục query parameter xuống cho Backend
                     const response = await axios.get(`/api/orders/vnpay-return?${searchParams.toString()}`);
                     
+                    if (!isMounted) return;
+
                     if (response.data.code === '00') {
                         setStatus('success');
                         setMessage('Thanh toán VNPAY thành công! Đơn hàng đã được ghi nhận.');
@@ -40,15 +44,22 @@ const OrderSuccess = () => {
                         setMessage('Giao dịch thanh toán thất bại hoặc đã bị hủy.');
                     }
                 } catch (error) {
+                    if (!isMounted) return;
                     setStatus('failed');
-                    setMessage('Dữ liệu thanh toán không hợp lệ hoặc bị giả mạo.');
+                    setMessage('Dữ liệu thanh toán không hợp lệ hoặc bị lỗi đường truyền.');
+                    console.error("Lỗi xác nhận VNPAY:", error);
                 }
             };
+            
             verifyPayment();
         } else if (!isCod) {
-            // Nếu không có tham số VNPay, cũng không phải COD -> Chắc khách gõ bừa link
+            // Không có tham số, cũng không phải từ nhánh COD -> Lạc đường
             navigate('/');
         }
+
+        return () => {
+            isMounted = false; // Chặn gọi API 2 lần do React Strict Mode
+        };
     }, [searchParams, isCod, navigate]);
 
     return (
@@ -81,10 +92,10 @@ const OrderSuccess = () => {
                 )}
 
                 <div className="order-success-actions">
-                    <button className="order-btn-outline" onClick={() => navigate('/my-orders')}>
+                    <button className="order-btn-outline" onClick={() => navigate('/history')}>
                         <FontAwesomeIcon icon={faListUl} /> Lịch sử đơn hàng
                     </button>
-                    <button className="order-btn-primary" onClick={() => navigate('/products')}>
+                    <button className="order-btn-primary" onClick={() => navigate('/')}>
                         <FontAwesomeIcon icon={faBagShopping} /> Tiếp tục mua sắm
                     </button>
                 </div>
