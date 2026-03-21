@@ -1,5 +1,25 @@
 import { PrismaClient } from '@prisma/client';
+import moment from 'moment';
+import crypto from 'crypto';
+import qs from 'qs';
+
 const prisma = new PrismaClient();
+
+function sortObject(obj) {
+    let sorted = {};
+    let str = [];
+    let key;
+    for (key in obj){
+        if (obj.hasOwnProperty(key)) {
+            str.push(encodeURIComponent(key));
+        }
+    }
+    str.sort();
+    for (key = 0; key < str.length; key++) {
+        sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, "+");
+    }
+    return sorted;
+}
 
 export const checkoutOrder = async (req, res) => {
     const customerId = req.user?.id; 
@@ -191,7 +211,66 @@ export const checkoutOrder = async (req, res) => {
             });
         });
 
-        res.status(200).json({ message: "🎉 Đặt hàng thành công!", orderId: currentCart.id });
+        // =============================================================
+        // 🚀 6. XỬ LÝ TRẢ VỀ DỰA TRÊN PHƯƠNG THỨC THANH TOÁN
+        // =============================================================
+        
+        if (paymentMethod === 'VNPAY') {
+            // Lấy IP của người dùng để gửi cho VNPAY (Bắt buộc)
+            let ipAddr = req.headers['x-forwarded-for'] || req.socket.remoteAddress || "127.0.0.1";
+
+            // Lấy config từ .env
+            let tmnCode = process.env.VNP_TMN_CODE;
+            let secretKey = process.env.VNP_HASH_SECRET;
+            let vnpUrl = process.env.VNP_URL;
+            let returnUrl = process.env.VNP_RETURN_URL;
+
+            // VNPAY yêu cầu format ngày giờ YYYYMMDDHHmmss
+            let createDate = moment(new Date()).format('YYYYMMDDHHmmss');
+            
+            // Dùng ID giỏ hàng làm mã đơn hàng gửi VNPAY (Xóa dấu gạch ngang của UUID cho an toàn)
+            let orderIdStr = currentCart.id.replace(/-/g, ''); 
+            
+            // Tạo Object chứa các tham số
+            let vnp_Params = {};
+            vnp_Params['vnp_Version'] = '2.1.0';
+            vnp_Params['vnp_Command'] = 'pay';
+            vnp_Params['vnp_TmnCode'] = tmnCode;
+            vnp_Params['vnp_Locale'] = 'vn';
+            vnp_Params['vnp_CurrCode'] = 'VND';
+            vnp_Params['vnp_TxnRef'] = orderIdStr;
+            vnp_Params['vnp_OrderInfo'] = 'Thanh toan don hang ' + orderIdStr;
+            vnp_Params['vnp_OrderType'] = 'other';
+            vnp_Params['vnp_Amount'] = finalPrice * 100; // VNPAY quy định số tiền phải nhân 100
+            vnp_Params['vnp_ReturnUrl'] = returnUrl;
+            vnp_Params['vnp_IpAddr'] = ipAddr;
+            vnp_Params['vnp_CreateDate'] = createDate;
+
+            // Sắp xếp tham số theo chuẩn VNPAY
+            vnp_Params = sortObject(vnp_Params);
+
+            // Băm chuỗi dữ liệu (Tạo chữ ký bảo mật HMAC SHA512)
+            let signData = qs.stringify(vnp_Params, { encode: false });
+            let hmac = crypto.createHmac("sha512", secretKey);
+            let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex"); 
+            
+            // Gắn chữ ký vào cuối URL
+            vnp_Params['vnp_SecureHash'] = signed;
+            vnpUrl += '?' + qs.stringify(vnp_Params, { encode: false });
+
+            // Gửi link VNPAY về cho Frontend
+            return res.status(200).json({ 
+                message: "Đang chuyển hướng sang VNPAY...", 
+                paymentUrl: vnpUrl 
+            });
+
+        } else {
+            // NẾU LÀ COD -> Trả về thành công luôn
+            return res.status(200).json({ 
+                message: "🎉 Đặt hàng thành công!", 
+                orderId: currentCart.id 
+            });
+        }
 
     } catch (error) {
         console.error("[ERROR] Checkout:", error);
@@ -238,5 +317,95 @@ export const getMyOrders = async (req, res) => {
     } catch (error) {
         console.error("[ERROR] getMyOrders:", error);
         res.status(500).json({ message: "Lỗi hệ thống khi tải lịch sử mua hàng." });
+    }
+};
+
+
+// 🔍 KIỂM TRA KẾT QUẢ TRẢ VỀ TỪ VNPAY
+export const verifyVnpayReturn = async (req, res) => {
+    try {
+        let vnp_Params = req.query;
+
+        let secureHash = vnp_Params['vnp_SecureHash'];
+        delete vnp_Params['vnp_SecureHash'];
+        delete vnp_Params['vnp_SecureHashType'];
+
+        vnp_Params = sortObject(vnp_Params);
+
+        let secretKey = process.env.VNP_HASH_SECRET;
+        let signData = qs.stringify(vnp_Params, { encode: false });
+        let hmac = crypto.createHmac("sha512", secretKey);
+        let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");
+
+        if (secureHash === signed) {
+            const responseCode = vnp_Params['vnp_ResponseCode'];
+            const orderIdStr = vnp_Params['vnp_TxnRef']; 
+
+            // Khôi phục lại UUID chuẩn
+            const orderId = `${orderIdStr.slice(0,8)}-${orderIdStr.slice(8,12)}-${orderIdStr.slice(12,16)}-${orderIdStr.slice(16,20)}-${orderIdStr.slice(20)}`;
+
+            if (responseCode === '00') {
+                // ✅ THÀNH CÔNG: Chốt đơn
+                await prisma.cart.update({
+                    where: { id: orderId },
+                    data: { paymentStatus: 'PAID' }
+                });
+                return res.status(200).json({ message: "Thanh toán thành công", code: "00" });
+                
+            } else {
+                // ❌ THẤT BẠI HOẶC HỦY: Trả lại tồn kho và Hủy đơn
+                // 1. Tìm đơn hàng kèm chi tiết sản phẩm và voucher
+                const failedOrder = await prisma.cart.findUnique({
+                    where: { id: orderId },
+                    include: { orderDetails: true }
+                });
+
+                if (failedOrder && failedOrder.status !== 'CANCELLED') {
+                    // Dùng Transaction để đảm bảo trả lại kho an toàn
+                    await prisma.$transaction(async (tx) => {
+                        // Trả lại tồn kho cho từng sản phẩm
+                        for (const item of failedOrder.orderDetails) {
+                            // Tìm 1 kho bất kỳ đang chứa sản phẩm này để cộng lại (Do bạn đang dùng 1 kho default)
+                            const inventory = await tx.inventory.findFirst({
+                                where: { productVariantId: item.productVariantId }
+                            });
+
+                            if (inventory) {
+                                await tx.inventory.update({
+                                    where: { id: inventory.id },
+                                    data: { quantity: { increment: item.quantity } }
+                                });
+                            }
+                        }
+
+                        // Trả lại lượt dùng Voucher (Nếu có)
+                    if (failedOrder.couponId) {
+                            const usage = await tx.couponUsage.findFirst({
+                                where: { couponId: failedOrder.couponId, customerId: failedOrder.customerId }
+                            });
+                            if (usage) {
+                                await tx.couponUsage.update({
+                                    where: { id: usage.id },
+                                    data: { remaining: { increment: 1 }, status: 'ACTIVE' }
+                                });
+                            }
+                    }
+
+                        // Cuối cùng: Hủy đơn hàng
+                        await tx.cart.update({
+                            where: { id: orderId },
+                            data: { paymentStatus: 'FAILED', status: 'CANCELLED' } 
+                        });
+                    });
+                }
+                
+                return res.status(200).json({ message: "Giao dịch bị hủy hoặc thất bại", code: responseCode });
+            }
+        } else {
+            return res.status(400).json({ message: "Chữ ký không hợp lệ (Bị giả mạo)!" });
+        }
+    } catch (error) {
+        console.error("VNPAY Return Error:", error);
+        res.status(500).json({ message: "Lỗi hệ thống khi xác thực VNPAY" });
     }
 };

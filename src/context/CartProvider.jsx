@@ -66,9 +66,9 @@ export const CartProvider = ({ children }) => {
             try {
                 // 🗄️ BƯỚC 1: HỎI Ý KIẾN BACKEND TRƯỚC
                 await axios.post("/api/cart/add", {
-                    variantId: product.variantId, // 👈 Sửa lại thành product.variantId
+                    variantId: product.variantId,
                     quantity: quantityToAdd, 
-                    price: product.price          // 👈 Sửa lại thành product.price
+                    price: product.price
                 }, {
                     headers: { Authorization: `Bearer ${token}` }
                 });

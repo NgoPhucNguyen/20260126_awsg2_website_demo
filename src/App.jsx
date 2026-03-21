@@ -1,22 +1,22 @@
 import './App.css';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { PersistLogin, RequireAuth } from './features/auth/AuthRoutes';
 
 // Pages & Components
+import ResetPassword from './pages/ResetPassword';
+import ForgotPassword from './pages/ForgotPassword';
+import Unauthorized from './features/auth/Unauthorized';
+import Layout from './components/Layout'; 
+
 import Product from './pages/Product';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import Profile from './pages/Profile';
 import History from './pages/CustomerHistory';
 import AnalyzeSkin from './pages/AnalyzeSkin';
-import PaymentResult from './pages/Payment';
-import ResetPassword from './pages/ResetPassword';
-import ForgotPassword from './pages/ForgotPassword';
-
-import PaymentMoMo from './components/Payment/PaymentMoMo'; 
-import Layout from './components/Layout'; 
-import Unauthorized from './features/auth/Unauthorized';
-import { PersistLogin, RequireAuth } from './features/auth/AuthRoutes';
 import Checkout from './pages/Checkout';
+import OrderSuccess from './pages/OrderSuccess';
+
 
 // Admin Imports
 import AdminLayout from './components/AdminComponent/AdminLayout';
@@ -55,16 +55,9 @@ function App() {
                     <Route path="product/:id" element={<ProductDetail />} />
                     <Route path="cart" element={<Cart />} />
                     <Route path="analyze-skin" element={<AnalyzeSkin />} />
-                    <Route path="payment-result" element={<PaymentResult />} />
                     <Route path="checkout" element={<Checkout />} />
-                    
-                    {/* Dev Test Route */}
-                    <Route path="test-payment" element={
-                        <div className="test-container">
-                            <h1>Test MoMo Integration</h1>
-                            <PaymentMoMo amount={1000} />
-                        </div>
-                    } />
+                    <Route path="order-success" element={<OrderSuccess />} />
+                    <Route path="vnpay-return" element={<OrderSuccess />} />
 
                     {/* Nhóm trang yêu cầu đăng nhập (User/Admin đều vào được) */}
                     <Route element={<RequireAuth allowedRoles={[ROLES.User, ROLES.Admin]} />}>

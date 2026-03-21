@@ -34,7 +34,7 @@ const ContactModal = ({ isOpen, onClose }) => {
             <div className="contact-modal-box" onClick={(e) => e.stopPropagation()}>
                 <div className="modal-header">
                     <h3 className="modal-title">Contact Us</h3>
-                    <button onClick={onClose} className="close-btn" aria-label="Đóng hộp thoại">✕</button>
+                    <button onClick={onClose} className="modal-close-btn" aria-label="Đóng hộp thoại">✕</button>
                 </div>
                 
                 <form onSubmit={handleSubmit}>
@@ -49,8 +49,8 @@ const ContactModal = ({ isOpen, onClose }) => {
                         aria-label="Nội dung tin nhắn"
                     />
                     <div className="modal-actions">
-                        <button type="submit" className="send-btn">Send</button>
-                        <button type="button" className="cancel-btn" onClick={onClose}>Cancel</button>
+                        <button type="submit" className="modal-send-btn">Send</button>
+                        <button type="button" className="modal-cancel-btn" onClick={onClose}>Cancel</button>
                     </div>
                 </form>
             </div>

@@ -358,3 +358,110 @@
     .checkout-container { grid-template-columns: 1fr; }
     .checkout-summary-card { position: static; margin-top: 10px; }
 }
+
+
+/* --- TOGGLE ĐỊA CHỈ (RADIO BUTTONS) --- */
+.checkout-address-toggle-group {
+    display: flex;
+    gap: clamp(10px, 2vw, 15px);
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.checkout-toggle-btn {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: clamp(12px, 2vw, 16px);
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #f9fafb;
+    transition: all 0.2s ease;
+}
+
+.checkout-toggle-btn input[type="radio"] {
+    accent-color: #cca858;
+    width: 18px;
+    height: 18px;
+}
+
+.checkout-toggle-btn span {
+    font-weight: 600;
+    color: #4b5563;
+    font-size: clamp(0.9rem, 1.5vw, 0.95rem);
+}
+
+.checkout-toggle-btn span svg {
+    margin-right: 6px;
+    color: #6b7280;
+}
+
+.checkout-toggle-btn.active {
+    border-color: #cca858;
+    background: #fffcf3;
+}
+
+.checkout-toggle-btn.active span {
+    color: #1c1917;
+}
+
+.checkout-toggle-btn.active span svg {
+    color: #cca858;
+}
+
+.checkout-toggle-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f3f4f6;
+}
+
+/* --- HỘP THÔNG TIN ĐỊA CHỈ MẶC ĐỊNH --- */
+.checkout-default-address-box {
+    background: #f8fafc;
+    border-left: 4px solid #cca858;
+    padding: 16px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.checkout-default-address-box strong {
+    font-size: 1.05rem;
+    color: #1c1917;
+}
+
+.checkout-default-address-box span {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+.checkout-default-address-box p {
+    margin: 8px 0 0 0;
+    color: #374151;
+    line-height: 1.5;
+}
+
+/* Tinh chỉnh thẻ select cho đồng bộ */
+.checkout-input-select {
+    width: 100%;
+    padding: clamp(10px, 1.5vw, 12px) 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background-color: white;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.checkout-input-select:disabled {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+}
+
+.checkout-input-select:focus {
+    border-color: #cca858;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(204, 168, 88, 0.15);
+}
