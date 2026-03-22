@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import axios from '@/api/axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import SelectFormProduct from '@/components/AdminComponent/SelectFormProduct';
-import './CouponFormModal.css'; // 🚀 Import file CSS độc lập
+import { faXmark, faCalendarDays } from '@fortawesome/free-solid-svg-icons';
+import { formatToLocalDatetime } from '@/utils/dateUtils';
+import './CouponFormModal.css';
 
 const API_COUPONS = '/api/coupons';
 
@@ -17,15 +17,16 @@ const FormField = ({ label, error, required, children }) => (
     </div>
 );
 
-const CouponFormModal = ({ coupon, products, categories, onClose, onSuccess }) => {
+// 🚀 Đã bỏ props 'products' và 'categories' vì không còn dùng tới
+const CouponFormModal = ({ coupon, onClose, onSuccess }) => {
     const isEditing = !!coupon;
     const [submitting, setSubmitting] = useState(false);
     const [generalError, setGeneralError] = useState('');
     const [errors, setErrors] = useState({});
-    
-    const [showVariantModal, setShowVariantModal] = useState(false);
 
-    // Khởi tạo Form Data
+    // STATE: Cờ hiệu báo bắt đầu ngay
+    const [isImmediate, setIsImmediate] = useState(!isEditing || !coupon?.createdAt || new Date(coupon.createdAt) <= new Date());
+
     const [formData, setFormData] = useState({
         code: coupon?.code || '',
         type: coupon?.type || 'PERCENTAGE',
@@ -33,8 +34,10 @@ const CouponFormModal = ({ coupon, products, categories, onClose, onSuccess }) =
         value: coupon?.value?.toString() || '',
         description: coupon?.description || '',
         usageLimit: coupon?.usageLimit?.toString() || '',
-        expireAt: coupon?.expireAt ? new Date(coupon.expireAt).toISOString().slice(0, 16) : '',
-        rule: coupon?.rule || { minOrderValue: 0, maxDiscountValue: 0, usagePerUser: 0, applicableVariants: [], isFirstOrder: false }
+        createdAt: coupon?.createdAt ? formatToLocalDatetime(coupon.createdAt) : formatToLocalDatetime(new Date()),
+        expireAt: coupon?.expireAt ? formatToLocalDatetime(coupon.expireAt) : '',
+        // 🚀 Đã xóa 'applicableVariants' ra khỏi rule
+        rule: coupon?.rule || { minOrderValue: 0, maxDiscountValue: 0, usagePerUser: 0, isFirstOrder: false }
     });
 
     const validateForm = () => {
@@ -44,34 +47,31 @@ const CouponFormModal = ({ coupon, products, categories, onClose, onSuccess }) =
         if (!codeValue) {
             newErrors.code = 'Mã coupon không được để trống';
         } else if (codeValue.length < 3) {
-            newErrors.code = 'Mã coupon tối thiểu 3 ký tự';
+            newErrors.code = 'Mã tối thiểu 3 ký tự';
         } else if (!/^[A-Z0-9_-]+$/.test(codeValue)) {
-            newErrors.code = 'Mã chỉ chứa chữ hoa, số, gạch dưới và gạch ngang';
+            newErrors.code = 'Mã chỉ chứa chữ hoa, số, gạch dưới/ngang';
         }
 
         const valueNum = parseFloat(formData.value);
-        if (!formData.value) {
-            newErrors.value = 'Giá trị không được để trống';
-        } else if (isNaN(valueNum) || valueNum <= 0) {
-            newErrors.value = 'Giá trị phải lớn hơn 0';
-        } else if (formData.type === 'PERCENTAGE' && valueNum > 100) {
-            newErrors.value = 'Giá trị % không được vượt quá 100';
-        }
+        if (!formData.value) newErrors.value = 'Không được để trống';
+        else if (isNaN(valueNum) || valueNum <= 0) newErrors.value = 'Phải lớn hơn 0';
+        else if (formData.type === 'PERCENTAGE' && valueNum > 100) newErrors.value = 'Không vượt quá 100%';
 
-        const limitNum = parseInt(formData.usageLimit);
-        if (!formData.usageLimit) {
-            newErrors.usageLimit = 'Lượt dùng không được để trống';
-        } else if (isNaN(limitNum) || limitNum <= 0) {
-            newErrors.usageLimit = 'Lượt dùng phải lớn hơn 0';
+        if (!formData.usageLimit) newErrors.usageLimit = 'Không được để trống';
+
+        // VALIDATE LOGIC NGÀY THÁNG
+        const now = new Date();
+        const startTime = isImmediate ? now : new Date(formData.createdAt);
+        const endTime = new Date(formData.expireAt);
+
+        if (!isImmediate && !formData.createdAt) {
+            newErrors.createdAt = 'Vui lòng chọn ngày bắt đầu';
         }
 
         if (!formData.expireAt) {
-            newErrors.expireAt = 'Thời hạn không được để trống';
-        } else {
-            const expireDate = new Date(formData.expireAt);
-            if (expireDate <= new Date()) {
-                newErrors.expireAt = 'Thời hạn phải lớn hơn hiện tại';
-            }
+            newErrors.expireAt = 'Vui lòng chọn ngày kết thúc';
+        } else if (endTime <= startTime) {
+            newErrors.expireAt = 'Ngày kết thúc phải SAU ngày bắt đầu';
         }
 
         setErrors(newErrors);
@@ -85,30 +85,25 @@ const CouponFormModal = ({ coupon, products, categories, onClose, onSuccess }) =
 
         try {
             setSubmitting(true);
+            
             const submitData = {
                 ...formData,
                 value: parseFloat(formData.value),
                 usageLimit: parseInt(formData.usageLimit),
+                createdAt: isImmediate ? new Date().toISOString() : new Date(formData.createdAt).toISOString(),
                 expireAt: new Date(formData.expireAt).toISOString(),
             };
 
             if (isEditing) await axios.put(`${API_COUPONS}/${coupon.id}`, submitData);
             else await axios.post(API_COUPONS, submitData);
             
-            onSuccess(); // Refresh bảng
-            onClose(); // Đóng Modal
+            onSuccess(); 
+            onClose(); 
         } catch (error) {
             setGeneralError(error.response?.data?.message || 'Lỗi hệ thống');
         } finally {
             setSubmitting(false);
         }
-    };
-
-    // Render danh sách biến thể đã chọn
-    const getVariantDisplayName = (variantId) => {
-        const allVariants = products.flatMap(p => (p.variants || []).map(v => ({ ...v, productName: p.nameVn })));
-        const v = allVariants.find(x => x.id === variantId);
-        return v ? `${v.productName} - ${v.sku}` : `Mã #${variantId}`;
     };
 
     return (
@@ -173,13 +168,14 @@ const CouponFormModal = ({ coupon, products, categories, onClose, onSuccess }) =
                                     step="1" min="0"
                                 />
                             </FormField>
-                            <FormField label="Thời hạn kết thúc" error={errors.expireAt} required>
+                            
+                            <FormField label="Tổng giới hạn số lần nhập mã" error={errors.usageLimit} required>
                                 <input 
-                                    type="datetime-local" 
-                                    className={`coupon-form-modal-input-field ${errors.expireAt ? 'input-error' : ''}`} 
-                                    value={formData.expireAt}
-                                    onChange={(e) => setFormData({ ...formData, expireAt: e.target.value })}
-                                    min={new Date().toISOString().slice(0, 16)}
+                                    type="number" 
+                                    className={`coupon-form-modal-input-field ${errors.usageLimit ? 'input-error' : ''}`} 
+                                    value={formData.usageLimit}
+                                    onChange={(e) => setFormData({ ...formData, usageLimit: e.target.value })} 
+                                    placeholder="VD: 500" min="1"
                                 />
                             </FormField>
                         </div>
@@ -195,20 +191,48 @@ const CouponFormModal = ({ coupon, products, categories, onClose, onSuccess }) =
                         </FormField>
                     </div>
 
+                    {/* --- 🕒 QUẢN LÝ THỜI GIAN --- */}
+                    <div className="coupon-form-modal-section" style={{ background: '#f8fafc', padding: '15px', borderRadius: '8px' }}>
+                        <h4 className="coupon-form-modal-section-title"><FontAwesomeIcon icon={faCalendarDays}/> Thời Gian Áp Dụng</h4>
+                        
+                        <div className="coupon-form-modal-checkbox-row" style={{ marginBottom: '15px' }}>
+                            <input 
+                                type="checkbox" 
+                                id="isImmediate" 
+                                checked={isImmediate}
+                                onChange={(e) => setIsImmediate(e.target.checked)}
+                            />
+                            <label htmlFor="isImmediate" style={{ fontWeight: 'bold' }}>Bắt đầu có hiệu lực ngay lập tức</label>
+                        </div>
+
+                        <div className="coupon-form-modal-row-2">
+                            {!isImmediate && (
+                                <FormField label="Thời điểm bắt đầu (Lên lịch)" error={errors.createdAt} required>
+                                    <input 
+                                        type="datetime-local" 
+                                        className={`coupon-form-modal-input-field ${errors.createdAt ? 'input-error' : ''}`} 
+                                        value={formData.createdAt}
+                                        onChange={(e) => setFormData({ ...formData, createdAt: e.target.value })}
+                                    />
+                                </FormField>
+                            )}
+
+                            <FormField label="Thời hạn kết thúc" error={errors.expireAt} required>
+                                <input 
+                                    type="datetime-local" 
+                                    className={`coupon-form-modal-input-field ${errors.expireAt ? 'input-error' : ''}`} 
+                                    value={formData.expireAt}
+                                    onChange={(e) => setFormData({ ...formData, expireAt: e.target.value })}
+                                />
+                            </FormField>
+                        </div>
+                    </div>
+
                     {/* --- ĐIỀU KIỆN SỬ DỤNG --- */}
                     <div className="coupon-form-modal-section">
                         <h4 className="coupon-form-modal-section-title">Điều Kiện Khắt Khe (Rules)</h4>
                         
                         <div className="coupon-form-modal-row-2">
-                            <FormField label="Tổng giới hạn số lần nhập mã" error={errors.usageLimit} required>
-                                <input 
-                                    type="number" 
-                                    className={`coupon-form-modal-input-field ${errors.usageLimit ? 'input-error' : ''}`} 
-                                    value={formData.usageLimit}
-                                    onChange={(e) => setFormData({ ...formData, usageLimit: e.target.value })} 
-                                    placeholder="VD: 500" min="1"
-                                />
-                            </FormField>
                             <FormField label="Giới hạn số lần dùng mỗi khách">
                                 <input 
                                     type="number" 
@@ -218,9 +242,6 @@ const CouponFormModal = ({ coupon, products, categories, onClose, onSuccess }) =
                                     placeholder="0 = Không giới hạn" min="0"
                                 />
                             </FormField>
-                        </div>
-
-                        <div className="coupon-form-modal-row-2">
                             <FormField label="Đơn hàng tối thiểu (VNĐ)">
                                 <input 
                                     type="number" 
@@ -230,6 +251,9 @@ const CouponFormModal = ({ coupon, products, categories, onClose, onSuccess }) =
                                     placeholder="VD: 200000" min="0"
                                 />
                             </FormField>
+                        </div>
+
+                        <div className="coupon-form-modal-row-2">
                             <FormField label="Mức giảm tối đa (Áp dụng cho %)">
                                 <input 
                                     type="number" 
@@ -253,29 +277,7 @@ const CouponFormModal = ({ coupon, products, categories, onClose, onSuccess }) =
                         </div>
                     </div>
 
-                    {/* --- RÀNG BUỘC SẢN PHẨM --- */}
-                    <div className="coupon-form-modal-section">
-                        <h4 className="coupon-form-modal-section-title">Ràng Buộc Sản Phẩm (Optional)</h4>
-                        <div className="coupon-form-modal-variant-selector">
-                            <button type="button" className="coupon-form-modal-btn coupon-form-modal-btn-secondary" onClick={() => setShowVariantModal(true)}>
-                                Quản lý Biến thể ({formData.rule.applicableVariants.length} đã chọn)
-                            </button>
-                            <span className="coupon-form-modal-hint-text">Bỏ trống để áp dụng cho toàn bộ cửa hàng</span>
-                        </div>
-
-                        {formData.rule.applicableVariants.length > 0 && (
-                            <div className="coupon-form-modal-selected-variants">
-                                {formData.rule.applicableVariants.map(vId => (
-                                    <div key={vId} className="coupon-form-modal-variant-tag">
-                                        {getVariantDisplayName(vId)}
-                                        <button type="button" onClick={() => {
-                                            setFormData({...formData, rule: {...formData.rule, applicableVariants: formData.rule.applicableVariants.filter(id => id !== vId)}})
-                                        }}>✕</button>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                    {/* 🚀 Đã xóa hoàn toàn section Chọn Biến Thể Sản Phẩm */}
 
                     <div className="coupon-form-modal-footer">
                         <button type="button" className="coupon-form-modal-btn coupon-form-modal-btn-secondary" onClick={onClose} disabled={submitting}>Hủy Bỏ</button>
@@ -284,20 +286,6 @@ const CouponFormModal = ({ coupon, products, categories, onClose, onSuccess }) =
                         </button>
                     </div>
                 </form>
-
-                {/* GỌI COMPONENT CHỌN SẢN PHẨM */}
-                {showVariantModal && (
-                    <SelectFormProduct 
-                        products={products}
-                        categories={categories}
-                        initialSelectedIds={formData.rule.applicableVariants}
-                        onClose={() => setShowVariantModal(false)}
-                        onSave={(selectedIds) => {
-                            setFormData({...formData, rule: {...formData.rule, applicableVariants: selectedIds}});
-                            setShowVariantModal(false);
-                        }}
-                    />
-                )}
             </div>
         </div>
     );

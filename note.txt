@@ -1,4 +1,7 @@
-🏦 Hành động tại VNPAY: * Chọn ngân hàng NCB.
+🏦 Hành động tại VNPAY: 
+Phải đi đúng trình tự và nhập đúng
+* Chọn Thẻ nội địa.
+* Chọn ngân hàng NCB.
 
 Nhập số thẻ: 9704198526191432198
 
@@ -6,7 +9,8 @@ Tên chủ thẻ: NGUYEN VAN A
 
 Ngày phát hành: 07/15
 
-Bấm thanh toán, nhập mã OTP 123456 và Xác nhận.
+Bấm thanh toán, Bấm đồng ý 
+nhập mã OTP 123456 và Thanh Toán.
 
 
 

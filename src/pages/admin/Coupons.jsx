@@ -1,25 +1,19 @@
 // src/pages/admin/Coupons.jsx
 import { useState, useEffect } from 'react';
-import axios from '@/api/axios'; // Đảm bảo đường dẫn axios đúng với project của bạn
+import axios from '@/api/axios'; 
 import './Coupons.css';
 
-// Import các Modal (Đảm bảo bạn đã tạo các file này theo hướng dẫn ở bước trước)
 import AssignCouponModal from '@/components/AdminComponent/AssignCouponModal';
-import CouponFormModal from '@/components/AdminComponent/CouponFormModal';
-
-// Import FontAwesome
+import CouponFormModal from '@/components/AdminComponent/Coupon/CouponFormModal';
+import { formatDateTimeVn } from '@/utils/dateUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const API_COUPONS = '/api/coupons';
-const API_PRODUCTS = '/api/products';
-const API_CATEGORIES = '/api/categories';
 
 const Coupons = () => {
     // 📦 DATA STATE TỔNG
     const [coupons, setCoupons] = useState([]);
-    const [products, setProducts] = useState([]);
-    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
     const [generalError, setGeneralError] = useState('');
 
@@ -31,11 +25,9 @@ const Coupons = () => {
     const [showFormModal, setShowFormModal] = useState(false);
     const [editingCoupon, setEditingCoupon] = useState(null);
 
-    // 🔄 LẤY DỮ LIỆU LÚC VÀO TRANG
+    // 🔄 LẤY DỮ LIỆU LÚC VÀO TRANG (Chỉ lấy mỗi Coupons thôi, cho nhẹ!)
     useEffect(() => {
         fetchCoupons();
-        fetchProducts();
-        fetchCategories();
     }, []);
 
     const fetchCoupons = async () => {
@@ -48,24 +40,6 @@ const Coupons = () => {
             setGeneralError('Lỗi tải mã giảm giá: ' + error.message);
         } finally {
             setLoading(false);
-        }
-    };
-
-    const fetchProducts = async () => {
-        try {
-            const response = await axios.get(API_PRODUCTS);
-            setProducts(response.data);
-        } catch (error) {
-            console.error(`[ERROR]: fetchProducts : ${error.message}`);
-        }
-    };
-
-    const fetchCategories = async () => {
-        try {
-            const response = await axios.get(API_CATEGORIES);
-            setCategories(response.data);
-        } catch (error) {
-            console.error(`[ERROR]: fetchCategories : ${error.message}`);
         }
     };
 
@@ -103,12 +77,7 @@ const Coupons = () => {
             ? `${coupon.value}%` 
             : new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(coupon.value);
     };
-
-    const formatDateTime = (dateString) => {
-        if (!dateString) return '';
-        return new Date(dateString).toLocaleString('vi-VN');
-    };
-
+    
     return (
         <div className="coupon-wrapper fade-in">
             <header className="coupon-header-section">
@@ -161,10 +130,9 @@ const Coupons = () => {
                                         <td>{coupon.type === 'PERCENTAGE' ? 'Phần trăm (%)' : 'Tiền mặt (đ)'}</td>
                                         <td className="coupon-value-highlight">{formatValue(coupon)}</td>
                                         <td>
-                                            {/* Chỗ này sẽ render theo số assignedCount/usedCount nếu Backend của bạn trả về */}
                                             {coupon.usageLimit}
                                         </td>
-                                        <td>{formatDateTime(coupon.expireAt)}</td>
+                                        <td>{formatDateTimeVn(coupon.expireAt)}</td>
                                         <td>
                                             <div className="coupon-action-cell">
                                                 <button 
@@ -203,10 +171,8 @@ const Coupons = () => {
             {showFormModal && (
                 <CouponFormModal 
                     coupon={editingCoupon}
-                    products={products}
-                    categories={categories}
                     onClose={() => setShowFormModal(false)}
-                    onSuccess={fetchCoupons} // Khi Modal lưu thành công, nó sẽ gọi hàm này để Load lại bảng
+                    onSuccess={fetchCoupons}
                 />
             )}
 
@@ -215,7 +181,7 @@ const Coupons = () => {
                 <AssignCouponModal 
                     coupon={assigningCoupon}
                     onClose={() => setShowAssignModal(false)}
-                    onAssigned={fetchCoupons} // Tặng thành công thì load lại bảng
+                    onAssigned={fetchCoupons} 
                 />
             )}
         </div>

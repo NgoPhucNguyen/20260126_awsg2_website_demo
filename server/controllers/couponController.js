@@ -1,32 +1,35 @@
 import prisma from '../prismaClient.js';
 
-// GET LIST OF COUPONS
+// 1. GET LIST OF COUPONS (Tối ưu lại cách đếm số lượt đã dùng thực tế)
 export const getCoupons = async (req, res) => {
   try {
     const coupons = await prisma.coupon.findMany({
       orderBy: { createdAt: 'desc' },
       include: {
         _count: {
-          select: {
-            CouponUsage: true // Đếm xem mã này đã nằm trong ví của bao nhiêu người (bao gồm cả chưa dùng và đã dùng)
-          }
+          select: { CouponUsage: true } // Đây là số người đã LƯU mã vào ví
         }
       }
     });
 
-    // Tính toán thêm số lượt THỰC SỰ ĐÃ DÙNG (USED_UP)
+    // 🚀 TÍNH TOÁN LẠI SỐ LƯỢT ĐÃ DÙNG THỰC TẾ DỰA VÀO BẢNG CART
     const couponsWithStats = await Promise.all(coupons.map(async (coupon) => {
-        const usedCount = await prisma.couponUsage.count({
+        // Đếm xem có bao nhiêu Đơn hàng Hợp lệ đã sử dụng mã này
+        const realUsedCount = await prisma.cart.count({
             where: {
-                couponId: coupon.id,
-                status: 'USED_UP'
+                OR: [
+                    { couponId: coupon.id },
+                    { shippingCouponId: coupon.id }
+                ],
+                // Bỏ qua các giỏ hàng nháp hoặc đơn đã hủy
+                status: { notIn: ['DRAFT', 'CANCELLED'] }
             }
         });
 
         return {
             ...coupon,
-            assignedCount: coupon._count.CouponUsage,
-            usedCount: usedCount
+            assignedCount: coupon._count.CouponUsage, // Số lượt đã lưu ví
+            usedCount: realUsedCount                  // Số lượt đã chốt đơn thành công
         };
     }));
 
@@ -37,51 +40,43 @@ export const getCoupons = async (req, res) => {
   }
 };
 
+// 2. ASSIGN COUPON (Tặng mã)
 export const assignCoupon = async (req, res) => {
     try {
         const { couponId, email } = req.body;
 
-        if (!couponId || !email) {
-            return res.status(400).json({ message: 'Vui lòng cung cấp Coupon ID và Email khách hàng.' });
-        }
+        if (!couponId || !email) return res.status(400).json({ message: 'Vui lòng cung cấp Coupon ID và Email khách hàng.' });
 
-        // 1. Tìm Khách hàng qua Email
         const customer = await prisma.customer.findUnique({ where: { mail: email } });
-        if (!customer) {
-            return res.status(404).json({ message: `Không tìm thấy khách hàng với email: ${email}` });
-        }
+        if (!customer) return res.status(404).json({ message: `Không tìm thấy khách hàng với email: ${email}` });
 
-        // 2. Tìm Coupon
         const coupon = await prisma.coupon.findUnique({ where: { id: couponId } });
-        if (!coupon) {
-            return res.status(404).json({ message: 'Không tìm thấy Coupon.' });
-        }
+        if (!coupon) return res.status(404).json({ message: 'Không tìm thấy Coupon.' });
 
-        // 3. Kiểm tra xem khách hàng này đã có mã này chưa (Tránh tặng 2 lần)
         const existingWalletItem = await prisma.couponUsage.findFirst({
+            where: { couponId: coupon.id, customerId: customer.id }
+        });
+
+        if (existingWalletItem) return res.status(400).json({ message: 'Khách hàng này đã có mã giảm giá này trong ví rồi.' });
+
+        // 🚀 CHỈ CHẶN TẶNG MÃ NẾU SỐ LƯỢT DÙNG THỰC TẾ ĐÃ HẾT
+        const realUsedCount = await prisma.cart.count({
             where: {
-                couponId: coupon.id,
-                customerId: customer.id
+                OR: [{ couponId: coupon.id }, { shippingCouponId: coupon.id }],
+                status: { notIn: ['DRAFT', 'CANCELLED'] }
             }
         });
 
-        if (existingWalletItem) {
-            return res.status(400).json({ message: 'Khách hàng này đã có mã giảm giá này trong ví rồi.' });
+        if (realUsedCount >= coupon.usageLimit) {
+            return res.status(400).json({ message: 'Mã giảm giá này đã hết lượt sử dụng trên hệ thống, không thể tặng thêm.' });
         }
 
-        // 4. Kiểm tra giới hạn tổng phát hành (Global Usage Limit)
-        const currentAssigned = await prisma.couponUsage.count({ where: { couponId: coupon.id } });
-        if (currentAssigned >= coupon.usageLimit) {
-            return res.status(400).json({ message: 'Mã giảm giá này đã phát hành hết giới hạn cho phép.' });
-        }
-
-        // 5. Phát hành mã (Bỏ vào ví khách hàng)
         await prisma.couponUsage.create({
             data: {
                 couponId: coupon.id,
                 customerId: customer.id,
                 status: 'ACTIVE',
-                remaining: coupon.rule?.usagePerUser > 0 ? coupon.rule.usagePerUser : 1 // Mặc định cho phép dùng 1 lần nếu không set
+                remaining: coupon.rule?.usagePerUser > 0 ? coupon.rule.usagePerUser : 1 
             }
         });
 
@@ -93,36 +88,23 @@ export const assignCoupon = async (req, res) => {
     }
 };
 
-
-// get coupon by id
 export const getCouponById = async (req, res) => {
   try {
     const { id } = req.params;
-    const coupon = await prisma.coupon.findUnique({
-      where: { id }
-    });
-    console.log("Fetched Coupon:", coupon);
-    if (!coupon) {
-      return res.status(404).json({ message: 'Coupon không tìm thấy' });
-    }
+    const coupon = await prisma.coupon.findUnique({ where: { id } });
+    if (!coupon) return res.status(404).json({ message: 'Coupon không tìm thấy' });
     res.json(coupon);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// CREATE COUPON
 export const createCoupon = async (req, res) => {
   try {
-    const { code, category , type, value, description, usageLimit, expireAt, rule } = req.body;
+    const { code, category , type, value, description, usageLimit, createdAt, expireAt, rule } = req.body;
 
-    // check if code already exists
-    const existingCoupon = await prisma.coupon.findUnique({
-      where: { code }
-    });
-    if (existingCoupon) {
-      return res.status(400).json({ message: 'Mã coupon đã tồn tại' });
-    }
+    const existingCoupon = await prisma.coupon.findUnique({ where: { code } });
+    if (existingCoupon) return res.status(400).json({ message: 'Mã coupon đã tồn tại' });
 
     const coupon = await prisma.coupon.create({
       data: {
@@ -132,31 +114,25 @@ export const createCoupon = async (req, res) => {
         value: parseFloat(value),
         description,
         usageLimit: parseInt(usageLimit),
+        createdAt: new Date(createdAt), 
         expireAt: new Date(expireAt),
         rule: rule || { minOrderValue: 0 }
       }
     });
 
-    res.status(201).json({
-      message: 'Tạo coupon thành công',
-      coupon
-    });
+    res.status(201).json({ message: 'Tạo coupon thành công', coupon });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// UPDATE COUPON
 export const updateCoupon = async (req, res) => {
   try {
     const { id } = req.params;
-    const { code, category, type, value, description, usageLimit, expireAt, rule } = req.body;
+    const { code, category, type, value, description, usageLimit, createdAt, expireAt, rule } = req.body;
 
-    // Kiểm tra code có trùng với coupon khác không
     if (code) {
-      const existingCoupon = await prisma.coupon.findUnique({
-        where: { code }
-      });
+      const existingCoupon = await prisma.coupon.findUnique({ where: { code } });
       if (existingCoupon && existingCoupon.id !== id) {
         return res.status(400).json({ message: 'Mã coupon đã tồn tại' });
       }
@@ -171,92 +147,87 @@ export const updateCoupon = async (req, res) => {
         ...(value !== undefined && { value: parseFloat(value) }),
         ...(description !== undefined && { description }),
         ...(usageLimit !== undefined && { usageLimit: parseInt(usageLimit) }),
+        ...(createdAt && { createdAt: new Date(createdAt) }),
         ...(expireAt && { expireAt: new Date(expireAt) }),
         ...(rule && { rule })
       }
     });
 
-    res.json({
-      message: 'Cập nhật coupon thành công',
-      coupon
-    });
+    res.json({ message: 'Cập nhật coupon thành công', coupon });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// DELETE COUPON
 export const deleteCoupon = async (req, res) => {
-  try {
-    const { id } = req.params;
+    try {
+        const { id } = req.params;
+        const usedInOrders = await prisma.cart.count({
+            where: { OR: [ { couponId: id }, { shippingCouponId: id } ] }
+        });
+        if (usedInOrders > 0) {
+            return res.status(400).json({ message: 'Không thể xóa vĩnh viễn! Mã này đã tồn tại trong lịch sử Hóa đơn.' });
+        }
 
-    await prisma.coupon.delete({
-      where: { id }
-    });
+        await prisma.$transaction(async (tx) => {
+            await tx.couponUsage.deleteMany({ where: { couponId: id } });
+            await tx.coupon.delete({ where: { id } });
+        });
 
-    res.json({ message: 'Xóa coupon thành công' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+        res.json({ message: 'Xóa coupon thành công!' });
+    } catch (error) {
+        res.status(500).json({ message: 'Lỗi hệ thống khi xóa mã giảm giá.' });
+    }
 };
 
-// CHECK VALIDITY OF COUPON
+// 3. VALIDATE COUPON (Chốt chặn lúc khách nhập mã)
 export const validateCoupon = async (req, res) => {
   try {
     const { code, orderTotal } = req.body;
     const customerId = req.user?.id;
 
-    if (!customerId) {
-        return res.status(401).json({ message: 'Vui lòng đăng nhập để sử dụng mã giảm giá.' });
-    }
+    if (!customerId) return res.status(401).json({ message: 'Vui lòng đăng nhập để sử dụng mã giảm giá.' });
 
     const coupon = await prisma.coupon.findUnique({
       where: { code: code.toUpperCase() },
-      include: { 
-        _count: { select: { CouponUsage: true } } 
-      }
+      include: { _count: { select: { CouponUsage: true } } }
     });
 
-    // 1. Mã không tồn tại
-    if (!coupon) {
-      return res.status(404).json({ message: 'Mã coupon không tồn tại' });
-    }
+    if (!coupon) return res.status(404).json({ message: 'Mã coupon không tồn tại' });
+    
+    const now = new Date()
+    if (now < coupon.createdAt) return res.status(400).json({ message: 'Mã giảm giá này chưa đến thời gian áp dụng' });
+    if (now > coupon.expireAt) return res.status(400).json({ message: 'Mã coupon đã hết hạn' });
 
-    // 2. Mã đã quá hạn (Expire)
-    if (new Date() > coupon.expireAt) {
-      return res.status(400).json({ message: 'Mã coupon đã hết hạn' });
-    }
-
-    // 3. KIỂM TRA QUYỀN SỞ HỮU (VÍ VOUCHER)
-    const userWalletItem = await prisma.couponUsage.findFirst({
+    // 🚀 BƯỚC QUAN TRỌNG NHẤT: KIỂM TRA LƯỢT DÙNG TOÀN CỤC TRƯỚC
+    const globalUsedCount = await prisma.cart.count({
         where: {
-            couponId: coupon.id,
-            customerId: customerId,
-            status: 'ACTIVE',
-            remaining: { gt: 0 } // Vẫn còn lượt sử dụng
+            OR: [{ couponId: coupon.id }, { shippingCouponId: coupon.id }],
+            status: { notIn: ['DRAFT', 'CANCELLED'] }
         }
     });
 
-    // Nếu người dùng KHÔNG có mã này trong ví (tức là họ tự gõ tay một mã public)
-    if (!userWalletItem) {
-        // Phải kiểm tra xem mã public này đã cạn kiệt số lượng phát hành chưa
-        if (coupon._count.CouponUsage >= coupon.usageLimit) {
-            return res.status(400).json({ message: 'Mã giảm giá này đã hết lượt sử dụng trên hệ thống.' });
-        }
-        
-        // (Tuỳ chọn: Nếu bạn không muốn cho khách tự gõ mã mà chỉ được xài mã trong ví, 
-        // bạn có thể return lỗi luôn ở đây: "Bạn không sở hữu mã này")
+    // Nếu hệ thống đã đạt max usageLimit -> Báo lỗi luôn, bất kể trong ví khách còn hay không!
+    if (globalUsedCount >= coupon.usageLimit) {
+        return res.status(400).json({ message: 'Rất tiếc! Mã giảm giá này đã hết lượt sử dụng trên toàn hệ thống.' });
     }
 
-    // 4. Kiểm tra điều kiện đơn hàng tối thiểu
+    // Sau khi qua được ải Global, mới kiểm tra xem trong ví khách hàng còn lượt không (Personal Limit)
+    const userWalletItem = await prisma.couponUsage.findFirst({
+        where: { couponId: coupon.id, customerId: customerId, status: 'ACTIVE', remaining: { gt: 0 } }
+    });
+
+    if (!userWalletItem) {
+        // Nếu là mã Public (khách tự gõ), ta đã check Global ở trên rồi, nên cho qua.
+        // Tuy nhiên, nếu bạn muốn BẮT BUỘC khách phải lưu vào ví mới được xài thì return lỗi ở đây.
+        // Hiện tại cứ cho phép khách xài mã Public nếu Global chưa hết.
+    }
+
     const rule = coupon.rule || { minOrderValue: 0 };
     if (orderTotal < rule.minOrderValue) {
-      return res.status(400).json({
-        message: `Hóa đơn tối thiểu phải từ ${new Intl.NumberFormat('vi-VN').format(rule.minOrderValue)}đ`
-      });
+      return res.status(400).json({ message: `Hóa đơn tối thiểu phải từ ${new Intl.NumberFormat('vi-VN').format(rule.minOrderValue)}đ` });
     }
 
-    // 5. Nếu mọi thứ OK, trả về thông tin mã cho Frontend tính toán
     res.json({ 
         valid: true, 
         coupon: {
@@ -265,11 +236,110 @@ export const validateCoupon = async (req, res) => {
             type: coupon.type,
             value: coupon.value,
             category: coupon.category,
-            maxDiscountValue: rule.maxDiscountValue // Gửi kèm max discount để FE giới hạn (nếu có)
+            maxDiscountValue: rule.maxDiscountValue 
         }
     });
   } catch (error) {
-    console.error("[ERROR] validateCoupon:", error);
     res.status(500).json({ message: 'Lỗi hệ thống khi kiểm tra mã.' });
   }
+};
+
+// ... (Các code cũ ở orderController.js giữ nguyên)
+
+// =========================================================================
+// 🚀 TÍNH NĂNG MỚI: HỦY ĐƠN HÀNG (Dành cho Khách Hàng / Admin)
+// =========================================================================
+export const cancelOrder = async (req, res) => {
+    const { id } = req.params;
+    const userId = req.user?.id;
+    const userRole = req.user?.role; // Giả sử bạn có lưu role trong token (User: 2001, Admin: 5150)
+
+    if (!userId) return res.status(401).json({ message: "Vui lòng đăng nhập." });
+
+    try {
+        // 1. Tìm đơn hàng
+        const order = await prisma.cart.findUnique({
+            where: { id },
+            include: { orderDetails: true }
+        });
+
+        if (!order) return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
+
+        // 2. Kiểm tra quyền Hủy (Khách chỉ hủy được đơn của mình, Admin hủy được mọi đơn)
+        const isAdmin = userRole === 5150 || userRole === 'Admin';
+        if (!isAdmin && order.customerId !== userId) {
+            return res.status(403).json({ message: "Bạn không có quyền hủy đơn hàng này." });
+        }
+
+        // 3. Kiểm tra Trạng thái (Chỉ được hủy khi đang PENDING)
+        if (order.status !== 'PENDING') {
+            return res.status(400).json({ message: "Không thể hủy đơn hàng đã được xử lý hoặc đang giao." });
+        }
+
+        // 4. KIỂM TRA THỜI GIAN (Quy tắc 2 Giờ) - Bỏ qua nếu là Admin
+        if (!isAdmin) {
+            const now = new Date();
+            const orderTime = new Date(order.createdAt);
+            const diffInHours = (now - orderTime) / (1000 * 60 * 60);
+
+            if (diffInHours > 2) {
+                return res.status(400).json({ message: "Đã quá 2 tiếng kể từ lúc đặt hàng. Vui lòng liên hệ Admin để được hỗ trợ." });
+            }
+        }
+
+        // 5. THỰC HIỆN HỦY VÀ HOÀN TRẢ (Dùng Transaction)
+        await prisma.$transaction(async (tx) => {
+            // A. Hoàn trả Tồn kho (Inventory)
+            for (const item of order.orderDetails) {
+                const inventory = await tx.inventory.findFirst({
+                    where: { productVariantId: item.productVariantId }
+                });
+
+                if (inventory) {
+                    await tx.inventory.update({
+                        where: { id: inventory.id },
+                        data: { quantity: { increment: item.quantity } }
+                    });
+                }
+            }
+
+            // B. Hoàn trả lượt dùng Mã giảm giá Đơn hàng (Nếu có)
+            if (order.couponId) {
+                const usage = await tx.couponUsage.findFirst({
+                    where: { couponId: order.couponId, customerId: order.customerId }
+                });
+                if (usage) {
+                    await tx.couponUsage.update({
+                        where: { id: usage.id },
+                        data: { remaining: { increment: 1 }, status: 'ACTIVE' }
+                    });
+                }
+            }
+
+            // C. Hoàn trả lượt dùng Mã giảm giá Vận chuyển (Nếu có)
+            if (order.shippingCouponId) {
+                const shippingUsage = await tx.couponUsage.findFirst({
+                    where: { couponId: order.shippingCouponId, customerId: order.customerId }
+                });
+                if (shippingUsage) {
+                    await tx.couponUsage.update({
+                        where: { id: shippingUsage.id },
+                        data: { remaining: { increment: 1 }, status: 'ACTIVE' }
+                    });
+                }
+            }
+
+            // D. Cập nhật trạng thái Đơn hàng
+            await tx.cart.update({
+                where: { id },
+                data: { status: 'CANCELLED' }
+            });
+        });
+
+        res.json({ message: "Hủy đơn hàng thành công. Tồn kho và Voucher đã được hoàn trả." });
+
+    } catch (error) {
+        console.error("Lỗi khi hủy đơn:", error);
+        res.status(500).json({ message: "Lỗi hệ thống khi hủy đơn hàng." });
+    }
 };

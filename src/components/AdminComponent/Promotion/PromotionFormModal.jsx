@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import axios from '@/api/axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 import SelectFormProduct from '@/components/AdminComponent/SelectFormProduct';
+import { formatToLocalDatetime } from '@/utils/dateUtils';
 import './PromotionFormModal.css'; 
 
 const API_PROMOTIONS = '/api/promotions';
@@ -25,13 +26,17 @@ const PromotionFormModal = ({ promo, products, categories, onClose, onSuccess })
     
     const [showVariantModal, setShowVariantModal] = useState(false);
 
+    // 🚀 STATE: Cờ hiệu báo bắt đầu ngay
+    const [isImmediate, setIsImmediate] = useState(!isEditing || !promo?.startTime || new Date(promo.startTime) <= new Date());
+
     // Khởi tạo Form Data
     const [formData, setFormData] = useState({
         type: promo?.type || 'PERCENTAGE',
         value: promo?.value?.toString() || '',
         description: promo?.description || '',
-        startTime: promo?.startTime ? new Date(promo.startTime).toISOString().slice(0, 16) : '',
-        endTime: promo?.endTime ? new Date(promo.endTime).toISOString().slice(0, 16) : '',
+        // 🚀 DÙNG HÀM TỪ DATEUTILS NHƯ COUPON
+        startTime: promo?.startTime ? formatToLocalDatetime(promo.startTime) : formatToLocalDatetime(new Date()),
+        endTime: promo?.endTime ? formatToLocalDatetime(promo.endTime) : '',
         rule: promo?.rule || { minOrderValue: 0, maxDiscountValue: 0, usagePerUser: 0, isFirstOrder: false },
         applicableVariantIds: promo?.applicableVariantIds || []
     });
@@ -48,18 +53,19 @@ const PromotionFormModal = ({ promo, products, categories, onClose, onSuccess })
             newErrors.value = 'Giá trị % không được vượt quá 100';
         }
 
-        if (!formData.startTime) {
+        // 🚀 VALIDATE LOGIC NGÀY THÁNG CÓ XÉT `isImmediate`
+        const now = new Date();
+        const start = isImmediate ? now : new Date(formData.startTime);
+        const end = new Date(formData.endTime);
+
+        if (!isImmediate && !formData.startTime) {
             newErrors.startTime = 'Thời gian bắt đầu không được để trống';
         }
 
         if (!formData.endTime) {
             newErrors.endTime = 'Thời gian kết thúc không được để trống';
-        } else if (formData.startTime && formData.endTime) {
-            const start = new Date(formData.startTime);
-            const end = new Date(formData.endTime);
-            if (end <= start) {
-                newErrors.endTime = 'Thời gian kết thúc phải sau thời gian bắt đầu';
-            }
+        } else if (end <= start) {
+            newErrors.endTime = 'Thời gian kết thúc phải sau thời gian bắt đầu';
         }
 
         setErrors(newErrors);
@@ -74,11 +80,14 @@ const PromotionFormModal = ({ promo, products, categories, onClose, onSuccess })
 
         try {
             setSubmitting(true);
+            
+            // 🚀 BỌC THÉP UTC KHI GỬI ĐI
             const submitData = {
                 type: formData.type,
                 value: parseFloat(formData.value),
                 description: formData.description.trim(),
-                startTime: new Date(formData.startTime).toISOString(),
+                // Nếu chọn "Bắt đầu ngay" -> Lấy giờ hiện tại. Nếu không -> Lấy ngày đã nhập
+                startTime: isImmediate ? new Date().toISOString() : new Date(formData.startTime).toISOString(),
                 endTime: new Date(formData.endTime).toISOString(),
                 rule: {
                     minOrderValue: parseInt(formData.rule?.minOrderValue || 0),
@@ -162,18 +171,34 @@ const PromotionFormModal = ({ promo, products, categories, onClose, onSuccess })
                         </FormField>
                     </div>
 
-                    <div className="promotion-form-modal-section">
-                        <h4 className="promotion-form-modal-section-title">Thời Gian Áp Dụng</h4>
+                    {/* --- 🕒 QUẢN LÝ THỜI GIAN (ĐỒNG BỘ VỚI COUPON) --- */}
+                    <div className="promotion-form-modal-section" style={{ background: '#f8fafc', padding: '15px', borderRadius: '8px' }}>
+                        <h4 className="promotion-form-modal-section-title"><FontAwesomeIcon icon={faCalendarDays}/> Thời Gian Khuyến Mãi</h4>
                         
+                        <div className="promotion-form-modal-checkbox-row" style={{ marginBottom: '15px' }}>
+                            <input 
+                                type="checkbox" 
+                                id="isImmediate" 
+                                checked={isImmediate}
+                                onChange={(e) => setIsImmediate(e.target.checked)}
+                            />
+                            <label htmlFor="isImmediate" style={{ fontWeight: 'bold' }}>Chạy chiến dịch ngay lập tức</label>
+                        </div>
+
                         <div className="promotion-form-modal-row-2">
-                            <FormField label="Thời Gian Bắt Đầu" error={errors.startTime} required>
-                                <input 
-                                    type="datetime-local" 
-                                    className={`promotion-form-modal-input-field ${errors.startTime ? 'input-error' : ''}`} 
-                                    value={formData.startTime}
-                                    onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
-                                />
-                            </FormField>
+                            {/* NẾU KHÔNG CHỌN "BẮT ĐẦU NGAY", HIỆN Ô CHỌN NGÀY BẮT ĐẦU */}
+                            {!isImmediate && (
+                                <FormField label="Thời Gian Bắt Đầu" error={errors.startTime} required>
+                                    <input 
+                                        type="datetime-local" 
+                                        className={`promotion-form-modal-input-field ${errors.startTime ? 'input-error' : ''}`} 
+                                        value={formData.startTime}
+                                        onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
+                                    />
+                                </FormField>
+                            )}
+
+                            {/* Ô KẾT THÚC LÚC NÀO CŨNG HIỆN */}
                             <FormField label="Thời Gian Kết Thúc" error={errors.endTime} required>
                                 <input 
                                     type="datetime-local" 

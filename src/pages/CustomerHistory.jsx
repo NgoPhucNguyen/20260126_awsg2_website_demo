@@ -3,14 +3,56 @@ import axios from "@/api/axios";
 import { useAuth } from "@/features/auth/AuthProvider"; 
 import { getImageUrl } from "@/utils/getImageUrl";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClockRotateLeft, faBoxOpen, faMoneyBillWave, faTruckFast } from '@fortawesome/free-solid-svg-icons';
+import { faClockRotateLeft, faBoxOpen, faMoneyBillWave, faTruckFast, faCircleCheck, faCircleXmark, faHourglassHalf } from '@fortawesome/free-solid-svg-icons';
 import "./CustomerHistory.css";
+
+// 🕒 COMPONENT ĐẾM NGƯỢC THỜI GIAN
+const CountdownTimer = ({ createdAt, onExpire }) => {
+    const [timeLeft, setTimeLeft] = useState("");
+    const [isExpired, setIsExpired] = useState(false);
+
+    useEffect(() => {
+        const calculateTimeLeft = () => {
+            const orderTime = new Date(createdAt).getTime();
+            const expiryTime = orderTime + (2 * 60 * 60 * 1000); // Cộng thêm 2 tiếng
+            const now = new Date().getTime();
+            const difference = expiryTime - now;
+
+            if (difference <= 0) {
+                setIsExpired(true);
+                setTimeLeft("Đã hết hạn hủy");
+                if (onExpire) onExpire();
+            } else {
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+                setTimeLeft(`${hours}h ${minutes}m ${seconds}s`);
+            }
+        };
+
+        calculateTimeLeft(); // Chạy ngay lần đầu
+        const timer = setInterval(calculateTimeLeft, 1000); // Cập nhật mỗi giây
+
+        return () => clearInterval(timer);
+    }, [createdAt, onExpire]);
+
+    if (isExpired) return null; // Ẩn luôn nếu hết giờ
+
+    return (
+        <span className="countdown-timer" style={{ color: '#ef4444', fontSize: '0.85rem', fontWeight: 'bold' }}>
+            <FontAwesomeIcon icon={faHourglassHalf} spin style={{marginRight: '4px'}} /> 
+            Còn {timeLeft} để hủy đơn
+        </span>
+    );
+};
+
 
 const CustomerHistory = () => {
     const { auth } = useAuth();
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [cancelingId, setCancelingId] = useState(null); // State khóa nút khi đang gọi API
 
     useEffect(() => {
         let isMounted = true;
@@ -51,6 +93,34 @@ const CustomerHistory = () => {
         };
     }, [auth?.accessToken]);
 
+    // 🛑 HÀM GỌI API HỦY ĐƠN HÀNG
+    const handleCancelOrder = async (orderId) => {
+        if (!window.confirm("Bạn có chắc chắn muốn hủy đơn hàng này không?")) return;
+
+        try {
+            setCancelingId(orderId);
+            const response = await axios.put(`/api/orders/${orderId}/cancel`, {}, {
+                headers: { Authorization: `Bearer ${auth.accessToken}` }
+            });
+
+            // Cập nhật lại list ở Frontend mà không cần gọi lại API GET
+            setOrders(prevOrders => 
+                prevOrders.map(order => 
+                    order.id === orderId 
+                    ? { ...order, status: 'CANCELLED', paymentStatus: 'FAILED' } // Đổi status ảo
+                    : order
+                )
+            );
+            alert(response.data.message || "Đã hủy đơn hàng thành công!");
+
+        } catch (err) {
+            alert(err.response?.data?.message || "Có lỗi xảy ra khi hủy đơn hàng.");
+        } finally {
+            setCancelingId(null);
+        }
+    };
+
+
     const formatPrice = (price) => {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
     };
@@ -69,6 +139,27 @@ const CustomerHistory = () => {
             case 'CANCELLED': return <span className="customer-history-badge badge-cancelled">Đã hủy</span>;
             default: return <span className="customer-history-badge">{status}</span>;
         }
+    };
+
+    // 🟢 HÀM HIỂN THỊ STATUS THANH TOÁN
+    const getPaymentStatusText = (paymentStatus, paymentMethod) => {
+        if (paymentStatus === 'PAID') {
+            return <span style={{ color: '#16a34a', fontWeight: 'bold' }}><FontAwesomeIcon icon={faCircleCheck} /> Đã Thanh Toán</span>;
+        }
+        if (paymentStatus === 'UNPAID' && paymentMethod === 'COD') {
+            return <span style={{ color: '#ea580c', fontWeight: 'bold' }}><FontAwesomeIcon icon={faClockRotateLeft} /> Trả Tiền Khi Nhận Hàng</span>;
+        }
+        if (paymentStatus === 'FAILED' || paymentStatus === 'REFUNDED') {
+            return <span style={{ color: '#ef4444', fontWeight: 'bold' }}><FontAwesomeIcon icon={faCircleXmark} /> Thất Bại / Đã Hoàn Tiền</span>;
+        }
+        return <span style={{ color: '#6b7280' }}>Chưa Rõ</span>;
+    };
+
+    // KIỂM TRA ĐƠN CÓ THỂ HỦY KHÔNG (Còn PENDING và chưa qua 2 tiếng)
+    const isCancelable = (status, createdAt) => {
+        if (status !== 'PENDING') return false;
+        const diffInHours = (new Date() - new Date(createdAt)) / (1000 * 60 * 60);
+        return diffInHours <= 2;
     };
 
     if (loading) {
@@ -96,7 +187,10 @@ const CustomerHistory = () => {
                 </div>
             ) : (
                 <div className="customer-history-list">
-                    {orders.map((order) => (
+                    {orders.map((order) => {
+                        const canCancel = isCancelable(order.status, order.createdAt);
+
+                        return (
                         <div key={order.id} className="customer-history-card">
                             
                             {/* CARD HEADER: ID, Trạng thái, Thời gian */}
@@ -113,39 +207,114 @@ const CustomerHistory = () => {
 
                             {/* CARD BODY: Danh sách sản phẩm */}
                             <div className="customer-history-card-body">
-                                {order.orderDetails.map((detail) => (
-                                    <div key={detail.id} className="customer-history-item">
-                                        <div className="customer-history-item-img">
-                                            {/* Fallback hình ảnh nếu ko có */}
-                                            <img src={getImageUrl(detail.variant?.thumbnailUrl)} alt="Product" />
+                                {order.orderDetails.map((detail) => {
+                                    // 🚀 TÍNH TOÁN PROMOTION (NỘI SUY)
+                                    const hasPromotion = detail.originalPrice && detail.originalPrice > detail.unitPrice;
+                                    const savedAmount = detail.originalPrice - detail.unitPrice;
+
+                                    return (
+                                        <div key={detail.id} className="customer-history-item">
+                                            <div className="customer-history-item-img">
+                                                <img src={getImageUrl(detail.variant?.thumbnailUrl)} alt="Product" />
+                                            </div>
+                                            <div className="customer-history-item-info">
+                                                <h4>{detail.variant?.product?.nameVn || 'Sản phẩm không xác định'}</h4>
+                                                <p className="customer-history-item-variant">SKU: {detail.variant?.sku}</p>
+                                                <p className="customer-history-item-qty">x{detail.quantity}</p>
+                                            </div>
+                                            <div className="customer-history-item-price" style={{ textAlign: 'right' }}>
+                                                {/* Nếu có Promotion, gạch ngang giá gốc */}
+                                                {detail.promotion && (
+                                                    <div style={{ textDecoration: 'line-through', color: '#9ca3af', fontSize: '0.85rem' }}>
+                                                        {formatPrice(detail.originalPrice)}
+                                                    </div>
+                                                )}
+                                                
+                                                {/* Giá mua thực tế */}
+                                                <div style={{ color: detail.promotion ? '#ef4444' : 'inherit', fontWeight: detail.promotion ? 'bold' : 'normal' }}>
+                                                    {formatPrice(detail.unitPrice)}
+                                                </div>
+
+                                                {/* 🚀 BADGE THÔNG BÁO CHUẨN XÁC TỪ DATABASE */}
+                                                {detail.promotion && (
+                                                    <div style={{ fontSize: '0.75rem', color: '#16a34a', marginTop: '4px', background: '#dcfce7', padding: '2px 6px', borderRadius: '4px', display: 'inline-block' }}>
+                                                        {detail.promotion.type === 'PERCENTAGE' 
+                                                            ? `Giảm ${detail.promotion.value}% (${detail.promotion.description || 'Flash Sale'})`
+                                                            : `Giảm ${formatPrice(detail.promotion.value)} (${detail.promotion.description || 'Flash Sale'})`
+                                                        }
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
-                                        <div className="customer-history-item-info">
-                                            <h4>{detail.variant?.product?.nameVn || 'Sản phẩm không xác định'}</h4>
-                                            <p className="customer-history-item-variant">SKU: {detail.variant?.sku}</p>
-                                            <p className="customer-history-item-qty">x{detail.quantity}</p>
-                                        </div>
-                                        <div className="customer-history-item-price">
-                                            {formatPrice(detail.unitPrice)}
-                                        </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
 
                             {/* CARD FOOTER: Tổng tiền & Thông tin thanh toán */}
                             <div className="customer-history-card-footer">
                                 <div className="customer-history-payment-info">
-                                    <p><FontAwesomeIcon icon={faMoneyBillWave} /> TT: <strong>{order.paymentMethod || 'COD'}</strong></p>
-                                    <p><FontAwesomeIcon icon={faTruckFast} /> Đ/c: <span>{order.shippingAddress || 'Không có địa chỉ'}</span></p>
+                                    <p><FontAwesomeIcon icon={faMoneyBillWave} /> Phương thức: <strong>{order.paymentMethod || 'COD'}</strong></p>
+                                    <p><FontAwesomeIcon icon={faTruckFast} /> Giao đến: <span>{order.shippingAddress || 'Không có địa chỉ'}</span></p>
+                                    
+                                    {/* 🚀 HIỂN THỊ TÌNH TRẠNG THANH TOÁN Ở ĐÂY */}
+                                    <p style={{ marginTop: '8px' }}>
+                                        Tình trạng: {getPaymentStatusText(order.paymentStatus, order.paymentMethod)}
+                                    </p>
                                 </div>
                                 
-                                <div className="customer-history-total-group">
-                                    <span className="customer-history-total-label">Thành tiền:</span>
-                                    <span className="customer-history-total-price">{formatPrice(order.finalPrice)}</span>
+                                <div className="customer-history-total-group" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', width: '100%' }}>
+                                    
+                                    {/* 🚀 HIỂN THỊ CHI TIẾT GIẢM GIÁ (NẾU CÓ) */}
+                                    {(order.couponDiscount > 0 || order.shippingDiscount > 0) && (
+                                        <div style={{ fontSize: '0.9rem', color: '#6b7280', marginBottom: '8px', textAlign: 'right', width: '100%' }}>
+                                            <div style={{marginBottom: '4px'}}>Tạm tính: {formatPrice(order.finalPrice + order.couponDiscount + order.shippingDiscount - 30000)}</div>
+                                            <div style={{marginBottom: '4px'}}>Phí giao hàng: {formatPrice(30000)}</div>
+                                            
+                                            {order.mainCoupon && (
+                                                <div style={{ color: '#16a34a' }}>
+                                                    Mã {order.mainCoupon.code}: -{formatPrice(order.couponDiscount)}
+                                                </div>
+                                            )}
+                                            {order.shippingCoupon && (
+                                                <div style={{ color: '#16a34a' }}>
+                                                    Mã {order.shippingCoupon.code}: -{formatPrice(order.shippingDiscount)}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* TỔNG CỘNG */}
+                                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', borderTop: (order.couponDiscount > 0 || order.shippingDiscount > 0) ? '1px dashed #e5e7eb' : 'none', paddingTop: '8px' }}>
+                                        <span className="customer-history-total-label">Tổng cộng:</span>
+                                        <span className="customer-history-total-price" style={{ color: '#ef4444', fontSize: '1.2rem', fontWeight: 'bold' }}>
+                                            {formatPrice(order.finalPrice)}
+                                        </span>
+                                    </div>
+
+                                    {/* NÚT HỦY ĐƠN CHỈ HIỆN KHI ĐỦ ĐIỀU KIỆN */}
+                                    {canCancel && (
+                                        <div style={{ marginTop: '15px', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '5px' }}>
+                                            <button 
+                                                className="btn-cancel-order"
+                                                onClick={() => handleCancelOrder(order.id)}
+                                                disabled={cancelingId === order.id}
+                                                style={{
+                                                    padding: '6px 12px', background: '#fee2e2', color: '#b91c1c', border: '1px solid #fca5a5',
+                                                    borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold'
+                                                }}
+                                            >
+                                                {cancelingId === order.id ? 'Đang hủy...' : 'Hủy Đơn Hàng'}
+                                            </button>
+                                            <CountdownTimer 
+                                                createdAt={order.createdAt} 
+                                                onExpire={() => setOrders([...orders])} 
+                                            />
+                                        </div>
+                                    )}
                                 </div>
                             </div>
-
                         </div>
-                    ))}
+                    )})}
                 </div>
             )}
         </div>

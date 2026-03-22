@@ -4,8 +4,8 @@ import axios from '@/api/axios';
 import './Promotions.css';
 
 // Nhúng Component Form đã tách
-import PromotionFormModal from '@/components/AdminComponent/PromotionFormModal';
-
+import PromotionFormModal from '@/components/AdminComponent/Promotion/PromotionFormModal';
+import { formatDateTimeVn } from '@/utils/dateUtils';
 // FontAwesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -88,11 +88,7 @@ const Promotions = () => {
             ? `${promo.value}%` 
             : new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(promo.value);
     };
-
-    const formatDateTime = (dateString) => {
-        return new Date(dateString).toLocaleString('vi-VN');
-    };
-
+    
     return (
         <div className="promotion-wrapper fade-in">
             <header className="promotion-header-section">
@@ -144,8 +140,8 @@ const Promotions = () => {
                                         </td>
                                         <td className="promotion-value-highlight">{formatValue(promo)}</td>
                                         <td className="desc-cell">{promo.description || '-'}</td>
-                                        <td>{formatDateTime(promo.startTime)}</td>
-                                        <td>{formatDateTime(promo.endTime)}</td>
+                                        <td>{formatDateTimeVn(promo.startTime)}</td>
+                                        <td>{formatDateTimeVn(promo.endTime)}</td>
                                         <td>
                                             <strong>{promo.applicableVariantIds?.length || 0}</strong> mã
                                         </td>

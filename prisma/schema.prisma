@@ -240,7 +240,7 @@ model Promotion {
   endTime     DateTime      @map("end_time")
 
   products ProductPromotion[]
-
+  orderDetails OrderDetail[]
   @@map("promotion")
 }
 
@@ -315,7 +315,7 @@ model Inventory {
 model Cart {
   id               String   @id @default(uuid())
   customerId       String   @map("customer_id")
-  status           String   // Trạng thái: "CART", "PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"
+  status           String   // Trạng thái: "DRAFT", "PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"
   createdAt        DateTime @default(now()) @map("create_at")
   
   
@@ -344,12 +344,14 @@ model OrderDetail {
   id               String @id @default(uuid())
   orderId          String @map("order_id")
   productVariantId Int    @map("product_variant_id")
+  promotionId      String? @map("promotion_id")
   quantity         Int
   originalPrice    Int    @map("original_price")
   unitPrice        Int    @map("unit_price")
 
   cart        Cart?            @relation(fields: [orderId], references: [id])
   variant     ProductVariant?  @relation(fields: [productVariantId], references: [id])
+  promotion   Promotion?       @relation(fields: [promotionId], references: [id])
   shipDetails ShipmentDetail[]
 
   @@map("order_detail")
