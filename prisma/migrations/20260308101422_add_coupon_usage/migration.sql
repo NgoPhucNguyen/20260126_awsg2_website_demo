@@ -20,7 +20,7 @@ CREATE TABLE "coupon_usage" (
     "customer_id" TEXT NOT NULL,
     "used_at" TIMESTAMP(3) NOT NULL,
     "status" "CouponStatus" NOT NULL,
-    "remaning" INTEGER NOT NULL,
+    "remaining" INTEGER NOT NULL,
 
     CONSTRAINT "coupon_usage_pkey" PRIMARY KEY ("id")
 );

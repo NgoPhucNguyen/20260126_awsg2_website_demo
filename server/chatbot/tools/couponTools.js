@@ -32,7 +32,7 @@ export const getCouponInfoTool = tool(
                     return JSON.stringify({
                         ...usage.coupon,
                         status: usage.status,
-                        remaining: usage.remaning,
+                        remaining: usage.remaining,
                         customerId: usage.customerId,
                     });
                 }
@@ -68,7 +68,7 @@ export const getCouponInfoTool = tool(
             return JSON.stringify({
                 ...couponUsage.coupon,
                 status: couponUsage.status,
-                remaining: couponUsage.remaning,
+                remaining: couponUsage.remaining,
             });
         } catch (error) {
             return JSON.stringify({ error: error.message });
@@ -79,26 +79,26 @@ export const getCouponInfoTool = tool(
         description: "Lấy thông tin mã giảm giá của khách hàng (chỉ coupon họ sở hữu)",
         schema: z.object({
             couponCode: z.string().describe("Mã giảm giá"),
-            customerId: z.string().optional().describe("Admin only: customer ID cần xem coupon"),
-            authCustomerId: z.string().optional().describe("Injected by backend auth context"),
-            authRole: z.number().optional().describe("Injected by backend auth context"),
-        }),
+            // customerId: z.string().optional().describe("Admin only: customer ID cần xem coupon"),
+            // authCustomerId: z.string().optional().describe("Injected by backend auth context"),
+            // authRole: z.number().optional().describe("Injected by backend auth context"),
+        }).passthrough(),
     }
 );
 
 // Get available coupons for a specific customer
 export const getAvailableCouponsTool = tool(
-    async ({ customerId, authCustomerId, authRole, category = null, limit = 20 }) => {
+    async ({ authCustomerId, authRole, limit = 20 }) => {
+        console.log("[getAvailableCouponsTool] Called with:", { authCustomerId, authRole, limit });
         try {
             if (isAdmin(authRole)) {
-                if (customerId) {
+                if (authCustomerId) {
                     const usages = await prisma.couponUsage.findMany({
                         where: {
-                            customerId,
+                            customerId: authCustomerId,
                             status: "ACTIVE",
-                            remaning: { gt: 0 },
+                            remaining: { gt: 0 },
                             coupon: {
-                                ...(category && { category }),
                                 expireAt: { gt: new Date() },
                             },
                         },
@@ -109,7 +109,7 @@ export const getAvailableCouponsTool = tool(
                     const customerCoupons = usages.map((usage) => ({
                         ...usage.coupon,
                         status: usage.status,
-                        remaining: usage.remaning,
+                        remaining: usage.remaining,
                         customerId: usage.customerId,
                     }));
 
@@ -118,7 +118,6 @@ export const getAvailableCouponsTool = tool(
 
                 const coupons = await prisma.coupon.findMany({
                     where: {
-                        ...(category && { category }),
                         expireAt: { gt: new Date() },
                     },
                     take: limit,
@@ -135,9 +134,8 @@ export const getAvailableCouponsTool = tool(
                 where: {
                     customerId: authCustomerId,
                     status: "ACTIVE",
-                    remaning: { gt: 0 },
+                    remaining: { gt: 0 },
                     coupon: {
-                        ...(category && { category }),
                         expireAt: { gt: new Date() },
                     },
                 },
@@ -151,7 +149,7 @@ export const getAvailableCouponsTool = tool(
             const coupons = couponUsages.map((usage) => ({
                 ...usage.coupon,
                 status: usage.status,
-                remaining: usage.remaning,
+                remaining: usage.remaining,
             }));
 
             return JSON.stringify(coupons);
@@ -163,12 +161,14 @@ export const getAvailableCouponsTool = tool(
         name: "getAvailableCoupons",
         description: "Lấy danh sách mã giảm giá còn hiệu lực của khách hàng (SHIPPING hoặc ORDER)",
         schema: z.object({
-            customerId: z.string().optional().describe("Admin only: customer ID cần xem coupon"),
-            authCustomerId: z.string().optional().describe("Injected by backend auth context"),
-            authRole: z.number().optional().describe("Injected by backend auth context"),
-            category: z.enum(["SHIPPING", "ORDER"]).optional().describe("Loại mã giảm giá"),
+            // customerId: z.string().optional().describe("Admin only: customer ID cần xem coupon"),
+            // authCustomerId: z.string().optional().describe("Injected by backend auth context"),
+            // authRole: z.number().optional().describe("Injected by backend auth context"),
+            // category: z.enum(["SHIPPING", "ORDER"])
+                    // .optional()
+                    // .describe("QUAN TRỌNG: Chỉ truyền trường này nếu khách hàng nhắc ĐÍCH DANH là 'mã freeship' (vận chuyển) hoặc 'mã đơn hàng'. Nếu khách hỏi chung chung như 'mã giảm giá', TUYỆT ĐỐI KHÔNG truyền trường này (để trống)."),
             limit: z.number().int().positive().default(20).describe("Số lượng mã"),
-        }),
+        }).passthrough(),
     }
 );
 
@@ -208,7 +208,7 @@ export const validateCouponTool = tool(
                 return JSON.stringify({ valid: false, message: "Mã giảm giá không ở trạng thái có thể sử dụng" });
             }
 
-            if (couponUsage.remaning <= 0) {
+            if (couponUsage.remaining <= 0) {
                 return JSON.stringify({ valid: false, message: "Bạn đã sử dụng mã này rồi" });
             }
 
@@ -236,11 +236,11 @@ export const validateCouponTool = tool(
         description: "Kiểm tra tính hợp lệ của mã giảm giá (hạn sử dụng, đã dùng chưa, tính chiết khấu)",
         schema: z.object({
             couponCode: z.string().describe("Mã giảm giá"),
-            customerId: z.string().optional().describe("Admin only: customer ID cần validate"),
-            authCustomerId: z.string().optional().describe("Injected by backend auth context"),
-            authRole: z.number().optional().describe("Injected by backend auth context"),
+            // customerId: z.string().optional().describe("Admin only: customer ID cần validate"),
+            // authCustomerId: z.string().optional().describe("Injected by backend auth context"),
+            // authRole: z.number().optional().describe("Injected by backend auth context"),
             orderAmount: z.number().optional().describe("Tổng tiền đơn hàng (để tính % giảm)"),
-        }),
+        }).passthrough(),
     }
 );
 
