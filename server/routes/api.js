@@ -7,11 +7,12 @@ import productRoutes from './productRoutes.js';
 import customerRoutes from './customerRoutes.js';
 import uploadRoutes from './uploadRoutes.js';
 import profileRoutes from './profileRoutes.js'; 
-import cartRoutes from './cartRoutes.js'; // Import cart routes
+import cartRoutes from './cartRoutes.js'; 
 import couponRoutes from './couponRoutes.js';
 import promotionRoutes from './promotionRoutes.js';
 import categoryRoutes from './categoryRoute.js';
 import chatbotRoute from './chatbotRoute.js';
+import orderRoutes from './orderRoutes.js'; 
 
 import orderRoutes from './orderRoutes.js'; // Import order routes
 const router = express.Router();
