@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   postgres:
     image: postgres:15
@@ -12,6 +13,45 @@ services:
       - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - dine_ease_network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: dine_ease_backend
+    restart: always
+    ports:
+      - '3500:3500'
+    environment:
+      NODE_ENV: production
+      PORT: 3500
+      DATABASE_URL: postgresql://myuser:mypassword@postgres:5432/dine_ease_local
+    depends_on:
+      - postgres
+    networks:
+      - dine_ease_network
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: dine_ease_frontend
+    restart: always
+    ports:
+      - '3000:3000'
+    depends_on:
+      - backend
+    networks:
+      - dine_ease_network
 
 volumes:
   postgres_data:
+
+networks:
+  dine_ease_network:
+    driver: bridge

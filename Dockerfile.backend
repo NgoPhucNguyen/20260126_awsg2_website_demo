@@ -1,0 +1,26 @@
+# Backend Dockerfile - Express.js Server
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy Prisma schema and generated client
+COPY prisma ./prisma/
+
+# Generate Prisma Client
+RUN npx prisma generate
+
+# Copy the rest of the application
+COPY . .
+
+# Expose backend port
+EXPOSE 3500
+
+# Start the backend server
+CMD ["npm", "run", "server"]
