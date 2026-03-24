@@ -60,6 +60,36 @@ class AgentClient {
         return String(content).trim();
     }
 
+    sanitizeUserFacingContent(text) {
+        const raw = (text ?? "").trim();
+        if (!raw) return raw;
+
+        // Drop sentences that expose internal implementation details.
+        const bannedPatterns = [
+            /\bc[oô]ng c[ụu]\b/i,
+            /\bh[àa]m\b/i,
+            /\bapi\b/i,
+            /\bfunction\b/i,
+            /\btruy v[ấa]n\s*db\b/i,
+            /get[A-Z][A-Za-z0-9_]*/,
+        ];
+
+        const sentences = raw
+            .replace(/\r/g, "")
+            .split(/(?<=[.!?])\s+|\n+/)
+            .map((s) => s.trim())
+            .filter(Boolean);
+
+        const safeSentences = sentences.filter(
+            (sentence) => !bannedPatterns.some((pattern) => pattern.test(sentence))
+        );
+
+        const cleaned = safeSentences.join(" ").replace(/\s+/g, " ").trim();
+        if (cleaned) return cleaned;
+
+        return "Mình đã kiểm tra thông tin và sẽ hỗ trợ bạn theo hướng dẫn phù hợp với dữ liệu hiện có.";
+    }
+
     async loadSystemMessage() {
         if (this.systemMessage) return this.systemMessage;
 
@@ -83,7 +113,7 @@ class AgentClient {
             auth = {},
         } = options;
 
-        // console.log("[CHATBOT] auth :", auth);
+        console.log("[CHATBOT] auth :", auth);
 
         const activeSystemMessage = systemPrompt ?? await this.loadSystemMessage();
         const messages = [
@@ -96,24 +126,27 @@ class AgentClient {
             const response = await this.toolEnabledModel.invoke(messages);
             messages.push(response);
 
-            // console.log("[CHATBOT] Model response:", response);
+            console.log("[CHATBOT] Model response:", response);
 
             const toolCalls = response.tool_calls ?? [];
             if (toolCalls.length === 0) {
-                return this.normalizeModelContent(response.content);
+                const normalizedContent = this.normalizeModelContent(response.content);
+                const finalContent = this.sanitizeUserFacingContent(normalizedContent);
+                console.log("[CHATBOT] Final content:", finalContent);
+                return finalContent;
             }
 
             for (const call of toolCalls) {
                 const tool = this.toolsMap[call.name];
                 let toolResult;
 
-                // console.log(`[CHATBOT] Invoking tool: ${call.name} with args:`, call.args);
+                console.log(`[CHATBOT] Invoking tool: ${call.name} with args:`, call.args);
 
                 if (!tool) {
                     toolResult = `Tool '${call.name}' is not available.`;
                 } else {
                     try {
-                        // console.log(`[CHATBOT] Found tool '${call.name}'. Invoking...`);
+                        console.log(`[CHATBOT] Found tool '${call.name}'. Invoking...`);
                         const mergedArgs = {
                             ...(call.args ?? {}),
                             // Server-side identity is authoritative.
@@ -122,9 +155,11 @@ class AgentClient {
                             // authCustomerId: call.args.authCustomerId ?? undefined,
                         };
 
-                        // console.log(`[CHATBOT] Merged args for tool '${call.name}':`, mergedArgs);
+                        console.log(`[CHATBOT] Merged args for tool '${call.name}':`, mergedArgs);
 
                         toolResult = await tool.invoke(mergedArgs);
+
+                        console.log(`[CHATBOT] Result from tool '${call.name}':`, toolResult);
                     } catch (error) {
                         console.error(`[CHATBOT] Error occurred while invoking tool '${call.name}':`, error);
                         toolResult = `Tool '${call.name}' failed: ${error?.message ?? String(error)}`;
@@ -172,19 +207,19 @@ class AgentClient {
 }
 
 // demo
-const demo = async () => {
-    const agent = new AgentClient();
-    const result = await agent.run("Tôi có mã giảm giá nào còn hiệu lực không?", {
-        auth: { customerId: "a0fba32e-c316-41dd-b5b2-405939db6d99" },
-    });
-    // console.log(result);
-};
+// const demo = async () => {
+//     const agent = new AgentClient();
+//     const result = await agent.run("Tôi có mã giảm giá nào còn hiệu lực không?", {
+//         auth: { customerId: "a0fba32e-c316-41dd-b5b2-405939db6d99" },
+//     });
+//     console.log(result);
+// };
 
-if (IS_MAIN_MODULE) {
-    demo().catch((error) => {
-        console.error("[DEMO ERROR]:", error?.message ?? error);
-        process.exitCode = 1;
-    });
-}
+// if (IS_MAIN_MODULE) {
+//     demo().catch((error) => {
+//         console.error("[DEMO ERROR]:", error?.message ?? error);
+//         process.exitCode = 1;
+//     });
+// }
 
 export default AgentClient;

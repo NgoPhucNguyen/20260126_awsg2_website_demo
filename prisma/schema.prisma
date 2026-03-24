@@ -176,6 +176,12 @@ model ProductImage {
 }
 
 // Promotion & Coupon
+
+enum CouponCategory {
+  SHIPPING
+  ORDER
+}
+
 model Coupon {
   id          String         @id @default(uuid())
   description String?
@@ -193,11 +199,6 @@ model Coupon {
   CouponUsage   CouponUsage[]
 
   @@map("coupon")
-}
-
-enum CouponCategory {
-  SHIPPING
-  ORDER
 }
 
 enum CouponType {

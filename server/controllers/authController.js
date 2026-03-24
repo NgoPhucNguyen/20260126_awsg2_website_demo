@@ -11,29 +11,31 @@ const sessions = {};
 
 // ➤ LOGIN (Chỉ sử dụng Email)
 export const handleLogin = async (req, res) => {
-    // 🚀 Đổi từ accountName sang mail
-    const loginEmail = req.body.mail || req.body.user; 
+
+    console.log("[LOGIN] Request received:", req.body);
+    const mail = req.body.mail || req.body.user;
     const pwd = req.body.password || req.body.pwd;
 
     const rememberMe = req.body.remember === true;
     const falseRe = 24 * 60 * 60 * 1000; // 1 Ngày
     const trueRe = 30 * 24 * 60 * 60 * 1000; // 30 Ngày
 
-    if (!loginEmail || !pwd) {
+    if (!mail || !pwd) {
         return res.status(400).json({ 'message': 'Yêu cầu nhập Email và Mật khẩu.' });
     }
 
-    // 🛡️ 1. HARDCODED ADMIN CHECK (Vẫn giữ nguyên biến môi trường)
-    if (loginEmail === process.env.ADMIN_NAME && pwd === process.env.ADMIN_PASS) {
-        console.log("⚠️ DEBUG: Admin Logged In");
+    // 🛡️ 1. HARDCODED ADMIN CHECK
+    if (mail === process.env.ADMIN_NAME && pwd === process.env.ADMIN_PASS) {
+        console.log("[LOGIN] DEBUG: Admin Logged In");
         const accessToken = jwt.sign(
-            { id: "admin-local-root", role: parseInt(process.env.ADMIN_ROLE), accountName: "Admin" },
+            { id: process.env.ADMIN_ID, role: parseInt(process.env.ADMIN_ROLE), accountName: "Admin" },
             process.env.ACCESS_TOKEN_SECRET || "test_secret",
             { expiresIn: '1d' }
         );
         const refreshToken = "fake_admin_refresh_" + Date.now();
         
-        sessions[refreshToken] = { id: 9999, accountName: "Admin", roles: [5150] };
+        // Save to RAM
+        sessions[refreshToken] = { id: process.env.ADMIN_ID, accountName: "Admin", roles: [parseInt(process.env.ADMIN_ROLE)] };
 
         res.cookie('jwt', refreshToken, { 
             httpOnly: true, 
@@ -48,7 +50,7 @@ export const handleLogin = async (req, res) => {
     try {
         // 🚀 Dùng findUnique thay vì findFirst(OR) -> Tốc độ truy vấn tăng vọt!
         const foundUser = await prisma.customer.findUnique({
-            where: { mail: loginEmail } 
+            where: { mail: mail } 
         });
         
         if (!foundUser) return res.status(401).json({ 'message': 'Email không tồn tại trong hệ thống' });
@@ -57,7 +59,7 @@ export const handleLogin = async (req, res) => {
         if (match) {
             console.log(`USER LOGGED IN: ${foundUser.mail}`);
             const accessToken = jwt.sign(
-                { "accountName": foundUser.accountName, "id": foundUser.id },
+                { "accountName": foundUser.accountName, "id": foundUser.id, "role": parseInt(process.env.CUSTOMER_ROLE) },
                 process.env.ACCESS_TOKEN_SECRET,
                 { expiresIn: '10m' }
             );
