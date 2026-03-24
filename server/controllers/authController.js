@@ -1,31 +1,31 @@
 // controllers/authController.js
-import prisma from '../prismaClient.js';
+import prisma from '../prismaClient.js'; 
+
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import "dotenv/config";
 
-// ⚠️ 1. DEFINE THIS VARIABLE SO IT DOESN'T CRASH
-const sessions = {}; 
+const sessions = {};
 
-// ➤ LOGIN (Hybrid: Admin RAM + User DB)
+// ➤ LOGIN (Chỉ sử dụng Email)
 export const handleLogin = async (req, res) => {
-
-    console.log("[LOGIN] Request received:", req.body);
-    const user = req.body.accountName || req.body.user;
+    // 🚀 Đổi từ accountName sang mail
+    const loginEmail = req.body.mail || req.body.user; 
     const pwd = req.body.password || req.body.pwd;
 
     const rememberMe = req.body.remember === true;
-    const falseRe = 24 * 60 * 60 * 1000; // 1 Days
-    const trueRe = 30 * 24 * 60 * 60 * 1000; // 30 Days
-    if (!user || !pwd) {
-        return res.status(400).json({ 'message': 'Account name and password required.' });
+    const falseRe = 24 * 60 * 60 * 1000; // 1 Ngày
+    const trueRe = 30 * 24 * 60 * 60 * 1000; // 30 Ngày
+
+    if (!loginEmail || !pwd) {
+        return res.status(400).json({ 'message': 'Yêu cầu nhập Email và Mật khẩu.' });
     }
 
-    // 🛡️ 1. HARDCODED ADMIN CHECK
-    if (user === process.env.ADMIN_NAME && pwd === process.env.ADMIN_PASS) {
-        console.log("[LOGIN] DEBUG: Admin Logged In");
+    // 🛡️ 1. HARDCODED ADMIN CHECK (Vẫn giữ nguyên biến môi trường)
+    if (loginEmail === process.env.ADMIN_NAME && pwd === process.env.ADMIN_PASS) {
+        console.log("⚠️ DEBUG: Admin Logged In");
         const accessToken = jwt.sign(
             { id: "admin-local-root", role: parseInt(process.env.ADMIN_ROLE), accountName: "Admin" },
             process.env.ACCESS_TOKEN_SECRET || "test_secret",
@@ -33,29 +33,29 @@ export const handleLogin = async (req, res) => {
         );
         const refreshToken = "fake_admin_refresh_" + Date.now();
         
-        // Save to RAM
-        sessions[refreshToken] = { id: "admin-local-root", accountName: "Admin", roles: [parseInt(process.env.ADMIN_ROLE)] };
+        sessions[refreshToken] = { id: 9999, accountName: "Admin", roles: [5150] };
 
         res.cookie('jwt', refreshToken, { 
             httpOnly: true, 
             secure: true, 
-            sameSite: 'None',
-            maxAge: rememberMe ? trueRe : falseRe // (1days) If remember ->30days
-            
+            sameSite: 'None', 
+            maxAge: rememberMe ? trueRe : falseRe 
         });
         return res.json({ accessToken, roles: [parseInt(process.env.ADMIN_ROLE)], accountName: "Admin" });
     }
     
     // ☁️ 2. PRISMA DATABASE CHECK
     try {
-        const foundUser = await prisma.customer.findFirst({
-            where: { OR: [{ mail: user }, { accountName: user }] }
+        // 🚀 Dùng findUnique thay vì findFirst(OR) -> Tốc độ truy vấn tăng vọt!
+        const foundUser = await prisma.customer.findUnique({
+            where: { mail: loginEmail } 
         });
-        if (!foundUser) return res.status(401).json({ 'message': 'User not found' });
+        
+        if (!foundUser) return res.status(401).json({ 'message': 'Email không tồn tại trong hệ thống' });
         
         const match = await bcrypt.compare(pwd, foundUser.passwordHash);
         if (match) {
-            console.log("[LOGIN] User logged in:", foundUser.accountName);
+            console.log(`USER LOGGED IN: ${foundUser.mail}`);
             const accessToken = jwt.sign(
                 { "accountName": foundUser.accountName, "id": foundUser.id },
                 process.env.ACCESS_TOKEN_SECRET,
@@ -67,7 +67,6 @@ export const handleLogin = async (req, res) => {
                 { expiresIn: '1d' }
             );
             
-            // SAVE TO DB
             await prisma.customer.update({
                 where: { id: foundUser.id },
                 data: { refreshToken: refreshToken } 
@@ -78,11 +77,10 @@ export const handleLogin = async (req, res) => {
                 secure: true, 
                 sameSite: 'None', 
                 maxAge: rememberMe ? trueRe : falseRe
-                // (1days) If remember ->30days
             });
             res.json({ accessToken, roles: [parseInt(process.env.CUSTOMER_ROLE)], accountName: foundUser.accountName });
         } else {
-            res.sendStatus(401);
+            res.status(401).json({ 'message': 'Mật khẩu không chính xác' });
         }
     } catch (err) {
         console.error("Login Error:", err.message);
@@ -93,33 +91,34 @@ export const handleLogin = async (req, res) => {
 // ➤ REGISTER
 export const handleRegister = async (req, res) => {
     const { accountName, mail, pwd } = req.body;
-    if (!accountName || !mail || !pwd) return res.status(400).json({ 'message': 'All fields required.' });
+    if (!accountName || !mail || !pwd) return res.status(400).json({ 'message': 'Vui lòng điền đầy đủ thông tin.' });
 
     try {
-        const existingUser = await prisma.customer.findFirst({
-            where: { OR: [{ mail }, { accountName: accountName }] }
+        // 🚀 Chỉ kiểm tra trùng lặp Email. Cho phép trùng accountName!
+        const existingUser = await prisma.customer.findUnique({
+            where: { mail: mail }
         });
 
-        if (existingUser) return res.status(409).json({ 'message': 'User already exists' });
+        if (existingUser) return res.status(409).json({ 'message': 'Email này đã được đăng ký' });
 
         const hashedPassword = await bcrypt.hash(pwd, 10);
 
         const newUser = await prisma.customer.create({
             data: {
-                accountName: accountName,
-                mail,
+                accountName: accountName, // Bây giờ chỉ là Tên hiển thị
+                mail: mail,
                 passwordHash: hashedPassword,
                 tier: 1,
                 skinProfile: {}
             }
         });
 
-        console.log(`✅ New User Registered: ${newUser.accountName}`);
-        res.status(201).json({ 'success': `User ${newUser.accountName} created!` });
+        console.log(`✅ New User Registered: ${newUser.mail}`);
+        res.status(201).json({ 'success': `Tài khoản ${newUser.mail} đã được tạo!` });
 
     } catch (err) {
         console.error("❌ Register Error:", err);
-        res.status(500).json({ 'message': 'Server Error' });
+        res.status(500).json({ 'message': 'Lỗi máy chủ' });
     }
 };
 

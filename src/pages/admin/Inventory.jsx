@@ -1,8 +1,9 @@
 // src/pages/admin/Inventory.jsx
 import { useState, useEffect } from "react";
-import { FaBoxOpen, FaPlus, FaTrash, FaPenToSquare, FaMagnifyingGlass, FaRotateLeft } from "react-icons/fa6";
+import { FaBoxOpen, FaPlus, FaTrash, FaPenToSquare, FaRotateLeft } from "react-icons/fa6";
 import axios from "@/api/axios";
-import AddProductModal from "@/components/AddProductModal";
+import AddProductModal from "@/components/AdminComponent/AddProductModal";
+import { getImageUrl } from "@/utils/getImageUrl";
 import "./Inventory.css"; 
 
 const Inventory = () => {
@@ -33,12 +34,17 @@ const Inventory = () => {
                         return total + inventoryItem.quantity;
                     }, 0) || 0;
                     
+                    const rawImageUrl = mainVariant.images?.[0]?.imageUrl || mainVariant.thumbnailUrl;
+                    const finalImage = rawImageUrl ? getImageUrl(rawImageUrl) : "https://via.placeholder.com/40?text=No+Img";
+
                     return {
                         id: product.id,
                         name: product.name,
+                        nameVn: product.nameVn || product.name,
                         category: product.category?.name || "Uncategorized",
                         price: mainVariant.unitPrice,
                         stock: variantStock, 
+                        image: finalImage,
                     };
                 });
 
@@ -80,10 +86,12 @@ const Inventory = () => {
         // 3. Map it to match the table's format
         const mappedProduct = {
             id: newProduct.id,
-            name: newProduct.nameVn,
+            name: newProduct.name,
+            nameVn: newProduct.nameVn || newProduct.name,
             category: categoryName,
             price: mainVariant.unitPrice || 0,
             stock: stock,
+            image: mainVariant.images?.[0]?.imageUrl ? getImageUrl(mainVariant.images[0].imageUrl) : "https://via.placeholder.com/40?text=No+Img",
         };
 
         // 4. Push it to the very top of the table!
@@ -123,9 +131,11 @@ const Inventory = () => {
     };
 
     // 🔎 Search Filter
-    const filteredProducts = products.filter(product => 
-        product.nameVn.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredProducts = products.filter(product => {
+        // Fallback to empty string if nameVn happens to be missing to prevent crashes
+        const searchTarget = product.nameVn || product.name || ""; 
+        return searchTarget.toLowerCase().includes(searchTerm.toLowerCase());
+    });
 
     // 💰 Price Formatter
     const formatPrice = (price) => {
@@ -153,30 +163,28 @@ const Inventory = () => {
             {/* Header */}
             <header className="inventory-header">
                 <div>
-                    <h2>📦 Product Inventory</h2>
-                    <p className="admin-subtitle">Manage your cosmetics catalog</p>
+                    <h2>Kho Sản Phẩm</h2>
+                    <p className="admin-subtitle">Quản lý danh mục mỹ phẩm</p>
                 </div>
                 <div className="header-actions">
                     <button
                         className={`btn-toggle ${isViewingArchived ? 'btn-toggle-archived' : 'btn-toggle-active'}`}
                         onClick={() => setIsViewingArchived(!isViewingArchived)}
                     >
-                        {isViewingArchived ? "<- Back to Active" : "🗑️ View Archived"}
+                        {isViewingArchived ? "Quay lại sản phẩm đang bán" : "Xem sản phẩm đã lưu trữ"}
                     </button>
 
-                    {/* Change your Add New Product button to look like this: */}
                     <button className="btn-add" onClick={() => setIsAddModalOpen(true)}>
-                        <FaPlus /> Add New Product
+                        <FaPlus /> Thêm sản phẩm mới
                     </button>
                 </div>
             </header>
 
             {/* Search Bar */}
             <div className="search-container">
-                <FaMagnifyingGlass className="search-icon" />
                 <input 
                     type="text" 
-                    placeholder="Search products..." 
+                    placeholder="Tìm kiếm sản phẩm..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="search-input"
@@ -191,18 +199,18 @@ const Inventory = () => {
             />
             {/* Table */}
             {isLoading ? (
-                <div className="loading-container"><div className="spinner"></div><p>Loading inventory...</p></div>
+                <div className="loading-container"><div className="spinner"></div><p>Đang tải kho ...</p></div>
             ) : (
                 <div className="table-responsive">
                     <table className="users-table">
                         <thead>
                              <tr>
                                 <th>ID</th>
-                                <th>Product Name</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Stock Status</th>
-                                <th>Actions</th>
+                                <th>Sản Phẩm</th>
+                                <th>Loại</th>
+                                <th>Giá</th>
+                                <th>Tồn Kho</th>
+                                <th>Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -210,12 +218,17 @@ const Inventory = () => {
                                 filteredProducts.map((product) => (
                                     <tr key={product.id}>
                                         <td className="col-id">#{product.id}</td>
-                                        <td>
-                                            <div className="product-cell">
-                                                <div className="img-placeholder"><FaBoxOpen size={20}/></div>
-                                                {product.name}
-                                            </div>
-                                        </td>
+                                            <td className="product-info-cell">
+                                                <img className="inventory-product-img"
+                                                    src={product.image} 
+                                                    alt={product.nameVn} 
+                                                    // Dự phòng nếu ảnh bị lỗi (404)
+                                                    onError={(e) => { e.target.src = 'https://via.placeholder.com/45?text=Lỗi' }}
+                                                />
+                                                <span className="product-name" title={product.nameVn}>
+                                                    {product.nameVn}
+                                                </span>
+                                            </td>
                                         <td><span className="badge tier-1">{product.category}</span></td>
                                         
                                         {/* 🎯 Applied the formatPrice function here! */}

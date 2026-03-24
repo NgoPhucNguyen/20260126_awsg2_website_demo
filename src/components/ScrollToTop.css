@@ -1,0 +1,57 @@
+/* ========================================================= */
+/* NÚT CUỘN LÊN ĐẦU TRANG (SCROLL TO TOP)                    */
+/* ========================================================= */
+.scroll-to-top-btn {
+    position: fixed;
+    z-index: 999;
+    
+    /* 📐 Toán học tọa độ: Tránh nút dính sát rạt mép màn hình */
+    /* Mobile: cách 16px, Desktop: cách 32px */
+    bottom: clamp(1rem, 4vh, 2rem);
+    right: clamp(1rem, 3vw, 2rem);
+    
+    /* 🎨 Kiểu dáng Nút */
+    width: clamp(40px, 4vw + 10px, 50px);
+    height: clamp(40px, 4vw + 10px, 50px);
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    /* 🎯 Căn giữa icon hoàn hảo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* 🚀 Hiệu ứng ẩn/hiện ban đầu (Chưa cuộn thì tàng hình) */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px); /* Bắt đầu ở vị trí thấp hơn một chút */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.arrow-icon {
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    stroke-width: 2.5px;
+    z-index: 1000;
+}
+
+/* --- KÍCH HOẠT KHI CUỘN QUA 300PX --- */
+.scroll-to-top-btn.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0); /* Nổi lên vị trí gốc */
+}
+
+/* --- HIỆU ỨNG HOVER --- */
+.scroll-to-top-btn:hover {
+    background-color: var(--accent-yellow, #E6C27A);
+    transform: translateY(-5px); /* Nhảy lên nhẹ khi di chuột vào */
+    box-shadow: 0 6px 16px rgba(230, 194, 122, 0.4);
+}
+
+/* 🛑 TỐI ƯU CHO MOBILE (Chạm tay) */
+@media (hover: none) {
+    .scroll-to-top-btn:hover {
+        /* Xóa hiệu ứng hover nhảy lên trên thiết bị cảm ứng để tránh giật lag */
+        transform: translateY(0);
+    }
+}

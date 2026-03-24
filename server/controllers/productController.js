@@ -1,5 +1,13 @@
 import prisma from '../prismaClient.js';
 
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
+
 // Get product from DB 
 export const getProducts = async (req, res) => {
   try {
@@ -95,18 +103,79 @@ export const getProducts = async (req, res) => {
         variants: {
           include: {
             images: true, // Get images to show thumbnail
-            inventories: true
+            inventories: true,
+            promotions: {
+                include: {
+                    promotion: true
+                }
+            }
           }
         }
       }
     });
 
-    res.json(products);
+    const formattedProducts = products.map(product => {
+        const formattedVariants = product.variants.map(variant => {
+            // 🧮 THE MATH: Sum up all inventory for this specific variant
+            const totalStock = variant.inventories?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+            return {
+                ...variant,
+                stock: totalStock 
+            };
+        });
+        return {
+            ...product,
+            variants: formattedVariants
+        };
+    });
+
+    res.json(formattedProducts); // Send the calculated data!
   } catch (error) {
     console.error("Error fetching products:", error);
     res.status(500).json({ error: 'Failed to fetch products' });
   }
 };
+
+
+export const getProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await prisma.product.findUnique({
+      where: { id: Number(id) },
+      include: {
+        brand: true,
+        category: true,
+        variants: {
+          include: {
+            images: true, // Important: Get images for each variant
+            inventories: true, // Get inventory to check stock
+            promotions: {
+                include: {
+                    promotion: true
+                }
+            }
+          }
+        }
+      }
+    });
+
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+    const formattedVariants = product.variants.map(variant => {
+        const totalStock = variant.inventories?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+        return { ...variant, stock: totalStock };
+    });
+
+    res.json({ ...product, variants: formattedVariants });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Server error" });
+    }
+};
+
+
 // Get all available brands, categories, and skin types to build the Sidebar
 // This func build for Filter
 export const getFilterAttributes = async (req, res) => {
@@ -129,41 +198,18 @@ export const getFilterAttributes = async (req, res) => {
   }
 };
 
-export const getProductById = async (req, res) => {
-  try {
-    const { id } = req.params;
 
-    const product = await prisma.product.findUnique({
-      where: { id: Number(id) },
-      include: {
-        brand: true,
-        category: true,
-        variants: {
-          include: {
-            images: true // Important: Get images for each variant
-          }
-        }
-      }
-    });
-
-    if (!product) {
-      return res.status(404).json({ error: "Product not found" });
-    }
-
-    res.json(product);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server error" });
-  }
-};
 // GET /api/products/:id/related
 export const getRelatedProducts = async (req, res) => {
   try {
-    const id = Number(req.params.id);
-    
+    const productId = parseInt(req.params.id, 10);
+    if (isNaN(productId)) {
+        return res.json([]); // Return empty if invalid ID
+    }
+
     // 1️⃣ Get current product's category AND skinType
     const currentProduct = await prisma.product.findUnique({
-      where: { id },
+      where: { id: productId },
       select: { categoryId: true, skinType: true } // 👈 Added skinType here!
     });
 
@@ -179,7 +225,7 @@ export const getRelatedProducts = async (req, res) => {
 
     // 3️⃣ Build the dynamic database query (The "Where" Clause)
     let whereClause = {
-      NOT: { id: id }, // Don't show the current product again
+      NOT: { id: productId }, // Don't show the current product again
       isActive: true   // Safety check: only show active products
     };
 
@@ -201,23 +247,40 @@ export const getRelatedProducts = async (req, res) => {
       where: whereClause,
       take: 20,
       include: {
+        brand: true,
+        category: true,
         variants: {
-          include: { images: true },
+          include: { 
+            images: true,
+            inventories: true,
+            promotions: {
+                include: {
+                    promotion: true
+                }
+            }
+          },
           take: 1 // Perfect! Keep this.
         },
         brand: true
       }
     });
-    const randomizedProducts = shuffleArray(related).slice(0, 8);
+    const formattedRelated = related.map(prod => {
+    const formattedVariants = prod.variants.map(variant => {
+        const totalStock = variant.inventories?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+        return { ...variant, stock: totalStock };
+    });
+    return { ...prod, variants: formattedVariants };
+    });
+
+    const randomizedProducts = shuffleArray(formattedRelated).slice(0, 8);
     res.json(randomizedProducts);
   } catch (error) {
     console.error(error);
     res.json([]); // Return empty array on error, don't crash
   }
 };
-// NOT USING DB .Delete using the whereClause. 
-// server/controllers/productController.js
 
+// NOT USING DB .Delete using the whereClause. 
 export const deleteProduct = async (req, res) => {
   try {
     // 1️⃣ Get the ID from the URL (e.g., /api/products/5)

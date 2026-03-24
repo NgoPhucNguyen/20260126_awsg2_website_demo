@@ -49,29 +49,6 @@ export const updateProfile = async (req, res) => {
             address 
         } = req.body;
 
-        // 🛡️ THE STEALTH CHECK: Protect the admin and prevent duplicates
-        if (accountName) {
-            // 1. Define the names you want to protect silently
-            // (Using optional chaining ?. in case ADMIN_NAME is undefined in .env)
-            const protectedNames = ['admin', 'root', 'superadmin', process.env.ADMIN_NAME?.toLowerCase()];
-            
-            // 2. Check if the requested name is in the protected list
-            const isProtected = protectedNames.includes(accountName.toLowerCase());
-            
-            // 3. Check if another regular customer already has this name
-            const existingUser = await prisma.customer.findFirst({
-                where: { 
-                    accountName: accountName,
-                    id: { not: userId } // Ignore their own current name
-                }
-            });
-
-            // 4. Return the EXACT SAME generic error for both situations! 🥷
-            if (isProtected || existingUser) {
-                return res.status(409).json({ message: 'This account name is already taken.' });
-            }
-        }
-
         // 💾 Update the database
         const updatedCustomer = await prisma.customer.update({
             where: { id: userId },
@@ -81,7 +58,6 @@ export const updateProfile = async (req, res) => {
                 lastName,
                 phoneNumber,
                 gender,
-                // Prisma requires a Date object for PostgreSQL @db.Date, not a string!
                 birthday: birthday ? new Date(birthday) : null,
                 skinProfile,
                 // Nested write for the Address table (Your original code was perfect here!)
@@ -100,6 +76,7 @@ export const updateProfile = async (req, res) => {
                 accountName: true,
                 firstName: true,
                 lastName: true,
+                mail: true,
                 phoneNumber: true,
                 gender: true,
                 birthday: true,

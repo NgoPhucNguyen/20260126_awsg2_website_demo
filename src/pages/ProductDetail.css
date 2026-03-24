@@ -1,13 +1,30 @@
+/* src/pages/ProductDetail.css */
+
+/* ========================================================= */
+/* BỐ CỤC CHÍNH (MAIN LAYOUT)                                */
+/* ========================================================= */
+
+.breadcrumb-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    /* 📏 Padding động: lùi sát mép trên Mobile, rộng rãi trên PC */
+    padding: clamp(1rem, 2vw, 1.5rem) clamp(1rem, 4vw, 2rem) 0;
+}
+
 .product-detail-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    /* 📏 Gap linh hoạt giữa ảnh và thông tin */
+    gap: clamp(2rem, 5vw, 4rem);
     max-width: 1200px;
-    margin: 4rem auto;
-    padding: 0 2rem;
+    margin: clamp(1.5rem, 4vw, 3rem) auto clamp(3rem, 6vw, 4rem); 
+    padding: 0 clamp(1rem, 4vw, 2rem);
 }
 
-/* LEFT SIDE */
+/* ========================================================= */
+/* TRÁI: PHẦN HÌNH ẢNH (LEFT IMAGE SECTION)                  */
+/* ========================================================= */
+
 .detail-image-section {
     display: flex;
     flex-direction: column;
@@ -15,151 +32,472 @@
 }
 
 .main-image {
-    background: #f9f9f9;
-    border-radius: 8px;
-    padding: 2rem;
+    background: #fcfcfc;
+    border-radius: clamp(8px, 1.5vw, 12px);
+    padding: clamp(1.5rem, 3vw, 2rem);
     display: flex;
     align-items: center;
     justify-content: center;
+    border: 1px solid var(--border-color, #f0f0f0);
 }
 
 .main-image img {
     max-width: 100%;
-    max-height: 500px;
+    /* 📏 Ép chiều cao tối đa của ảnh theo tỷ lệ màn hình (Viewport Height) */
+    max-height: clamp(350px, 50vh, 500px);
     object-fit: contain;
+    mix-blend-mode: multiply; /* Hòa trộn nền trắng ảnh cực xịn */
 }
 
-/* RIGHT SIDE */
+/* ========================================================= */
+/* PHẢI: CHI TIẾT SẢN PHẨM (RIGHT INFO SECTION)              */
+/* ========================================================= */
+
 .detail-info-section {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: center; /* Đẩy nội dung ra giữa trục dọc */
 }
 
 .product-title {
-    font-size: 2rem;
+    /* 📏 Co giãn từ 1.6rem (Mobile) đến 2.2rem (PC) */
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
     font-weight: 700;
-    margin-bottom: 0.5rem;
+    margin-bottom: clamp(0.5rem, 1vw, 0.8rem);
     color: #111;
+    line-height: 1.2;
 }
 
 .product-brand {
-    font-size: 0.9rem;
+    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
     color: #666;
-    margin-bottom: 1.5rem;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
-.product-price {
-    font-size: 1.5rem;
+.product-skintype {
+    margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
+    color: #555;
+    font-size: clamp(0.9rem, 1.2vw, 1rem);
+}
+
+.product-skintype span {
     font-weight: 600;
-    color: #000;
-    margin-bottom: 2rem;
+    color: #cca858; /* Điểm nhấn Gold sang trọng */
+}
+
+/* --- KHU VỰC GIÁ (PRICE SECTION) --- */
+.product-price {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* Nếu giá và nhãn quá dài, tự rớt dòng an toàn */
+    gap: clamp(8px, 1.5vw, 12px);
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
+}
+
+.current-price {
+    font-size: clamp(1.6rem, 3vw, 2rem);
+    font-weight: 800;
+    color: #8A1C31; 
+}
+
+.original-price {
+    text-decoration: line-through;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    color: #999;
+}
+
+.sale-badge {
+    background-color: #8A1C31;
+    color: white;
+    padding: clamp(4px, 0.8vw, 6px) clamp(8px, 1.5vw, 12px);
+    border-radius: 4px;
+    font-size: clamp(0.8rem, 1vw, 0.9rem);
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(138, 28, 49, 0.2);
+}
+
+/* Fallback giá không sale */
+.product-price > span:first-child:not(.current-price) {
+    font-size: clamp(1.6rem, 3vw, 2rem);
+    font-weight: 800;
+    color: #111;
 }
 
 .product-description {
     line-height: 1.6;
     color: #444;
-    margin-bottom: 2rem;
+    font-size: clamp(0.9rem, 1.2vw, 1rem);
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
     border-bottom: 1px solid #eee;
-    padding-bottom: 2rem;
+    padding-bottom: clamp(1.5rem, 3vw, 2rem);
 }
 
-/* VARIANTS */
+/* ========================================================= */
+/* LỰA CHỌN BIẾN THỂ (VARIANT SELECTORS)                     */
+/* ========================================================= */
+
 .variant-selector {
-    margin-bottom: 2rem;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
 }
 
 .variant-selector .label {
     display: block;
     font-weight: 600;
     margin-bottom: 0.8rem;
-    font-size: 0.9rem;
+    font-size: clamp(0.9rem, 1.2vw, 0.95rem);
+    color: #1c1917;
 }
 
 .variant-options {
     display: flex;
-    gap: 10px;
+    gap: clamp(8px, 1.2vw, 12px);
+    flex-wrap: wrap;
 }
 
 .variant-btn {
-    padding: 10px 20px;
+    padding: clamp(8px, 1.5vw, 12px) clamp(16px, 2vw, 24px);
     border: 1px solid #ddd;
-    background: white;
+    background: rgb(255, 254, 254);
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s;
+    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 4px;
+    color: #555;
+    font-weight: 500;
 }
 
 .variant-btn:hover {
-    border-color: #000;
+    border-color: #1c1917;
+    color: #1c1917;
 }
 
 .variant-btn.active {
-    border-color: #000;
-    background: #000;
-    color: white;
+    border-color: #cca858;
+    background: #cca858;
+    color: #000000; 
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* ACTION BUTTON */
+/* ========================================================= */
+/* TRẠNG THÁI KHO HÀNG (STOCK STATUS)                        */
+/* ========================================================= */
+
+.stock-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+    font-weight: 700;
+    margin-top: 0.5rem;
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.stock-status.in-stock { color: #2e7d32; }
+.stock-status.in-stock .status-dot { background-color: #2e7d32; }
+
+.stock-status.out-of-stock { color: #d32f2f; }
+.stock-status.out-of-stock .status-dot { background-color: #d32f2f; }
+
+/* ========================================================= */
+/* NÚT THÊM VÀO GIỎ (ACTION BUTTONS)                         */
+/* ========================================================= */
+
+.action-buttons {
+    display: flex;
+    width: 100%;
+}
+
 .add-cart-btn {
     width: 100%;
-    padding: 15px;
-    background: #000;
+    padding: clamp(14px, 2.5vw, 18px);
+    background: #1c1917;
     color: white;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 1px;
     border: none;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.add-cart-btn:hover {
-    background: #333;
+.add-cart-btn:hover:not(:disabled) {
+    background: #cca858;
+    color: #1c1917;
+    box-shadow: 0 6px 16px rgba(204, 168, 88, 0.3);
+    transform: translateY(-2px);
 }
+
+.add-cart-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.add-cart-btn.btn-loading {
+    background-color: #57534e;
+    cursor: not-allowed;
+}
+
+.add-cart-btn.btn-disabled {
+    background-color: #f5f5f5;
+    color: #a8a29e;
+    cursor: not-allowed;
+    border: 1px solid #e7e5e4;
+    box-shadow: none;
+    transform: none;
+}
+
+/* ========================================================= */
+/* 🪄 NÚT PHÂN TÍCH DA (AI SKIN ANALYZER BUTTON)             */
+/* ========================================================= */
+
+.analyze-skin-btn-wrapper {
+    width: 100%;
+    margin-top: clamp(12px, 2vw, 16px); /* Tạo khoảng cách với nút Mua Hàng */
+    display: flex;
+}
+
+.analyze-skin-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    
+    /* Thiết kế Ghost Button (Viền mỏng, không nền) để không tranh spotlight với nút đen "Thêm vào giỏ" */
+    background-color: #eac470;
+    border-radius: 6px;
+    
+    /* Chữ giữ màu xám đậm, nhưng sẽ đổi sang màu Vàng Gold khi hover */
+    color: #000000;
+    font-size: clamp(0.9rem, 1.2vw, 1rem);
+    font-weight: 600;
+    padding: clamp(10px, 1.5vw, 14px);
+    
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.magic-icon {
+    /* Màu Vàng Gold đặc trưng cho AI/Phân tích */
+    color: #000000; 
+    font-size: 1.1em;
+    transition: transform 0.3s ease;
+}
+
+/* Hiệu ứng Hover siêu mượt */
+.analyze-skin-btn:hover {
+    background-color: #fcfcfc; /* Nền xám cực nhạt */
+    color: #cca858;
+    box-shadow: 0 4px 12px rgba(204, 168, 88, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Biểu tượng cây đũa phép "vẩy" nhẹ khi hover */
+.analyze-skin-btn:hover .magic-icon {
+    transform: rotate(15deg) scale(1.1);
+}
+
+.analyze-skin-btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* ========================================================= */
+/* PHẦN DƯỚI: ĐÁNH GIÁ & SẢN PHẨM KHÁC                       */
+/* ========================================================= */
 
 .product-bottom-section {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 2rem 4rem;
+    padding: 0 clamp(1rem, 4vw, 2rem) clamp(3rem, 6vw, 5rem);
     display: flex;
     flex-direction: column;
-    gap: 3rem; /* Spacing between sliders and reviews */
+    /* 📏 Khoảng cách linh hoạt giữa Slider Lịch sử, Relate và Review */
+    gap: clamp(2.5rem, 5vw, 4rem); 
 }
 
-@media (max-width: 768px) {
+
+/* ========================================================= */
+/* BỐ CỤC CHO ĐIỆN THOẠI (MACRO LAYOUT SHIFT)                */
+/* ========================================================= */
+@media (max-width: 850px) {
     .product-detail-container {
+        /* Bẻ gãy cấu trúc 2 cột thành 1 cột xếp chồng (Ảnh trên, Chữ dưới) */
         grid-template-columns: 1fr;
         gap: 2rem;
-        margin: 2rem auto;
     }
 }
 
 
-/* 🌟 Anti-Spam Loading Button Styles */
-.add-cart-btn.btn-loading {
-    background-color: #888; /* Gray it out slightly */
-    cursor: not-allowed;
+/* ========================================================= */
+/* 🚀 STICKY BOTTOM ACTION BAR (HASAKI STYLE)                */
+/* ========================================================= */
+
+.sticky-cart-bar {
+    position: fixed;
+    /* 🛑 FIX 1: Gắn chặt vào đỉnh màn hình thay vì đáy */
+    top: 0; 
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
+    
+    /* 🛑 FIX 2: Viền và bóng đổ lật ngược xuống dưới */
+    border-bottom: 1px solid var(--border-color, #e5e5e5);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* Đổi -4px thành 4px */
+    
+    /* 🚀 Nâng z-index lên cao nhất để chắc chắn đè qua Navbar chính của bạn */
+    z-index: 9999; 
+    
+    /* 🛑 FIX 3: Giấu nó chìm lên TRÊN đỉnh màn hình (dùng số âm -100%) */
+    transform: translateY(-100%); 
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Khi class visible được thêm vào, nó sẽ trượt vút lên */
+.sticky-cart-bar.visible {
+    transform: translateY(0);
+}
+
+.sticky-cart-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    /* 📏 Đệm linh hoạt: trên mobile gọn lại, trên PC rộng rãi */
+    padding: clamp(8px, 1.5vw, 12px) clamp(16px, 4vw, 32px);
+    gap: clamp(10px, 2vw, 20px);
+}
+
+/* --- KHU VỰC THÔNG TIN (TRÁI) --- */
+.sticky-info {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 1.5vw, 15px);
+    overflow: hidden; /* Ngăn text dài đẩy nút bấm văng ra ngoài */
+}
+
+.sticky-img {
+    width: clamp(45px, 6vw, 60px);
+    height: clamp(45px, 6vw, 60px);
+    object-fit: contain;
+    border-radius: 6px;
+    background-color: #fcfcfc;
+    border: 1px solid #f0f0f0;
+    flex-shrink: 0;
+    mix-blend-mode: multiply;
+}
+
+.sticky-text-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow: hidden;
+}
+
+.sticky-name {
+    font-size: clamp(0.85rem, 1.2vw, 1rem);
+    font-weight: 600;
+    color: #1c1917;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sticky-price-row {
+    display: flex;
+    align-items: center;
+    gap: clamp(6px, 1vw, 10px);
+    font-size: clamp(0.75rem, 1vw, 0.85rem);
+}
+
+.sticky-price {
+    font-weight: 700;
+    color: #8A1C31; /* Đỏ đô */
+    font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+}
+
+.sticky-original {
+    text-decoration: line-through;
+    color: #999;
+}
+
+.sticky-divider {
+    color: #ccc;
+}
+
+.sticky-variant {
+    color: #cca858;
+    font-weight: 600;
+}
+
+/* --- KHU VỰC NÚT BẤM (PHẢI) --- */
+.sticky-add-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    opacity: 0.8;
+    
+    background-color: #1c1917;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+    flex-shrink: 0;
+    
+    /* 📏 Nút to ra trên Desktop, nhỏ gọn trên Mobile */
+    padding: clamp(10px, 1.5vw, 12px) clamp(16px, 2vw, 24px);
+    font-size: clamp(0.85rem, 1vw, 0.95rem);
+    transition: all 0.2s;
 }
 
-.btn-spinner {
-    width: 16px;
-    height: 16px;
-    border: 2px solid #ffffff;
-    border-bottom-color: transparent;
-    border-radius: 50%;
-    display: inline-block;
-    box-sizing: border-box;
-    animation: rotation 1s linear infinite;
+.sticky-add-btn:hover:not(.btn-disabled) {
+    background-color: #cca858;
+    color: #1c1917;
 }
 
-@keyframes rotation {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.sticky-add-btn:active:not(.btn-disabled) {
+    transform: scale(0.97);
+}
+
+.sticky-add-btn.btn-disabled {
+    background-color: #f5f5f5;
+    color: #a8a29e;
+    cursor: not-allowed;
+    border: 1px solid #e7e5e4;
+}
+
+/* 📱 TINH CHỈNH RIÊNG CHO MOBILE SIÊU NHỎ */
+@media (max-width: 480px) {
+    .sticky-btn-text {
+        display: none; /* Ẩn chữ "Thêm vào giỏ", chỉ giữ lại Icon túi xách để tiết kiệm diện tích */
+    }
+    
+    .sticky-add-btn {
+        padding: 10px 16px;
+        font-size: 1.2rem; /* Phóng to Icon lên bù cho chữ đã mất */
+    }
+    
+    .sticky-variant {
+        display: none; /* Ẩn bớt dung tích để nhường chỗ cho giá tiền */
+    }
+    .sticky-divider {
+        display: none;
+    }
 }

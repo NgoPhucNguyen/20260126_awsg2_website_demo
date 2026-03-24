@@ -1,0 +1,467 @@
+/* src/pages/Checkout.css */
+
+.checkout-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(1rem, 3vw, 2rem);
+    min-height: 80vh;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.checkout-header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 1rem;
+}
+
+.checkout-back-link {
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    transition: color 0.2s;
+    padding: 0;
+}
+
+.checkout-back-link:hover { color: #1c1917; }
+
+.checkout-header h1 {
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    color: #1c1917;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+}
+
+.checkout-error-banner {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    padding: 14px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* ========================================================= */
+/* GRID LAYOUT CHÍNH (FORM VÀ SUMMARY)                       */
+/* ========================================================= */
+.checkout-container {
+    display: grid;
+    grid-template-columns: 1.8fr 1.2fr; /* Tỉ lệ Cột Form và Cột Bill */
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start;
+}
+
+/* --- CARD STYLE (Dùng chung cho các khối) --- */
+.checkout-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: clamp(1.2rem, 3vw, 2rem);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f3f4f6;
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
+}
+
+.checkout-card-title {
+    font-size: clamp(1.1rem, 2vw, 1.25rem);
+    color: #1c1917;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 2px solid #f3f4f6;
+    padding-bottom: 12px;
+}
+
+.checkout-card-title svg { color: #cca858; }
+
+/* --- FORM GIAO HÀNG --- */
+.checkout-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: clamp(12px, 2vw, 16px);
+    margin-bottom: 16px;
+}
+
+.checkout-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.checkout-input-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.checkout-input-group label span { color: #dc2626; }
+
+.checkout-input-group input, 
+.checkout-input-group textarea {
+    padding: clamp(10px, 1.5vw, 12px) 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.checkout-input-group input:focus, 
+.checkout-input-group textarea:focus {
+    border-color: #cca858;
+    box-shadow: 0 0 0 3px rgba(204, 168, 88, 0.15);
+}
+
+/* --- PHƯƠNG THỨC THANH TOÁN --- */
+.checkout-payment-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.checkout-payment-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.checkout-payment-option:hover { background: #f9fafb; }
+
+.checkout-payment-option.active {
+    border-color: #cca858;
+    background: #fffcf3;
+}
+
+.checkout-payment-option input[type="radio"] {
+    margin-top: 4px;
+    accent-color: #cca858;
+    width: 18px;
+    height: 18px;
+}
+
+.checkout-payment-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.payment-icon { font-size: 1.8rem; }
+.cod-icon { color: #16a34a; }
+.vnpay-icon { color: #2563eb; }
+
+.checkout-payment-content strong {
+    display: block;
+    color: #1c1917;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+.checkout-payment-content p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+/* ========================================================= */
+/* CỘT TÓM TẮT ĐƠN HÀNG (BILL)                               */
+/* ========================================================= */
+.checkout-summary-card {
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: clamp(1.2rem, 3vw, 2rem);
+    position: sticky;
+    top: clamp(80px, 10vh, 100px);
+    border: 1px solid #e5e7eb;
+}
+
+.checkout-summary-title {
+    font-size: 1.2rem;
+    margin: 0 0 1rem 0;
+    color: #1c1917;
+    border-bottom: 1px solid #d1d5db;
+    padding-bottom: 12px;
+}
+
+.checkout-item-mini-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 350px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* Tùy chỉnh thanh cuộn cho mượt */
+.checkout-item-mini-list::-webkit-scrollbar { width: 4px; }
+.checkout-item-mini-list::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+
+.checkout-mini-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.checkout-mini-img {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    padding: 4px;
+}
+
+.checkout-mini-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.checkout-mini-qty {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #6b7280;
+    color: white;
+    font-size: 0.7rem;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 700;
+}
+
+.checkout-mini-info { flex: 1; }
+
+.checkout-mini-info h4 {
+    margin: 0 0 4px 0;
+    font-size: 0.85rem;
+    color: #1c1917;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.checkout-mini-info p {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.checkout-mini-price {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #1c1917;
+}
+
+.checkout-divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 1.2rem 0;
+}
+
+.checkout-price-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    color: #4b5563;
+}
+
+.checkout-discount-text { color: #dc2626; font-weight: 500; }
+.checkout-strikethrough { text-decoration: line-through; color: #9ca3af; margin-right: 8px; font-size: 0.85rem; }
+.checkout-free-text { color: #16a34a; font-weight: 600; }
+
+.checkout-final-total {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1c1917;
+    align-items: center;
+}
+
+.checkout-highlight-total {
+    font-size: 1.5rem;
+    color: #1c1917;
+}
+
+.checkout-submit-btn {
+    width: 100%;
+    background: #1c1917;
+    color: #cca858;
+    padding: clamp(14px, 2vw, 18px);
+    border: none;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.checkout-submit-btn:hover:not(:disabled) {
+    background: #333333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.checkout-submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background: #4b5563;
+    color: #e5e7eb;
+}
+
+.checkout-terms-note {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 1rem;
+}
+
+.checkout-terms-note a { color: #1c1917; font-weight: 600; text-decoration: none; }
+.checkout-terms-note a:hover { text-decoration: underline; }
+
+/* ========================================================= */
+/* 📱 MOBILE RESPONSIVE                                      */
+/* ========================================================= */
+@media (max-width: 850px) {
+    .checkout-container { grid-template-columns: 1fr; }
+    .checkout-summary-card { position: static; margin-top: 10px; }
+}
+
+
+/* --- TOGGLE ĐỊA CHỈ (RADIO BUTTONS) --- */
+.checkout-address-toggle-group {
+    display: flex;
+    gap: clamp(10px, 2vw, 15px);
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.checkout-toggle-btn {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: clamp(12px, 2vw, 16px);
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #f9fafb;
+    transition: all 0.2s ease;
+}
+
+.checkout-toggle-btn input[type="radio"] {
+    accent-color: #cca858;
+    width: 18px;
+    height: 18px;
+}
+
+.checkout-toggle-btn span {
+    font-weight: 600;
+    color: #4b5563;
+    font-size: clamp(0.9rem, 1.5vw, 0.95rem);
+}
+
+.checkout-toggle-btn span svg {
+    margin-right: 6px;
+    color: #6b7280;
+}
+
+.checkout-toggle-btn.active {
+    border-color: #cca858;
+    background: #fffcf3;
+}
+
+.checkout-toggle-btn.active span {
+    color: #1c1917;
+}
+
+.checkout-toggle-btn.active span svg {
+    color: #cca858;
+}
+
+.checkout-toggle-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f3f4f6;
+}
+
+/* --- HỘP THÔNG TIN ĐỊA CHỈ MẶC ĐỊNH --- */
+.checkout-default-address-box {
+    background: #f8fafc;
+    border-left: 4px solid #cca858;
+    padding: 16px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.checkout-default-address-box strong {
+    font-size: 1.05rem;
+    color: #1c1917;
+}
+
+.checkout-default-address-box span {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+.checkout-default-address-box p {
+    margin: 8px 0 0 0;
+    color: #374151;
+    line-height: 1.5;
+}
+
+/* Tinh chỉnh thẻ select cho đồng bộ */
+.checkout-input-select {
+    width: 100%;
+    padding: clamp(10px, 1.5vw, 12px) 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background-color: white;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.checkout-input-select:disabled {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+}
+
+.checkout-input-select:focus {
+    border-color: #cca858;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(204, 168, 88, 0.15);
+}

@@ -42,30 +42,56 @@ export const syncCart = async (req, res) => {
 
         // 🌟 RULE 3: MERGE LOCAL CART VÀO DATABASE CART
         if (localCart && localCart.length > 0) {
+            const now = new Date();
             for (const localItem of localCart) {
-                // Tìm xem món này đã có trong DB chưa
-                const existingDetail = await prisma.orderDetail.findFirst({
-                    where: {
-                        orderId: dbCart.id,
-                        productVariantId: localItem.variantId
+                // 🔍 NEW: Look up the variant AND its active promotions
+                const variant = await prisma.productVariant.findUnique({
+                    where: { id: Number(localItem.variantId) },
+                    include: {
+                        promotions: {
+                            include: { promotion: true },
+                            where: {
+                                promotion: {
+                                    startTime: { lte: now },
+                                    endTime: { gte: now }
+                                }
+                            }
+                        }
                     }
                 });
 
+                if (!variant) continue;
+
+                // 💰 Calculate the REAL current price
+                let currentPrice = variant.unitPrice;
+                if (variant.promotions.length > 0) {
+                    const promo = variant.promotions[0].promotion;
+                    const discount = promo.type === 'PERCENTAGE' 
+                        ? (currentPrice * promo.value) / 100 
+                        : promo.value;
+                    currentPrice = Math.max(0, currentPrice - discount);
+                }
+                // 🌟 THE FIX: Use upsert logic to either update existing item or create new one
+                const existingDetail = await prisma.orderDetail.findFirst({
+                    where: { orderId: dbCart.id, productVariantId: variant.id }
+                });
+                // 🐛 BUG FIX: This is where the actual database update happens! We either increment quantity or create a new record.
                 if (existingDetail) {
-                    // Nếu có rồi -> Cộng dồn số lượng
                     await prisma.orderDetail.update({
                         where: { id: existingDetail.id },
-                        data: { quantity: existingDetail.quantity + localItem.quantity }
+                        data: { 
+                            quantity: existingDetail.quantity + localItem.quantity,
+                            unitPrice: currentPrice // ✅ Sync to the LATEST price
+                        }
                     });
                 } else {
-                    // Nếu chưa có -> Tạo mới vào DB
                     await prisma.orderDetail.create({
                         data: {
                             orderId: dbCart.id,
-                            productVariantId: localItem.variantId,
+                            productVariantId: variant.id,
                             quantity: localItem.quantity,
-                            originalPrice: localItem.price,
-                            unitPrice: localItem.price
+                            originalPrice: variant.unitPrice, // 👈 Original base price
+                            unitPrice: currentPrice           // 👈 Actual price user pays
                         }
                     });
                 }
@@ -86,10 +112,13 @@ export const syncCart = async (req, res) => {
         const formattedCart = finalCart.orderDetails.map(detail => ({
             id: detail.variant.productId,
             variantId: detail.productVariantId,
-            name: detail.variant.product.nameVn,
+            nameVn: detail.variant.product.nameVn || detail.variant.product.name,
+            // Price logic: We want to show the price that the user is actually paying (after promotion), not the original price
             price: detail.unitPrice,
+            originalPrice: detail.originalPrice,
+            isSale: detail.unitPrice < detail.originalPrice,
             quantity: detail.quantity,
-            // ... map các trường image/size nếu cần ...
+            // For simplicity, we take the first image of the variant as the thumbnail
             image: detail.variant.thumbnailUrl, 
             specification: detail.variant.specification,
             size: detail.variant.specification?.size || detail.variant.specification?.volume || null
@@ -107,34 +136,68 @@ export const syncCart = async (req, res) => {
 export const addCartItem = async (req, res) => {
     try {
         const userId = req.user.id;
-        const { variantId, quantity, price } = req.body;
-
-        // 1. Find or Create DRAFT cart
+        const { variantId, quantity } = req.body;
+        
+        const safeVariantId = Number(variantId);
+        const safeQuantity = Number(quantity);
+        
+        // 
+        const stockData = await prisma.inventory.aggregate({
+            _sum: { quantity: true },
+            where: { productVariantId: safeVariantId }
+        });
+        const totalStock = stockData._sum.quantity || 0; // Nếu không có trong kho thì = 0
+        
+        // 1. Kiểm tra tồn kho trước khi thêm
         let dbCart = await prisma.cart.findFirst({
-            where: { customerId: userId, status: 'DRAFT' }
+            where: { customerId: userId, status: 'DRAFT' },
+            include: { orderDetails: true }
         });
 
         if (!dbCart) {
             dbCart = await prisma.cart.create({
-                data: { customerId: userId, status: 'DRAFT', finalPrice: 0, couponDiscount: 0 }
+                data: { customerId: userId, status: 'DRAFT', finalPrice: 0, couponDiscount: 0 },
+                include: { orderDetails: true }
+            });
+        }
+        
+        const existingDetail = dbCart.orderDetails.find(item => item.productVariantId === safeVariantId);
+        const currentCartQty = existingDetail ? existingDetail.quantity : 0;
+        const requestedTotalQty = currentCartQty + safeQuantity;
+
+        // 🚀 CHẶN NGAY NẾU VƯỢT QUÁ TỒN KHO
+        if (requestedTotalQty > totalStock) {
+            return res.status(400).json({ 
+                message: `Rất tiếc, sản phẩm này chỉ còn ${totalStock} chiếc trong kho.` 
             });
         }
 
-        // 🌟 FORCE TYPES TO INTEGER TO PREVENT PRISMA CRASHES
-        const safeVariantId = Number(variantId);
-        const safePrice = Number(price);
-        const safeQuantity = Number(quantity);
-
-        // 2. Check if item already exists in the cart
-        const existingDetail = await prisma.orderDetail.findFirst({
-            where: { orderId: dbCart.id, productVariantId: safeVariantId }
+        const variant = await prisma.productVariant.findUnique({
+            where: { id: safeVariantId },
+            include: {
+                promotions: {
+                    include: { promotion: true },
+                    where: { promotion: { startTime: { lte: new Date() }, endTime: { gte: new Date() } } }
+                }
+            }
         });
 
+        if (!variant) return res.status(404).json({ error: "Product not found" });
+
+        let realPrice = variant.unitPrice;
+        if (variant.promotions.length > 0) {
+            const promo = variant.promotions[0].promotion;
+            const discount = promo.type === 'PERCENTAGE' ? (realPrice * promo.value) / 100 : promo.value;
+            realPrice = realPrice - discount;
+        }
+
         if (existingDetail) {
-            // ✅ ATOMIC INCREMENT
             await prisma.orderDetail.update({
                 where: { id: existingDetail.id },
-                data: { quantity: { increment: safeQuantity } } 
+                data: { 
+                    quantity: { increment: safeQuantity },
+                    unitPrice: realPrice
+            } 
             });
         } else {
             // ✅ CREATE NEW ITEM
@@ -143,8 +206,8 @@ export const addCartItem = async (req, res) => {
                     orderId: dbCart.id,
                     productVariantId: safeVariantId,
                     quantity: safeQuantity,
-                    originalPrice: safePrice,
-                    unitPrice: safePrice
+                    originalPrice: variant.unitPrice,
+                    unitPrice: realPrice
                 }
             });
         }
@@ -190,6 +253,10 @@ export const updateCartItemQuantity = async (req, res) => {
     try {
         const userId = req.user.id;
         const { variantId, quantity } = req.body; 
+
+        const safeVariantId = Number(variantId);
+        const requestedQuantity = Number(quantity);
+
         console.log(`\n📥 [BACKEND] Received Update: User: ${userId}, Variant: ${variantId}, New Qty: ${quantity}`); // 🐛 DEBUG LOG
 
         // 1. Find active cart
@@ -202,6 +269,8 @@ export const updateCartItemQuantity = async (req, res) => {
             return res.status(404).json({ message: "Cart not found" });
         }
 
+
+
         const ONE_DAY_MS = 24 * 60 * 60 * 1000;
         if (new Date() - new Date(dbCart.createdAt) > ONE_DAY_MS) {
             console.log(`⚠️ [BACKEND] Cart is expired! Updating status to EXPIRED.`); // 🐛 DEBUG LOG
@@ -213,29 +282,80 @@ export const updateCartItemQuantity = async (req, res) => {
         }
 
         console.log(`🛒 [BACKEND] Found valid Cart ID: ${dbCart.id}`); // 🐛 DEBUG LOG
+        
+        // Check stock availability BEFORE updating quantity
+        const stockData = await prisma.inventory.aggregate({
+            _sum: { quantity: true },
+            where: { productVariantId: safeVariantId }
+        });
+        const totalStock = stockData._sum.quantity || 0;
 
-        // 2. Enforce Backend Limit (Security against hackers bypassing the frontend!)
-        const safeQuantity = Math.min(5, Math.max(1, quantity));
+        if (requestedQuantity > totalStock) {
+            return res.status(400).json({ 
+                message: `Không thể tăng thêm. Sản phẩm chỉ còn ${totalStock} chiếc trong kho.` 
+            });
+        }
+
+        // 2. Enforce Backend Limit (Cực kỳ quan trọng: Lấy Min của 5, Tổng kho, và số lượng khách yêu cầu)
+        const safeQuantity = Math.min(5, totalStock, Math.max(1, requestedQuantity));
+        // ========================================================
 
         // 3. Update the exact quantity in the database
-        // 🌟 THE FIX: This is where const updateResult belongs!
         const updateResult = await prisma.orderDetail.updateMany({
             where: { 
                 orderId: dbCart.id, 
-                productVariantId: Number(variantId) 
+                productVariantId: safeVariantId 
             },
             data: { quantity: safeQuantity }
         });
         
-        console.log(`📝 [BACKEND] Prisma Update Result: Modified ${updateResult.count} rows`); // 🐛 DEBUG LOG
+        console.log(`📝 [BACKEND] Prisma Update Result: Modified ${updateResult.count} rows`); 
 
         if (updateResult.count === 0) {
-            console.log(`⚠️ [BACKEND] Warning: Found the cart, but could not find Variant ${variantId} inside it!`); // 🐛 DEBUG LOG
+            console.log(`⚠️ [BACKEND] Warning: Found the cart, but could not find Variant ${variantId} inside it!`); 
         }
 
         res.status(200).json({ message: "Quantity updated" });
     } catch (error) {
         console.error("❌ [BACKEND] Update Quantity Error:", error);
         res.status(500).json({ error: "Failed to update quantity" });
+    }
+};
+
+
+
+export const getCustomerCoupons = async (req, res) => {
+    try {
+        // Lấy ID của khách hàng đang đăng nhập từ Middleware (Giả sử là req.user.id)
+        // Lưu ý: Middleware xác thực (verifyToken) của bạn phải được chạy trước hàm này
+        const customerId = req.user?.id;
+
+        if (!customerId) {
+            return res.status(401).json({ message: "Vui lòng đăng nhập để xem ví Voucher." });
+        }
+
+        const myVouchers = await prisma.couponUsage.findMany({
+            where: {
+                customerId: customerId,
+                status: 'ACTIVE',       // Chỉ lấy mã đang kích hoạt
+                remaining: { gt: 0 },   // Phải còn ít nhất 1 lượt sử dụng
+                coupon: {
+                    expireAt: { gt: new Date() } // Mã chưa qua thời gian hết hạn
+                }
+            },
+            include: {
+                coupon: true // Kéo theo toàn bộ thông tin gốc của Coupon (code, type, value, expireAt...)
+            },
+            orderBy: {
+                coupon: {
+                    expireAt: 'asc' // Sắp xếp: Mã nào sắp hết hạn thì đẩy lên đầu để ưu tiên dùng trước
+                }
+            }
+        });
+
+        res.json(myVouchers);
+    } catch (error) {
+        console.error("[ERROR] getCustomerCoupons:", error);
+        res.status(500).json({ message: "Lỗi hệ thống khi tải ví Voucher." });
     }
 };

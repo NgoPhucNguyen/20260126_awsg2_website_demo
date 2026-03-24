@@ -1,14 +1,5 @@
-// controllers/uploadController.js
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-
-// 1. Configure S3 Client
-const s3 = new S3Client({
-    region: process.env.AWS_S3_REGION,
-    credentials: {
-        accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY
-    }
-});
+import s3Client from "../s3Config.js";
+import { Upload } from "@aws-sdk/lib-storage";
 
 export const uploadImage = async (req, res) => {
     const file = req.file;
@@ -19,20 +10,29 @@ export const uploadImage = async (req, res) => {
         const fileName = `uploads/${Date.now()}-${file.originalname}`;
         
         // Prepare the upload command
-        const command = new PutObjectCommand({
-            Bucket: process.env.AWS_BUCKET_NAME,
-            Key: fileName,
-            Body: file.buffer,
-            ContentType: file.mimetype
+        const parallelUploadS3 = new Upload({
+            client: s3Client,
+            params: {
+                Bucket: process.env.S3_BUCKET_NAME,
+                Key: fileName,
+                Body: file.buffer, 
+                ContentType: file.mimetype,
+            },
+            queueSize: 4, 
+            partSize: 5 * 1024 * 1024, 
         });
 
         // Send to AWS
-        await s3.send(command);
+        const result = await parallelUploadS3.done();
 
-        // Generate the public URL
-        const fileUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_S3_REGION}.amazonaws.com/${fileName}`;
+        // URL
+        const fileUrl = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
         
-        res.json({ message: "Upload successful!", url: fileUrl });
+        res.json({ 
+            message: "Upload successful!", 
+            url: result.Location || fileUrl 
+        });     
+
     } catch (err) {
         console.error("S3 Upload Error:", err);
         res.status(500).send("Error uploading to S3");

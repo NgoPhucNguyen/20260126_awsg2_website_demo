@@ -1,42 +1,60 @@
 // src/components/ProductCard.jsx
 import { Link } from "react-router-dom";
-import { useTranslation } from 'react-i18next'; // 🌟 1. Import the translation hook
-import { FiShoppingBag, FiLoader } from "react-icons/fi";
+import { useTranslation } from 'react-i18next';
 import { useCart } from "@/context/CartProvider";
 import "./ProductCard.css";
 
+// 🎨 Import Font Awesome chuẩn Tree-shaking
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBagShopping, faSpinner } from '@fortawesome/free-solid-svg-icons';
+
 const ProductCard = ({ product }) => {
-    // 🌟 2. Grab the translation function (t) and the active language (i18n)
     const { t, i18n } = useTranslation(); 
-    
     const { addToCart, isAdding } = useCart();
     
     const displayName = i18n.language === 'vi' ? (product.nameVn || product.name) : product.name;
-
+    
     const formatPrice = (price) => {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
     };
+    
+    const isOutOfStock = product.stock === 0;
 
     return (
-        <div className="product-card">
-            {/* 1. WRAP CLICKABLE AREAS IN LINK */}
+        <div className={`product-card ${isOutOfStock ? 'out-of-stock-card' : ''}`}>
+            
             <Link 
                 to={`/product/${product.id}?variant=${product.variantId}`} 
                 className="card-link"
             >
+                {/* 1. KHU VỰC HÌNH ẢNH */}
                 <div className="card-image">
-                    {/* 🌟 4. Update the alt text for better SEO/Accessibility */}
-                    <img src={product.image} alt={displayName} />
+                    <img 
+                        src={product.image} 
+                        alt={displayName} 
+                        className={isOutOfStock ? "grayscale-img" : ""}
+                        loading="lazy" /* Tối ưu hiệu suất tải ảnh */
+                    />
+                    
                     {product.brand && <span className="brand-tag">{product.brand}</span>}
+                    
+                    {isOutOfStock ? (
+                        <div className="out-of-stock-overlay">
+                            <span>Hết Hàng</span>
+                        </div>
+                    ) : product.isSale && (
+                        <span className="sale-badge-overlay">
+                            -{product.discountValue}{product.discountType === 'PERCENTAGE' ? '%' : 'đ'}
+                        </span>
+                    )}
                 </div>
                 
+                {/* 2. KHU VỰC THÔNG TIN */}
                 <div className="card-info">
-                    {/* 🌟 5. Inject the dynamic translated name */}
-                    <h3>{displayName}</h3>
+                    <h3 className="product-card-title" title={displayName}>{displayName}</h3>
 
-                    {/* Skin Type */}
                     {product.skinType && (
-                        <div style={{ fontSize: "0.8rem", color: "#d4af37", marginBottom: "8px", fontWeight: "600" }}>
+                        <div className="skin-type-tag">
                             Phù hợp: {product.skinType}
                         </div>
                     )}
@@ -45,26 +63,38 @@ const ProductCard = ({ product }) => {
                 </div>
             </Link>
 
-            {/* 2. ACTION AREA */}
+            {/* 3. KHU VỰC HÀNH ĐỘNG (Giá & Nút thêm giỏ) */}
             <div className="card-footer">
-                <span className="price">{formatPrice(product.price)}</span>
+                <div className="price-container">
+                    {product.isSale ? (
+                        <div className="price-wrapper-sale">
+                            <span className="price sale-price">
+                                {formatPrice(product.price)}
+                            </span>
+                            <span className="original-price-strike">
+                                {formatPrice(product.originalPrice)}
+                            </span>
+                        </div>
+                    ) : (
+                        <span className="price">{formatPrice(product.price)}</span>
+                    )}
+                </div>
                 
-                {/* 👇 The new 3D Layered Button */}
                 <button 
-                    className={`btn-3d-circle ${isAdding ? 'btn-disabled' : ''}`} // Add CSS class if adding
+                    className={`btn-add-cart ${isAdding || isOutOfStock ? 'btn-disabled' : ''}`} 
                     onClick={(e) => {
-                        e.preventDefault(); // Stop the Link from triggering if they click the button!
-                        addToCart(product);
+                        e.preventDefault(); 
+                        if (!isOutOfStock) addToCart(product);
                     }}
-                    disabled={isAdding} // 🔒 Lock the button
-                    aria-label={t('productCard.add')}
+                    disabled={isAdding || isOutOfStock}
+                    aria-label={t('productCard.add', 'Thêm vào giỏ')}
+                    title={isOutOfStock ? "Sản phẩm đã hết hàng" : "Thêm vào giỏ"}
                 >
-                    <span className="btn-shadow"></span>
-                    <span className="btn-edge"></span>
-                    <div className="btn-front">
-                        {/* 🌟 Show Spinner if adding, else show Bag */}
-                        {isAdding ? <span className="btn-spinner"></span> : <FiShoppingBag />}
-                    </div>
+                    {isAdding ? (
+                        <FontAwesomeIcon icon={faSpinner} spin className="btn-spinner" />
+                    ) : (
+                        <FontAwesomeIcon icon={faBagShopping} />
+                    )}
                 </button>
             </div>
         </div>

@@ -1,0 +1,293 @@
+/* src/pages/CustomerHistory.css */
+
+.customer-history-page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: clamp(1rem, 3vw, 2rem);
+    min-height: 80vh;
+    font-family: var(--font-body, 'Inter', sans-serif);
+}
+
+.fade-in {
+    animation: fadeInHistory 0.4s ease-out;
+}
+
+@keyframes fadeInHistory {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.customer-history-header {
+    margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 1rem;
+}
+
+.customer-history-header h1 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: #1c1917;
+    margin: 0 0 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+}
+
+.customer-history-header h1 svg {
+    color: #cca858;
+}
+
+.customer-history-header p {
+    color: #6b7280;
+    margin: 0;
+    font-size: clamp(0.9rem, 1.5vw, 1rem);
+}
+
+.customer-history-loading {
+    text-align: center;
+    padding: 50px;
+    color: #6b7280;
+    font-style: italic;
+}
+
+.customer-history-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+/* --- TRẠNG THÁI TRỐNG --- */
+.customer-history-empty {
+    text-align: center;
+    padding: clamp(3rem, 10vh, 6rem) 1rem;
+    background: #f9fafb;
+    border-radius: 12px;
+    border: 1px dashed #d1d5db;
+}
+
+.customer-history-empty-icon {
+    font-size: clamp(3rem, 8vw, 4.5rem);
+    color: #d1d5db;
+    margin-bottom: 1rem;
+}
+
+.customer-history-empty h2 {
+    color: #374151;
+    margin: 0 0 8px 0;
+}
+
+.customer-history-empty p {
+    color: #6b7280;
+    margin: 0;
+}
+
+/* --- DANH SÁCH ĐƠN HÀNG --- */
+.customer-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.2rem, 3vw, 2rem);
+}
+
+.customer-history-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+}
+
+.customer-history-card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    border-color: #d1d5db;
+}
+
+/* Header của Card */
+.customer-history-card-header {
+    background: #fdfaf3;
+    padding: clamp(12px, 2vw, 16px) clamp(16px, 3vw, 24px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.customer-history-id-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.customer-history-label {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.customer-history-id-group strong {
+    color: #1c1917;
+    font-family: monospace;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
+}
+
+.customer-history-date {
+    color: #9ca3af;
+    font-size: 0.85rem;
+    margin-left: 8px;
+    padding-left: 12px;
+    border-left: 1px solid #d1d5db;
+}
+
+/* Badges */
+.customer-history-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.badge-pending { background: #fef3c7; color: #b45309; }
+.badge-processing { background: #e0f2fe; color: #1d4ed8; }
+.badge-shipped { background: #f3e8ff; color: #be185d; }
+.badge-delivered { background: #dcfce3; color: #166534; }
+.badge-cancelled { background: #fef2f2; color: #dc2626; }
+
+/* Body của Card (Chứa Sản phẩm) */
+.customer-history-card-body {
+    padding: clamp(12px, 2vw, 20px) clamp(16px, 3vw, 24px);
+    display: flex;
+    flex-direction: column;
+}
+
+.customer-history-item {
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 3vw, 20px);
+    padding: 12px 0;
+    border-bottom: 1px dashed #f3f4f6;
+}
+
+.customer-history-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.customer-history-item-img {
+    width: clamp(60px, 8vw, 80px);
+    height: clamp(60px, 8vw, 80px);
+    background: #f9fafb;
+    border: 1px solid #f3f4f6;
+    border-radius: 8px;
+    padding: 4px;
+}
+
+.customer-history-item-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.customer-history-item-info {
+    flex: 1;
+}
+
+.customer-history-item-info h4 {
+    margin: 0 0 4px 0;
+    font-size: clamp(0.9rem, 1.5vw, 1rem);
+    color: #1c1917;
+}
+
+.customer-history-item-variant {
+    color: #6b7280;
+    font-size: 0.8rem;
+    margin: 0 0 2px 0;
+}
+
+.customer-history-item-qty {
+    color: #1c1917;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.customer-history-item-price {
+    font-weight: 700;
+    color: #cca858;
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+}
+
+/* Footer của Card (Thành tiền) */
+.customer-history-card-footer {
+    background: #f9fafb;
+    padding: clamp(12px, 2vw, 16px) clamp(16px, 3vw, 24px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #e5e7eb;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.customer-history-payment-info p {
+    margin: 0 0 4px 0;
+    font-size: 0.85rem;
+    color: #4b5563;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.customer-history-payment-info p svg {
+    color: #9ca3af;
+    width: 16px;
+}
+
+.customer-history-payment-info p span {
+    color: #1c1917;
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.customer-history-total-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.customer-history-total-label {
+    color: #374151;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.customer-history-total-price {
+    color: #dc2626;
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    font-weight: 800;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+    .customer-history-card-header { flex-direction: column; align-items: flex-start; }
+    .customer-history-date { border-left: none; padding-left: 0; margin-left: 0; display: block; margin-top: 4px; }
+    .customer-history-card-footer { flex-direction: column; align-items: flex-end; }
+    .customer-history-payment-info { width: 100%; margin-bottom: 10px; border-bottom: 1px dashed #d1d5db; padding-bottom: 10px;}
+}
+
+.customer-history-btn-cancel-order {
+    padding: '6px 12px'; 
+    background: '#fee2e2'; 
+    color: '#b91c1c'; 
+    border: '1px solid #fca5a5';
+    cursor: 'pointer'; 
+    font-weight: bold;
+}

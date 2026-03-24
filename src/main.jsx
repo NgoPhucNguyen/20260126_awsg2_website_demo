@@ -6,7 +6,7 @@ import { AuthProvider } from './features/auth/AuthProvider.jsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartProvider.jsx';
 import { ToastProvider } from './context/ToastProvider.jsx';
-
+import './index.css';
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>

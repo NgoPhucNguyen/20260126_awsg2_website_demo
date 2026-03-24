@@ -1,0 +1,239 @@
+/* src/components/ProductSlider.css */
+
+.product-slider-section {
+    margin-top: clamp(2rem, 5vw, 4rem);
+    padding: clamp(1.5rem, 3vw, 2.5rem) 0; 
+    border-top: 1px solid var(--border-color, #eee);
+    overflow: hidden; 
+}
+
+.slider-title {
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    margin-bottom: clamp(1rem, 3vw, 2rem);
+    text-align: left; 
+    font-weight: 700;
+    color: var(--text-primary, #1c1917);
+    padding-left: clamp(16px, 3vw, 24px);
+}
+
+/* ========================================================= */
+/* KỸ THUẬT LƯỚT CHUỘT TRÊN DESKTOP (DRAG TO SCROLL)         */
+/* ========================================================= */
+.slider-grid {
+    display: flex; 
+    gap: clamp(1rem, 2vw, 1.5rem);
+    padding: 10px clamp(16px, 3vw, 24px);
+    
+    /* 🛑 CỐT LÕI CHO SCROLL NGANG */
+    overflow-x: auto; 
+    flex-wrap: nowrap; 
+    
+    /* Cấu hình cuộn mượt mà */
+    scroll-snap-type: x mandatory; 
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; /* Hỗ trợ iOS */
+    
+    /* Chuẩn bị cho Dragging */
+    cursor: grab; 
+    
+    /* Ẩn scrollbar xấu xí (Firefox/IE) */
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
+}
+
+/* Khi mới nhấn chuột xuống (chưa kéo) */
+.slider-grid.active {
+    cursor: grabbing;
+}
+
+/* 🛑 KHI ĐÃ BẮT ĐẦU KÉO (.dragging) */
+.slider-grid.dragging {
+    scroll-behavior: auto; /* Tắt mượt để kéo không bị giật */
+    scroll-snap-type: none; /* Tắt neo để kéo tự do */
+}
+
+/* Khóa chết mọi tương tác với thẻ con khi đang kéo */
+.slider-grid.dragging .slider-card {
+    pointer-events: none; 
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Ẩn scrollbar cho Chrome/Safari trên Mobile */
+.slider-grid::-webkit-scrollbar {
+    display: none;
+}
+
+/* 💻 Tùy chỉnh Scrollbar thanh lịch chỉ hiển thị trên Desktop */
+@media (min-width: 769px) {
+    .slider-grid::-webkit-scrollbar {
+        display: block;
+        height: 6px; 
+    }
+    .slider-grid::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+        border-radius: 4px;
+        margin: 0 clamp(16px, 3vw, 24px); 
+    }
+    .slider-grid::-webkit-scrollbar-thumb {
+        background: #d4d4d4; 
+        border-radius: 4px;
+    }
+    .slider-grid::-webkit-scrollbar-thumb:hover {
+        background: #a3a3a3; 
+    }
+}
+
+/* ========================================================= */
+/* THẺ SẢN PHẨM BÊN TRONG SLIDER                             */
+/* ========================================================= */
+.slider-card {
+    flex: 0 0 clamp(160px, 35vw, 220px); 
+    scroll-snap-align: start; 
+    border: 1px solid var(--border-color, #f0f0f0);
+    border-radius: clamp(6px, 1vw, 8px);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    background: #ffffff;
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+    
+    /* Chống bôi đen vô tình khi click hụt */
+    user-select: none;
+}
+
+.slider-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    border-color: var(--accent-yellow, #d4af37); 
+}
+
+.slider-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.slider-image {
+    height: clamp(140px, 20vh, 180px);
+    padding: clamp(0.75rem, 1.5vw, 1rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fcfcfc;
+    border-bottom: 1px solid #f9f9f9;
+}
+
+.slider-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    mix-blend-mode: multiply; 
+    transition: transform 0.4s ease;
+    pointer-events: none; /* Khóa ảnh để tránh lỗi Ghost Drag */
+}
+
+.slider-card:hover .slider-image img {
+    transform: scale(1.05);
+}
+
+/* ========================================================= */
+/* NHÃN (BADGES & OVERLAYS)                                  */
+/* ========================================================= */
+.slider-sale-badge {
+    position: absolute;
+    top: clamp(6px, 1vw, 10px);
+    right: clamp(6px, 1vw, 10px);
+    background-color: #991b1b; 
+    color: white;
+    padding: clamp(3px, 0.8vw, 4px) clamp(6px, 1vw, 8px);
+    border-radius: 4px;
+    font-size: clamp(0.7rem, 1vw, 0.8rem);
+    font-weight: 700;
+    z-index: 2;
+    box-shadow: 0 2px 6px rgba(153, 27, 27, 0.2);
+}
+
+.slider-out-of-stock {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+}
+
+.slider-out-of-stock span {
+    background-color: rgba(28, 25, 23, 0.85);
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: clamp(0.75rem, 1vw, 0.85rem);
+    font-weight: 700;
+}
+
+/* ========================================================= */
+/* TEXT & THÔNG TIN                                          */
+/* ========================================================= */
+.slider-info {
+    padding: clamp(0.75rem, 1.5vw, 1rem);
+    text-align: left; 
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.slider-brand {
+    font-size: clamp(0.65rem, 1vw, 0.75rem);
+    color: #888;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.slider-name {
+    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    margin: 0 0 8px 0;
+    color: #1c1917;
+    font-weight: 600;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.slider-name small {
+    color: #888;
+    font-weight: normal;
+}
+
+.slider-price-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: auto; 
+}
+
+.slider-price-regular {
+    font-weight: 700;
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    color: #1c1917;
+}
+
+.slider-price-sale {
+    font-weight: 700;
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    color: #dc2626; 
+}
+
+.slider-price-original {
+    text-decoration: line-through;
+    color: #a8a29e;
+    font-size: clamp(0.75rem, 1vw, 0.85rem);
+    font-weight: 500;
+}

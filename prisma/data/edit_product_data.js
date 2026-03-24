@@ -3,18 +3,8 @@
 
 export const products = [
   {
-    "name": "La Roche-Posay Effaclar Micellar Water Ultra Oily Skin",
-    "nameVn": "Nước Tẩy Trang La Roche-Posay Cho Da Dầu, Nhạy Cảm",
-    "brandId": "brand-larocheposay",
-    "categoryId": 7,
-    "description": null,
-    "ingredient": "",
-    "skinType": "Da dầu/Da nhạy cảm",
-    "isActive": true,
-    "variants": []
-  },
-  {
-    "name": "Bioderma Sensibio H2O",
+    "id": 1,
+    "name": "Sensibio H2O",
     "nameVn": "Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm",
     "brandId": "brand-bioderma",
     "categoryId": 7,
@@ -22,21 +12,66 @@ export const products = [
     "ingredient": "Aqua/Water/Eau, Peg-6 Caprylic/Capric Glycerides, Fructooligosaccharides, Mannitol, Xylitol, Rhamnose, Cucumis Sativus (Cucumber) Fruit Extract, Propylene Glycol, Cetrimonium Bromide, Disodium Edta",
     "skinType": "Da nhạy cảm",
     "isActive": true,
-    "variants": []
+    "variants": [
+      {
+        "id": 1,
+        "sku": "BDM-TT-250",
+        "specification": {
+          "volume": "250ml",
+          "packaging": "Medium Bottle"
+        },
+        "unitPrice": 361000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm 250ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm 250ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "sku": "BDM-TT-500",
+        "specification": {
+          "volume": "500ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 380000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm 500ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm 500ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "sku": "BDM-TT-100",
+        "specification": {
+          "volume": "100ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 204000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm 100ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm 100ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
   },
   {
-    "name": "La Roche-Posay Micellar Water Ultra Sensitive Skin",
-    "nameVn": "Nước Tẩy Trang La Roche-Posay Dành Cho Da Nhạy Cảm",
-    "brandId": "brand-larocheposay",
-    "categoryId": 7,
-    "description": null,
-    "ingredient": "",
-    "skinType": "Da nhạy cảm",
-    "isActive": true,
-    "variants": []
-  },
-  {
-    "name": "La Roche-Posay Effaclar Purifying Foaming Gel",
+    "id": 2,
+    "name": "Gel Rửa Mặt La Roche-Posay Dành Cho Da Dầu, Nhạy Cảm",
     "nameVn": "Gel Rửa Mặt La Roche-Posay Dành Cho Da Dầu, Nhạy Cảm",
     "brandId": "brand-larocheposay",
     "categoryId": 5,
@@ -46,7 +81,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 43,
+        "id": 4,
         "sku": "LRP-RM-200",
         "specification": {
           "volume": "200ml",
@@ -64,7 +99,7 @@ export const products = [
         ]
       },
       {
-        "id": 167,
+        "id": 5,
         "sku": "LRP-RM-400",
         "specification": {
           "volume": "400ml",
@@ -82,7 +117,7 @@ export const products = [
         ]
       },
       {
-        "id": 64,
+        "id": 6,
         "sku": "LRP-RM-50",
         "specification": {
           "volume": "50ml",
@@ -102,7 +137,8 @@ export const products = [
     ]
   },
   {
-    "name": "La Roche-Posay Effaclar Micro-Peeling Purifying Gel",
+    "id": 3,
+    "name": "Gel Rửa Mặt La Roche-Posay Giảm Mụn Cho Mặt, Toàn Thân",
     "nameVn": "Gel Rửa Mặt La Roche-Posay Giảm Mụn Cho Mặt, Toàn Thân",
     "brandId": "brand-larocheposay",
     "categoryId": 5,
@@ -112,7 +148,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 65,
+        "id": 7,
         "sku": "LRP-RM-50",
         "specification": {
           "volume": "50ml",
@@ -130,7 +166,7 @@ export const products = [
         ]
       },
       {
-        "id": 168,
+        "id": 8,
         "sku": "LRP-RM-400",
         "specification": {
           "volume": "400ml",
@@ -150,7 +186,8 @@ export const products = [
     ]
   },
   {
-    "name": "Cocoon Winter Melon Micellar Water",
+    "id": 4,
+    "name": "Winter Melon Micellar Water",
     "nameVn": "Nước Tẩy Trang Bí Đao Cocoon Làm Sạch và Giảm Dầu",
     "brandId": "brand-cocoon",
     "categoryId": 7,
@@ -160,41 +197,56 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 4,
+        "id": 9,
         "sku": "CC-TT-BD-140",
-        "specification": { "volume": "140ml", "packaging": "Small Bottle" },
+        "specification": {
+          "volume": "140ml",
+          "packaging": "Small Bottle"
+        },
         "unitPrice": 93000,
         "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Cocoon/Nước Tẩy Trang Bí Đao Cocoon 140Ml.jpg",
         "slug": null,
         "images": [
-          { "imageUrl": "images/products/Dầu Tẩy Trang Hoa Hồng Cocoon 140Ml.jpg", "displayOrder": 1, "altText": "FrontView" }
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Cocoon/Nước Tẩy Trang Bí Đao Cocoon 140Ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
         ]
       },
       {
-        "id": 5,
+        "id": 10,
         "sku": "CC-TT-BD-500",
-        "specification": { "volume": "500ml", "packaging": "Large Bottle" },
+        "specification": {
+          "volume": "500ml",
+          "packaging": "Large Bottle"
+        },
         "unitPrice": 179000,
         "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Cocoon/Nước Tẩy Trang Bí Đao Cocoon 500ml.jpg",
         "slug": null,
         "images": [
-          { "imageUrl": "images/products/Nước Tẩy Trang Bí Đao Cocoon 500ml.jpg", "displayOrder": 1, "altText": "Front View" }
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Cocoon/Nước Tẩy Trang Bí Đao Cocoon 500ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
         ]
       }
     ]
   },
   {
-    "name": "Bioderma Sébium H2O",
+    "id": 5,
+    "name": "Sébium H2O",
     "nameVn": "Nước Tẩy Trang Bioderma Dành Cho Da Dầu & Hỗn Hợp",
     "brandId": "brand-bioderma",
     "categoryId": 7,
     "description": null,
-    "ingredient": "Water (Aqua), Peg-6 Caprylic/Capric Glycerides, Sodium Citrate , Zinc Gluconate, Copper Sulfate, Ginkgo Biloba Extract",
+    "ingredient": "Water (Aqua), Peg-6 Caprylic/Capric Glycerides, Sodium Citrate , Zinc Gluconate, Copper Sulfate, Ginkgo Biloba Extract – Chiết Xuất Lá Bạch Quả, Mannitol, Xylitol, Rhamnose, Fructooligosaccharides, Propylene Glycol, Citric Acid, Disodium Edta, Cetrimonium Bromide, Fragrance (Parfum)",
     "skinType": "Da dầu/Da hỗn hợp",
     "isActive": true,
     "variants": [
       {
-        "id": 7,
+        "id": 11,
         "sku": "BDM-TT-250",
         "specification": {
           "volume": "250ml",
@@ -212,7 +264,7 @@ export const products = [
         ]
       },
       {
-        "id": 8,
+        "id": 12,
         "sku": "BDM-TT-100",
         "specification": {
           "volume": "100ml",
@@ -230,7 +282,7 @@ export const products = [
         ]
       },
       {
-        "id": 6,
+        "id": 13,
         "sku": "BDM-TT-500",
         "specification": {
           "volume": "500ml",
@@ -250,17 +302,18 @@ export const products = [
     ]
   },
   {
-    "name": "Bioderma Sensibio Micellar Cleansing Oil",
+    "id": 6,
+    "name": "Sensibio Micellar Cleansing Oil",
     "nameVn": "Dầu Tẩy Trang Bioderma Hỗ Trợ Sạch Sâu Dịu Nhẹ",
     "brandId": "brand-bioderma",
     "categoryId": 7,
     "description": null,
-    "ingredient": "Ethylhexyl Palmitate, Brassica Campestris (Rapeseed) Seed Oil, Polyglyceryl-4 Oleate, Aqua/Water/Eau, Sodium Pca",
+    "ingredient": "Ethylhexyl Palmitate, Brassica Campestris (Rapeseed) Seed Oil, Polyglyceryl-4 Oleate, Aqua/Water/Eau, Sodium Pca, Propanediol, Caprylic/Capric Triglyceride, Benzotriazolyl Dodecyl P-Cresol, Tocopherol, Helianthus Annuus (Sunflower) Seed Oil, Laminaria Ochroleuca Extract, Stearyl Glycyrrhetinate",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
       {
-        "id": 9,
+        "id": 14,
         "sku": "BDM-TT-150",
         "specification": {
           "volume": "150ml",
@@ -280,17 +333,49 @@ export const products = [
     ]
   },
   {
-    "name": "Anessa Perfect UV Sunscreen Skincare Gel",
+    "id": 7,
+    "name": "Sensibio H2O Lingettes (Wipes)",
+    "nameVn": "Khăn Ướt Tẩy Trang Bioderma Làm Sạch Da Nhạy Cảm 25 Miếng",
+    "brandId": "brand-bioderma",
+    "categoryId": 7,
+    "description": null,
+    "ingredient": "Water (Aqua), Peg-6 Caprylic/Capric Glycerides, Cucumis Sativus (Cucumber) Fruit Extract, Mannitol, Xylitol, Rhamnose, Fructooligosaccharides, Propylene Glycol, Disodium Edta, Cetrimonium Bromide",
+    "skinType": "Da nhạy cảm",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 15,
+        "sku": "BDM-TT-25",
+        "specification": {
+          "volume": "25 sheets",
+          "packaging": "Soft Pack"
+        },
+        "unitPrice": 187000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Khăn Ướt Tẩy Trang Bioderma Làm Sạch Da Nhạy Cảm 25 Miếng.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Khăn Ướt Tẩy Trang Bioderma Làm Sạch Da Nhạy Cảm 25 Miếng.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "",
     "nameVn": "Gel Chống Nắng Anessa Dưỡng Ẩm Bảo Vệ Hoàn Hảo ",
     "brandId": "brand-anessa",
     "categoryId": 2,
     "description": null,
     "ingredient": "",
-    "skinType": "Da khô/Da hỗn hợp",
+    "skinType": "Da khô/ Da hỗn hợp",
     "isActive": true,
     "variants": [
       {
-        "id": 162,
+        "id": 16,
         "sku": "AE-CN-90",
         "specification": {
           "volume": "90g",
@@ -317,11 +402,11 @@ export const products = [
     "categoryId": 2,
     "description": null,
     "ingredient": "",
-    "skinType": "Da khô/Da hỗn hợp",
+    "skinType": "Da khô/ Da hỗn hợp",
     "isActive": true,
     "variants": [
       {
-        "id": 161,
+        "id": 17,
         "sku": "AE-CN-90",
         "specification": {
           "volume": "90g",
@@ -341,17 +426,18 @@ export const products = [
     ]
   },
   {
-    "name": "Anessa Perfect UV Sunscreen Skincare Milk",
+    "id": 10,
+    "name": "",
     "nameVn": "Sữa Chống Nắng Anessa Dưỡng Da Kiềm Dầu",
     "brandId": "brand-anessa",
     "categoryId": 2,
     "description": null,
     "ingredient": "",
-    "skinType": "Da dầu/Da hỗn hợp",
+    "skinType": "Da dầu/ Da hỗn hợp",
     "isActive": true,
     "variants": [
       {
-        "id": 102,
+        "id": 18,
         "sku": "AE-CN-20",
         "specification": {
           "volume": "20ml",
@@ -369,7 +455,7 @@ export const products = [
         ]
       },
       {
-        "id": 159,
+        "id": 19,
         "sku": "AE-CN-60",
         "specification": {
           "volume": "60ml",
@@ -400,7 +486,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 156,
+        "id": 20,
         "sku": "LR-CN-50",
         "specification": {
           "volume": "50ml",
@@ -426,14 +512,17 @@ export const products = [
     "brandId": "brand-cocoon",
     "categoryId": 7,
     "description": null,
-    "ingredient": "Aqua/Water, Polyglyceryl-4 Caprylate/Caprate, Nelumbo Nucifera Flower Extract",
+    "ingredient": "Aqua/Water, Polyglyceryl-4 Caprylate/Caprate, Polyglyceryl-4 Laurate/Sebacate, Betaine, Nelumbo Nucifera Flower Extract, Alpha-Glucan Oligosaccharide, Inulin, Beta-Glucan, Trehalose, Xylitol, Propanediol, Glycerin, Glycereth-26, Sodium Lactate, Lactic Acid, Hydroxyacetophenone, Cetylpyridinium Chloride, Trisodium Ethylenediamine Disuccinate, Citric Acid, O-Cymen-5-Ol, Sodium Benzoate, Potassium Sorbate",
     "skinType": "Da nhạy cảm",
     "isActive": true,
     "variants": [
       {
-        "id": 12,
+        "id": 21,
         "sku": "CC-TT-SHG-500",
-        "specification": { "volume": "500ml", "packaging": "Large Bottle" },
+        "specification": {
+          "volume": "500ml",
+          "packaging": "Large Bottle"
+        },
         "unitPrice": 206000,
         "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Cocoon/Nước Tẩy Trang Sen Hậu Giang Cocoon Dành Cho Da Rất Nhạy Cảm 500ml.jpg",
         "slug": null,
@@ -446,7 +535,7 @@ export const products = [
         ]
       },
       {
-        "id": 11,
+        "id": 22,
         "sku": "CC-TT-SHG-140",
         "specification": {
           "volume": "140ml",
@@ -472,12 +561,12 @@ export const products = [
     "brandId": "brand-loreal",
     "categoryId": 7,
     "description": null,
-    "ingredient": "Aqua / Water, Hexylene Glycol, Glycerin, Rosa Gallica Flower Extract",
+    "ingredient": "Aqua / Water, Hexylene Glycol, Glycerin, Rosa Gallica Flower Extract, Sorbitol, Poloxamer 184, Disodium Cocoamphodiacetate, Disodium Edta, Propylene Glycol, BHT , Polyaminopropyl Biguanide",
     "skinType": "Da dầu/Da hỗn hợp",
     "isActive": true,
     "variants": [
       {
-        "id": 13,
+        "id": 23,
         "sku": "LR-TT-DD-400",
         "specification": {
           "volume": "400ml",
@@ -508,7 +597,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 48,
+        "id": 24,
         "sku": "LRP-RM-125",
         "specification": {
           "volume": "125ml",
@@ -539,7 +628,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 49,
+        "id": 25,
         "sku": "LRP-RM-200",
         "specification": {
           "volume": "200ml",
@@ -565,12 +654,12 @@ export const products = [
     "brandId": "brand-cerave",
     "categoryId": 5,
     "description": null,
-    "ingredient": "Purified Water (Aqua), Cocamidopropyl Hydroxysultaine, Glycerin, Niacinamide",
+    "ingredient": "Purified Water (Aqua), Cocamidopropyl Hydroxysultaine, Glycerin, Sodium Lauroyl Sarcosinate, Peg-150 Pentaerythrityl Tetrastearate (And) Peg-6 Caprylic/Capric Glycerides, Niacinamide, Propylene Glycol, Sodium Methyl Cocoyl Taurate, Ceramide 3, Ceramide 6-Ii, Ceramide 1, Hyaluronic Acid, Cholesterol, Sodium Chloride, Phytosphingosine, Citric Acid, Edetate Disodium Dihydrate, Sodium Lauroyl Lactylate, Methylparaben, Propylparaben, Carbomer, Xanthan Gum",
     "skinType": "Da dầu/Hỗn hợp dầu",
     "isActive": true,
     "variants": [
       {
-        "id": 83,
+        "id": 26,
         "sku": "CV-RM-88",
         "specification": {
           "volume": "88ml",
@@ -588,7 +677,7 @@ export const products = [
         ]
       },
       {
-        "id": 78,
+        "id": 27,
         "sku": "CV-RM-236",
         "specification": {
           "volume": "236ml",
@@ -606,7 +695,7 @@ export const products = [
         ]
       },
       {
-        "id": 77,
+        "id": 28,
         "sku": "CV-RM-473",
         "specification": {
           "volume": "473ml",
@@ -624,7 +713,7 @@ export const products = [
         ]
       },
       {
-        "id": 88,
+        "id": 29,
         "sku": "CV-RM-30",
         "specification": {
           "volume": "30ml",
@@ -650,12 +739,12 @@ export const products = [
     "brandId": "brand-cerave",
     "categoryId": 5,
     "description": null,
-    "ingredient": "Aqua / Water, Glycerin, Salicylic Acid, Ceramide Np",
+    "ingredient": "Aqua / Water, Ocamidopropyl Hydroxysultaine, Glycerin, Sodium Lauroyl Sarcosinate, Niacinamide, Salicylic Acid, Sodium Methyl Cocoyl Taurate, Peg-150 Pentaerythrityl, Tetrastearate, Tetrastearate, Gluconolactone, Sodium Cocoyl Isethionate, Ceramide Np, Ceramide Ap, Ceramide Eop, Carbomer, Calcium Gluconate, Calcium Gluconate, Triethyl Citrate, Sodium Hydroxide, Sodium Benzoate, Sodium Chloride, Sodium Lauroyl Lactylate, Cholesterol, Coconut Acid, Tetrasodium Edta, Caprylyl Glycol, Hydrolyzed Hyaluronic Acid, Trisodium Ethylenediamine, Disuccinate, Hectorite, Phytosphingosine, Xanthan Gum, Acrylates Copolymer, Benzoic Acid",
     "skinType": "Da mụn",
     "isActive": true,
     "variants": [
       {
-        "id": 82,
+        "id": 30,
         "sku": "CV-RM-473",
         "specification": {
           "volume": "473ml",
@@ -673,7 +762,7 @@ export const products = [
         ]
       },
       {
-        "id": 84,
+        "id": 31,
         "sku": "CV-RM-236",
         "specification": {
           "volume": "236ml",
@@ -716,7 +805,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 38,
+        "id": 32,
         "sku": "PY-TO-200",
         "specification": {
           "volume": "200ml",
@@ -734,7 +823,7 @@ export const products = [
         ]
       },
       {
-        "id": 40,
+        "id": 33,
         "sku": "PY-TO-30",
         "specification": {
           "volume": "30ml",
@@ -752,7 +841,7 @@ export const products = [
         ]
       },
       {
-        "id": 39,
+        "id": 34,
         "sku": "PY-TO-100",
         "specification": {
           "volume": "100ml",
@@ -783,7 +872,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 46,
+        "id": 35,
         "sku": "CC-TO-SHG-310",
         "specification": {
           "volume": "310ml",
@@ -801,7 +890,7 @@ export const products = [
         ]
       },
       {
-        "id": 45,
+        "id": 36,
         "sku": "CC-TO-SHG-500",
         "specification": {
           "volume": "500ml",
@@ -819,7 +908,7 @@ export const products = [
         ]
       },
       {
-        "id": 47,
+        "id": 37,
         "sku": "CC-TO-SHG-140",
         "specification": {
           "volume": "140ml",
@@ -850,7 +939,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 51,
+        "id": 38,
         "sku": "CC-TO-310",
         "specification": {
           "volume": "140ml",
@@ -868,7 +957,7 @@ export const products = [
         ]
       },
       {
-        "id": 52,
+        "id": 39,
         "sku": "CC-TO-140",
         "specification": {
           "volume": "310ml",
@@ -899,7 +988,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 54,
+        "id": 40,
         "sku": "CC-TO-NHY-140",
         "specification": {
           "volume": "140ml",
@@ -917,7 +1006,7 @@ export const products = [
         ]
       },
       {
-        "id": 55,
+        "id": 41,
         "sku": "CC-TO-NHY-310",
         "specification": {
           "volume": "310ml",
@@ -948,7 +1037,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 58,
+        "id": 42,
         "sku": "KL-TO-180",
         "specification": {
           "volume": "180ml",
@@ -968,7 +1057,7 @@ export const products = [
     ]
   },
   {
-    "id": 60,
+    "id": 24,
     "name": "",
     "nameVn": "Mặt Nạ Caryophy Phục Hồi Da Đa Năng ",
     "brandId": "brand-caryophy",
@@ -979,7 +1068,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 130,
+        "id": 43,
         "sku": "CR-PH-MN-25",
         "specification": {
           "volume": "25G",
@@ -999,7 +1088,7 @@ export const products = [
     ]
   },
   {
-    "id": 24,
+    "id": 25,
     "name": "Glycolic Bright Melasyl 8% [Melasyl+Glycolic+Niacinamide]",
     "nameVn": "Serum L'Oreal Sáng Da, Mờ Thâm Mụn & Nám",
     "brandId": "brand-loreal",
@@ -1010,7 +1099,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 140,
+        "id": 44,
         "sku": "LR-SR-MN-30",
         "specification": {
           "volume": "30ml",
@@ -1030,7 +1119,7 @@ export const products = [
     ]
   },
   {
-    "id": 25,
+    "id": 26,
     "name": "Glycolic Bright 1.0% Glycolic Acid (AHA)",
     "nameVn": "Serum L'Oreal Dưỡng Sáng Và Mờ Thâm Nám",
     "brandId": "brand-loreal",
@@ -1041,7 +1130,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 141,
+        "id": 45,
         "sku": "LR-SR-DS-15",
         "specification": {
           "volume": "15ml",
@@ -1061,18 +1150,18 @@ export const products = [
     ]
   },
   {
-    "id": 26,
+    "id": 27,
     "name": "Revitalift Hyaluronic Acid 1.5% Hyaluron Serum",
     "nameVn": "Serum L'Oreal Hyaluronic Acid Cấp Ẩm Sáng Da",
     "brandId": "brand-loreal",
     "categoryId": 4,
     "description": null,
     "ingredient": "",
-    "skinType": "Da thường/Mọi loại da",
+    "skinType": "Da thường/ Mọi loại da",
     "isActive": true,
     "variants": [
       {
-        "id": 143,
+        "id": 46,
         "sku": "LR-SR-HYA-15",
         "specification": {
           "volume": "15ml",
@@ -1090,7 +1179,7 @@ export const products = [
         ]
       },
       {
-        "id": 142,
+        "id": 47,
         "sku": "LR-SR-HYA-30",
         "specification": {
           "volume": "30ml",
@@ -1110,7 +1199,7 @@ export const products = [
     ]
   },
   {
-    "id": 27,
+    "id": 28,
     "name": "Mela B3 Serum",
     "nameVn": "Serum La Roche-Posay Giảm Thâm Nám & Dưỡng Sáng Da",
     "brandId": "brand-larocheposay",
@@ -1121,7 +1210,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 163,
+        "id": 48,
         "sku": "LRP-SR-SA-30",
         "specification": {
           "volume": "30ml",
@@ -1152,7 +1241,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 144,
+        "id": 49,
         "sku": "LR-SR-NI-30",
         "specification": {
           "volume": "30ml",
@@ -1183,7 +1272,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 110,
+        "id": 50,
         "sku": "BB-GT-MN-30",
         "specification": {
           "volume": "30ml",
@@ -1214,7 +1303,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 14,
+        "id": 51,
         "sku": "LRP-TT-400",
         "specification": {
           "volume": "400ml",
@@ -1232,7 +1321,7 @@ export const products = [
         ]
       },
       {
-        "id": 37,
+        "id": 52,
         "sku": "LRP-TT-50",
         "specification": {
           "volume": "50ml",
@@ -1250,7 +1339,7 @@ export const products = [
         ]
       },
       {
-        "id": 35,
+        "id": 53,
         "sku": "LRP-TT-200",
         "specification": {
           "volume": "200ml",
@@ -1313,11 +1402,11 @@ export const products = [
     "categoryId": 3,
     "description": null,
     "ingredient": "",
-    "skinType": "Da khô/Da hỗn hợp",
+    "skinType": "Da khô/ Da hỗn hợp",
     "isActive": true,
     "variants": [
       {
-        "id": 117,
+        "id": 54,
         "sku": "BB-DA-MN-30",
         "specification": {
           "volume": "30ml",
@@ -1344,11 +1433,11 @@ export const products = [
     "categoryId": 3,
     "description": null,
     "ingredient": "",
-    "skinType": "Da dầu/Da hỗn hợp",
+    "skinType": "Da dầu/ Da hỗn hợp",
     "isActive": true,
     "variants": [
       {
-        "id": 118,
+        "id": 55,
         "sku": "NR-TT-MN-26",
         "specification": {
           "volume": "26ml",
@@ -1374,12 +1463,12 @@ export const products = [
     "brandId": "brand-naruko",
     "categoryId": 3,
     "description": null,
-    "ingredient": "Salicylic Acid, Niacinamide, Zinc",
-    "skinType": "Da dầu/Da hỗn hợp",
+    "ingredient": "",
+    "skinType": "Da thường",
     "isActive": true,
     "variants": [
       {
-        "id": 119,
+        "id": 56,
         "sku": "NR-SL-MN-26",
         "specification": {
           "volume": "26ml",
@@ -1411,18 +1500,18 @@ export const products = [
     "variants": []
   },
   {
-    "id": 40,
+    "id": 39,
     "name": "",
     "nameVn": "Kem Chống Nắng La Roche-Posay Kiểm Soát Dầu SPF50+",
     "brandId": "brand-larocheposay",
     "categoryId": 2,
     "description": null,
-    "ingredient": "Salicylic Acid 2%",
-    "skinType": "Da dầu/Da hỗn hợp",
+    "ingredient": "",
+    "skinType": "Da dầu/ Da hỗn hợp",
     "isActive": true,
     "variants": [
       {
-        "id": 153,
+        "id": 57,
         "sku": "LRP-CN-15",
         "specification": {
           "volume": "15ml",
@@ -1442,18 +1531,18 @@ export const products = [
     ]
   },
   {
-    "id": 41,
+    "id": 40,
     "name": "Serum La Roche-Posay Giảm Mụn 3 Tác Động ",
     "nameVn": "Serum La Roche-Posay Giảm Mụn 3 Tác Động ",
     "brandId": "brand-larocheposay",
     "categoryId": 4,
     "description": null,
-    "ingredient": "Rosa Damascena Flower Water, Panthenol, Glycerin",
-    "skinType": "Da khô/Da hỗn hợp",
+    "ingredient": "",
+    "skinType": "Da mụn",
     "isActive": true,
     "variants": [
       {
-        "id": 53,
+        "id": 58,
         "sku": "LRP-SR-3",
         "specification": {
           "volume": "3ml",
@@ -1471,7 +1560,7 @@ export const products = [
         ]
       },
       {
-        "id": 165,
+        "id": 59,
         "sku": "LRP-SR-30",
         "specification": {
           "volume": "30ml",
@@ -1491,18 +1580,18 @@ export const products = [
     ]
   },
   {
-    "id": 42,
+    "id": 41,
     "name": "Vichy 89 Minerals Intensive Repair Serum",
     "nameVn": "Serum Vichy 89 Khoáng Chất Phục Hồi Chuyên Sâu",
     "brandId": "brand-vichy",
     "categoryId": 4,
     "description": null,
-    "ingredient": "Aqua / Water, Hexylene Glycol, Glycerin",
-    "skinType": "Da dầu/Da hỗn hợp",
+    "ingredient": "",
+    "skinType": "Da nhạy cảm",
     "isActive": true,
     "variants": [
       {
-        "id": 108,
+        "id": 60,
         "sku": "VC-SR-10",
         "specification": {
           "volume": "10ml",
@@ -1520,7 +1609,7 @@ export const products = [
         ]
       },
       {
-        "id": 57,
+        "id": 61,
         "sku": "VC-SR-50",
         "specification": {
           "volume": "50ml",
@@ -1538,7 +1627,7 @@ export const products = [
         ]
       },
       {
-        "id": 90,
+        "id": 62,
         "sku": "VC-SR-75",
         "specification": {
           "volume": "75ml",
@@ -1558,18 +1647,18 @@ export const products = [
     ]
   },
   {
-    "id": 43,
+    "id": 42,
     "name": "Sữa Rửa Mặt CeraVe Làm Sạch & Tẩy Tế Bào Chết Dịu Nhẹ",
     "nameVn": "Sữa Rửa Mặt CeraVe Làm Sạch & Tẩy Tế Bào Chết Dịu Nhẹ",
     "brandId": "brand-cerave",
     "categoryId": 5,
     "description": null,
-    "ingredient": "Ceramides, Hyaluronic Acid, Amino Acids",
-    "skinType": "Da thường/Mọi loại da",
+    "ingredient": "Purified Water (Aqua), Cocamidopropyl Hydroxysultaine, Glycerin, Sodium Lauroyl Sarcosinate, Peg-150 Pentaerythrityl Tetrastearate (And) Peg-6 Caprylic/Capric Glycerides, Niacinamide, Propylene Glycol, Sodium Methyl Cocoyl Taurate, Ceramide 3, Ceramide 6-Ii, Ceramide 1, Hyaluronic Acid, Cholesterol, Sodium Chloride, Phytosphingosine, Citric Acid, Edetate Disodium Dihydrate, Sodium Lauroyl Lactylate, Methylparaben, Propylparaben, Carbomer, Xanthan Gum",
+    "skinType": "Da nhạy cảm",
     "isActive": true,
     "variants": [
       {
-        "id": 81,
+        "id": 63,
         "sku": "CV-RM-236",
         "specification": {
           "volume": "236ml",
@@ -1589,18 +1678,18 @@ export const products = [
     ]
   },
   {
-    "id": 45,
+    "id": 43,
     "name": "",
     "nameVn": "Serum Vichy Hỗ Trợ Trẻ Hoá Và Săn Chắc Da ",
     "brandId": "brand-vichy",
-    "categoryId": 5,
+    "categoryId": 4,
     "description": null,
-    "ingredient": "Zinc, Copper, Salicylic Acid",
-    "skinType": "Da dầu/Hỗn hợp dầu",
+    "ingredient": "",
+    "skinType": "Da nhạy cảm",
     "isActive": true,
     "variants": [
       {
-        "id": 91,
+        "id": 64,
         "sku": "VC-SR-30",
         "specification": {
           "volume": "30ml",
@@ -1620,18 +1709,18 @@ export const products = [
     ]
   },
   {
-    "id": 46,
+    "id": 44,
     "name": "",
     "nameVn": "Serum Vichy Giải Cứu Làn Da Tức Thì ",
     "brandId": "brand-vichy",
     "categoryId": 4,
     "description": null,
-    "ingredient": "White Truffle, Chia Seed Extract",
-    "skinType": "Da thường/Mọi loại da",
+    "ingredient": "",
+    "skinType": "Da thường",
     "isActive": true,
     "variants": [
       {
-        "id": 107,
+        "id": 65,
         "sku": "VC-SR-10",
         "specification": {
           "volume": "10ml",
@@ -1651,7 +1740,7 @@ export const products = [
     ]
   },
   {
-    "id": 47,
+    "id": 45,
     "name": "",
     "nameVn": "Dưỡng Chất Vichy Giảm Nếp Nhăn Và Giúp Trẻ Hoá Da",
     "brandId": "brand-vichy",
@@ -1662,7 +1751,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 92,
+        "id": 66,
         "sku": "VC-SR-30",
         "specification": {
           "volume": "30ml",
@@ -1682,7 +1771,7 @@ export const products = [
     ]
   },
   {
-    "id": 48,
+    "id": 46,
     "name": "",
     "nameVn": "Kem Chống Nắng Eucerin Chứa Tinh Chất Sáng Da ",
     "brandId": "brand-eucerin",
@@ -1693,7 +1782,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 109,
+        "id": 67,
         "sku": "EC-CN-50",
         "specification": {
           "volume": "50ml",
@@ -1713,7 +1802,7 @@ export const products = [
     ]
   },
   {
-    "id": 49,
+    "id": 47,
     "name": "",
     "nameVn": "Kem Chống Nắng Eucerin Kiềm Dầu (Có Màu)",
     "brandId": "brand-eucerin",
@@ -1724,7 +1813,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 147,
+        "id": 68,
         "sku": "EC-CN-50",
         "specification": {
           "volume": "50ml",
@@ -1744,7 +1833,7 @@ export const products = [
     ]
   },
   {
-    "id": 50,
+    "id": 48,
     "name": "",
     "nameVn": "Kem Chống Nắng Eucerin Cho Da Nhạy Cảm",
     "brandId": "brand-eucerin",
@@ -1755,7 +1844,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 145,
+        "id": 69,
         "sku": "EC-CN-50",
         "specification": {
           "volume": "50ml",
@@ -1775,7 +1864,7 @@ export const products = [
     ]
   },
   {
-    "id": 51,
+    "id": 49,
     "name": "",
     "nameVn": "Kem Chống Nắng Eucerin SPF 50 Ngăn Ngừa Da Lão Hóa",
     "brandId": "brand-eucerin",
@@ -1786,7 +1875,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 146,
+        "id": 70,
         "sku": "EC-CN-50",
         "specification": {
           "volume": "50ml",
@@ -1806,7 +1895,7 @@ export const products = [
     ]
   },
   {
-    "id": 53,
+    "id": 50,
     "name": "Sữa Rửa Mặt Hada Labo Dưỡng Sáng Cao Cấp",
     "nameVn": "Sữa Rửa Mặt Hada Labo Dưỡng Sáng Cao Cấp",
     "brandId": "brand-hadalabo",
@@ -1837,7 +1926,7 @@ export const products = [
     ]
   },
   {
-    "id": 54,
+    "id": 51,
     "name": "Sữa Rửa Mặt Vichy Dạng Gel Làm Sạch Sâu & Giảm Nhờn",
     "nameVn": "Sữa Rửa Mặt Vichy Dạng Gel Làm Sạch Sâu & Giảm Nhờn",
     "brandId": "brand-vichy",
@@ -1848,7 +1937,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 75,
+        "id": 72,
         "sku": "VC-RM-400",
         "specification": {
           "volume": "400ml",
@@ -1866,7 +1955,7 @@ export const products = [
         ]
       },
       {
-        "id": 74,
+        "id": 73,
         "sku": "VC-RM-200",
         "specification": {
           "volume": "200ml",
@@ -1886,7 +1975,7 @@ export const products = [
     ]
   },
   {
-    "id": 55,
+    "id": 52,
     "name": "Rose Cleansing Oil",
     "nameVn": "Dầu Tẩy Trang Cocoon Chiết Xuất Hoa Hồng ",
     "brandId": "brand-cocoon",
@@ -1897,7 +1986,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 16,
+        "id": 74,
         "sku": "CC-TT-HH-140",
         "specification": {
           "volume": "140ml",
@@ -1915,7 +2004,7 @@ export const products = [
         ]
       },
       {
-        "id": 15,
+        "id": 75,
         "sku": "CC-TT-HH-310",
         "specification": {
           "volume": "310ml",
@@ -1935,7 +2024,7 @@ export const products = [
     ]
   },
   {
-    "id": 56,
+    "id": 53,
     "name": "",
     "nameVn": "Mặt Nạ Naruko Ý Dĩ Nhân Đỏ Dưỡng Sáng Da",
     "brandId": "brand-naruko",
@@ -1946,7 +2035,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 123,
+        "id": 76,
         "sku": "NR-DS-MN-26",
         "specification": {
           "volume": "26ml",
@@ -1966,7 +2055,7 @@ export const products = [
     ]
   },
   {
-    "id": 57,
+    "id": 54,
     "name": "",
     "nameVn": "Mặt Nạ Tẩy Tế Bào Chết innisfree Từ Lúa Mạch Xanh",
     "brandId": "brand-innisfree",
@@ -1977,7 +2066,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 125,
+        "id": 77,
         "sku": "IF-MN-TC-120",
         "specification": {
           "volume": "120ml",
@@ -1997,7 +2086,7 @@ export const products = [
     ]
   },
   {
-    "id": 58,
+    "id": 55,
     "name": "Micellar Water 3-in-1 Moisturizing Even For Sensitive Skin",
     "nameVn": "Nước Tẩy Trang L'Oreal Dưỡng Ẩm Cho Da Thường, Khô",
     "brandId": "brand-loreal",
@@ -2008,7 +2097,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 17,
+        "id": 78,
         "sku": "LR-TT-400",
         "specification": {
           "volume": "400ml",
@@ -2028,7 +2117,7 @@ export const products = [
     ]
   },
   {
-    "id": 59,
+    "id": 56,
     "name": "",
     "nameVn": "Mặt Nạ Naruko Hoa Thủy Tiên Hỗ Trợ Phục Hồi Da",
     "brandId": "brand-naruko",
@@ -2039,7 +2128,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 128,
+        "id": 79,
         "sku": "NR-HT-MN-26",
         "specification": {
           "volume": "26ml",
@@ -2059,7 +2148,7 @@ export const products = [
     ]
   },
   {
-    "id": 39,
+    "id": 57,
     "name": "",
     "nameVn": "Sữa Chống Nắng La Roche-Posay Cho Da Dầu Mụn ",
     "brandId": "brand-larocheposay",
@@ -2070,7 +2159,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 152,
+        "id": 80,
         "sku": "LRP-CN-50",
         "specification": {
           "volume": "50ml",
@@ -2090,7 +2179,7 @@ export const products = [
     ]
   },
   {
-    "id": 61,
+    "id": 58,
     "name": "",
     "nameVn": "Mặt Nạ BNBG PDRN Cấp Ẩm Đa Tầng, Căng Bóng Da",
     "brandId": "brand-bnbg",
@@ -2101,7 +2190,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 112,
+        "id": 81,
         "sku": "BB-PDRN-MN-30",
         "specification": {
           "volume": "30ml",
@@ -2121,7 +2210,7 @@ export const products = [
     ]
   },
   {
-    "id": 62,
+    "id": 59,
     "name": "",
     "nameVn": "Tẩy Tế Bào Chết Eucerin Dành Cho Da Nhờn Mụn ",
     "brandId": "brand-eucerin",
@@ -2132,7 +2221,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 135,
+        "id": 82,
         "sku": "EC-TC-100",
         "specification": {
           "volume": "100ml",
@@ -2152,7 +2241,7 @@ export const products = [
     ]
   },
   {
-    "id": 64,
+    "id": 60,
     "name": "",
     "nameVn": "Mặt Nạ BNBG Tràm Trà Giúp Thải Độc Da, Giảm Mụn",
     "brandId": "brand-bnbg",
@@ -2163,7 +2252,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 105,
+        "id": 83,
         "sku": "BB-TT-MN-30",
         "specification": {
           "volume": "30ml",
@@ -2183,7 +2272,7 @@ export const products = [
     ]
   },
   {
-    "id": 65,
+    "id": 61,
     "name": "",
     "nameVn": "Mặt Nạ BNBG Vitamin B3 Làm Sáng Da",
     "brandId": "brand-bnbg",
@@ -2194,7 +2283,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 106,
+        "id": 84,
         "sku": "BB-VB3-MN-30",
         "specification": {
           "volume": "30ml",
@@ -2214,7 +2303,7 @@ export const products = [
     ]
   },
   {
-    "id": 66,
+    "id": 62,
     "name": "",
     "nameVn": "Mặt Nạ BNBG Vitamin A Hỗ Trợ Nâng Cơ ",
     "brandId": "brand-bnbg",
@@ -2225,7 +2314,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 111,
+        "id": 85,
         "sku": "BB-VA-MN-30",
         "specification": {
           "volume": "30ml",
@@ -2245,7 +2334,7 @@ export const products = [
     ]
   },
   {
-    "id": 68,
+    "id": 63,
     "name": "",
     "nameVn": "Sữa Chống Nắng La Roche-Posay Bảo Vệ Khỏi Tia UVA",
     "brandId": "brand-larocheposay",
@@ -2256,7 +2345,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 151,
+        "id": 86,
         "sku": "LRP-CN-50",
         "specification": {
           "volume": "50ml",
@@ -2276,7 +2365,7 @@ export const products = [
     ]
   },
   {
-    "id": 69,
+    "id": 64,
     "name": "",
     "nameVn": "Nước Cân Bằng La Roche-Posay Cho Da Thường, Nhạy Cảm",
     "brandId": "brand-larocheposay",
@@ -2287,7 +2376,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 59,
+        "id": 87,
         "sku": "LRP-TO-200",
         "specification": {
           "volume": "200ml",
@@ -2307,7 +2396,7 @@ export const products = [
     ]
   },
   {
-    "id": 70,
+    "id": 65,
     "name": "",
     "nameVn": "Sữa Chống Nắng La Roche-Posay Dưỡng Sáng Mờ Thâm",
     "brandId": "brand-larocheposay",
@@ -2318,7 +2407,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 150,
+        "id": 88,
         "sku": "LRP-CN-50",
         "specification": {
           "volume": "50ml",
@@ -2338,7 +2427,7 @@ export const products = [
     ]
   },
   {
-    "id": 71,
+    "id": 66,
     "name": "",
     "nameVn": "Kem Chống Nắng La Roche-Posay Giúp Giảm Mụn & Bóng Nhờn",
     "brandId": "brand-larocheposay",
@@ -2350,7 +2439,7 @@ export const products = [
     "variants": []
   },
   {
-    "id": 72,
+    "id": 67,
     "name": "Micellar Water 3-in-1 Deep Cleansing Even For Sensitive Skin",
     "nameVn": "Nước Tẩy Trang L'Oreal Làm Sạch Sâu Trang Điểm",
     "brandId": "brand-loreal",
@@ -2361,7 +2450,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 18,
+        "id": 89,
         "sku": "LR-TT-400",
         "specification": {
           "volume": "400ml",
@@ -2381,7 +2470,7 @@ export const products = [
     ]
   },
   {
-    "id": 73,
+    "id": 68,
     "name": "",
     "nameVn": "Kem Chống Nắng L'Oreal X20 Thoáng Da Mỏng Nhẹ",
     "brandId": "brand-loreal",
@@ -2392,7 +2481,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 154,
+        "id": 90,
         "sku": "LR-CN-50",
         "specification": {
           "volume": "50ml",
@@ -2410,7 +2499,7 @@ export const products = [
         ]
       },
       {
-        "id": 149,
+        "id": 91,
         "sku": "LRP-CN-50",
         "specification": {
           "volume": "50ml",
@@ -2430,7 +2519,7 @@ export const products = [
     ]
   },
   {
-    "id": 74,
+    "id": 69,
     "name": "",
     "nameVn": "Kem Chống Nắng L'Oreal Mịn Nhẹ Nâng Tông Giảm Thâm",
     "brandId": "brand-loreal",
@@ -2441,7 +2530,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 155,
+        "id": 92,
         "sku": "LR-CN-50",
         "specification": {
           "volume": "50ml",
@@ -2461,7 +2550,7 @@ export const products = [
     ]
   },
   {
-    "id": 75,
+    "id": 70,
     "name": "Supple Preparation Unscented Toner",
     "nameVn": "Nước Hoa Hồng Klairs Không Mùi Cho Da Nhạy Cảm ",
     "brandId": "brand-klairs",
@@ -2472,7 +2561,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 60,
+        "id": 93,
         "sku": "KL-TO-180",
         "specification": {
           "volume": "180ml",
@@ -2490,7 +2579,7 @@ export const products = [
         ]
       },
       {
-        "id": 61,
+        "id": 94,
         "sku": "KL-TO-30",
         "specification": {
           "volume": "30ml",
@@ -2508,7 +2597,7 @@ export const products = [
         ]
       },
       {
-        "id": 62,
+        "id": 95,
         "sku": "KL-TO-20",
         "specification": {
           "volume": "20ml",
@@ -2526,7 +2615,7 @@ export const products = [
         ]
       },
       {
-        "id": 63,
+        "id": 96,
         "sku": "KL-TO-10",
         "specification": {
           "volume": "10ml",
@@ -2546,7 +2635,7 @@ export const products = [
     ]
   },
   {
-    "id": 76,
+    "id": 71,
     "name": "Dermopure Clinical Purifying Toner",
     "nameVn": "Toner Eucerin Dành Cho Da Nhờn Mụn",
     "brandId": "brand-eucerin",
@@ -2557,7 +2646,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 93,
+        "id": 97,
         "sku": "EC-TO-200",
         "specification": {
           "volume": "200ml",
@@ -2575,7 +2664,7 @@ export const products = [
         ]
       },
       {
-        "id": 94,
+        "id": 98,
         "sku": "EC-TO-100",
         "specification": {
           "volume": "100ml",
@@ -2595,7 +2684,7 @@ export const products = [
     ]
   },
   {
-    "id": 77,
+    "id": 72,
     "name": "DermatoCLEAN Hyaluron Toner",
     "nameVn": "Toner Eucerin Dưỡng Ẩm Cho Da Nhạy Cảm",
     "brandId": "brand-eucerin",
@@ -2606,7 +2695,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 95,
+        "id": 99,
         "sku": "EC-TO-DA-200",
         "specification": {
           "volume": "200ml",
@@ -2626,7 +2715,7 @@ export const products = [
     ]
   },
   {
-    "id": 78,
+    "id": 73,
     "name": "Boosting Essence",
     "nameVn": "Nước Dưỡng Eucerin Làm Sáng Và Cấp Ẩm Cho Da",
     "brandId": "brand-eucerin",
@@ -2637,7 +2726,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 97,
+        "id": 100,
         "sku": "EC-TO-CA-30",
         "specification": {
           "volume": "30ml",
@@ -2655,7 +2744,7 @@ export const products = [
         ]
       },
       {
-        "id": 98,
+        "id": 101,
         "sku": "EC-TO-CA-100",
         "specification": {
           "volume": "100ml",
@@ -2675,7 +2764,7 @@ export const products = [
     ]
   },
   {
-    "id": 79,
+    "id": 74,
     "name": "First Spray Serum",
     "nameVn": "Serum d'Alba Dạng Xịt Nấm Truffle Trắng Căng Bóng Da",
     "brandId": "brand-dAlba",
@@ -2686,7 +2775,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 136,
+        "id": 102,
         "sku": "DA-SR-TF-100",
         "specification": {
           "volume": "100ml",
@@ -2706,7 +2795,7 @@ export const products = [
     ]
   },
   {
-    "id": 80,
+    "id": 75,
     "name": "Vital Spray Serum",
     "nameVn": "Serum d'Alba Dạng Xịt 8 Loại Dầu Hoa Đỏ Cấp Ẩm Dịu Da",
     "brandId": "brand-dAlba",
@@ -2717,7 +2806,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 137,
+        "id": 103,
         "sku": "DA-SR-8L-100",
         "specification": {
           "volume": "100ml",
@@ -2737,7 +2826,7 @@ export const products = [
     ]
   },
   {
-    "id": 81,
+    "id": 76,
     "name": "Vita Toning Capsule Serum",
     "nameVn": "Serum d'Alba Viên Nang Dưỡng Sáng Da ",
     "brandId": "brand-dAlba",
@@ -2748,7 +2837,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 138,
+        "id": 104,
         "sku": "DA-SR-VN-50",
         "specification": {
           "volume": "50ml",
@@ -2768,7 +2857,7 @@ export const products = [
     ]
   },
   {
-    "id": 82,
+    "id": 77,
     "name": "Refresh Aqua Serum",
     "nameVn": "Serum d'Alba Dạng Xịt Cấp Ẩm, Làm Mát Da",
     "brandId": "brand-dAlba",
@@ -2779,7 +2868,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 139,
+        "id": 105,
         "sku": "DA-SR-CA-100",
         "specification": {
           "volume": "100ml",
@@ -2799,7 +2888,7 @@ export const products = [
     ]
   },
   {
-    "id": 83,
+    "id": 78,
     "name": "",
     "nameVn": "Kem Chống Nắng La Roche-Posay Phổ Rộng, Nâng Tông Kiềm Dầu ",
     "brandId": "brand-larocheposay",
@@ -2810,7 +2899,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 148,
+        "id": 106,
         "sku": "LRP-CN-50",
         "specification": {
           "volume": "50ml",
@@ -2830,7 +2919,7 @@ export const products = [
     ]
   },
   {
-    "id": 85,
+    "id": 79,
     "name": "",
     "nameVn": "Sữa Chống Nắng L’Oreal Bảo Vệ Phổ Rộng Sáng Da Mờ Thâm",
     "brandId": "brand-loreal",
@@ -2841,7 +2930,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 157,
+        "id": 107,
         "sku": "LR-CN-50",
         "specification": {
           "volume": "50ml",
@@ -2861,7 +2950,7 @@ export const products = [
     ]
   },
   {
-    "id": 86,
+    "id": 80,
     "name": "",
     "nameVn": "Gel Chống Nắng L'Oreal Watergel Thế Hệ Mới",
     "brandId": "brand-loreal",
@@ -2872,7 +2961,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 158,
+        "id": 108,
         "sku": "LR-CN-50",
         "specification": {
           "volume": "50ml",
@@ -2892,7 +2981,7 @@ export const products = [
     ]
   },
   {
-    "id": 87,
+    "id": 81,
     "name": "La Roche-Posay Serum for Skin Repair, Hydration & Regeneration",
     "nameVn": "Serum La Roche-Posay Phục Hồi, Cấp Ẩm & Tái Tạo Da",
     "brandId": "brand-larocheposay",
@@ -2903,7 +2992,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 50,
+        "id": 109,
         "sku": "LRP-SR-10",
         "specification": {
           "volume": "10ml",
@@ -2923,7 +3012,7 @@ export const products = [
     ]
   },
   {
-    "id": 88,
+    "id": 82,
     "name": "",
     "nameVn": "Sữa Chống Nắng Anessa Cho Da Nhạy Cảm & Trẻ Em ",
     "brandId": "brand-anessa",
@@ -2934,7 +3023,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 160,
+        "id": 110,
         "sku": "AE-CN-60",
         "specification": {
           "volume": "60ml",
@@ -2954,7 +3043,7 @@ export const products = [
     ]
   },
   {
-    "id": 89,
+    "id": 83,
     "name": "La Roche-Posay Serum Helps Regenerate & Restore Skin",
     "nameVn": "Serum La Roche-Posay Giúp Tái Tạo & Phục Hồi Da ",
     "brandId": "brand-larocheposay",
@@ -2965,7 +3054,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 42,
+        "id": 111,
         "sku": "LRP-SR-30",
         "specification": {
           "volume": "30ml",
@@ -2985,7 +3074,7 @@ export const products = [
     ]
   },
   {
-    "id": 90,
+    "id": 84,
     "name": "",
     "nameVn": "Serum Chống Nắng Anessa Dưỡng Da Nâng Tông ",
     "brandId": "brand-anessa",
@@ -2996,7 +3085,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 99,
+        "id": 112,
         "sku": "AE-CN-30",
         "specification": {
           "volume": "30ml",
@@ -3016,7 +3105,7 @@ export const products = [
     ]
   },
   {
-    "id": 91,
+    "id": 85,
     "name": "",
     "nameVn": "Xịt Chống Nắng Anessa Dưỡng Da Đa Năng",
     "brandId": "brand-anessa",
@@ -3027,7 +3116,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 100,
+        "id": 113,
         "sku": "AE-CN-60",
         "specification": {
           "volume": "60g",
@@ -3047,7 +3136,7 @@ export const products = [
     ]
   },
   {
-    "id": 92,
+    "id": 86,
     "name": "",
     "nameVn": "Gel Chống Nắng Anessa Cho Da Nhạy Cảm & Trẻ Em ",
     "brandId": "brand-anessa",
@@ -3058,7 +3147,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 101,
+        "id": 114,
         "sku": "AE-CN-90",
         "specification": {
           "volume": "90g",
@@ -3078,7 +3167,7 @@ export const products = [
     ]
   },
   {
-    "id": 93,
+    "id": 87,
     "name": "",
     "nameVn": "Mặt Nạ BNBG Vitamin E Dưỡng Ẩm Da",
     "brandId": "brand-bnbg",
@@ -3089,7 +3178,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 103,
+        "id": 115,
         "sku": "BB-VE-MN-30",
         "specification": {
           "volume": "30ml",
@@ -3109,7 +3198,7 @@ export const products = [
     ]
   },
   {
-    "id": 94,
+    "id": 88,
     "name": "",
     "nameVn": "Mặt Nạ BNBG Vitamin B Phục Hồi Da",
     "brandId": "brand-bnbg",
@@ -3120,7 +3209,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 104,
+        "id": 116,
         "sku": "BB-VB-MN-30",
         "specification": {
           "volume": "30ml",
@@ -3140,7 +3229,7 @@ export const products = [
     ]
   },
   {
-    "id": 95,
+    "id": 89,
     "name": "",
     "nameVn": "Mặt Nạ Naruko Bạch Ngọc Lan Dưỡng Sáng, Săn Chắc Da",
     "brandId": "brand-naruko",
@@ -3151,7 +3240,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 131,
+        "id": 117,
         "sku": "NR-BN-MN-26",
         "specification": {
           "volume": "26ml",
@@ -3171,7 +3260,7 @@ export const products = [
     ]
   },
   {
-    "id": 96,
+    "id": 90,
     "name": "",
     "nameVn": "Mặt Nạ Naruko Hoa Hồng Nhung Cấp Nước Cho Da",
     "brandId": "brand-naruko",
@@ -3182,7 +3271,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 122,
+        "id": 118,
         "sku": "NR-HH-MN-26",
         "specification": {
           "volume": "26ml",
@@ -3202,7 +3291,7 @@ export const products = [
     ]
   },
   {
-    "id": 97,
+    "id": 91,
     "name": "",
     "nameVn": "Mặt Nạ BNBG Placenta Truyền Năng Lượng, Phục Hồi Da",
     "brandId": "brand-bnbg",
@@ -3214,7 +3303,7 @@ export const products = [
     "variants": []
   },
   {
-    "id": 98,
+    "id": 92,
     "name": "",
     "nameVn": "Mặt Nạ BNBG Exosome Nâng Cơ, Trẻ Hoá Da",
     "brandId": "brand-bnbg",
@@ -3225,7 +3314,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 115,
+        "id": 119,
         "sku": "BB-EX-MN-30",
         "specification": {
           "volume": "30ml",
@@ -3245,7 +3334,7 @@ export const products = [
     ]
   },
   {
-    "id": 100,
+    "id": 93,
     "name": "",
     "nameVn": "Mặt Nạ BNBG Vita Complex Dưỡng Sáng, Mờ Thâm Nám",
     "brandId": "brand-bnbg",
@@ -3256,7 +3345,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 116,
+        "id": 120,
         "sku": "BB-VT-MN-30",
         "specification": {
           "volume": "30ml",
@@ -3276,7 +3365,7 @@ export const products = [
     ]
   },
   {
-    "id": 101,
+    "id": 94,
     "name": "",
     "nameVn": "Mặt Nạ Caryophy Làm Giảm Mụn, Thâm & Dưỡng Ẩm Da",
     "brandId": "brand-caryophy",
@@ -3307,7 +3396,7 @@ export const products = [
     ]
   },
   {
-    "id": 102,
+    "id": 95,
     "name": "",
     "nameVn": "Mặt Nạ Sur.Medic+ Tinh Chất Glutathione Làm Sáng Da ",
     "brandId": "brand-surmedic",
@@ -3318,7 +3407,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 129,
+        "id": 122,
         "sku": "SM-GL-MN-30",
         "specification": {
           "volume": "30G",
@@ -3338,7 +3427,7 @@ export const products = [
     ]
   },
   {
-    "id": 103,
+    "id": 96,
     "name": "",
     "nameVn": "Mặt Nạ Sur.Medic+ Phục Hồi & Làm Dịu Da Cấp Tốc",
     "brandId": "brand-surmedic",
@@ -3349,7 +3438,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 127,
+        "id": 123,
         "sku": "SM-PH-MN-28",
         "specification": {
           "volume": "28G",
@@ -3369,7 +3458,7 @@ export const products = [
     ]
   },
   {
-    "id": 104,
+    "id": 97,
     "name": "",
     "nameVn": "Mặt Nạ Sur.Medic+ Cung Cấp Multi Vitamin",
     "brandId": "brand-surmedic",
@@ -3380,7 +3469,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 126,
+        "id": 124,
         "sku": "SM-CC-MN-30",
         "specification": {
           "volume": "30G",
@@ -3400,7 +3489,7 @@ export const products = [
     ]
   },
   {
-    "id": 105,
+    "id": 98,
     "name": "",
     "nameVn": "Tẩy Da Chết Mặt Cocoon Cà Phê Đắk Lắk ",
     "brandId": "brand-cocoon",
@@ -3411,7 +3500,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 120,
+        "id": 125,
         "sku": "CC-TC-150",
         "specification": {
           "volume": "150ml",
@@ -3431,7 +3520,7 @@ export const products = [
     ]
   },
   {
-    "id": 106,
+    "id": 99,
     "name": "",
     "nameVn": "Gel Tẩy Tế Bào Chết innisfree Từ Lúa Mạch Xanh",
     "brandId": "brand-innisfree",
@@ -3442,7 +3531,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 124,
+        "id": 126,
         "sku": "IF-G-TC-120",
         "specification": {
           "volume": "120ml",
@@ -3462,7 +3551,7 @@ export const products = [
     ]
   },
   {
-    "id": 107,
+    "id": 100,
     "name": "",
     "nameVn": "Dung Dịch Tẩy Da Chết Paula’s Choice 2% BHA ",
     "brandId": "brand-paulachoice",
@@ -3473,7 +3562,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 132,
+        "id": 127,
         "sku": "PL-2-TC-118",
         "specification": {
           "volume": "118ml",
@@ -3491,7 +3580,7 @@ export const products = [
         ]
       },
       {
-        "id": 133,
+        "id": 128,
         "sku": "PL-2-TC-30",
         "specification": {
           "volume": "30ml",
@@ -3511,7 +3600,7 @@ export const products = [
     ]
   },
   {
-    "id": 67,
+    "id": 101,
     "name": "",
     "nameVn": "Túi Refill Gel Rửa Mặt La Roche-Posay Cho Da Dầu, Nhạy Cảm",
     "brandId": "brand-larocheposay",
@@ -3522,7 +3611,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 44,
+        "id": 129,
         "sku": "LRP-RM-RF-400",
         "specification": {
           "volume": "400ml",
@@ -3542,7 +3631,7 @@ export const products = [
     ]
   },
   {
-    "id": 84,
+    "id": 102,
     "name": "Vichy Serum Improves & Prevents Dark Spots and Brown Spots",
     "nameVn": "Serum Vichy Cải Thiện & Ngăn Ngừa Thâm Nám Đốm Nâu",
     "brandId": "brand-vichy",
@@ -3553,7 +3642,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 56,
+        "id": 130,
         "sku": "VC-SR-30",
         "specification": {
           "volume": "30ml",
@@ -3578,7 +3667,7 @@ export const products = [
     ]
   },
   {
-    "id": 99,
+    "id": 103,
     "name": "",
     "nameVn": "Mặt Nạ BNBG Placenta Truyền Năng Lượng, Phục Hồi Da",
     "brandId": "brand-bnbg",
@@ -3589,7 +3678,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 113,
+        "id": 131,
         "sku": "BB-PC-MN-30",
         "specification": {
           "volume": "30ml",
@@ -3609,7 +3698,7 @@ export const products = [
     ]
   },
   {
-    "id": 63,
+    "id": 104,
     "name": "Blemish Control Cleanser",
     "nameVn": "",
     "brandId": "brand-cerave",
@@ -3621,7 +3710,7 @@ export const products = [
     "variants": []
   },
   {
-    "id": 148,
+    "id": 105,
     "name": "",
     "nameVn": "Nước Tẩy Trang Garnier Cho Da Dầu, Mụn 125ml (Mẫu Cũ)",
     "brandId": "brand-garnier",
@@ -3632,7 +3721,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 171,
+        "id": 132,
         "sku": "GN-TT-125-C",
         "specification": {
           "volume": "125ml",
@@ -3652,7 +3741,7 @@ export const products = [
     ]
   },
   {
-    "id": 108,
+    "id": 106,
     "name": "Sữa Rửa Mặt CeraVe Cho Da Thường Đến Khô",
     "nameVn": "Sữa Rửa Mặt CeraVe Cho Da Thường Đến Khô",
     "brandId": "brand-cerave",
@@ -3663,7 +3752,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 79,
+        "id": 133,
         "sku": "CV-RM-473",
         "specification": {
           "volume": "473ml",
@@ -3686,7 +3775,7 @@ export const products = [
         ]
       },
       {
-        "id": 80,
+        "id": 134,
         "sku": "CV-RM-236",
         "specification": {
           "volume": "236ml",
@@ -3704,7 +3793,7 @@ export const products = [
         ]
       },
       {
-        "id": 85,
+        "id": 135,
         "sku": "CV-RM-88",
         "specification": {
           "volume": "88ml",
@@ -3724,7 +3813,7 @@ export const products = [
     ]
   },
   {
-    "id": 109,
+    "id": 107,
     "name": "Rose Bi-Phase Micellar Water",
     "nameVn": "Nước Tẩy Trang Cocoon Hoa Hồng Cấp Ẩm Da",
     "brandId": "brand-cocoon",
@@ -3735,7 +3824,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 19,
+        "id": 136,
         "sku": "CC-TT-HH-140",
         "specification": {
           "volume": "140ml",
@@ -3753,7 +3842,7 @@ export const products = [
         ]
       },
       {
-        "id": 20,
+        "id": 137,
         "sku": "CC-TT-HH-310",
         "specification": {
           "volume": "310ml",
@@ -3773,7 +3862,7 @@ export const products = [
     ]
   },
   {
-    "id": 110,
+    "id": 108,
     "name": "Revitalift Crystal Purifying Micellar Water",
     "nameVn": "Nước Tẩy Trang L'Oreal Làm Sạch Sâu Cho Da Dầu",
     "brandId": "brand-loreal",
@@ -3784,7 +3873,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 21,
+        "id": 138,
         "sku": "LR-TT-400",
         "specification": {
           "volume": "400ml",
@@ -3802,7 +3891,7 @@ export const products = [
         ]
       },
       {
-        "id": 22,
+        "id": 139,
         "sku": "LR-TT-95",
         "specification": {
           "volume": "95ml",
@@ -3822,7 +3911,7 @@ export const products = [
     ]
   },
   {
-    "id": 116,
+    "id": 109,
     "name": "Revitalift Hyaluronic Acid Hydrating Micellar Water",
     "nameVn": "Nước Tẩy Trang L'Oreal Căng Mịn Da",
     "brandId": "brand-loreal",
@@ -3833,7 +3922,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 32,
+        "id": 140,
         "sku": "LR-TT-95",
         "specification": {
           "volume": "95ml",
@@ -3851,7 +3940,7 @@ export const products = [
         ]
       },
       {
-        "id": 31,
+        "id": 141,
         "sku": "LR-TT-400",
         "specification": {
           "volume": "400ml",
@@ -3871,7 +3960,7 @@ export const products = [
     ]
   },
   {
-    "id": 117,
+    "id": 110,
     "name": "Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô",
     "nameVn": "Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô",
     "brandId": "brand-cerave",
@@ -3882,7 +3971,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 86,
+        "id": 142,
         "sku": "CV-RM-236",
         "specification": {
           "volume": "236ml",
@@ -3900,7 +3989,7 @@ export const products = [
         ]
       },
       {
-        "id": 87,
+        "id": 143,
         "sku": "CV-RM-100",
         "specification": {
           "volume": "100ml",
@@ -3920,7 +4009,7 @@ export const products = [
     ]
   },
   {
-    "id": 118,
+    "id": 111,
     "name": "Gel Rửa Mặt Hada Labo Dưỡng Ẩm Cho Da Nhạy Cảm",
     "nameVn": "Gel Rửa Mặt Hada Labo Dưỡng Ẩm Cho Da Nhạy Cảm",
     "brandId": "brand-hadalabo",
@@ -3931,7 +4020,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 73,
+        "id": 144,
         "sku": "HL-RM-80",
         "specification": {
           "volume": "80g",
@@ -3951,7 +4040,7 @@ export const products = [
     ]
   },
   {
-    "id": 119,
+    "id": 112,
     "name": "Sữa Rửa Mặt Vichy Từ Đất Sét Và Đá Khoáng Núi Lửa",
     "nameVn": "Sữa Rửa Mặt Vichy Từ Đất Sét Và Đá Khoáng Núi Lửa",
     "brandId": "brand-vichy",
@@ -3962,7 +4051,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 76,
+        "id": 145,
         "sku": "VC-RM-125",
         "specification": {
           "volume": "125ml",
@@ -3982,7 +4071,7 @@ export const products = [
     ]
   },
   {
-    "id": 120,
+    "id": 113,
     "name": "Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô",
     "nameVn": "Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô",
     "brandId": "brand-cerave",
@@ -3994,7 +4083,7 @@ export const products = [
     "variants": []
   },
   {
-    "id": 121,
+    "id": 114,
     "name": "Sữa Rửa Mặt CeraVe Sạch Sâu Cho Da Thường Đến Da Dầu",
     "nameVn": "Sữa Rửa Mặt CeraVe Sạch Sâu Cho Da Thường Đến Da Dầu",
     "brandId": "brand-cerave",
@@ -4006,7 +4095,7 @@ export const products = [
     "variants": []
   },
   {
-    "id": 122,
+    "id": 115,
     "name": "Gel Rửa Mặt La Roche-Posay Dành Cho Da Dầu, Nhạy Cảm",
     "nameVn": "Gel Rửa Mặt La Roche-Posay Dành Cho Da Dầu, Nhạy Cảm",
     "brandId": "brand-larocheposay",
@@ -4018,7 +4107,7 @@ export const products = [
     "variants": []
   },
   {
-    "id": 124,
+    "id": 116,
     "name": "Kem Rửa Mặt Hada Labo Sạch Sâu Dưỡng Ẩm",
     "nameVn": "Kem Rửa Mặt Hada Labo Sạch Sâu Dưỡng Ẩm",
     "brandId": "brand-hadalabo",
@@ -4029,7 +4118,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 67,
+        "id": 146,
         "sku": "HL-RM-80",
         "specification": {
           "volume": "80g",
@@ -4049,7 +4138,7 @@ export const products = [
     ]
   },
   {
-    "id": 125,
+    "id": 117,
     "name": "Kem Rửa Mặt Hada Labo Sạch Sâu, Dưỡng Sáng Da",
     "nameVn": "Kem Rửa Mặt Hada Labo Sạch Sâu, Dưỡng Sáng Da",
     "brandId": "brand-hadalabo",
@@ -4060,7 +4149,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 68,
+        "id": 147,
         "sku": "HL-RM-SD-80",
         "specification": {
           "volume": "80g",
@@ -4080,7 +4169,7 @@ export const products = [
     ]
   },
   {
-    "id": 126,
+    "id": 118,
     "name": "Kem Rửa Mặt Hada Labo Dưỡng Chuyên Biệt Ngừa Lão Hóa",
     "nameVn": "Kem Rửa Mặt Hada Labo Dưỡng Chuyên Biệt Ngừa Lão Hóa",
     "brandId": "brand-hadalabo",
@@ -4091,7 +4180,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 69,
+        "id": 148,
         "sku": "HL-RM-LAO-80",
         "specification": {
           "volume": "80ml",
@@ -4111,7 +4200,7 @@ export const products = [
     ]
   },
   {
-    "id": 127,
+    "id": 119,
     "name": "Sữa Rửa Mặt Hada Labo Chăm Sóc Da Lão Hóa Cao Cấp",
     "nameVn": "Sữa Rửa Mặt Hada Labo Chăm Sóc Da Lão Hóa Cao Cấp",
     "brandId": "brand-hadalabo",
@@ -4122,7 +4211,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 70,
+        "id": 149,
         "sku": "HL-RM-100",
         "specification": {
           "volume": "100g",
@@ -4142,7 +4231,7 @@ export const products = [
     ]
   },
   {
-    "id": 128,
+    "id": 120,
     "name": "Sữa Rửa Mặt Hada Labo Dưỡng Ẩm Cao Cấp",
     "nameVn": "Sữa Rửa Mặt Hada Labo Dưỡng Ẩm Cao Cấp",
     "brandId": "brand-hadalabo",
@@ -4153,7 +4242,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 72,
+        "id": 150,
         "sku": "HL-RM-100",
         "specification": {
           "volume": "100ml",
@@ -4173,7 +4262,7 @@ export const products = [
     ]
   },
   {
-    "id": 130,
+    "id": 121,
     "name": "Sữa Rửa Mặt CeraVe Sạch Sâu Cho Da Thường Đến Da Dầu",
     "nameVn": "Sữa Rửa Mặt CeraVe Sạch Sâu Cho Da Thường Đến Da Dầu",
     "brandId": "brand-cerave",
@@ -4185,7 +4274,7 @@ export const products = [
     "variants": []
   },
   {
-    "id": 132,
+    "id": 122,
     "name": "Sữa Rửa Mặt CeraVe Cho Da Thường Đến Khô",
     "nameVn": "Sữa Rửa Mặt CeraVe Cho Da Thường Đến Khô",
     "brandId": "brand-cerave",
@@ -4197,7 +4286,7 @@ export const products = [
     "variants": []
   },
   {
-    "id": 135,
+    "id": 123,
     "name": "Micellar Water Ultra Sensitive Skin",
     "nameVn": "Nước Tẩy Trang La Roche-Posay Cho Da Dầu, Nhạy Cảm",
     "brandId": "brand-larocheposay",
@@ -4208,7 +4297,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 41,
+        "id": 151,
         "sku": "LRP-TT-50",
         "specification": {
           "volume": "50ml",
@@ -4226,7 +4315,7 @@ export const products = [
         ]
       },
       {
-        "id": 36,
+        "id": 152,
         "sku": "LRP-TT-200",
         "specification": {
           "volume": "200ml",
@@ -4244,7 +4333,7 @@ export const products = [
         ]
       },
       {
-        "id": 33,
+        "id": 153,
         "sku": "LRP-TT-400",
         "specification": {
           "volume": "400ml",
@@ -4264,7 +4353,7 @@ export const products = [
     ]
   },
   {
-    "id": 133,
+    "id": 124,
     "name": "",
     "nameVn": "",
     "brandId": "brand-cerave",
@@ -4276,7 +4365,7 @@ export const products = [
     "variants": []
   },
   {
-    "id": 131,
+    "id": 125,
     "name": "",
     "nameVn": "",
     "brandId": "brand-cerave",
@@ -4288,7 +4377,7 @@ export const products = [
     "variants": []
   },
   {
-    "id": 111,
+    "id": 126,
     "name": "Micellar Cleansing Water For Oily & Acne-Prone Skin New",
     "nameVn": "Nước Tẩy Trang Garnier Dành Cho Da Dầu Và Mụn ",
     "brandId": "brand-garnier",
@@ -4299,7 +4388,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 23,
+        "id": 154,
         "sku": "GN-TT-125",
         "specification": {
           "volume": "125ml",
@@ -4317,7 +4406,7 @@ export const products = [
         ]
       },
       {
-        "id": 24,
+        "id": 155,
         "sku": "GN-TT-400",
         "specification": {
           "volume": "400ml",
@@ -4337,7 +4426,7 @@ export const products = [
     ]
   },
   {
-    "id": 112,
+    "id": 127,
     "name": "Micellar Oil Infused Cleansing Water",
     "nameVn": "Nước Tẩy Trang Garnier Làm Sạch Sâu Lớp Trang Điểm",
     "brandId": "brand-garnier",
@@ -4348,7 +4437,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 25,
+        "id": 156,
         "sku": "GN-TT-SS-125",
         "specification": {
           "volume": "125ml",
@@ -4366,7 +4455,7 @@ export const products = [
         ]
       },
       {
-        "id": 26,
+        "id": 157,
         "sku": "GN-TT-SS-400",
         "specification": {
           "volume": "400ml",
@@ -4386,7 +4475,7 @@ export const products = [
     ]
   },
   {
-    "id": 136,
+    "id": 128,
     "name": "Micellar Oil Infused Cleansing Water",
     "nameVn": "Nước Tẩy Trang Garnier Làm Sạch Sâu Lớp Trang Điểm (Mẫu Cũ)",
     "brandId": "brand-garnier",
@@ -4397,7 +4486,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 34,
+        "id": 158,
         "sku": "GN-TT-MC-125",
         "specification": {
           "volume": "125ml",
@@ -4417,7 +4506,7 @@ export const products = [
     ]
   },
   {
-    "id": 134,
+    "id": 129,
     "name": "Sữa Rửa Mặt Cerave Cho Da Dầu Mụn",
     "nameVn": "",
     "brandId": "brand-cerave",
@@ -4429,7 +4518,7 @@ export const products = [
     "variants": []
   },
   {
-    "id": 139,
+    "id": 130,
     "name": "",
     "nameVn": "Mặt Nạ BNBG Vita Complex Dưỡng Sáng, Mờ Thâm Nám (Mới)",
     "brandId": "brand-bnbg",
@@ -4441,7 +4530,7 @@ export const products = [
     "variants": []
   },
   {
-    "id": 140,
+    "id": 131,
     "name": "",
     "nameVn": "Serum Vichy Làm Dịu Da Và Giảm Mụn",
     "brandId": "brand-vichy",
@@ -4452,7 +4541,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 96,
+        "id": 159,
         "sku": "VC-SR-30",
         "specification": {
           "volume": "30ml",
@@ -4472,7 +4561,7 @@ export const products = [
     ]
   },
   {
-    "id": 141,
+    "id": 132,
     "name": "",
     "nameVn": "Mặt Nạ BNBG Vita Complex Dưỡng Sáng Da, Mờ Thâm Nám(Mới)",
     "brandId": "brand-bnbg",
@@ -4483,7 +4572,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 114,
+        "id": 160,
         "sku": "BB-VT-MN-30",
         "specification": {
           "volume": "30ml",
@@ -4503,7 +4592,7 @@ export const products = [
     ]
   },
   {
-    "id": 142,
+    "id": 133,
     "name": "",
     "nameVn": "Tẩy Da Chết Paula’s Choice 5% AHA Cho Da Thường Khô",
     "brandId": "brand-paulachoice",
@@ -4514,7 +4603,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 134,
+        "id": 161,
         "sku": "PL-5-TC-50",
         "specification": {
           "volume": "50ml",
@@ -4534,7 +4623,7 @@ export const products = [
     ]
   },
   {
-    "id": 143,
+    "id": 134,
     "name": "",
     "nameVn": "Serum La Roche-Posay Giúp Giảm Thâm Nám, Làm Đều Màu Da",
     "brandId": "brand-larocheposay",
@@ -4545,7 +4634,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 164,
+        "id": 162,
         "sku": "LRP-SR-30",
         "specification": {
           "volume": "30ml",
@@ -4565,7 +4654,7 @@ export const products = [
     ]
   },
   {
-    "id": 144,
+    "id": 135,
     "name": "",
     "nameVn": "Serum La Roche-Posay Giúp Phục Hồi, Bảo Vệ & Cấp Ẩm Da",
     "brandId": "brand-larocheposay",
@@ -4576,7 +4665,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 166,
+        "id": 163,
         "sku": "LRP-SR-30",
         "specification": {
           "volume": "30ml",
@@ -4596,7 +4685,7 @@ export const products = [
     ]
   },
   {
-    "id": 145,
+    "id": 136,
     "name": "",
     "nameVn": "Nước Hoa Hồng Klairs Dành Cho Da Nhạy Cảm",
     "brandId": "brand-klairs",
@@ -4607,7 +4696,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 169,
+        "id": 164,
         "sku": "KL-TO-180",
         "specification": {
           "volume": "180ml",
@@ -4627,7 +4716,7 @@ export const products = [
     ]
   },
   {
-    "id": 146,
+    "id": 137,
     "name": "",
     "nameVn": "Kem Rửa Mặt Hada Labo Cho Da Mụn Và Nhạy Cảm",
     "brandId": "brand-hadalabo",
@@ -4638,7 +4727,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 170,
+        "id": 165,
         "sku": "HL-RM-80",
         "specification": {
           "volume": "80g",
@@ -4658,7 +4747,7 @@ export const products = [
     ]
   },
   {
-    "id": 149,
+    "id": 138,
     "name": "",
     "nameVn": "Kem Chống Nắng Eucerin Kiềm Dầu & Ngừa Mụn",
     "brandId": "brand-eucerin",
@@ -4669,7 +4758,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 172,
+        "id": 166,
         "sku": "EC-CN-KD-50",
         "specification": {
           "volume": "50ml",
@@ -4689,7 +4778,7 @@ export const products = [
     ]
   },
   {
-    "id": 123,
+    "id": 139,
     "name": "Túi Refill Gel Rửa Mặt La Roche-Posay Cho Da Dầu, Nhạy Cảm",
     "nameVn": "",
     "brandId": "brand-larocheposay",
@@ -4701,7 +4790,7 @@ export const products = [
     "variants": []
   },
   {
-    "id": 113,
+    "id": 140,
     "name": "Micellar Cleansing Water For Sensitive Skin",
     "nameVn": "Nước Tẩy Trang Garnier Dành Cho Da Nhạy Cảm",
     "brandId": "brand-garnier",
@@ -4712,7 +4801,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 27,
+        "id": 167,
         "sku": "GN-TT-NC-125",
         "specification": {
           "volume": "125ml",
@@ -4730,7 +4819,7 @@ export const products = [
         ]
       },
       {
-        "id": 28,
+        "id": 168,
         "sku": "GN-TT-NC-400",
         "specification": {
           "volume": "400ml",
@@ -4750,7 +4839,7 @@ export const products = [
     ]
   },
   {
-    "id": 114,
+    "id": 141,
     "name": "Micellar Cleansing Water Vitamin C",
     "nameVn": "Nước Tẩy Trang Garnier Vitamin C Làm Sáng Da",
     "brandId": "brand-garnier",
@@ -4761,7 +4850,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 29,
+        "id": 169,
         "sku": "GN-TT-VTMC-400",
         "specification": {
           "volume": "400ml",
@@ -4781,7 +4870,7 @@ export const products = [
     ]
   },
   {
-    "id": 115,
+    "id": 142,
     "name": "Micellar Exfoliating Water 1% PHA+AHA",
     "nameVn": "Nước Tẩy Trang Garnier Làm Sạch Tế Bào Da Chết",
     "brandId": "brand-garnier",
@@ -4792,7 +4881,7 @@ export const products = [
     "isActive": true,
     "variants": [
       {
-        "id": 30,
+        "id": 170,
         "sku": "GN-TT-400",
         "specification": {
           "volume": "400ml",

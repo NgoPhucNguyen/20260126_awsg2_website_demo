@@ -1,0 +1,43 @@
+/* src/components/Breadcrumb/Breadcrumb.css */
+
+.breadcrumb-nav {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.breadcrumb-list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* Allows wrapping on small mobile screens */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.breadcrumb-item {
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb-link {
+    color: #57534e; /* Text Secondary */
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+.breadcrumb-link:hover {
+    color: #9A7B4F; /* Your elegant gold */
+}
+
+.breadcrumb-separator {
+    color: #a8a29e;
+    margin: 0 8px;
+    font-size: 1rem;
+    display: flex;
+}
+
+.breadcrumb-current {
+    color: #1c1917; /* Text Primary (Dark Charcoal) */
+    font-weight: 600;
+}

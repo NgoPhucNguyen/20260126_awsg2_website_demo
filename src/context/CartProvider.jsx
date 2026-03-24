@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useContext, useEffect, useMemo } from "react";
 import { useToast } from  './ToastProvider';
 import axios from "@/api/axios";
 import { useAuth } from "@/features/auth/AuthProvider";
@@ -17,7 +17,8 @@ export const CartProvider = ({ children }) => {
         const savedCart = localStorage.getItem("shopping-cart");
         return savedCart ? JSON.parse(savedCart) : [];
     });
-
+    
+    
     // 3. Save to LocalStorage (Runs every time cartItems changes)
     
     // 🌟 NEW: Sync Function to Merge Local Cart with Database Cart
@@ -53,51 +54,66 @@ export const CartProvider = ({ children }) => {
     }, [cartItems]);
     
     // addToCart Function (Now with Database Sync)
-    // 🌟 2. ADD THE DATABASE ENGINE TO ADD TO CART
-    const addToCart = async (product) => { // 👈 MUST BE ASYNC NOW!
-        if (isAdding) return; // 🔒 ANTI-SPAM LOCK: Stop if already processing
-        
-        setIsAdding(true); // Spinner starts immediately on click
+    // 🌟 2. ADD THE DATABASE ENGINE TO ADD TO CART (Đã fix lỗi undefined)
+    const addToCart = async (product, quantityToAdd = 1) => {
+        if (isAdding) return; // Khóa chống spam click
+        setIsAdding(true);
 
-        // ⏱️ THE 0.3s DELAY (Great for UI feedback and throttling)
-        await new Promise(resolve => setTimeout(resolve, 300));
-        // ⚡ OPTIMISTIC UI: Instantly update React
-
-        setCartItems((prevItems) => {
-            const existingItemIndex = prevItems.findIndex((item) => 
-                item.id === product.id && item.variantId === product.variantId
-            );
-
-            if (existingItemIndex > -1) {
-                return prevItems.map((item, index) => 
-                    index === existingItemIndex
-                        ? { ...item, quantity: Math.min(5, item.quantity + 1) } // Limit to 5 here too!
-                        : item
-                );
-            } else {
-                return [...prevItems, { ...product, quantity: 1 }];
-            }
-        });
-        
-        showToast(`Thêm ${product.nameVn || product.name} vào giỏ hàng!`); 
-
-        // 🗄️ DATABASE SYNC: Quietly update DB in background
         const token = currentToken;
+        let addSuccess = false; // Cờ kiểm soát
+
         if (token) {
             try {
-                // Make sure your backend has the addCartItem controller we wrote earlier!
+                // 🗄️ BƯỚC 1: HỎI Ý KIẾN BACKEND TRƯỚC
                 await axios.post("/api/cart/add", {
                     variantId: product.variantId,
-                    quantity: 1, 
+                    quantity: quantityToAdd, 
                     price: product.price
                 }, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
+                
+                // Backend trả về 200 OK (Kho đủ hàng)
+                addSuccess = true;
+
             } catch (error) {
-                console.error("Failed to add item to database", error);
+                // 🚨 BACKEND TỪ CHỐI (Lỗi hết hàng)
+                console.error("Lỗi khi thêm vào giỏ DB:", error);
+                const errorMsg = error.response?.data?.message || "Lỗi mạng. Vui lòng thử lại.";
+                alert(errorMsg); 
             }
+        } else {
+            // Cho phép khách vãng lai thêm vào LocalStorage
+            addSuccess = true; 
         }
-        setIsAdding(false); // 🔓 UNLOCK: Allow next add after this one finishes
+
+        // 💻 BƯỚC 2: CHỈ CẬP NHẬT GIAO DIỆN (UI) KHI BACKEND ĐỒNG Ý
+        if (addSuccess) {
+            setCartItems((prevItems) => {
+                const existingItemIndex = prevItems.findIndex((item) => 
+                    item.id === product.id && item.variantId === product.variantId
+                );
+
+                if (existingItemIndex > -1) {
+                    return prevItems.map((item, index) => 
+                        index === existingItemIndex
+                            ? { ...item, quantity: Math.min(5, item.quantity + quantityToAdd) } 
+                            : item
+                    );
+                } else {
+                    // Trải phẳng object product cũ của bạn và ghi đè quantity
+                    return [...prevItems, { 
+                        ...product,
+                        quantity: quantityToAdd 
+                    }];
+                }
+            });
+            
+            // Hiện Toast Báo xanh
+            showToast(`Thêm ${product.nameVn || product.name} vào giỏ hàng thành công!`); 
+        }
+
+        setIsAdding(false); // Mở khóa
     };
     
 
@@ -124,69 +140,84 @@ export const CartProvider = ({ children }) => {
     };
 
     const updateQuantity = async (productId, variantId, amount) => {
-        // 1. Prevent overlapping requests if user is spam clicking!
         if (isUpdating) return; 
 
-        // 2. Find the current item and calculate the math FIRST
+        // 1. Tìm sản phẩm hiện tại trong state
         const itemToUpdate = cartItems.find(item => item.id === productId && item.variantId === variantId);
         if (!itemToUpdate) return;
 
-        const newQuantity = Math.min(5, Math.max(1, itemToUpdate.quantity + amount));
+        // 2. Tính nháp số lượng mới
+        const newQuantity = itemToUpdate.quantity + amount;
 
-        // If they hit the limit, show toast and stop
-        if (newQuantity === itemToUpdate.quantity) {
-            if (newQuantity === 5 && amount > 0) {
-                showToast("Maximum 5 items allowed per product.");
-            }
-            return;
-        }
+        // Chặn sớm nếu số lượng < 1 (Nếu muốn xóa thì họ phải bấm nút Thùng rác)
+        if (newQuantity < 1) return;
 
-        // 3. 🔒 LOCK THE UI (Starts the loading delay)
+        // 3. Khóa UI
         setIsUpdating(true);
+        let updateSuccess = false;
 
-        const token = currentToken;
-        let updateSuccess = true;
-
-        // 4. 🗄️ DATABASE FIRST (Pessimistic UI)
-        if (token) {
-            console.log(`🚀 [FRONTEND] Sending to DB - Variant ID: ${variantId}, Target Qty: ${newQuantity}`); // 🐛 DEBUG LOG
+        if (auth?.accessToken) {
+            console.log(`🚀 [FRONTEND] Sending to DB - Variant ID: ${variantId}, Target Qty: ${newQuantity}`);
+            
             try {
-                await axios.put("/api/cart/update", {
-                    variantId: variantId,
-                    quantity: newQuantity 
-                }, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                console.log(`✅ [FRONTEND] DB returned Success!`); // 🐛 DEBUG LOG
+                // 🗄️ BƯỚC 1: BÁO CHO BACKEND
+                const response = await axios.put("/api/cart/update", 
+                    {
+                        productId: productId, 
+                        variantId: variantId,
+                        quantity: newQuantity 
+                    }, 
+                    {
+                        headers: { Authorization: `Bearer ${auth.accessToken}` }
+                    }
+                );
+                
+                // Nếu Backend OK (Kho đủ hàng, và không vượt hạn mức Backend set là 5)
+                // Lấy cái newQuantity mà backend trả về (đã được ép an toàn) để update UI
+                const safeQtyFromBackend = response.data.newQuantity || newQuantity;
+                
+                updateSuccess = true;
+                itemToUpdate._safeQty = safeQtyFromBackend; // Biến tạm
+
             } catch (error) {
-                console.error("❌ [FRONTEND] Axios Error:", error); // 🐛 DEBUG LOG
-                updateSuccess = false;
-                showToast("Network error. Could not update quantity.");
+                // 🚨 BACKEND TỪ CHỐI (Ví dụ: Kho có 2, đòi lên 3)
+                console.error("❌ [FRONTEND] Lỗi Update Quantity:", error);
+                
+                // Bắt cái câu báo lỗi "Không thể tăng thêm. Sản phẩm chỉ còn..."
+                const errorMsg = error.response?.data?.message || "Lỗi mạng. Không thể cập nhật số lượng.";
+                alert(errorMsg); 
             }
-        } else {
-             console.log(`⚠️ [FRONTEND] Still no token... User is a Guest!`); // 🐛 DEBUG LOG
         }
 
+        // 💻 BƯỚC 2: NẾU THÀNH CÔNG -> CẬP NHẬT UI
         if (updateSuccess) {
             setCartItems((prevItems) =>
                 prevItems.map((item) =>
                     (item.id === productId && item.variantId === variantId)
-                        ? { ...item, quantity: newQuantity }
+                        ? { ...item, quantity: itemToUpdate._safeQty }
                         : item
                 )
             );
         }
         
-        setIsUpdating(false); // 🔓 UNLOCK UI
+        setIsUpdating(false); // Mở khóa UI
     };
 
     const setCartData = (newCartItems) => {
         setCartItems(newCartItems);
     };
-    // 💰 Calculate Totals
-    const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-    const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
 
+    const clearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem("shopping-cart");
+    };
+
+    const totalPrice = useMemo(() => {
+    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+    }, [cartItems]);
+
+    // 💰 Calculate Totals
+    const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
     return (
         <CartContext.Provider value={{ 
             cartItems, 
@@ -198,7 +229,8 @@ export const CartProvider = ({ children }) => {
             totalItems,
             syncWithDatabase, //Expose to Login call it 
             isUpdating,
-            isAdding
+            isAdding,
+            clearCart
         }}>
             {children}
         </CartContext.Provider>

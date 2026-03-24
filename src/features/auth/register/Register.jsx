@@ -1,7 +1,11 @@
-import '../auth.css'; 
-import { FiX, FiEye, FiEyeOff } from 'react-icons/fi'; // 1. Import Eyes
+// src/features/auth/register/Register.jsx
+import './Register.css';
 import { useRef, useState, useEffect } from "react";
 import axios from '@/api/axios';
+
+// 🎨 1. CHỈ IMPORT FONT AWESOME - XÓA SẠCH REACT-ICONS
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const REGISTER_URL = 'api/auth/register';
 
@@ -9,7 +13,6 @@ const Register = ({ onClose, onSwitchToLogin }) => {
     const accountRef = useRef();
     const errRef = useRef();
 
-    // Simple State
     const [accountName, setAccountName] = useState('');
     const [mail, setMail] = useState('');
     const [pwd, setPwd] = useState('');
@@ -17,15 +20,13 @@ const Register = ({ onClose, onSwitchToLogin }) => {
     const [accountNameErr, setAccountNameErr] = useState('');
     const [mailErr, setMailErr] = useState('');
     const [pwdErr, setPwdErr] = useState('');
-    const [generalErr, setGeneralErr] = useState(''); // Renamed for consistency
+    const [generalErr, setGeneralErr] = useState('');
 
     const [success, setSuccess] = useState(false);
     const [showPwd, setShowPwd] = useState(false);
 
-    // Focus on account_name when opening
     useEffect(() => { accountRef.current.focus(); }, [])
 
-    // Clear error when user types
     useEffect(() => { 
         setAccountNameErr(''); 
         setGeneralErr('');
@@ -44,10 +45,8 @@ const Register = ({ onClose, onSwitchToLogin }) => {
     const handleSubmit = async (e) => {
         e.preventDefault(); 
         
-
         let isValid = true;
 
-        // 3️⃣ Manual Validation Logic
         if (!accountName) {
             setAccountNameErr("Account Name is required");
             isValid = false;
@@ -62,12 +61,11 @@ const Register = ({ onClose, onSwitchToLogin }) => {
             setPwdErr("Password is required");
             isValid = false;
         } else if (pwd.length < 6) {
-            // 🛡️ CHECK PASSWORD LENGTH HERE
             setPwdErr("Password must be at least 6 characters");
             isValid = false;
         }
 
-        if (!isValid) return; // Stop if there are errors
+        if (!isValid) return; 
 
         try {
             await axios.post(REGISTER_URL,
@@ -94,36 +92,42 @@ const Register = ({ onClose, onSwitchToLogin }) => {
     }
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
+        <div className="register-modal-overlay" onClick={onClose} aria-modal="true" role="dialog">
             <div className="register-container" onClick={(e) => e.stopPropagation()}>
                 
-                <button className="close-modal-btn" onClick={onClose}>
-                    <FiX />
+                <button className="register-close-btn" onClick={onClose} aria-label="Đóng form đăng ký">
+                    {/* 🎨 2. SỬ DỤNG FONT AWESOME */}
+                    <FontAwesomeIcon icon={faXmark} />
                 </button>
 
                 {success ? (
-                    <section className="success-section">
-                        <h1>Welcome to the Club!</h1>
-                        <p className="auth-subtitle">
-                            Your account has been created successfully.
+                    <section className="register-success-section">
+                        <h1 className="register-title">Chào mừng gia nhập!</h1>
+                        <p className="register-subtitle">
+                            Tài khoản của bạn đã được tạo thành công.
                         </p>
-                        <div style={{marginTop: '20px'}}>
-                            <button className="auth-btn" onClick={onSwitchToLogin}>
-                                Sign In Now
+                        <div style={{marginTop: 'clamp(1.5rem, 3vw, 2rem)'}}>
+                            <button className="register-submit-btn" onClick={onSwitchToLogin}>
+                                Đăng Nhập Ngay
                             </button>
                         </div>
                     </section>
                 ) : (
                     <>
-                        <p ref={errRef} className={generalErr ? "errmsg" : "offscreen"} aria-live="assertive">
+                        <p 
+                            ref={errRef} 
+                            className={generalErr ? "register-general-err" : "register-offscreen"} 
+                            aria-live="assertive"
+                            tabIndex="-1"
+                        >
                             {generalErr}
                         </p>
                         
-                        <h1>Create Account</h1>
-                        <p className="auth-subtitle">Join with us</p>
+                        <h1 className="register-title">Tạo Tài Khoản</h1>
+                        <p className="register-subtitle">Tham gia cùng chúng tôi</p>
                         
-                        <form onSubmit={handleSubmit}>
-                            <label htmlFor="accountName">Account Name</label>
+                        <form className="register-form" onSubmit={handleSubmit} noValidate>
+                            <label htmlFor="accountName">Tên Tài Khoản</label>
                             <input
                                 type="text"
                                 id="accountName"
@@ -131,10 +135,9 @@ const Register = ({ onClose, onSwitchToLogin }) => {
                                 autoComplete="username"
                                 onChange={(e) => setAccountName(e.target.value)}
                                 value={accountName}
-                                className={accountNameErr ? "input-error" : ""}
+                                className={accountNameErr ? "register-input-error" : ""}
                             />
-                            
-                            {accountNameErr && <span className="field-error-text">{accountNameErr}</span>}
+                            {accountNameErr && <span className="register-field-error">{accountNameErr}</span>}
 
                             <label htmlFor="email">Email</label>
                             <input
@@ -143,42 +146,42 @@ const Register = ({ onClose, onSwitchToLogin }) => {
                                 autoComplete="email"
                                 onChange={(e) => setMail(e.target.value)}
                                 value={mail}
-                                className={mailErr ? "input-error" : ""}
+                                className={mailErr ? "register-input-error" : ""}
                             />
+                            {mailErr && <span className="register-field-error">{mailErr}</span>}
 
-                            <label htmlFor="password">Password</label>
-                            
-                            {/* 3. WRAPPER FOR ICON (Matches Login.jsx) */}
-                            <div className="password-input-wrapper">
+                            <label htmlFor="password">Mật Khẩu</label>
+                            <div className="register-password-wrapper">
                                 <input
-                                    type={showPwd ? "text" : "password"} // Toggle Type
+                                    type={showPwd ? "text" : "password"} 
                                     id="password"
                                     autoComplete="new-password"
                                     onChange={(e) => setPwd(e.target.value)}
                                     value={pwd}
-                                    className={pwdErr ? "input-error" : ""}
+                                    className={pwdErr ? "register-input-error" : ""}
                                 />
                                 <button 
-                                    type="button" // Prevents form submit
-                                    className="password-toggle-icon"
+                                    type="button" 
+                                    className="register-toggle-icon"
                                     onClick={() => setShowPwd(!showPwd)}
                                     tabIndex="-1"
+                                    aria-label={showPwd ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
                                 >
-                                    {showPwd ? <FiEyeOff /> : <FiEye />}
+                                    {/* 🎨 3. SỬ DỤNG FONT AWESOME */}
+                                    <FontAwesomeIcon icon={showPwd ? faEyeSlash : faEye} />
                                 </button>
                             </div>
+                            {pwdErr && <span className="register-field-error">{pwdErr}</span>}
 
-                            {pwdErr && <span className="field-error-text">{pwdErr}</span>}
-
-                            <button className="auth-btn" type="submit">
-                                Sign Up
+                            <button className="register-submit-btn" type="submit">
+                                Đăng Ký
                             </button>
                         </form>
 
-                        <p className="auth-footer">
-                            Already registered?
-                            <button onClick={onSwitchToLogin} className="switch-btn">
-                                Sign In
+                        <p className="register-footer-text">
+                            Đã có tài khoản?
+                            <button onClick={onSwitchToLogin} className="register-switch-btn">
+                                Đăng Nhập
                             </button>
                         </p>
                     </>

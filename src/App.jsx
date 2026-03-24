@@ -1,94 +1,93 @@
-//src/App.jsx
+import './App.css';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { PersistLogin, RequireAuth } from './features/auth/AuthRoutes';
 
-import './index.css';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-// Pages
-import Product from './pages/Product';     // showroom
-import ProductDetail from './pages/ProductDetail'; // contains details description
-import Cart from './pages/Cart';           // Cart of each user
-import Profile from './pages/Profile';     // page for edit the profile of user
-import History from './pages/History';     // User buying history 
-import AnalyzeSkin from './pages/AnalyzeSkin'; // Analyze face
-import PaymentResult from './pages/Payment';   // User Payment (NotDoneYet)
+// Pages & Components
 import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/ForgotPassword';
-// Components
-import PaymentMoMo from './components/Payment/PaymentMoMo'; 
+import Unauthorized from './features/auth/Unauthorized';
 import Layout from './components/Layout'; 
 
-// Auth Components
-import { PersistLogin, RequireAuth } from './features/auth/AuthRoutes';
-import Unauthorized from './features/auth/Unauthorized';
+import Product from './pages/Product';
+import ProductDetail from './pages/ProductDetail';
+import Cart from './pages/Cart';
+import Profile from './pages/Profile';
+import History from './pages/CustomerHistory';
+import AnalyzeSkin from './pages/AnalyzeSkin';
+import Checkout from './pages/Checkout';
+import OrderSuccess from './pages/OrderSuccess';
 
-// 🆕 ADMIN IMPORTS
-import AdminLayout from './components/AdminLayout'; // The Shell (Sidebar)
-import Customers from './pages/admin/Customers';           // The User Table
+
+// Admin Imports
+import AdminLayout from './components/AdminComponent/AdminLayout';
+import Customers from './pages/admin/Customers';
 import Inventory from './pages/admin/Inventory';
-import Coupons from './pages/admin/Coupons';            // Coupon Management
-import Promotions from './pages/admin/Promotions';      // Promotion Management
+import Coupons from './pages/admin/Coupons';
+import Promotions from './pages/admin/Promotions';
 
+const Analytics = () => (
+    <div className="admin-content-wrapper fade-in">
+        <h2>📈 Analytics Dashboard</h2>
+        <p>Tính năng đang được phát triển dành cho quản trị viên...</p>
+    </div>
+);
 
-const Analytics = () => <div className="fade-in" style={{padding: '2rem'}}><h2>📈 Analytics Dashboard</h2><p>Coming soon...</p></div>;
-
-
-const ROLES = {
-  'User': 2001,
-  'Admin': 5150
-}
+const ROLES = { 'User': 2001, 'Admin': 5150 };
 
 function App() {
-  return (
-    <Routes>
-      {/* 🌍 PUBLIC ROUTES */}
-      <Route path="unauthorized" element={<Unauthorized />} />
-      <Route path="forgot-password" element={<ForgotPassword />} />
-      <Route path="reset-password" element={<ResetPassword />} />
+    return (
+        <Routes>
+            {/* 🌍 ROUTES TRÀN VIỀN (Nằm ngoài hệ thống Layout) */}
+            <Route path="unauthorized" element={<Unauthorized />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="reset-password" element={<ResetPassword />} />
 
-      {/* MAIN ROUTES */}
-      <Route path="/" element={<Layout />}>
-        {/* 🔐 PERSIST LOGIN */}
-        <Route element={<PersistLogin />}>
-            
-            {/* PUBLIC ACCESS (Inside PersistLogin) */}
-            <Route path="/" element={<Product />} />
-            <Route path="product/:id" element={<ProductDetail />} />
-            <Route path="cart" element={<Cart />} />
-            <Route path="analyze-skin" element={<AnalyzeSkin />} />
+            {/* 🛡️ BỌC PERSIST LOGIN CHO CẢ 2 THẾ GIỚI */}
+            <Route element={<PersistLogin />}>
 
-            {/* 💸 MOMO PAYMENT ROUTES */}
-            <Route path="payment-result" element={<PaymentResult />} />
-            <Route path="test-payment" element={
-              <div style={{ padding: '50px' }}>
-                    <h1>Test MoMo Integration</h1>
-                    <PaymentMoMo amount={1000} />
-                </div>
-            } />
+                {/* ======================================================= */}
+                {/* 🌍 WORLD 1: PUBLIC SHELL (Dành cho Khách hàng)        */}
+                {/* ======================================================= */}
+                <Route path="/" element={<Layout />}>
+                    
+                    {/* Nhóm trang công khai */}
+                    <Route index element={<Product />} />
+                    <Route path="product/:id" element={<ProductDetail />} />
+                    <Route path="cart" element={<Cart />} />
+                    <Route path="analyze-skin" element={<AnalyzeSkin />} />
+                    <Route path="checkout" element={<Checkout />} />
+                    <Route path="order-success" element={<OrderSuccess />} />
+                    <Route path="vnpay-return" element={<OrderSuccess />} />
 
-            {/* 🛡️ USER + ADMIN ROUTES */}
-            <Route element={<RequireAuth allowedRoles={[ROLES.User, ROLES.Admin]} />}>
-                <Route path="profile" element={<Profile />} />
-                <Route path="history" element={<History />} />
-            </Route>
+                    {/* Nhóm trang yêu cầu đăng nhập (User/Admin đều vào được) */}
+                    <Route element={<RequireAuth allowedRoles={[ROLES.User, ROLES.Admin]} />}>
+                        <Route path="profile" element={<Profile />} />
+                        <Route path="history" element={<History />} />
+                    </Route>
 
-            {/* 👑 ADMIN DASHBOARD (NESTED ROUTES) */}
-            <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
-                {/* 1. PARENT: The Sidebar Shell */}
-                <Route path="admin" element={<AdminLayout />}>
-                    {/* 2. DEFAULT: Redirect /admin -> /admin/users */}
-                    <Route index element={<Navigate to="customers" replace />} />
-
-                    {/* 3. CHILDREN: The Content */}
-                    <Route path="customers" element={<Customers />} />
-                    <Route path="inventory" element={<Inventory />} />
-                    <Route path="coupons" element={<Coupons />} />
-                    <Route path="promotions" element={<Promotions />} />
-                    <Route path="analytics" element={<Analytics />} />
                 </Route>
+                {/* 🔚 KẾT THÚC WORLD 1 */}
+
+
+                {/* ======================================================= */}
+                {/* 🌍 WORLD 2: ADMIN SHELL (Dành riêng cho Quản trị viên) */}
+                {/* ======================================================= */}
+                <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
+                    {/* 🚀 BÍ QUYẾT: AdminLayout giờ đây đứng ngang hàng với Layout */}
+                    <Route path="/admin" element={<AdminLayout />}>
+                        <Route index element={<Navigate to="customers" replace />} />
+                        <Route path="customers" element={<Customers />} />
+                        <Route path="inventory" element={<Inventory />} />
+                        <Route path="coupons" element={<Coupons />} />
+                        <Route path="promotions" element={<Promotions />} />
+                        <Route path="analytics" element={<Analytics />} />
+                    </Route>
+                </Route>
+                {/* 🔚 KẾT THÚC WORLD 2 */}
+
             </Route>
-        </Route> {/* End PersistLogin */}
-      </Route> {/* End Layout */}
-    </Routes>
-  );
+        </Routes>
+    );
 }
 
 export default App;
