@@ -6,7 +6,7 @@ export const verifyJWT = (req, res, next) => {
     
     // 2. If there is no header, or it doesn't start with "Bearer ", kick them out!
     if (!authHeader?.startsWith('Bearer ')) {
-        console.log("🚫 Missing or invalid Authorization header");
+        console.log("Missing or invalid Authorization header");
         return res.sendStatus(401); // 401 Unauthorized
     }
 

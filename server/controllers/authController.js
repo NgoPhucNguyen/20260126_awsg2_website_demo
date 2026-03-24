@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
+import "dotenv/config";
 
 const sessions = {};
 
@@ -26,7 +27,7 @@ export const handleLogin = async (req, res) => {
     if (loginEmail === process.env.ADMIN_NAME && pwd === process.env.ADMIN_PASS) {
         console.log("⚠️ DEBUG: Admin Logged In");
         const accessToken = jwt.sign(
-            { id: 9999, role: 5150, accountName: "Admin" },
+            { id: "admin-local-root", role: parseInt(process.env.ADMIN_ROLE), accountName: "Admin" },
             process.env.ACCESS_TOKEN_SECRET || "test_secret",
             { expiresIn: '1d' }
         );
@@ -40,7 +41,7 @@ export const handleLogin = async (req, res) => {
             sameSite: 'None', 
             maxAge: rememberMe ? trueRe : falseRe 
         });
-        return res.json({ accessToken, roles: [5150], accountName: "Admin" });
+        return res.json({ accessToken, roles: [parseInt(process.env.ADMIN_ROLE)], accountName: "Admin" });
     }
     
     // ☁️ 2. PRISMA DATABASE CHECK
@@ -77,7 +78,7 @@ export const handleLogin = async (req, res) => {
                 sameSite: 'None', 
                 maxAge: rememberMe ? trueRe : falseRe
             });
-            res.json({ accessToken, roles: [2001], accountName: foundUser.accountName });
+            res.json({ accessToken, roles: [parseInt(process.env.CUSTOMER_ROLE)], accountName: foundUser.accountName });
         } else {
             res.status(401).json({ 'message': 'Mật khẩu không chính xác' });
         }
@@ -167,7 +168,7 @@ export const handleRefresh = async (req, res) => {
             process.env.ACCESS_TOKEN_SECRET || "test_secret",
             { expiresIn: '1d' }
         );
-        return res.json({ accessToken, roles: [5150], accountName: "Admin" });
+        return res.json({ accessToken, roles: [parseInt(process.env.ADMIN_ROLE)], accountName: "Admin" });
     }
 
     // 2. CHECK DB (Regular User) - THIS WAS MISSING IN YOUR CODE
@@ -188,7 +189,7 @@ export const handleRefresh = async (req, res) => {
                 process.env.ACCESS_TOKEN_SECRET,
                 { expiresIn: '10m' }
             );
-            res.json({ accessToken, roles: [2001], accountName: foundUser.accountName });
+            res.json({ accessToken, roles: [parseInt(process.env.CUSTOMER_ROLE)], accountName: foundUser.accountName });
         }
     );
 };
