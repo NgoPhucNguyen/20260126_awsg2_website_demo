@@ -4,7 +4,7 @@ import { verifyJWT } from '#server/middleware/verifyJWT.js'; // Your auth middle
 
 const router = express.Router();
 
-// 🔒 Both routes MUST be protected by your JWT middleware
+// Both routes MUST be protected by your JWT middleware
 router.use(verifyJWT); 
 
 router.route('/')

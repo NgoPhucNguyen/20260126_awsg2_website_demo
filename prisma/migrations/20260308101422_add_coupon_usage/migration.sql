@@ -11,9 +11,6 @@ CREATE TYPE "CouponCategory" AS ENUM ('SHIPPING', 'ORDER');
 CREATE TYPE "CouponStatus" AS ENUM ('ACTIVE', 'EXPIRED', 'USED_UP', 'INACTIVE');
 
 -- AlterTable
-ALTER TABLE "category" ALTER COLUMN "name" SET DATA TYPE TEXT;
-
--- AlterTable
 ALTER TABLE "coupon" ADD COLUMN     "category" "CouponCategory" NOT NULL;
 
 -- CreateTable
@@ -23,7 +20,7 @@ CREATE TABLE "coupon_usage" (
     "customer_id" TEXT NOT NULL,
     "used_at" TIMESTAMP(3) NOT NULL,
     "status" "CouponStatus" NOT NULL,
-    "remaning" INTEGER NOT NULL,
+    "remaining" INTEGER NOT NULL,
 
     CONSTRAINT "coupon_usage_pkey" PRIMARY KEY ("id")
 );

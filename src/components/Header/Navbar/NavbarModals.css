@@ -58,7 +58,7 @@
     margin-bottom: clamp(1rem, 3vw, 1.5rem);
 }
 
-.close-btn {
+.modal-close-btn {
     position: absolute;
     /* 📐 Định vị động: Xê dịch tỷ lệ thuận với padding của Box */
     top: clamp(12px, 2vw, 24px);
@@ -80,9 +80,8 @@
     transition: background-color 0.2s, color 0.2s;
 }
 
-.close-btn:hover {
+.modal-close-btn:hover {
     color: var(--text-primary, #1a1a1a);
-    background-color: #f3f4f6;
 }
 
 /* ========================================================= */
@@ -124,7 +123,7 @@
     gap: clamp(0.75rem, 2vw, 1rem);
 }
 
-.send-btn, .cancel-btn {
+.modal-send-btn, .modal-cancel-btn {
     padding: clamp(0.75rem, 1.5vw, 1rem);
     border-radius: 8px;
     font-weight: 600;
@@ -133,13 +132,13 @@
     transition: opacity 0.2s, background-color 0.2s;
 }
 
-.send-btn {
+.modal-send-btn {
     background-color: var(--text-primary, #1c1917);
     color: #ffffff;
     border: none;
 }
 
-.send-btn:hover { opacity: 0.9; }
+.modal-send-btn:hover { opacity: 0.9; }
 
 .cancel-btn {
     background-color: transparent;
@@ -149,9 +148,9 @@
     order: -1; 
 }
 
-.cancel-btn:hover { background-color: #f9fafb; }
+.modal-cancel-btn:hover { background-color: #f9fafb; }
 
 /* Desktop override: Trả lại thứ tự chuẩn (Cancel nằm bên phải) */
 @media (min-width: 480px) {
-    .cancel-btn { order: 1; }
+    .modal-cancel-btn { order: 1; }
 }

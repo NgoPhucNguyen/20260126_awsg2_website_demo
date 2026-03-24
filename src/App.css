@@ -1,11 +1,3 @@
-/* --- HỆ THỐNG LAYOUT CƠ BẢN --- */
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  /* Chống tràn ngang trên iPhone SE/8 */
-  overflow-x: hidden; 
-}
 /* --- HIỆU ỨNG CHUYỂN TRANG (FADE IN) --- */
 .fade-in {
   animation: smoothAppearance 0.5s cubic-bezier(0.4, 0, 0.2, 1);

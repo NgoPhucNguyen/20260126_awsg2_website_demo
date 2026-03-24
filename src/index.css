@@ -94,3 +94,27 @@ h1, h2, h3, h4 {
         transform: none;
     }
 }
+
+
+/* ========================================================= */
+/* 6. GIẢI CỨU STICKY NAVBAR (VŨ KHÍ TỐI THƯỢNG)             */
+/* ========================================================= */
+
+html, body, #root {
+    /* 🛑 Bắt buộc phải là visible để sticky hoạt động */
+    overflow: visible !important; 
+    
+    /* 🚀 Tuyệt chiêu CSS hiện đại: Dùng 'clip' thay cho 'hidden'. 
+       Nó giúp bạn cắt bỏ phần thừa (chống cuộn ngang) mà KHÔNG làm chết lệnh sticky! */
+    overflow-x: clip !important; 
+    
+    /* Đảm bảo khung React không bị giới hạn chiều cao khiến sticky trượt ra ngoài */
+    min-height: 100vh;
+    height: auto !important;
+}
+
+/* Đảm bảo thẻ app-shell bao trọn màn hình mà không bị bóp nghẹt */
+#root {
+    display: flex;
+    flex-direction: column;
+}

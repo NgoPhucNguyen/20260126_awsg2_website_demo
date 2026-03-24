@@ -137,21 +137,40 @@ export const addCartItem = async (req, res) => {
     try {
         const userId = req.user.id;
         const { variantId, quantity } = req.body;
-
-        // 1. Find or Create DRAFT cart
+        
+        const safeVariantId = Number(variantId);
+        const safeQuantity = Number(quantity);
+        
+        // 
+        const stockData = await prisma.inventory.aggregate({
+            _sum: { quantity: true },
+            where: { productVariantId: safeVariantId }
+        });
+        const totalStock = stockData._sum.quantity || 0; // Nếu không có trong kho thì = 0
+        
+        // 1. Kiểm tra tồn kho trước khi thêm
         let dbCart = await prisma.cart.findFirst({
-            where: { customerId: userId, status: 'DRAFT' }
+            where: { customerId: userId, status: 'DRAFT' },
+            include: { orderDetails: true }
         });
 
         if (!dbCart) {
             dbCart = await prisma.cart.create({
-                data: { customerId: userId, status: 'DRAFT', finalPrice: 0, couponDiscount: 0 }
+                data: { customerId: userId, status: 'DRAFT', finalPrice: 0, couponDiscount: 0 },
+                include: { orderDetails: true }
             });
         }
+        
+        const existingDetail = dbCart.orderDetails.find(item => item.productVariantId === safeVariantId);
+        const currentCartQty = existingDetail ? existingDetail.quantity : 0;
+        const requestedTotalQty = currentCartQty + safeQuantity;
 
-        // 🌟 FORCE TYPES TO INTEGER TO PREVENT PRISMA CRASHES
-        const safeVariantId = Number(variantId);
-        const safeQuantity = Number(quantity);
+        // 🚀 CHẶN NGAY NẾU VƯỢT QUÁ TỒN KHO
+        if (requestedTotalQty > totalStock) {
+            return res.status(400).json({ 
+                message: `Rất tiếc, sản phẩm này chỉ còn ${totalStock} chiếc trong kho.` 
+            });
+        }
 
         const variant = await prisma.productVariant.findUnique({
             where: { id: safeVariantId },
@@ -171,18 +190,13 @@ export const addCartItem = async (req, res) => {
             const discount = promo.type === 'PERCENTAGE' ? (realPrice * promo.value) / 100 : promo.value;
             realPrice = realPrice - discount;
         }
-        // 2. Check if item already exists in the cart
-        const existingDetail = await prisma.orderDetail.findFirst({
-            where: { orderId: dbCart.id, productVariantId: safeVariantId }
-        });
 
         if (existingDetail) {
-            // ✅ ATOMIC INCREMENT
             await prisma.orderDetail.update({
                 where: { id: existingDetail.id },
                 data: { 
                     quantity: { increment: safeQuantity },
-                    unitPrice: realPrice // ✅ Always update to the latest price
+                    unitPrice: realPrice
             } 
             });
         } else {
@@ -239,6 +253,10 @@ export const updateCartItemQuantity = async (req, res) => {
     try {
         const userId = req.user.id;
         const { variantId, quantity } = req.body; 
+
+        const safeVariantId = Number(variantId);
+        const requestedQuantity = Number(quantity);
+
         console.log(`\n📥 [BACKEND] Received Update: User: ${userId}, Variant: ${variantId}, New Qty: ${quantity}`); // 🐛 DEBUG LOG
 
         // 1. Find active cart
@@ -251,6 +269,8 @@ export const updateCartItemQuantity = async (req, res) => {
             return res.status(404).json({ message: "Cart not found" });
         }
 
+
+
         const ONE_DAY_MS = 24 * 60 * 60 * 1000;
         if (new Date() - new Date(dbCart.createdAt) > ONE_DAY_MS) {
             console.log(`⚠️ [BACKEND] Cart is expired! Updating status to EXPIRED.`); // 🐛 DEBUG LOG
@@ -262,29 +282,80 @@ export const updateCartItemQuantity = async (req, res) => {
         }
 
         console.log(`🛒 [BACKEND] Found valid Cart ID: ${dbCart.id}`); // 🐛 DEBUG LOG
+        
+        // Check stock availability BEFORE updating quantity
+        const stockData = await prisma.inventory.aggregate({
+            _sum: { quantity: true },
+            where: { productVariantId: safeVariantId }
+        });
+        const totalStock = stockData._sum.quantity || 0;
 
-        // 2. Enforce Backend Limit (Security against hackers bypassing the frontend!)
-        const safeQuantity = Math.min(5, Math.max(1, quantity));
+        if (requestedQuantity > totalStock) {
+            return res.status(400).json({ 
+                message: `Không thể tăng thêm. Sản phẩm chỉ còn ${totalStock} chiếc trong kho.` 
+            });
+        }
+
+        // 2. Enforce Backend Limit (Cực kỳ quan trọng: Lấy Min của 5, Tổng kho, và số lượng khách yêu cầu)
+        const safeQuantity = Math.min(5, totalStock, Math.max(1, requestedQuantity));
+        // ========================================================
 
         // 3. Update the exact quantity in the database
-        // 🌟 THE FIX: This is where const updateResult belongs!
         const updateResult = await prisma.orderDetail.updateMany({
             where: { 
                 orderId: dbCart.id, 
-                productVariantId: Number(variantId) 
+                productVariantId: safeVariantId 
             },
             data: { quantity: safeQuantity }
         });
         
-        console.log(`📝 [BACKEND] Prisma Update Result: Modified ${updateResult.count} rows`); // 🐛 DEBUG LOG
+        console.log(`📝 [BACKEND] Prisma Update Result: Modified ${updateResult.count} rows`); 
 
         if (updateResult.count === 0) {
-            console.log(`⚠️ [BACKEND] Warning: Found the cart, but could not find Variant ${variantId} inside it!`); // 🐛 DEBUG LOG
+            console.log(`⚠️ [BACKEND] Warning: Found the cart, but could not find Variant ${variantId} inside it!`); 
         }
 
         res.status(200).json({ message: "Quantity updated" });
     } catch (error) {
         console.error("❌ [BACKEND] Update Quantity Error:", error);
         res.status(500).json({ error: "Failed to update quantity" });
+    }
+};
+
+
+
+export const getCustomerCoupons = async (req, res) => {
+    try {
+        // Lấy ID của khách hàng đang đăng nhập từ Middleware (Giả sử là req.user.id)
+        // Lưu ý: Middleware xác thực (verifyToken) của bạn phải được chạy trước hàm này
+        const customerId = req.user?.id;
+
+        if (!customerId) {
+            return res.status(401).json({ message: "Vui lòng đăng nhập để xem ví Voucher." });
+        }
+
+        const myVouchers = await prisma.couponUsage.findMany({
+            where: {
+                customerId: customerId,
+                status: 'ACTIVE',       // Chỉ lấy mã đang kích hoạt
+                remaining: { gt: 0 },   // Phải còn ít nhất 1 lượt sử dụng
+                coupon: {
+                    expireAt: { gt: new Date() } // Mã chưa qua thời gian hết hạn
+                }
+            },
+            include: {
+                coupon: true // Kéo theo toàn bộ thông tin gốc của Coupon (code, type, value, expireAt...)
+            },
+            orderBy: {
+                coupon: {
+                    expireAt: 'asc' // Sắp xếp: Mã nào sắp hết hạn thì đẩy lên đầu để ưu tiên dùng trước
+                }
+            }
+        });
+
+        res.json(myVouchers);
+    } catch (error) {
+        console.error("[ERROR] getCustomerCoupons:", error);
+        res.status(500).json({ message: "Lỗi hệ thống khi tải ví Voucher." });
     }
 };
