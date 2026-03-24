@@ -12,6 +12,7 @@ import cartRoutes from './cartRoutes.js'; // Import cart routes
 import couponRoutes from './couponRoutes.js';
 import promotionRoutes from './promotionRoutes.js';
 import categoryRoutes from './categoryRoute.js';
+import chatbotRoute from './chatbotRoute.js';
 
 const router = express.Router();
 
@@ -23,6 +24,7 @@ router.use('/cart', cartRoutes); // Mount cart routes under /api/cart
 router.use('/customers', customerRoutes);
 router.use('/coupons', couponRoutes);
 router.use('/promotions', promotionRoutes);
+router.use('/chatbot', chatbotRoute);
 
 router.use('/upload', uploadRoutes);
 router.use('/payment', paymentRoutes);

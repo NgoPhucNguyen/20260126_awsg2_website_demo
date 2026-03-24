@@ -7,8 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// --- QUẢN LÝ ĐỊA CHỈ & KHO ---
-
+// Location
 model Address {
   id            String   @id @default(uuid())
   fullAddress   String   @map("full_address")
@@ -24,6 +23,7 @@ model Address {
   @@map("address")
 }
 
+// Inventory 
 model Warehouse {
   id            String @id @default(uuid())
   name          String
@@ -41,8 +41,7 @@ model Warehouse {
   @@map("warehouse")
 }
 
-// --- QUẢN LÝ NGƯỜI DÙNG & NHÂN VIÊN ---
-
+// User and Employee
 model Customer {
   id           String               @id @default(uuid())
   firstName    String?              @map("first_name")
@@ -71,18 +70,6 @@ model Customer {
   @@map("customer")
 }
 
-// 1. Add this new model
-model PasswordResetToken {
-  id         String   @id @default(uuid())
-  tokenHash  String   @unique @map("token_hash")
-  customerId String   @map("customer_id")
-  expiresAt  DateTime @map("expires_at")
-  // Link only to Customer for now
-  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
-
-  @@map("password_reset_token")
-}
-
 model Employee {
   id           String   @id @default(uuid())
   firstName    String   @map("first_name")
@@ -103,8 +90,18 @@ model Employee {
   @@map("employee")
 }
 
-// --- QUẢN LÝ SẢN PHẨM ---
+model PasswordResetToken {
+  id         String   @id @default(uuid())
+  tokenHash  String   @unique @map("token_hash")
+  customerId String   @map("customer_id")
+  expiresAt  DateTime @map("expires_at")
+  // Link only to Customer for now
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
 
+  @@map("password_reset_token")
+}
+
+// Product
 model Brand {
   id       String    @id @default(uuid())
   name     String
@@ -178,8 +175,7 @@ model ProductImage {
   @@map("product_images")
 }
 
-// --- QUẢN LÝ KHUYẾN MÃI ---
-
+// Promotion & Coupon
 model Coupon {
   id          String         @id @default(uuid())
   description String?
@@ -260,8 +256,7 @@ model ProductPromotion {
   @@map("product_promotion")
 }
 
-// --- QUẢN LÝ NHẬP KHO & TỒN KHO ---
-
+// Importation
 model Supplier {
   id           String        @id @default(uuid())
   name         String
@@ -310,8 +305,7 @@ model Inventory {
   @@map("inventory")
 }
 
-// --- QUẢN LÝ ĐƠN HÀNG & VẬN CHUYỂN ---
-
+// Order & Shipment
 model Cart {
   id               String   @id @default(uuid())
   customerId       String   @map("customer_id")

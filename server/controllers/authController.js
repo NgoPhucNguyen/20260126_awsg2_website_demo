@@ -4,12 +4,15 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
+import "dotenv/config";
 
 // ⚠️ 1. DEFINE THIS VARIABLE SO IT DOESN'T CRASH
 const sessions = {}; 
 
 // ➤ LOGIN (Hybrid: Admin RAM + User DB)
 export const handleLogin = async (req, res) => {
+
+    console.log("[LOGIN] Request received:", req.body);
     const user = req.body.accountName || req.body.user;
     const pwd = req.body.password || req.body.pwd;
 
@@ -22,25 +25,25 @@ export const handleLogin = async (req, res) => {
 
     // 🛡️ 1. HARDCODED ADMIN CHECK
     if (user === process.env.ADMIN_NAME && pwd === process.env.ADMIN_PASS) {
-        console.log("⚠️  DEBUG: Admin Logged In");
+        console.log("[LOGIN] DEBUG: Admin Logged In");
         const accessToken = jwt.sign(
-            { id: 9999, role: 5150, accountName: "Admin" },
+            { id: "admin-local-root", role: parseInt(process.env.ADMIN_ROLE), accountName: "Admin" },
             process.env.ACCESS_TOKEN_SECRET || "test_secret",
             { expiresIn: '1d' }
         );
         const refreshToken = "fake_admin_refresh_" + Date.now();
         
         // Save to RAM
-        sessions[refreshToken] = { id: 9999, accountName: "Admin", roles: [5150] };
+        sessions[refreshToken] = { id: "admin-local-root", accountName: "Admin", roles: [parseInt(process.env.ADMIN_ROLE)] };
 
         res.cookie('jwt', refreshToken, { 
             httpOnly: true, 
             secure: true, 
-            sameSite: 'None', 
+            sameSite: 'None',
             maxAge: rememberMe ? trueRe : falseRe // (1days) If remember ->30days
             
         });
-        return res.json({ accessToken, roles: [5150], accountName: "Admin" });
+        return res.json({ accessToken, roles: [parseInt(process.env.ADMIN_ROLE)], accountName: "Admin" });
     }
     
     // ☁️ 2. PRISMA DATABASE CHECK
@@ -52,7 +55,7 @@ export const handleLogin = async (req, res) => {
         
         const match = await bcrypt.compare(pwd, foundUser.passwordHash);
         if (match) {
-            console.log("USER  LOGGIN IN");
+            console.log("[LOGIN] User logged in:", foundUser.accountName);
             const accessToken = jwt.sign(
                 { "accountName": foundUser.accountName, "id": foundUser.id },
                 process.env.ACCESS_TOKEN_SECRET,
@@ -77,7 +80,7 @@ export const handleLogin = async (req, res) => {
                 maxAge: rememberMe ? trueRe : falseRe
                 // (1days) If remember ->30days
             });
-            res.json({ accessToken, roles: [2001], accountName: foundUser.accountName });
+            res.json({ accessToken, roles: [parseInt(process.env.CUSTOMER_ROLE)], accountName: foundUser.accountName });
         } else {
             res.sendStatus(401);
         }
@@ -166,7 +169,7 @@ export const handleRefresh = async (req, res) => {
             process.env.ACCESS_TOKEN_SECRET || "test_secret",
             { expiresIn: '1d' }
         );
-        return res.json({ accessToken, roles: [5150], accountName: "Admin" });
+        return res.json({ accessToken, roles: [parseInt(process.env.ADMIN_ROLE)], accountName: "Admin" });
     }
 
     // 2. CHECK DB (Regular User) - THIS WAS MISSING IN YOUR CODE
@@ -187,7 +190,7 @@ export const handleRefresh = async (req, res) => {
                 process.env.ACCESS_TOKEN_SECRET,
                 { expiresIn: '10m' }
             );
-            res.json({ accessToken, roles: [2001], accountName: foundUser.accountName });
+            res.json({ accessToken, roles: [parseInt(process.env.CUSTOMER_ROLE)], accountName: foundUser.accountName });
         }
     );
 };
