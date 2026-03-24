@@ -4,194 +4,157 @@
 .product-page-container {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    padding: 2rem;
-    max-width: 1100px; /* Giảm độ rộng cho phù hợp */
+    /* Khoảng cách an toàn co giãn thay vì 2rem cứng nhắc */
+    gap: clamp(1rem, 3vw, 2rem);
+    padding: clamp(1rem, 3vw, 2rem);
+    max-width: 1200px; /* Chuẩn Grid 4 cột hiện đại */
     margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* Responsive: Stack on mobile */
-@media (max-width: 768px) {
-    .product-page-container {
-        grid-template-columns: 1fr;
-    }
-    /* Hide sidebar on mobile? Or show below? */
-    /* You might want to add a "Show Filters" button for mobile later */
-}
-
+/* Đã xóa đoạn @media lỗi của bạn (grid-template-columns nằm trong thẻ flex là sai) */
 
 .product-header {
     display: flex;
-    justify-content: space-between; /* Pushes button left, text right */
-    align-items: flex-end; /* Aligns them at the bottom edge */
-    border-bottom: 2px solid #f0f0f0;
-    padding-bottom: 1rem;
-    margin-bottom: 1rem;
+    flex-wrap: wrap; /* Đảm bảo trên Mobile chữ và filter rớt dòng gọn gàng */
+    justify-content: space-between; 
+    align-items: flex-end; 
+    gap: 1rem;
+    border-bottom: 2px solid var(--border-color, #f0f0f0);
+    padding-bottom: clamp(0.75rem, 1.5vw, 1rem);
+    margin-bottom: clamp(1rem, 3vw, 2rem);
 }
 
 .header-titles {
-    text-align: right;
+    text-align: left; /* Đổi sang Left để tự nhiên hơn khi rớt dòng trên mobile */
 }
 
 .header-titles h1 {
-    font-size: 1.8rem;
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
     margin: 0 0 5px 0;
+    color: var(--text-primary, #1c1917);
 }
 
-/* --- PRODUCT GRID --- */
+.header-titles p {
+    margin: 0;
+    font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+    color: var(--text-muted, #666);
+}
+
+/* ========================================================= */
+/* 🚀 PRODUCT GRID - THE MAGIC MATH (KHÔNG CẦN MEDIA QUERY)  */
+/* ========================================================= */
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 2rem;
+    /* 🧮 GIẢI THÍCH TOÁN HỌC (ĐỂ 2 SẢN PHẨM TRÊN 1 HÀNG MOBILE):
+       - minmax(X, 1fr): Cột sẽ rộng tối thiểu là X, và dãn ra lấp đầy khoảng trống (1fr).
+       - X = clamp(135px, 25vw, 250px).
+       - Trên iPhone SE (320px): Rộng 25vw (~80px), nên nó sẽ chặn ở mức thấp nhất là 135px. 
+         (320px màn hình - 32px padding - 10px gap = 278px. 278px / 2 = 139px > 135px).
+         👉 KẾT QUẢ: Hiển thị ĐÚNG 2 cột trên mọi điện thoại.
+       - Trên Desktop (1200px): Rộng 25vw (300px), nó chặn ở mức 250px.
+         👉 KẾT QUẢ: Hiển thị 4 cột.
+    */
+    grid-template-columns: repeat(auto-fill, minmax(clamp(135px, 25vw, 250px), 1fr));
+    
+    /* Gap cũng tự bóp nhỏ trên mobile (10px) và rộng ra trên Desktop (24px) */
+    gap: clamp(10px, 2vw, 24px);
 }
 
-.product-card {
-    border: 1px solid #eee;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
-    background: white;
-    display: flex;
-    flex-direction: column;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.card-image {
-    position: relative;
-    height: 200px;
-    padding: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.card-image img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-}
-
-.brand-tag {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: #333;
-    color: white;
-    font-size: 0.7rem;
-    padding: 2px 6px;
-    border-radius: 4px;
-}
-
-.card-details {
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
-
-.card-details h3 {
-    font-size: 1rem;
-    margin: 0 0 5px 0;
-}
-
-.description {
-    font-size: 0.85rem;
-    color: #666;
-    margin-bottom: auto;
-}
-
-.price-row {
-    margin-top: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.price {
-    font-weight: bold;
-    font-size: 1.1rem;
-}
-
-.add-btn {
-    background: #333;
-    color: white;
-    border: none;
-    padding: 5px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-
-/* ========================================================= */
-/* 🔢 PAGINATION STYLES                                      */
-/* ========================================================= */
-
+/* 🔢 PAGINATION STYLES */
 .pagination-container {
     display: flex;
+    flex-wrap: nowrap; 
     justify-content: center;
     align-items: center;
-    gap: 15px;
-    margin-top: 40px;
+    gap: clamp(4px, 1vw, 15px);
+    margin-top: clamp(20px, 4vw, 40px);
     padding-bottom: 20px;
+    position: relative;
+    z-index: 10;
+}
+.pagination-container::-webkit-scrollbar {
+    display: none;
 }
 
 .page-numbers {
     display: flex;
-    gap: 8px;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: clamp(4px, 1vw, 8px);
 }
 
-/* The actual numbers (1, 2, 3...) */
 .page-num-btn {
-    width: 40px;
-    height: 40px;
+    /* Co giãn từ 32px (Mobile) lên 40px (Desktop) */
+    width: clamp(32px, 3vw + 10px, 40px);
+    height: clamp(32px, 3vw + 10px, 40px);
     display: flex;
     align-items: center;
     justify-content: center;
     border: 1px solid #e7e5e4;
     background-color: white;
     color: #57534e;
-    border-radius: 50%; /* Circles look very elegant for numbers */
-    font-size: 0.95rem;
+    border-radius: 10%; 
+    flex-shrink: 0;
+    font-size: clamp(0.85rem, 1vw, 0.95rem);
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .page-num-btn:hover:not(.active) {
     background-color: #f5f5f5;
-    border-color: #cca858; /* Hovering hints at the gold theme */
+    border-color: #c6a87c; 
     color: #1c1917;
 }
 
-/* The Active Page */
 .page-num-btn.active {
-    background-color: #1c1917; /* Dark Charcoal */
-    color: #E6C27A; /* Gold text */
-    border-color: #1c1917;
+    background-color: #E6C27A; 
+    color: #1c1917; 
+    border-color: #E6C27A;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* Previous / Next Navigation Buttons */
 .page-nav-btn {
     background: transparent;
     border: none;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1vw, 0.95rem);
     font-weight: 700;
     color: #1c1917;
     cursor: pointer;
-    padding: 10px 15px;
-    transition: opacity 0.2s;
+    padding: clamp(6px, 1vw, 10px) clamp(8px, 1.5vw, 15px);
+    transition: color 0.2s;
+    white-space: nowrap; /* Ngăn chữ "Trước" / "Sau" bị cắt nếu container quá hẹp */
+    flex-shrink: 0;
 }
 
 .page-nav-btn:hover:not(:disabled) {
-    color: #cca858; /* Turn gold on hover */
+    color: #c6a87c; 
 }
 
 .page-nav-btn:disabled {
     color: #ccc;
     cursor: not-allowed;
+}
+
+/* THÔNG BÁO TRỐNG */
+.no-results {
+    grid-column: 1 / -1; /* Ép dòng thông báo chiếm toàn bộ chiều ngang */
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.page-ellipsis {
+    display: flex;
+    align-items: center; /* Căn dấu 3 chấm nằm ở giữa theo trục dọc */
+    justify-content: center;
+    width: clamp(16px, 2vw, 24px); /* Không cần rộng bằng nút bấm */
+    color: var(--text-muted, #999);
+    font-weight: 700;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    letter-spacing: 1px;
+    flex-shrink: 0;
 }

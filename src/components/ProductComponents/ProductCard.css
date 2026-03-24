@@ -3,127 +3,127 @@
 /* ========================================================= */
 /* 1. KHUNG THẺ SẢN PHẨM (CARD CONTAINER)                    */
 /* ========================================================= */
-
 .product-card {
-    border: 1px solid #eee;
-    border-radius: 8px;
-    background: white;
+    border: 1px solid var(--border-color, #e5e5e5);
+    border-radius: clamp(8px, 1.5vw, 12px);
+    background: #ffffff;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    height: 100%; /* Đảm bảo các thẻ trên cùng 1 hàng cao bằng nhau */
-    /* Hiệu ứng nổi lên và đổ bóng mềm khi hover */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%; 
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
 }
 
 .product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    transform: translateY(clamp(-3px, -0.5vw, -6px));
 }
 
-/* Xóa gạch chân mặc định của thẻ Link */
 .card-link {
     text-decoration: none;
     color: inherit;
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* Đẩy khu vực card-footer xuống sát đáy */
+    flex-grow: 1; 
 }
 
 /* ========================================================= */
 /* 2. KHU VỰC HÌNH ẢNH (IMAGE AREA)                          */
 /* ========================================================= */
-
 .card-image {
     position: relative;
-    height: 220px; /* Chiều cao cố định để giao diện đều đặn */
-    padding: 1.5rem;
+    /* 📏 Ép chiều cao ảnh linh hoạt: Mobile nhỏ nhắn, PC to rõ */
+    height: clamp(160px, 25vh, 240px); 
+    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #fff;
+    background-color: #ffffff; /* Nền xám cực nhạt để tôn ảnh sản phẩm */
     border-bottom: 1px solid #f5f5f5;
     overflow: hidden;
 }
 
 .card-image img {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
-    transition: transform 0.4s ease; /* Thời gian zoom ảnh chậm lại cho mượt */
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .product-card:hover .card-image img {
-    transform: scale(1.05); /* Zoom nhẹ ảnh khi hover */
+    transform: scale(1.2); 
 }
 
-/* Nhãn Thương Hiệu (Góc trái) */
+/* Nhãn Thương Hiệu */
 .brand-tag {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    background: #000;
+    top: clamp(6px, 1vw, 12px);
+    left: clamp(6px, 1vw, 12px);
+    background: #1c1917;
     color: white;
-    font-size: 0.7rem;
-    padding: 3px 8px;
+    font-size: clamp(0.6rem, 0.8vw, 0.75rem);
+    padding: 3px clamp(6px, 1vw, 8px);
     border-radius: 4px;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
     z-index: 2;
+    letter-spacing: 0.05em;
 }
 
-/* Nhãn Giảm Giá (Góc phải - Giữ nguyên tông Đỏ Ruby gốc) */
+/* Nhãn Giảm Giá */
 .sale-badge-overlay {
     position: absolute;
-    top: 12px;
-    right: 12px;
-    background-color: #8A1C31; 
+    top: clamp(6px, 1vw, 12px);
+    right: clamp(6px, 1vw, 12px);
+    background-color: #ff0000; /* Đỏ đô sang trọng */
     color: white;
-    font-size: 0.75rem;
+    font-size: clamp(0.7rem, 1vw, 0.8rem);
     font-weight: 800;
-    padding: 6px 12px;
+    padding: clamp(4px, 1vw, 6px) clamp(8px, 1.5vw, 12px);
     border-radius: 20px;
     z-index: 2;
-    box-shadow: 0 4px 10px rgba(138, 28, 49, 0.2);
+    box-shadow: 0 4px 10px rgba(153, 27, 27, 0.2);
     letter-spacing: 0.5px;
 }
 
 /* ========================================================= */
 /* 3. KHU VỰC TEXT (TITLE & DESCRIPTION)                     */
 /* ========================================================= */
-
 .card-info {
-    padding: 1rem 1rem 0 1rem;
+    padding: clamp(0.75rem, 1.5vw, 1.1rem);
+    padding-bottom: 0; /* Tránh đẩy footer quá xa */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Cực kỳ quan trọng để đẩy footer xuống đáy */
 }
 
-/* Tên sản phẩm */
-.card-info h3 {
-    font-size: 1rem;
-    margin: 0 0 0.5rem 0;
-    font-weight: bold;
-    color: #333;
-    /* Cắt bớt text nếu dài quá 2 dòng */
+.product-card-title {
+    font-family: var(--font-body);
+    font-size: clamp(0.9rem, 1.2vw, 1rem);
+    margin: 0 0 clamp(4px, 1vw, 8px) 0;
+    font-weight: 700;
+    color: #1c1917;
+    line-height: 1.3;
+    
+    /* Truncate 2 dòng chuẩn xác */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
-/* Ghi chú loại da (Mới chuyển từ style inline sang class) */
 .skin-type-tag {
-    font-size: 0.8rem;
-    color: #d4af37; /* Màu Gold nhạt */
-    margin-bottom: 8px;
+    font-size: clamp(0.7rem, 1vw, 0.8rem);
+    color: #c6a87c; /* Vàng Aphrodite */
+    margin-bottom: clamp(4px, 1vw, 8px);
     font-weight: 600;
 }
 
-/* Mô tả ngắn */
 .description {
-    font-size: 0.85rem;
-    color: #777;
+    font-size: clamp(0.75rem, 1vw, 0.85rem);
+    color: #57534e;
     line-height: 1.4;
-    margin-bottom: 1rem;
-    /* Cắt bớt text nếu dài quá 2 dòng */
+    margin: 0;
+    
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -133,17 +133,15 @@
 /* ========================================================= */
 /* 4. CHÂN THẺ: GIÁ & NÚT BẤM (FOOTER)                       */
 /* ========================================================= */
-
 .card-footer {
-    padding: 1rem;
+    padding: clamp(0.75rem, 1.5vw, 1.25rem);
     margin-top: auto; 
     display: flex;
     justify-content: space-between;
-    align-items: flex-end; /* Căn thẳng hàng đáy của giá và nút */
-    border-top: 1px solid #f9f9f9;
+    align-items: flex-end; 
+    gap: 8px; /* Đảm bảo giá và nút không dính vào nhau trên màn hẹp */
 }
 
-/* --- Xử lý hiển thị Giá --- */
 .price-container {
     display: flex;
     flex-direction: column;
@@ -156,19 +154,19 @@
 }
 
 .price {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #333;
+    font-size: clamp(0.8rem, 1.5vw + 0.2rem, 1.2rem);
+    font-weight: 800;
+    color: #1c1917;
 }
 
 .sale-price {
-    color: #d32f2f; /* Màu đỏ tươi (giữ theo style gốc của bạn) */
+    color: #dc2626; /* Đỏ tươi nổi bật */
 }
 
 .original-price-strike {
-    color: #999;
+    color: #a8a29e;
     text-decoration: line-through;
-    font-size: 0.85rem;
+    font-size: clamp(0.75rem, 1vw, 0.85rem);
     font-weight: 500;
     margin-top: 2px;
 }
@@ -176,115 +174,83 @@
 /* ========================================================= */
 /* 5. NÚT THÊM VÀO GIỎ (ADD TO CART BUTTON)                  */
 /* ========================================================= */
-
 .btn-add-cart {
-    /* Hình dáng nút */
-    min-width: 60px; 
-    height: 44px;
-    padding: 0 15px;
+    /* 📏 Kích thước hút co giãn: Giữ nút Vuông/Chữ nhật tỷ lệ chuẩn */
+    width: clamp(36px, 4vw + 10px, 44px); 
+    height: clamp(36px, 4vw + 10px, 44px);
+    flex-shrink: 0; /* Chống bị bóp méo khi Flexbox thiếu chỗ */
+    
     display: flex;
     align-items: center;
     justify-content: center;
     
-    /* Màu sắc (Giữ tông Gold gốc) */
     background-color: #E6C27A; 
-    border: 1px solid #E6C27A;
-    border-radius: 4px; 
-    color: #000;
+    border: none;
+    border-radius: clamp(6px, 1vw, 8px); 
+    color: #1c1917;
     
-    /* Cấu hình hiển thị Icon bên trong (Rất quan trọng để không bị lỗi tàng hình) */
-    font-size: 1.25rem; 
+    font-size: clamp(1.1rem, 1.5vw, 1.3rem); 
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 4px 10px rgba(230, 194, 122, 0.2);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Kiểm soát trực tiếp thẻ Icon (SVG) để luôn giữ đúng tỷ lệ */
-.btn-add-cart svg {
-    width: 1.2em;
-    height: 1.2em;
-    flex-shrink: 0;
-}
-
-/* Hover: Chuyển sang màu tối sang trọng */
 .btn-add-cart:hover:not(.btn-disabled) {
     background-color: #1c1917; 
-    border-color: #1c1917;
     color: #ffffff; 
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 6px 12px rgba(28, 25, 23, 0.15);
 }
 
-/* Click: Nút lún nhẹ xuống */
 .btn-add-cart:active:not(.btn-disabled) {
     transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    box-shadow: none;
 }
 
-/* Trạng thái Disable (Khi hết hàng hoặc đang Load) */
-.btn-add-cart.btn-disabled {
+.btn-disabled {
     background-color: #f5f5f5;
-    border-color: #e0e0e0;
-    color: #a8a29e;
+    color: #d6d3d1;
     cursor: not-allowed;
     box-shadow: none;
-    transform: none;
 }
 
-/* Vòng xoay Loading (Spinner) */
-.btn-add-cart .btn-spinner {
-    width: 20px;
-    height: 20px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-top: 2px solid #fff;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.btn-spinner {
+    color: #1c1917; /* Màu của icon loading */
 }
 
 /* ========================================================= */
 /* 6. TRẠNG THÁI HẾT HÀNG (OUT OF STOCK)                     */
 /* ========================================================= */
 
-/* Làm mờ text của thẻ đang hết hàng */
-.out-of-stock-card h3,
-.out-of-stock-card .price {
-    color: #999 !important; 
+.out-of-stock-card .product-title,
+.out-of-stock-card .price,
+.out-of-stock-card .description {
+    color: #a8a29e !important; 
 }
 
-/* Biến ảnh thành đen trắng */
 .grayscale-img {
-    filter: grayscale(100%) opacity(0.7);
-    transition: filter 0.3s ease;
+    filter: grayscale(100%) opacity(0.6);
 }
 
-/* Lớp phủ che mờ hình ảnh */
 .out-of-stock-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.6);
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 3;
 }
 
-/* Khối chữ "Đã hết hàng" */
 .out-of-stock-overlay span {
-    background-color: #1c1917;
+    background-color: rgba(28, 25, 23, 0.85);
+    backdrop-filter: blur(4px);
     color: #ffffff;
-    padding: 8px 16px;
+    padding: clamp(6px, 1.5vw, 10px) clamp(12px, 3vw, 20px);
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: clamp(0.75rem, 1.2vw, 0.9rem);
     text-transform: uppercase;
-    letter-spacing: 1px;
-    border-radius: 4px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.1em;
+    border-radius: 6px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }

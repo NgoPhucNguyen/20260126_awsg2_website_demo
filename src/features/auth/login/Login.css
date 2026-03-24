@@ -1,0 +1,349 @@
+/* src/features/auth/login/Login.css */
+
+/* ========================================================= */
+/* 0. BIẾN CỤC BỘ DÀNH RIÊNG CHO FORM (THEME VARIABLES)      */
+/* ========================================================= */
+:root {
+    --login-bg: #ffffff;
+    --login-text-main: #1c1917;
+    --login-text-muted: #57534e;
+    --login-border: #e7e5e4;
+    --login-primary: #1c1917; 
+    --login-accent: #E6C27A;  
+    --login-hover: #c6a87c;
+    --login-error-bg: #fee2e2;
+    --login-error-text: #991b1b;
+}
+
+/* ========================================================= */
+/* 1. LỚP PHỦ NỀN (MODAL OVERLAY)                            */
+/* ========================================================= */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    padding: clamp(1rem, 3vw, 2rem); 
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ========================================================= */
+/* 2. KHUNG FORM CHÍNH (LOGIN CONTAINER)                     */
+/* ========================================================= */
+.login-container {
+    background-color: var(--login-bg);
+    width: 100%;
+    /* 📏 Ép khung: Rộng tối thiểu 320px, lý tưởng 90vw, tối đa 420px */
+    max-width: clamp(320px, 90vw, 420px); 
+    
+    /* 📏 Padding linh hoạt: Tăng dần theo chiều ngang màn hình (vw) */
+    padding: clamp(1.5rem, 5vw, 2.5rem) clamp(1.5rem, 6vw, 3rem); 
+    
+    border: 1px solid var(--login-border);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1); 
+    border-radius: clamp(12px, 3vw, 20px);
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    animation: formSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes formSlideUp {
+    from { transform: translateY(30px) scale(0.98); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* --- NÚT ĐÓNG (CLOSE BUTTON) --- */
+.close-modal-btn {
+    position: absolute;
+    top: clamp(12px, 3vw, 20px);
+    right: clamp(12px, 3vw, 20px);
+    
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    
+    /* 📏 Nút đóng tự động to ra trên màn hình lớn để dễ click */
+    width: clamp(32px, 8vw, 40px);
+    height: clamp(32px, 8vw, 40px);
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.close-modal-btn:hover {
+    color: var(--login-text-main);
+    background-color: #f3f4f6;
+}
+
+/* ========================================================= */
+/* 3. TYPOGRAPHY & HEADER                                    */
+/* ========================================================= */
+.login-container h1 {
+    font-family: var(--font-heading, 'Inter', sans-serif);
+    font-size: clamp(1.5rem, 5vw, 2rem); 
+    color: var(--login-text-main);
+    margin-bottom: clamp(0.25rem, 1vw, 0.5rem);
+    font-weight: 700;
+    text-align: center;
+}
+
+.auth-subtitle {
+    color: var(--login-text-muted);
+    font-size: clamp(0.85rem, 2vw, 0.95rem);
+    margin-bottom: clamp(1.5rem, 5vw, 2rem);
+    text-align: center;
+}
+
+/* ========================================================= */
+/* 4. FORM FIELDS (INPUTS & LABELS)                          */
+/* ========================================================= */
+.login-container form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-container label {
+    font-weight: 600;
+    margin-bottom: clamp(6px, 1.5vw, 8px);
+    font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+    color: var(--login-text-main);
+    display: block;
+}
+
+.login-container input[type="text"], 
+.login-container input[type="password"] {
+    /* 🛑 Thay vì dùng vh, ta dùng vw cho padding để tránh lỗi khi bàn phím ảo bật lên */
+    padding: clamp(12px, 3vw, 16px) clamp(12px, 3vw, 16px);
+    margin-bottom: clamp(1rem, 3vw, 1.25rem);
+    
+    border: 1.5px solid var(--login-border);
+    border-radius: 8px;
+    background: #fafafa;
+    width: 100%;
+    box-sizing: border-box;
+    
+    /* 🛡️ QUAN TRỌNG: Font-size min phải là 16px để iOS Safari không tự động Zoom màn hình */
+    font-size: clamp(16px, 2vw, 18px); 
+    color: var(--login-text-main);
+    height: clamp(48px, 6vw, 56px); /* Đảm bảo hitbox đủ lớn cho ngón tay */
+
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.login-container input:focus {
+    outline: none;
+    border-color: var(--login-accent); 
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(230, 194, 122, 0.15);
+}
+
+/* ========================================================= */
+/* 5. TOGGLE MẬT KHẨU (EYE ICON)                             */
+/* ========================================================= */
+.password-input-wrapper {
+    position: relative; 
+    width: 100%;
+    margin-bottom: clamp(1rem, 3vw, 1.25rem); 
+}
+
+.password-input-wrapper input {
+    margin-bottom: 0 !important;
+    /* Chừa chỗ cho icon con mắt tự co giãn */
+    padding-right: clamp(40px, 10vw, 50px) !important; 
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: clamp(4px, 1vw, 8px);
+    top: 50%;
+    transform: translateY(-50%);
+    
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--login-text-muted); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* 📏 Cục Hitbox của icon cũng phải co giãn */
+    width: clamp(32px, 8vw, 40px);
+    height: clamp(32px, 8vw, 40px);
+    border-radius: 50%;
+    font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+    z-index: 100;
+}
+
+.password-toggle-icon:hover {
+    color: var(--login-text-main);
+    background-color: #f3f4f6;
+}
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+/* ========================================================= */
+/* 6. THANH HÀNH ĐỘNG (GHI NHỚ & QUÊN MẬT KHẨU)              */
+/* ========================================================= */
+.form-actions {
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: clamp(1.5rem, 4vw, 2rem);
+    margin-top: -0.25rem; 
+    gap: 10px; /* Thêm gap khi bị rớt dòng trên màn cực nhỏ */
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: clamp(6px, 1.5vw, 8px);
+}
+
+.checkbox-group input[type="checkbox"] {
+    /* 📏 Checkbox to hơn trên màn lớn, dễ bấm hơn */
+    width: clamp(16px, 3vw, 20px);
+    height: clamp(16px, 3vw, 20px);
+    accent-color: var(--login-primary); 
+    cursor: pointer;
+    margin: 0;
+}
+
+.checkbox-group label {
+    margin: 0 !important;
+    font-size: clamp(0.85rem, 1.5vw, 0.95rem) !important;
+    font-weight: 500 !important;
+    cursor: pointer;
+}
+
+.forgot-password-link {
+    background: none;
+    border: none;
+    margin-left: auto;
+    text-align: right;
+    transform: translateX(10px); /* Đẩy link ra xa checkbox hơn */
+    color: var(--login-text-muted);
+    font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.forgot-password-link:hover {
+    color: var(--login-primary);
+    text-decoration: underline;
+}
+
+/* ========================================================= */
+/* 7. NÚT ĐĂNG NHẬP CHÍNH                                    */
+/* ========================================================= */
+.auth-btn {
+    padding: clamp(12px, 3vw, 16px);
+    background-color: var(--login-primary);
+    color: white;
+    font-weight: 700;
+    font-size: clamp(1rem, 2vw, 1.125rem);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
+    height: clamp(48px, 6vw, 56px);
+}
+
+.auth-btn:hover {
+    background-color: var(--login-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(198, 168, 124, 0.3);
+}
+
+.auth-btn:active {
+    transform: scale(0.98); 
+}
+
+/* ========================================================= */
+/* 8. FOOTER (CHUYỂN SANG ĐĂNG KÝ)                           */
+/* ========================================================= */
+.auth-footer {
+    margin-top: clamp(1.5rem, 4vw, 2rem);
+    text-align: center;
+    font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+    color: var(--login-text-muted);
+}
+
+.switch-btn {
+    background: none;
+    border: none;
+    color: var(--login-primary);
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 6px;
+    padding: 0;
+    font-size: inherit;
+    transition: color 0.2s;
+}
+
+.switch-btn:hover {
+    color: var(--login-hover);
+    text-decoration: underline;
+}
+
+/* ========================================================= */
+/* 9. QUẢN LÝ LỖI (ERROR HANDLING UI)                        */
+/* ========================================================= */
+.generalErr {
+    background-color: var(--login-error-bg);
+    color: var(--login-error-text);
+    padding: clamp(10px, 2.5vw, 14px); 
+    border-radius: 8px;
+    margin-bottom: clamp(1rem, 3vw, 1.25rem);
+    width: 100%;
+    text-align: center;
+    font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+    font-weight: 600;
+    border: 1px solid rgba(153, 27, 27, 0.2);
+    animation: modalFadeIn 0.3s ease-in;
+}
+
+.offscreen {
+    position: absolute;
+    left: -9999px;
+}
+
+.login-container input.input-error {
+    border-color: var(--login-error-text) !important;
+    background-color: #fffafb; 
+}
+
+.field-error-text {
+    color: var(--login-error-text);
+    font-size: clamp(0.75rem, 1.2vw, 0.85rem);
+    font-weight: 600;
+    margin-top: -8px; 
+    margin-bottom: 12px;
+    display: block;
+    animation: modalFadeIn 0.2s ease-in-out;
+}

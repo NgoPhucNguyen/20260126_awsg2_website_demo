@@ -213,9 +213,9 @@ model CouponUsage {
   id         String       @id @default(uuid())
   couponId   String       @map("coupon_id")
   customerId String       @map("customer_id")
-  usedAt     DateTime     @map("used_at")
+  usedAt     DateTime?     @map("used_at")
   status     CouponStatus // [ACTIVE, EXPIRED, USED_UP, INACTIVE]
-  remaning   Int
+  remaining   Int
 
   coupon   Coupon   @relation(fields: [couponId], references: [id])
   customer Customer @relation(fields: [customerId], references: [id])
@@ -240,7 +240,7 @@ model Promotion {
   endTime     DateTime      @map("end_time")
 
   products ProductPromotion[]
-
+  orderDetails OrderDetail[]
   @@map("promotion")
 }
 
@@ -315,13 +315,21 @@ model Inventory {
 model Cart {
   id               String   @id @default(uuid())
   customerId       String   @map("customer_id")
-  status           String
+  status           String   // Trạng thái: "DRAFT", "PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"
   createdAt        DateTime @default(now()) @map("create_at")
+  
+  
   shippingCouponId String?  @map("shipping_coupon_id")
   shippingDiscount Int      @default(0) @map("shipping_discount")
   couponId         String?  @map("coupon_id")
-  couponDiscount   Int      @map("coupon_discount")
-  finalPrice       Int      @map("final_price")
+  couponDiscount   Int      @default(0) @map("coupon_discount")
+  finalPrice       Int      @default(0) @map("final_price")
+
+  
+  shippingAddress  String?  @map("shipping_address") 
+  paymentMethod    String?  @map("payment_method")   // "COD", "VNPAY", "MOMO"
+  paymentStatus    String?  @map("payment_status")   // "UNPAID", "PAID", "REFUNDED"
+  note             String?  @db.Text                 // Lời nhắn (Giao giờ hành chính, gọi trước khi giao...)
 
   customer       Customer?     @relation(fields: [customerId], references: [id])
   shippingCoupon Coupon?       @relation("ShippingCoupon", fields: [shippingCouponId], references: [id])
@@ -336,12 +344,14 @@ model OrderDetail {
   id               String @id @default(uuid())
   orderId          String @map("order_id")
   productVariantId Int    @map("product_variant_id")
+  promotionId      String? @map("promotion_id")
   quantity         Int
   originalPrice    Int    @map("original_price")
   unitPrice        Int    @map("unit_price")
 
   cart        Cart?            @relation(fields: [orderId], references: [id])
   variant     ProductVariant?  @relation(fields: [productVariantId], references: [id])
+  promotion   Promotion?       @relation(fields: [promotionId], references: [id])
   shipDetails ShipmentDetail[]
 
   @@map("order_detail")

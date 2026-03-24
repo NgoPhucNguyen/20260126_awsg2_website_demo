@@ -1,62 +1,120 @@
+/* 1. IMPORT FONTS 
+  Giữ nguyên Nunito cho nội dung và Inter cho tiêu đề 
+*/
 @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
 :root {
-  /* COLORS */
+  /* COLORS - Giữ nguyên bảng màu sang trọng của bạn */
   --bg-primary: #ffffff;
   --bg-secondary: #fffdf5;
   --text-primary: #1c1917;
   --text-secondary: #57534e;
   --accent-yellow: #E6C27A;
   --border-color: #e7e5e4;
-  --space-md: clamp(1rem, 3vw, 2.5rem);
-  /* Used for body text (clean, easy to read) */
-  --font-body: 'Nunito'; 
+
+  /* --- ADVANCED CLAMP & CALC LOGIC --- */
+
+  /* Khoảng cách (Space): 
+    - Min: 16px (1rem) cho iPhone SE 
+    - Preferred: 3vw + 0.5rem (Tỉ lệ co giãn)
+    - Max: 40px (2.5rem) cho iPad/Desktop
+  */
+  --space-md: clamp(1rem, calc(0.5rem + 3vw), 2.5rem);
   
-  /* Used for elegant headings */
-  --font-heading:  'Inter';
-  
-  /* Used for ultra-luxury accents or italics */
-  --font-accent: 'Nunito', sans-serif; 
+  /* Fluid Typography: 
+    Sử dụng clamp giúp tiêu đề to hơn trên iPad nhưng vừa vặn trên iPhone 8 
+  */
+  --font-size-h1: clamp(1.75rem, 5vw + 1rem, 3.5rem);
+  --font-size-h2: clamp(1.5rem, 4vw + 1rem, 2.75rem);
+  --font-size-body: clamp(0.9375rem, 0.5vw + 0.8rem, 1.125rem);
+
+  /* FONTS */
+  --font-body: 'Nunito', sans-serif;
+  --font-heading: 'Inter', sans-serif;
 }
 
-/* Apply the default body font globally */
+/* 2. GLOBAL RESET */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
-  font-family: var(--font-body); /* Using the variable */
+  font-family: var(--font-body);
   background-color: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.6;
+  font-size: var(--font-size-body); /* Body tự co giãn */
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Apply the heading font globally */
+/* 3. HEADINGS - Tự động hóa độ lớn */
+h1 { font-size: var(--font-size-h1); line-height: 1.2; }
+h2 { font-size: var(--font-size-h2); line-height: 1.3; }
+
 h1, h2, h3, h4 {
-  font-family: var(--font-heading); /* Using the variable */
-  font-weight: 600;
+  font-family: var(--font-heading);
   color: var(--text-primary);
 }
 
-.login-container {
-  padding: var(--space-md)
-}
-
-/* Toast Notification Styles */
+/* 5. TOAST NOTIFICATION - Mobile First */
 .custom-toast {
     position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background: #1a1a1a; /* Dark charcoal */
+    /* Dùng clamp cho vị trí: Cách đáy 10px trên mobile, 30px trên iPad */
+    bottom: clamp(0.625rem, 2vw, 1.875rem);
+    left: clamp(0.625rem, 2vw, 1.875rem);
+    right: clamp(0.625rem, 2vw, 1.875rem); /* Tràn màn hình trên mobile cực nhỏ */
+    max-width: 400px;
+    
+    background: #1a1a1a;
     color: #fff;
     padding: 12px 24px;
-    border-radius: 4px;
-    border-left: 4px solid #d4af37; /* Aphrodite Gold */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-yellow);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     z-index: 9999;
-    animation: slideIn 0.3s ease-out;
+    animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes slideIn {
-    from { transform: translateX(-100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Tối ưu cho iPad trở lên: Toast về lại góc trái */
+@media (min-width: 768px) {
+    .custom-toast {
+        right: auto;
+        transform: none;
+    }
+}
+
+
+/* ========================================================= */
+/* 6. GIẢI CỨU STICKY NAVBAR (VŨ KHÍ TỐI THƯỢNG)             */
+/* ========================================================= */
+
+html, body, #root {
+    /* 🛑 Bắt buộc phải là visible để sticky hoạt động */
+    overflow: visible !important; 
+    
+    /* 🚀 Tuyệt chiêu CSS hiện đại: Dùng 'clip' thay cho 'hidden'. 
+       Nó giúp bạn cắt bỏ phần thừa (chống cuộn ngang) mà KHÔNG làm chết lệnh sticky! */
+    overflow-x: clip !important; 
+    
+    /* Đảm bảo khung React không bị giới hạn chiều cao khiến sticky trượt ra ngoài */
+    min-height: 100vh;
+    height: auto !important;
+}
+
+/* Đảm bảo thẻ app-shell bao trọn màn hình mà không bị bóp nghẹt */
+#root {
+    display: flex;
+    flex-direction: column;
 }
