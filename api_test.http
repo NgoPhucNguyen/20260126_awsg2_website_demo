@@ -1,0 +1,11 @@
+### Test lấy sản phẩm bằng đường truyền bảo mật
+GET https://d2thdp4qpdkr5u.cloudfront.net/api/products
+Content-Type: application/json
+
+### Test Chatbot AI Bedrock
+POST https://d2thdp4qpdkr5u.cloudfront.net/api/chatbot
+Content-Type: application/json
+
+{
+    "message": "Da dầu dùng gì?"
+}

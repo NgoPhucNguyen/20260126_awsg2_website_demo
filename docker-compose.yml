@@ -1,5 +1,7 @@
 version: '3.8'
+
 services:
+  # 🐘 Service Database
   postgres:
     image: postgres:15
     container_name: dine_ease_db
@@ -13,5 +15,32 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  # 🚀 Service Backend NodeJS
+  backend:
+    build: .
+    container_name: nodejs_backend_local
+    ports:
+      - '3500:3500'
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    volumes:
+      - ./server:/app/server
+
+  # 🎨 Service Prisma Studio (Phải nằm trong mục services này)
+  studio:
+    build: .
+    container_name: prisma_studio_local
+    # Thêm flag --hostname 0.0.0.0 để có thể truy cập từ trình duyệt bên ngoài Docker
+    command: npx prisma studio --browser none --hostname 0.0.0.0
+    ports:
+      - '5555:5555'
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+# 💾 Khai báo Volume ở cuối cùng, ngang hàng với version và services
 volumes:
   postgres_data:

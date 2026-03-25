@@ -46,7 +46,7 @@ app.use((err, req, res, next) => {
 });
 
 // 5. START
-app.listen(PORT, '0.0.0.0', () => { 
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running on port ${PORT}`);
     console.log(`📡 Connected to AWS Region: ${process.env.AWS_S3_REGION}`);
 });
