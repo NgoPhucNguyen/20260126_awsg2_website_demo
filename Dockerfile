@@ -22,4 +22,4 @@ COPY . .
 EXPOSE 3500
 
 # Khởi động server
-CMD ["npm", "run", "server"]
+CMD ["npm", "run", "start:prod"]
