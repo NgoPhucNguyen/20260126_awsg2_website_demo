@@ -15,7 +15,8 @@ const allowedOrigins = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
     'https://feature-aws-setup.d2bre07rfuezd0.amplifyapp.com',
-    'https://d26vwje9y7sojm.cloudfront.net'
+    'https://d26vwje9y7sojm.cloudfront.net',
+    'https://d2thdp4qpdkr5u.cloudfront.net',
 ];
 
 // 2. MIDDLEWARE

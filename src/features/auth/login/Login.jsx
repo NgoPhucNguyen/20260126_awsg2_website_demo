@@ -82,7 +82,9 @@ const Login = ({ onClose, onSwitchToRegister }) => {
             // Giữ nguyên logic setAuth để App vẫn hiển thị Tên của khách hàng
             setAuth({ accountName: fetchedName, roles, accessToken });
 
-            await syncWithDatabase(cartItems, accessToken);
+            if (!roles.includes(5150)) {
+                await syncWithDatabase(cartItems, accessToken);
+            }
             
             setEmail('');
             setPwd('');
@@ -122,7 +124,9 @@ const Login = ({ onClose, onSwitchToRegister }) => {
             const fetchedName = response?.data?.accountName; 
             
             setAuth({ accountName: fetchedName, roles, accessToken });
-            await syncWithDatabase(cartItems, accessToken);
+            if (!roles.includes(5150)) {
+                await syncWithDatabase(cartItems, accessToken);
+            }   
             
             showToast(`Chào mừng, ${fetchedName}!`);
             
