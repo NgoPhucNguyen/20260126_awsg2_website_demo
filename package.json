@@ -26,6 +26,7 @@
     "@langchain/google-genai": "^2.1.25",
     "@langchain/openai": "^1.2.13",
     "@prisma/client": "5.22.0",
+    "@react-oauth/google": "^0.13.4",
     "axios": "^1.13.4",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",

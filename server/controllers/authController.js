@@ -6,7 +6,11 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import "dotenv/config";
+// Thêm import này lên đầu file cùng với các import khác
+import { OAuth2Client } from 'google-auth-library';
 
+// Khởi tạo client của Google với Client ID từ file .env
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const sessions = {};
 
 // ➤ LOGIN (Chỉ sử dụng Email)
@@ -54,6 +58,10 @@ export const handleLogin = async (req, res) => {
         });
         
         if (!foundUser) return res.status(401).json({ 'message': 'Email không tồn tại trong hệ thống' });
+        // 🆕 THÊM ĐOẠN NÀY ĐỂ CHẶN LỖI CRASH BCRYPT
+        if (!foundUser.passwordHash) {
+            return res.status(401).json({ 'message': 'Tài khoản này được đăng ký bằng Google. Vui lòng chọn "Đăng nhập bằng Google".' });
+        }
         
         const match = await bcrypt.compare(pwd, foundUser.passwordHash);
         if (match) {
@@ -87,6 +95,101 @@ export const handleLogin = async (req, res) => {
     } catch (err) {
         console.error("Login Error:", err.message);
         res.status(500).json({ 'message': err.message });
+    }
+};
+
+// ➤ GOOGLE OAUTH LOGIN (Tự động Đăng ký / Đăng nhập)
+export const handleGoogleLogin = async (req, res) => {
+    const { token } = req.body;
+    const defaultRe = 30 * 24 * 60 * 60 * 1000; // Mặc định cho Google là nhớ 30 ngày
+
+    if (!token) return res.status(400).json({ message: 'Thiếu Google Token' });
+
+    try {
+        // 🛡️ 1. Gửi Token lên Google Server để xác minh tính hợp lệ
+        const ticket = await googleClient.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+        
+        // Bóc tách dữ liệu Google trả về
+        const payload = ticket.getPayload();
+        const { email, name, picture, sub: googleId, given_name, family_name } = payload;
+
+        // 🔍 2. Kiểm tra xem người dùng đã tồn tại trong Database chưa
+        let foundUser = await prisma.customer.findUnique({
+            where: { mail: email }
+        });
+
+        if (!foundUser) {
+            // 🆕 TẠO MỚI (Register Ngầm): Nếu email chưa từng xuất hiện
+            foundUser = await prisma.customer.create({
+                data: {
+                    mail: email,
+                    accountName: name,
+                    firstName: given_name || '',
+                    lastName: family_name || '',
+                    avatarUrl: picture, // Lấy luôn ảnh đại diện Gmail
+                    authProvider: 'GOOGLE',
+                    googleId: googleId,
+                    passwordHash: null, // ⚠️ Bỏ trống password
+                    tier: 1,
+                    skinProfile: {}
+                }
+            });
+            console.log(`✅ [OAUTH] Đã tạo tài khoản mới: ${email}`);
+        } else {
+            // 🔗 LIÊN KẾT TÀI KHOẢN: Nếu user đã từng đăng ký bằng pass thường, giờ họ bấm nút Google
+            if (!foundUser.googleId) {
+                foundUser = await prisma.customer.update({
+                    where: { mail: email },
+                    data: {
+                        googleId: googleId,
+                        authProvider: 'GOOGLE',
+                        avatarUrl: foundUser.avatarUrl || picture // Cập nhật ảnh nếu trước đó họ chưa có
+                    }
+                });
+                console.log(`🔗 [OAUTH] Đã liên kết tài khoản Local với Google: ${email}`);
+            }
+        }
+
+        // 🎟️ 3. TẠO ACCESS TOKEN & REFRESH TOKEN (Giống hệt logic cũ của bạn)
+        const accessToken = jwt.sign(
+            { "accountName": foundUser.accountName, "id": foundUser.id, "role": parseInt(process.env.CUSTOMER_ROLE) },
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: '10m' }
+        );
+        
+        const refreshToken = jwt.sign(
+            { "accountName": foundUser.accountName, "id": foundUser.id },
+            process.env.REFRESH_TOKEN_SECRET,
+            { expiresIn: '1d' }
+        );
+
+        // Lưu Refresh Token vào CSDL
+        await prisma.customer.update({
+            where: { id: foundUser.id },
+            data: { refreshToken: refreshToken }
+        });
+
+        // Gắn Cookie
+        res.cookie('jwt', refreshToken, { 
+            httpOnly: true, 
+            secure: true, 
+            sameSite: 'None', 
+            maxAge: defaultRe
+        });
+
+        // Trả về cho Frontend xử lý tiếp
+        res.json({ 
+            accessToken, 
+            roles: [parseInt(process.env.CUSTOMER_ROLE)], 
+            accountName: foundUser.accountName 
+        });
+
+    } catch (err) {
+        console.error("❌ Google Auth Error:", err);
+        res.status(401).json({ message: "Xác thực Google thất bại hoặc token đã hết hạn." });
     }
 };
 

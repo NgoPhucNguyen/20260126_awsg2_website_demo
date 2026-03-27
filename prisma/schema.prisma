@@ -49,8 +49,12 @@ model Customer {
   accountName  String               @map("accountName")
   mail         String               @unique
   phoneNumber  String?              @map("phone_number") @db.VarChar(10)
-  passwordHash String               @map("password_hash")
-  // Stores the long-lived session token
+  
+  // 🔄 CÁC TRƯỜNG THAY ĐỔI CHO OAUTH
+  passwordHash String?              @map("password_hash") // Đổi thành Optional (?)
+  googleId     String?              @unique @map("google_id") // Lưu ID định danh từ Google
+  authProvider String               @default("LOCAL") @map("auth_provider") // Đánh dấu: LOCAL, GOOGLE
+  
   refreshToken String?              @map("refresh_token")
   avatarUrl    String?              @map("avatar_url")
   isActive     Boolean              @default(true) @map("is_active")
@@ -60,12 +64,11 @@ model Customer {
   tier         Int?
   createdAt    DateTime             @default(now()) @map("created_at")
   addressId    String?              @map("address_id")
-  //user forgot password
+  
   resetTokens  PasswordResetToken[]
-
-  address     Address?      @relation(fields: [addressId], references: [id])
-  carts       Cart[]
-  CouponUsage CouponUsage[]
+  address      Address?             @relation(fields: [addressId], references: [id])
+  carts        Cart[]
+  CouponUsage  CouponUsage[]
 
   @@map("customer")
 }

@@ -7,11 +7,13 @@ import { useToast } from '@/context/ToastProvider';
 import { useCart } from '@/context/CartProvider';
 import axios from '@/api/axios';
 
-// 🎨 1. CHỈ IMPORT FONT AWESOME CHUẨN TREE-SHAKING
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
+import { GoogleLogin } from '@react-oauth/google'; // Google OAuth
+
 const LOGIN_URL = '/api/auth/login';
+const GOOGLE_AUTH_URL = '/api/auth/google'; // 🆕 Endpoint mới cho Backend
 
 const Login = ({ onClose, onSwitchToRegister }) => {
     const { setAuth } = useAuth();
@@ -66,7 +68,6 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
         try {
             const response = await axios.post(LOGIN_URL,
-                // 🚀 Gửi trường 'mail' thay vì 'accountName'
                 JSON.stringify({ mail: email, pwd, remember }),
                 {
                     headers: { 'Content-Type': 'application/json' },
@@ -103,18 +104,55 @@ const Login = ({ onClose, onSwitchToRegister }) => {
             if(errRef.current) errRef.current.focus();
         }
     };
+    // OAUTH
+    const handleGoogleSuccess = async (credentialResponse) => {
+        try {
+            // Gửi ID Token của Google xuống Backend để xác minh
+            const response = await axios.post(GOOGLE_AUTH_URL,
+                JSON.stringify({ token: credentialResponse.credential }),
+                {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true // Rất quan trọng để Backend set Cookie RefreshToken
+                }
+            );
+
+            // Xử lý y hệt như đăng nhập thường!
+            const accessToken = response?.data?.accessToken;
+            const roles = response?.data?.roles;
+            const fetchedName = response?.data?.accountName; 
+            
+            setAuth({ accountName: fetchedName, roles, accessToken });
+            await syncWithDatabase(cartItems, accessToken);
+            
+            showToast(`Chào mừng, ${fetchedName}!`);
+            
+            if (onClose) setTimeout(() => onClose(), 50); 
+            else navigate(from, { replace: true });
+
+        } catch (err) {
+            console.error("Google Auth Error:", err);
+            setGeneralErr('Đăng nhập bằng Google thất bại. Vui lòng thử lại.');
+            if(errRef.current) errRef.current.focus();
+        }
+    };
+    
+    // 🆕 3. HÀM XỬ LÝ KHI LỖI NÚT BẤM
+    const handleGoogleError = () => {
+        setGeneralErr('Không thể kết nối với Google.');
+    };
+
         
     const handleForgotClick = () => {
         if (onClose) onClose(); 
         navigate('/forgot-password');
     };
     
+
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="login-container" onClick={(e) => e.stopPropagation()}>
                 
                 <button className="close-modal-btn" onClick={onClose}>
-                    {/* 🎨 2. SỬ DỤNG FONT AWESOME CHO NÚT ĐÓNG */}
                     <FontAwesomeIcon icon={faXmark} />
                 </button>
 
@@ -189,6 +227,23 @@ const Login = ({ onClose, onSwitchToRegister }) => {
                         Đăng Nhập
                     </button>
                 </form>
+                
+                {/* 🆕 4. THÊM NÚT GOOGLE LOGIN Ở ĐÂY */}
+                <div className="auth-divider" style={{ textAlign: 'center', margin: '15px 0', color: '#888' }}>
+                    <span>HOẶC</span>
+                </div>
+                
+                <div className="google-btn-wrapper" style={{ display: 'flex', justifyContent: 'center', marginBottom: '15px' }}>
+                    <GoogleLogin 
+                        onSuccess={handleGoogleSuccess} 
+                        onError={handleGoogleError}
+                        theme="outline" // hoặc "filled_blue"
+                        shape="rectangular"
+                        text="continue_with"
+                        size="large"
+                    />
+                </div>
+                {/* -------------------------------------- */}
                 
                 <p className="auth-footer">
                     Chưa có tài khoản?

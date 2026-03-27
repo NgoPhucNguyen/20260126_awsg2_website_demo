@@ -7,7 +7,10 @@ import axios from '@/api/axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
+import { GoogleLogin } from '@react-oauth/google'; // Google OAuth
+
 const REGISTER_URL = 'api/auth/register';
+const GOOGLE_AUTH_URL = '/api/auth/google'; // 🆕 Endpoint mới cho Backend
 
 const Register = ({ onClose, onSwitchToLogin }) => {
     const accountRef = useRef();
@@ -90,6 +93,42 @@ const Register = ({ onClose, onSwitchToLogin }) => {
             if(errRef.current) errRef.current.focus();
         }
     }
+
+    const handleGoogleSuccess = async (credentialResponse) => {
+        try {
+            // Gửi ID Token của Google xuống Backend để xác minh
+            const response = await axios.post(GOOGLE_AUTH_URL,
+                JSON.stringify({ token: credentialResponse.credential }),
+                {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true // Rất quan trọng để Backend set Cookie RefreshToken
+                }
+            );
+
+            // Xử lý y hệt như đăng nhập thường!
+            const accessToken = response?.data?.accessToken;
+            const roles = response?.data?.roles;
+            const fetchedName = response?.data?.accountName; 
+            
+            setAuth({ accountName: fetchedName, roles, accessToken });
+            await syncWithDatabase(cartItems, accessToken);
+            
+            showToast(`Chào mừng, ${fetchedName}!`);
+            
+            if (onClose) setTimeout(() => onClose(), 50); 
+            else navigate(from, { replace: true });
+
+        } catch (err) {
+            console.error("Google Auth Error:", err);
+            setGeneralErr('Đăng nhập bằng Google thất bại. Vui lòng thử lại.');
+            if(errRef.current) errRef.current.focus();
+        }
+    };
+        
+    // 🆕 3. HÀM XỬ LÝ KHI LỖI NÚT BẤM
+    const handleGoogleError = () => {
+        setGeneralErr('Không thể kết nối với Google.');
+    };
 
     return (
         <div className="register-modal-overlay" onClick={onClose} aria-modal="true" role="dialog">
@@ -177,7 +216,23 @@ const Register = ({ onClose, onSwitchToLogin }) => {
                                 Đăng Ký
                             </button>
                         </form>
-
+                        
+                                {/* 🆕 4. THÊM NÚT GOOGLE LOGIN Ở ĐÂY */}
+                        <div className="auth-divider" style={{ textAlign: 'center', margin: '15px 0', color: '#888' }}>
+                            <span>HOẶC</span>
+                        </div>
+                        
+                        <div className="google-btn-wrapper" style={{ display: 'flex', justifyContent: 'center', marginBottom: '15px' }}>
+                            <GoogleLogin 
+                                onSuccess={handleGoogleSuccess} 
+                                onError={handleGoogleError}
+                                theme="outline" // hoặc "filled_blue"
+                                shape="rectangular"
+                                text="continue_with"
+                                size="large"
+                            />
+                        </div>
+                        {/* -------------------------------------- */}
                         <p className="register-footer-text">
                             Đã có tài khoản?
                             <button onClick={onSwitchToLogin} className="register-switch-btn">
