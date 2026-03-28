@@ -13,7 +13,7 @@ export const uploadImage = async (req, res) => {
         const parallelUploadS3 = new Upload({
             client: s3Client,
             params: {
-                Bucket: process.env.S3_BUCKET_NAME,
+                Bucket: process.env.AWS_S3_BUCKET_NAME,
                 Key: fileName,
                 Body: file.buffer, 
                 ContentType: file.mimetype,
@@ -26,7 +26,7 @@ export const uploadImage = async (req, res) => {
         const result = await parallelUploadS3.done();
 
         // URL
-        const fileUrl = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+        const fileUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
         
         res.json({ 
             message: "Upload successful!", 

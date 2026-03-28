@@ -5,15 +5,15 @@ import { fileURLToPath } from "node:url";
 import { ChatBedrockConverse } from "@langchain/aws";
 import { HumanMessage, SystemMessage, ToolMessage } from "@langchain/core/messages";
 
-import { config } from "../config/index.js";
-import { tools, toolsMap } from "../tools/index.js";
+import { config } from "../config/llm.js";
+import { getToolsForRole, getToolsMapForRole } from "../tools/index.js";
 
 
 // define __dirname (for system message loading)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const SYSTEM_MESSAGE_PATH = path.resolve(__dirname, "../context/systemMessage.txt");
-const IS_MAIN_MODULE = process.argv[1] && path.resolve(process.argv[1]) === __filename;
+const ADMIN_ROLE = Number(process.env.ADMIN_ROLE ?? 5150);
 
 class AgentClient {
     constructor() {
@@ -24,11 +24,59 @@ class AgentClient {
             "Trả lời tự nhiên cho người dùng cuối bằng tiếng Việt.",
         ].join(" "); // fallback prompt
 
-        this.tools = tools; // array of tool definitions
-        this.toolsMap = toolsMap;   // map of tool names
-
         this.systemMessage = null;
-        this.toolEnabledModel = this.model.bindTools(this.tools);
+        this.toolEnabledModels = new Map();
+    }
+
+    getRoleKey(role) {
+        return Number(role) === ADMIN_ROLE ? "admin" : "customer";
+    }
+
+    getToolContext(role) {
+        const tools = getToolsForRole(role, ADMIN_ROLE);
+        const toolsMap = getToolsMapForRole(role, ADMIN_ROLE);
+        const roleKey = this.getRoleKey(role);
+
+        if (!this.toolEnabledModels.has(roleKey)) {
+            this.toolEnabledModels.set(roleKey, this.model.bindTools(tools));
+        }
+
+        return {
+            roleKey,
+            tools,
+            toolsMap,
+            toolEnabledModel: this.toolEnabledModels.get(roleKey),
+        };
+    }
+
+    async invokeToolCallsInParallel(toolCalls, toolsMap, auth = {}) {
+        const tasks = toolCalls.map(async (call) => {
+            const tool = toolsMap[call.name];
+            let toolResult;
+
+            if (!tool) {
+                toolResult = `Tool '${call.name}' is not available.`;
+            } else {
+                try {
+                    const mergedArgs = {
+                        ...(call.args ?? {}),
+                        authId: auth.customerId ?? undefined,
+                        authRole: auth.role ?? undefined,
+                    };
+
+                    toolResult = await tool.invoke(mergedArgs);
+                } catch (error) {
+                    toolResult = `Tool '${call.name}' failed: ${error?.message ?? String(error)}`;
+                }
+            }
+
+            return new ToolMessage({
+                tool_call_id: call.id,
+                content: typeof toolResult === "string" ? toolResult : JSON.stringify(toolResult),
+            });
+        });
+
+        return Promise.all(tasks);
     }
 
     normalizeModelContent(content) {
@@ -115,6 +163,9 @@ class AgentClient {
 
         console.log("[CHATBOT] auth :", auth);
 
+        const { roleKey, toolsMap, toolEnabledModel } = this.getToolContext(auth.role);
+        console.log(`[CHATBOT] Active toolset role: ${roleKey}`);
+
         const activeSystemMessage = systemPrompt ?? await this.loadSystemMessage();
         const messages = [
             new SystemMessage(activeSystemMessage),
@@ -123,10 +174,8 @@ class AgentClient {
         ];
 
         for (let step = 0; step < maxToolCalls; step += 1) {
-            const response = await this.toolEnabledModel.invoke(messages);
+            const response = await toolEnabledModel.invoke(messages);
             messages.push(response);
-
-            console.log("[CHATBOT] Model response:", response);
 
             const toolCalls = response.tool_calls ?? [];
             if (toolCalls.length === 0) {
@@ -136,43 +185,8 @@ class AgentClient {
                 return finalContent;
             }
 
-            for (const call of toolCalls) {
-                const tool = this.toolsMap[call.name];
-                let toolResult;
-
-                console.log(`[CHATBOT] Invoking tool: ${call.name} with args:`, call.args);
-
-                if (!tool) {
-                    toolResult = `Tool '${call.name}' is not available.`;
-                } else {
-                    try {
-                        console.log(`[CHATBOT] Found tool '${call.name}'. Invoking...`);
-                        const mergedArgs = {
-                            ...(call.args ?? {}),
-                            // Server-side identity is authoritative.
-                            authCustomerId: auth.customerId ?? undefined,
-                            authRole: auth.role ?? undefined,
-                            // authCustomerId: call.args.authCustomerId ?? undefined,
-                        };
-
-                        console.log(`[CHATBOT] Merged args for tool '${call.name}':`, mergedArgs);
-
-                        toolResult = await tool.invoke(mergedArgs);
-
-                        console.log(`[CHATBOT] Result from tool '${call.name}':`, toolResult);
-                    } catch (error) {
-                        console.error(`[CHATBOT] Error occurred while invoking tool '${call.name}':`, error);
-                        toolResult = `Tool '${call.name}' failed: ${error?.message ?? String(error)}`;
-                    }
-                }
-
-                messages.push(
-                    new ToolMessage({
-                        tool_call_id: call.id,
-                        content: typeof toolResult === "string" ? toolResult : JSON.stringify(toolResult),
-                    })
-                );
-            }
+            const toolMessages = await this.invokeToolCallsInParallel(toolCalls, toolsMap, auth);
+            messages.push(...toolMessages);
         }
 
         throw new Error(`Max tool call iterations reached (${maxToolCalls}).`);
@@ -205,21 +219,4 @@ class AgentClient {
         throw lastError;
     }
 }
-
-// demo
-// const demo = async () => {
-//     const agent = new AgentClient();
-//     const result = await agent.run("Tôi có mã giảm giá nào còn hiệu lực không?", {
-//         auth: { customerId: "a0fba32e-c316-41dd-b5b2-405939db6d99" },
-//     });
-//     console.log(result);
-// };
-
-// if (IS_MAIN_MODULE) {
-//     demo().catch((error) => {
-//         console.error("[DEMO ERROR]:", error?.message ?? error);
-//         process.exitCode = 1;
-//     });
-// }
-
 export default AgentClient;

@@ -21,7 +21,7 @@ const askHandler = async (req, res) => {
 		const content = await agent.run(prompt, {
 			history,
 			auth: {
-				customerId: req.user.id,
+				authId: req.user.id,
 				role: req.user.role,
 			},
 		});

@@ -1,73 +1,38 @@
-// Product tools
-import {
-    searchProductsTool,
-    getProductInfoTool,
-    getProductsByCategoryTool,
-    getProductVariantTool,
-} from "./productTools.js";
+import { allToolsMap } from "./catalog.js";
+import { adminTools, adminToolsMap } from "./adminTools.js";
+import { customerTools, customerToolsMap } from "./customerTools.js";
+// import { employeeTools, employeeToolsMap } from "./employeeTools.js";
 
-// Category tools
-import {
-    getCategoriesTool,
-    getCategoryDetailsTool,
-    getBrandsTool,
-} from "./categoryTools.js";
+const allTools = Object.values(allToolsMap);
 
-// Inventory tools
-import {
-    checkInventoryTool,
-    getInventoryByWarehouseTool,
-    getLowStockItemsTool,
-} from "./inventoryTools.js";
-
-// Coupon & Promotion tools
-import {
-    getCouponInfoTool,
-    getAvailableCouponsTool,
-    validateCouponTool,
-    getPromotionsTool,
-} from "./couponTools.js";
-
-const tools = [
-    // Product tools
-    searchProductsTool,
-    getProductInfoTool,
-    getProductsByCategoryTool,
-    getProductVariantTool,
-    // Category tools
-    getCategoriesTool,
-    getCategoryDetailsTool,
-    getBrandsTool,
-    // Inventory tools
-    checkInventoryTool,
-    getInventoryByWarehouseTool,
-    getLowStockItemsTool,
-    // Coupon & Promotion tools
-    getCouponInfoTool,
-    getAvailableCouponsTool,
-    validateCouponTool,
-    getPromotionsTool,
-];
-
-const toolsMap = {
-    // Product
-    searchProducts: searchProductsTool,
-    getProductInfo: getProductInfoTool,
-    getProductsByCategory: getProductsByCategoryTool,
-    getProductVariant: getProductVariantTool,
-    // Category
-    getCategories: getCategoriesTool,
-    getCategoryDetails: getCategoryDetailsTool,
-    getBrands: getBrandsTool,
-    // Inventory
-    checkInventory: checkInventoryTool,
-    getInventoryByWarehouse: getInventoryByWarehouseTool,
-    getLowStockItems: getLowStockItemsTool,
-    // Coupon & Promotion
-    getCouponInfo: getCouponInfoTool,
-    getAvailableCoupons: getAvailableCouponsTool,
-    validateCoupon: validateCouponTool,
-    getPromotions: getPromotionsTool,
+const getToolsForRole = (role) => {
+    if (Number(role) === Number(process.env.ADMIN_ROLE)) {
+        return adminTools;
+    } if (Number(role) === Number(process.env.CUSTOMER_ROLE)) {
+        return customerTools;
+    } if (Number(role) === Number(process.env.EMPLOYEE_ROLE)) {
+        return employeeTools;
+    }
 };
 
-export { tools, toolsMap };
+const getToolsMapForRole = (role) => {
+    if (Number(role) === Number(process.env.ADMIN_ROLE)) {
+        // console.log("[TOOLS] Returning admin tools", adminToolsMap);
+        return adminToolsMap;
+    } if (Number(role) === Number(process.env.CUSTOMER_ROLE)) {
+        return customerToolsMap;
+    } if (Number(role) === Number(process.env.EMPLOYEE_ROLE)) {
+        return employeeToolsMap;
+    }
+};
+
+export {
+    // allTools,
+    // allToolsMap,
+    // customerTools,
+    // customerToolsMap,
+    // adminTools,
+    // adminToolsMap,
+    getToolsForRole,
+    getToolsMapForRole,
+};

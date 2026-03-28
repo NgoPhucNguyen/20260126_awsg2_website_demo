@@ -7,7 +7,8 @@ import {
   getRelatedProducts,
   deleteProduct,
   restoreProduct,
-  createProduct
+  createProduct,
+  updateProduct
 } from '#server/controllers/productController.js';
 
 const router = express.Router();
@@ -20,5 +21,6 @@ router.get('/:id/related', getRelatedProducts);
 router.delete('/:id', deleteProduct); // "Soft" delete
 router.patch('/:id/restore', restoreProduct); // Undo Soft Delete
 router.post('/', createProduct);
+router.put('/:id', updateProduct);
 
 export default router;

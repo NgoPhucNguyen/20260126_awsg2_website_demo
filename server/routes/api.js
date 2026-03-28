@@ -14,7 +14,6 @@ import categoryRoutes from './categoryRoute.js';
 import chatbotRoute from './chatbotRoute.js';
 import orderRoutes from './orderRoutes.js'; 
 
-import orderRoutes from './orderRoutes.js'; // Import order routes
 const router = express.Router();
 
 // --- MOUNT ROUTES ---

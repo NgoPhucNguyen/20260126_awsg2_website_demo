@@ -30,7 +30,7 @@ const ChatbotWidget = () => {
         } catch (error) {
             console.warn("[CHATBOT UI] Failed to restore local history", error);
         }
-        return [createMessage("bot", "Xin chao, minh la tro ly cua ban. Ban can tu van san pham hay ma giam gia?")];
+        return [createMessage("bot", "Xin chào! Mình là trợ lý của bạn. Bạn cần tư vấn sản phẩm hay mã giảm giá?")];
     });
 
     const listRef = useRef(null);
@@ -60,7 +60,7 @@ const ChatbotWidget = () => {
         pushMessage("user", prompt);
 
         if (!auth?.accessToken) {
-            pushMessage("bot", "Ban can dang nhap de su dung chatbot.");
+            pushMessage("bot", "Xin lỗi, bạn cần đăng nhập để sử dụng tính năng này.");
             return;
         }
 
@@ -71,18 +71,18 @@ const ChatbotWidget = () => {
             if (typeof botContent === "string" && botContent.trim()) {
                 pushMessage("bot", botContent);
             } else {
-                pushMessage("bot", "Mình chưa lay duoc noi dung tra loi. Ban thu lai giup minh nhe.");
+                pushMessage("bot", "Mình chưa lấy được nội dung trả lời. Bạn thử lại giúp mình nhé.");
             }
         } catch (error) {
             console.error("[CHATBOT UI] Ask failed", error);
-            pushMessage("bot", "Xin loi, ket noi chatbot dang co van de. Ban thu lai sau it phut nhe.");
+            pushMessage("bot", "Xin lỗi, mình không thể trả lời câu hỏi của bạn vào lúc này. Vui lòng thử lại sau ít phút.");
         } finally {
             setIsTyping(false);
         }
     };
 
     const clearHistory = () => {
-        const welcome = createMessage("bot", "Lich su da duoc xoa. Minh co the ho tro gi tiep cho ban?");
+        const welcome = createMessage("bot", "Lịch sử đã được xóa. Mình có thể hỗ trợ gì cho bạn?");
         setMessages([welcome]);
     };
 
@@ -104,12 +104,12 @@ const ChatbotWidget = () => {
                         <div className="chatbot-header-left">
                             <span className="chatbot-avatar">AI</span>
                             <div>
-                                <h3>Tro ly cham soc da</h3>
+                                <h3>Trợ lý chăm sóc da</h3>
                                 <p>Online</p>
                             </div>
                         </div>
                         <button type="button" className="chatbot-clear-btn" onClick={clearHistory}>
-                            Xoa lich su
+                            Xóa lịch sử
                         </button>
                     </header>
 
@@ -141,7 +141,7 @@ const ChatbotWidget = () => {
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            placeholder="Nhap cau hoi cua ban..."
+                            placeholder="Nhập câu hỏi của bạn..."
                             maxLength={1000}
                         />
                         <button type="submit" disabled={!canSend} aria-label="Gui tin nhan">

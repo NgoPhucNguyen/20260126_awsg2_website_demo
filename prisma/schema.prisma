@@ -1,10 +1,12 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  extensions = [vector]
 }
 
 // Location
@@ -139,8 +141,21 @@ model Product {
   brand    Brand?           @relation(fields: [brandId], references: [id])
   category Category?        @relation(fields: [categoryId], references: [id])
   variants ProductVariant[]
+  vector   ProductVector?
 
   @@map("product")
+}
+
+model ProductVector {
+  productId Int                  @id @map("product_id")
+  content   String
+  embedding Unsupported("vector")
+  metadata  Json                 @default("{}")
+  updatedAt DateTime             @default(now()) @map("updated_at")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_vectors")
 }
 
 model ProductVariant {
