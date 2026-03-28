@@ -4,10 +4,12 @@ import prisma from "../../prismaClient.js";
 import "dotenv/config";
 
 const isAdmin = (authRole) => Number(authRole) === parseInt(process.env.ADMIN_ROLE);
+const isEmployee = (authRole) => Number(authRole) === parseInt(process.env.EMPLOYEE_ROLE);
+const isCustomer = (authRole) => Number(authRole) === parseInt(process.env.CUSTOMER_ROLE);
 
 // Get coupon info (customer-specific)
 export const getCouponInfoTool = tool(
-    async ({ couponCode, customerId, authCustomerId, authRole }) => {
+    async ({ couponCode, customerId, authId, authRole }) => {
         try {
             if (!couponCode) {
                 return JSON.stringify({ error: "couponCode is required" });
@@ -48,14 +50,14 @@ export const getCouponInfoTool = tool(
                 return JSON.stringify(coupon);
             }
 
-            if (!authCustomerId) {
+            if (!authId) {
                 return JSON.stringify({ error: "Unauthorized: thiếu thông tin customer" });
             }
 
             // Non-admin: must own the coupon.
             const couponUsage = await prisma.couponUsage.findFirst({
                 where: {
-                    customerId: authCustomerId,
+                    customerId: authId,
                     coupon: { code: couponCode },
                 },
                 include: { coupon: true },
@@ -80,7 +82,7 @@ export const getCouponInfoTool = tool(
         schema: z.object({
             couponCode: z.string().describe("Mã giảm giá"),
             // customerId: z.string().optional().describe("Admin only: customer ID cần xem coupon"),
-            // authCustomerId: z.string().optional().describe("Injected by backend auth context"),
+            // authId: z.string().optional().describe("Injected by backend auth context"),
             // authRole: z.number().optional().describe("Injected by backend auth context"),
         }).passthrough(),
     }
@@ -88,51 +90,25 @@ export const getCouponInfoTool = tool(
 
 // Get available coupons for a specific customer
 export const getAvailableCouponsTool = tool(
-    async ({ authCustomerId, authRole, limit = 20 }) => {
-        console.log("[getAvailableCouponsTool] Called with:", { authCustomerId, authRole, limit });
+    async ({ authId, authRole, limit = 20 }) => {
         try {
-            if (isAdmin(authRole)) {
-                if (authCustomerId) {
-                    const usages = await prisma.couponUsage.findMany({
-                        where: {
-                            customerId: authCustomerId,
-                            status: "ACTIVE",
-                            remaining: { gt: 0 },
-                            coupon: {
-                                expireAt: { gt: new Date() },
-                            },
-                        },
-                        include: { coupon: true },
-                        take: limit,
-                    });
-
-                    const customerCoupons = usages.map((usage) => ({
-                        ...usage.coupon,
-                        status: usage.status,
-                        remaining: usage.remaining,
-                        customerId: usage.customerId,
-                    }));
-
-                    return JSON.stringify(customerCoupons);
-                }
-
+            if ((isAdmin(authRole) || isEmployee(authRole))) {
                 const coupons = await prisma.coupon.findMany({
                     where: {
                         expireAt: { gt: new Date() },
                     },
                     take: limit,
                 });
-
                 return JSON.stringify(coupons);
             }
 
-            if (!authCustomerId) {
-                return JSON.stringify({ error: "Unauthorized: thiếu thông tin customer" });
+            if (!authId) {
+                return JSON.stringify({ error: "Unauthorized: thiếu thông tin auth" });
             }
 
             const couponUsages = await prisma.couponUsage.findMany({
                 where: {
-                    customerId: authCustomerId,
+                    customerId: authId,
                     status: "ACTIVE",
                     remaining: { gt: 0 },
                     coupon: {
@@ -161,12 +137,6 @@ export const getAvailableCouponsTool = tool(
         name: "getAvailableCoupons",
         description: "Lấy danh sách mã giảm giá còn hiệu lực của khách hàng (SHIPPING hoặc ORDER)",
         schema: z.object({
-            // customerId: z.string().optional().describe("Admin only: customer ID cần xem coupon"),
-            // authCustomerId: z.string().optional().describe("Injected by backend auth context"),
-            // authRole: z.number().optional().describe("Injected by backend auth context"),
-            // category: z.enum(["SHIPPING", "ORDER"])
-                    // .optional()
-                    // .describe("QUAN TRỌNG: Chỉ truyền trường này nếu khách hàng nhắc ĐÍCH DANH là 'mã freeship' (vận chuyển) hoặc 'mã đơn hàng'. Nếu khách hỏi chung chung như 'mã giảm giá', TUYỆT ĐỐI KHÔNG truyền trường này (để trống)."),
             limit: z.number().int().positive().default(20).describe("Số lượng mã"),
         }).passthrough(),
     }
@@ -174,9 +144,9 @@ export const getAvailableCouponsTool = tool(
 
 // Validate coupon
 export const validateCouponTool = tool(
-    async ({ couponCode, customerId, authCustomerId, authRole, orderAmount = null }) => {
+    async ({ couponCode, customerId, authId, authRole, orderAmount = null }) => {
         try {
-            const targetCustomerId = isAdmin(authRole) ? (customerId ?? authCustomerId) : authCustomerId;
+            const targetCustomerId = isAdmin(authRole) ? (customerId ?? authId) : authId;
 
             if (!targetCustomerId) {
                 return JSON.stringify({ valid: false, message: "Unauthorized: thiếu thông tin customer" });
@@ -237,7 +207,7 @@ export const validateCouponTool = tool(
         schema: z.object({
             couponCode: z.string().describe("Mã giảm giá"),
             // customerId: z.string().optional().describe("Admin only: customer ID cần validate"),
-            // authCustomerId: z.string().optional().describe("Injected by backend auth context"),
+            // authId: z.string().optional().describe("Injected by backend auth context"),
             // authRole: z.number().optional().describe("Injected by backend auth context"),
             orderAmount: z.number().optional().describe("Tổng tiền đơn hàng (để tính % giảm)"),
         }).passthrough(),
