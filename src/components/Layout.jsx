@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "@/components/Header/Navbar/Navbar";
 import "./Layout.css";
 import ScrollToTop from "@/components/ScrollToTop";
+import ChatbotWidget from "@/components/ChatbotWidget/ChatbotWidget";
 /**
  * Layout Component: Bộ khung tối ưu cho Fluid Design.
  * Cấu trúc semantic giúp hỗ trợ SEO và Accessibility tốt hơn.
@@ -23,6 +24,7 @@ const Layout = () => {
             </main>
 
             <ScrollToTop />
+            <ChatbotWidget />
             {/* Footer sẽ được thêm vào đây trong tương lai */}
         </div>
     );

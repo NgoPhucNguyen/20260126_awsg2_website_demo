@@ -15,7 +15,8 @@ const allowedOrigins = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
     'https://feature-aws-setup.d2bre07rfuezd0.amplifyapp.com',
-    'https://d26vwje9y7sojm.cloudfront.net'
+    'https://d26vwje9y7sojm.cloudfront.net',
+    'https://d2thdp4qpdkr5u.cloudfront.net',
 ];
 
 // 2. MIDDLEWARE
@@ -41,12 +42,12 @@ app.use('/api', apiRoutes);
 
 // 4. GLOBAL ERROR HANDLER (Safety Net)
 app.use((err, req, res, next) => {
-    console.error("🔥 Global Error:", err.stack);
+    console.error("[🔥 Global Error] ", err.stack);
     res.status(500).json({ message: err.message });
 });
 
 // 5. START
-app.listen(PORT, '0.0.0.0', () => { 
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📡 Connected to AWS Region: ${process.env.AWS_REGION}`);
+    console.log(`📡 Connected to AWS Region: ${process.env.AWS_S3_REGION}`);
 });

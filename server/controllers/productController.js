@@ -1,4 +1,103 @@
 import prisma from '../prismaClient.js';
+import EmbeddingClient from '#server/chatbot/core/embedding_model.js';
+
+const embeddingClient = new EmbeddingClient();
+let vectorInfraReady = false;
+
+const toVectorLiteral = (values = []) => {
+  const sanitized = values.map((v) => {
+    const num = Number(v);
+    return Number.isFinite(num) ? num : 0;
+  });
+  return `[${sanitized.join(',')}]`;
+};
+
+const buildProductDocument = (product) => {
+  const name = product.name?.trim() || 'Khong co ten tieng Anh';
+  const nameVn = product.nameVn?.trim() || 'Khong co ten tieng Viet';
+  const description = product.description?.trim() || 'Khong co mo ta';
+  const ingredient = product.ingredient?.trim() || 'Khong co thanh phan';
+
+  return [
+    `Product ID: ${product.id}`,
+    `English Name: ${name}`,
+    `Vietnamese Name: ${nameVn}`,
+    `Description: ${description}`,
+    `Ingredients: ${ingredient}`,
+  ].join('\n');
+};
+
+const ensureVectorInfra = async (dimensions) => {
+  if (!Number.isInteger(dimensions) || dimensions <= 0) {
+    throw new Error(`Invalid embedding dimensions: ${dimensions}`);
+  }
+
+  if (vectorInfraReady) {
+    return;
+  }
+
+  await prisma.$executeRawUnsafe('CREATE EXTENSION IF NOT EXISTS vector;');
+  await prisma.$executeRawUnsafe(`
+    CREATE TABLE IF NOT EXISTS product_vectors (
+      product_id INTEGER PRIMARY KEY REFERENCES product(id) ON DELETE CASCADE,
+      content TEXT NOT NULL,
+      embedding VECTOR(${dimensions}) NOT NULL,
+      metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `);
+  await prisma.$executeRawUnsafe(`
+    ALTER TABLE product_vectors
+    ALTER COLUMN embedding TYPE VECTOR(${dimensions});
+  `);
+  vectorInfraReady = true;
+};
+
+const syncProductVector = async (productId) => {
+  const product = await prisma.product.findUnique({
+    where: { id: Number(productId) },
+    select: {
+      id: true,
+      name: true,
+      nameVn: true,
+      description: true,
+      ingredient: true,
+    },
+  });
+
+  if (!product) {
+    return;
+  }
+
+  const content = buildProductDocument(product);
+  const embedding = await embeddingClient.createEmbedding(content);
+  const dimensions = embedding.length;
+
+  await ensureVectorInfra(dimensions);
+
+  const vectorLiteral = toVectorLiteral(embedding);
+  const metadata = {
+    name: product.name ?? '',
+    nameVn: product.nameVn ?? '',
+  };
+
+  await prisma.$executeRawUnsafe(
+    `
+      INSERT INTO product_vectors (product_id, content, embedding, metadata, updated_at)
+      VALUES ($1, $2, $3::vector, $4::jsonb, NOW())
+      ON CONFLICT (product_id)
+      DO UPDATE SET
+        content = EXCLUDED.content,
+        embedding = EXCLUDED.embedding,
+        metadata = EXCLUDED.metadata,
+        updated_at = NOW();
+    `,
+    product.id,
+    content,
+    vectorLiteral,
+    JSON.stringify(metadata)
+  );
+};
 
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
@@ -407,10 +506,64 @@ export const createProduct = async (req, res) => {
             }
         });
 
+        await syncProductVector(newProduct.id);
+
         res.status(201).json({ message: "Product created successfully!", product: newProduct });
         
     } catch (error) {
         console.error("❌ Error creating product:", error);
         res.status(500).json({ error: "Failed to create product in database." });
     }
+};
+
+export const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const productId = Number(id);
+
+    if (Number.isNaN(productId)) {
+      return res.status(400).json({ error: 'Invalid product id' });
+    }
+
+    const {
+      name,
+      nameVn,
+      brandId,
+      categoryId,
+      description,
+      ingredient,
+      skinType,
+      isActive,
+    } = req.body;
+
+    const existingProduct = await prisma.product.findUnique({ where: { id: productId } });
+    if (!existingProduct) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    const updatedProduct = await prisma.product.update({
+      where: { id: productId },
+      data: {
+        ...(name !== undefined ? { name } : {}),
+        ...(nameVn !== undefined ? { nameVn } : {}),
+        ...(brandId !== undefined ? { brandId } : {}),
+        ...(categoryId !== undefined ? { categoryId: Number(categoryId) } : {}),
+        ...(description !== undefined ? { description } : {}),
+        ...(ingredient !== undefined ? { ingredient } : {}),
+        ...(skinType !== undefined ? { skinType } : {}),
+        ...(isActive !== undefined ? { isActive: Boolean(isActive) } : {}),
+      },
+      include: {
+        brand: true,
+        category: true,
+      },
+    });
+
+    await syncProductVector(updatedProduct.id);
+
+    return res.json({ message: 'Product updated successfully!', product: updatedProduct });
+  } catch (error) {
+    console.error('❌ Error updating product:', error);
+    return res.status(500).json({ error: 'Failed to update product.' });
+  }
 };

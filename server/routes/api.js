@@ -7,25 +7,28 @@ import productRoutes from './productRoutes.js';
 import customerRoutes from './customerRoutes.js';
 import uploadRoutes from './uploadRoutes.js';
 import profileRoutes from './profileRoutes.js'; 
-import cartRoutes from './cartRoutes.js'; // Import cart routes
+import cartRoutes from './cartRoutes.js'; 
 import couponRoutes from './couponRoutes.js';
 import promotionRoutes from './promotionRoutes.js';
 import categoryRoutes from './categoryRoute.js';
-import orderRoutes from './orderRoutes.js'; // Import order routes
+import chatbotRoute from './chatbotRoute.js';
+import orderRoutes from './orderRoutes.js'; 
+
 const router = express.Router();
 
 // --- MOUNT ROUTES ---
 router.use('/auth', authRoutes);
 router.use('/products', productRoutes);
-router.use('/cart', cartRoutes); // Mount cart routes under /api/cart
-router.use('/orders', orderRoutes); // Mount order routes under /api/orders
+router.use('/cart', cartRoutes);
+router.use('/orders', orderRoutes);
 // Admin routes
 router.use('/categories', categoryRoutes);
 router.use('/customers', customerRoutes);
 router.use('/coupons', couponRoutes);
 router.use('/promotions', promotionRoutes);
+router.use('/chatbot', chatbotRoute);
 
 router.use('/upload', uploadRoutes);
-router.use('/profile', profileRoutes); // Mount profile routes under /api/profile
+router.use('/profile', profileRoutes);
 
 export default router;
