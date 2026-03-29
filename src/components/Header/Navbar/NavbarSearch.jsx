@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiX } from "react-icons/fi";
+import { FiX, FiSearch } from "react-icons/fi"; // Thêm FiSearch
 import './NavbarSearch.css';
 
 const NavbarSearch = () => {
@@ -16,7 +16,9 @@ const NavbarSearch = () => {
     };
 
     return (
-        <div className="search-wrapper">
+        <div className="navbar-search-wrapper">
+            <FiSearch className="navbar-search-icon" /> {/* Icon Kính lúp */}
+            
             <input 
                 type="text" 
                 placeholder="Tìm kiếm..." 
@@ -24,12 +26,13 @@ const NavbarSearch = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={handleSearch}
                 aria-label="Tìm kiếm sản phẩm"
+                className="navbar-search-input"
             />
 
             {/* Nút xóa chỉ hiện khi có text */}
             {searchTerm && (
                 <button 
-                    className="clear-btn" 
+                    className="navbar-search-clear-btn" 
                     onClick={() => setSearchTerm("")}
                     aria-label="Xóa nội dung"
                 >

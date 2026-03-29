@@ -35,10 +35,10 @@
     text-align: center;
     
     /* Hiệu ứng nảy (Pop) mượt mà khi Modal xuất hiện */
-    animation: modalPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: contactModalPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes modalPopIn {
+@keyframes contactModalPopIn {
     from { opacity: 0; transform: scale(0.95) translateY(10px); }
     to { opacity: 1; transform: scale(1) translateY(0); }
 }
@@ -46,19 +46,19 @@
 /* ========================================================= */
 /* 3. TYPOGRAPHY & CLOSE BUTTON                              */
 /* ========================================================= */
-.modal-title {
+.contact-modal-title {
     font-size: clamp(1.25rem, 2vw + 0.5rem, 1.75rem);
     margin-bottom: 0.5rem;
     color: var(--text-primary, #1c1917);
 }
 
-.modal-subtitle {
+.contact-modal-subtitle {
     font-size: clamp(0.85rem, 1vw + 0.2rem, 1rem);
     color: var(--text-secondary, #57534e);
     margin-bottom: clamp(1rem, 3vw, 1.5rem);
 }
 
-.modal-close-btn {
+.contact-modal-close-btn {
     position: absolute;
     /* 📐 Định vị động: Xê dịch tỷ lệ thuận với padding của Box */
     top: clamp(12px, 2vw, 24px);
@@ -80,14 +80,14 @@
     transition: background-color 0.2s, color 0.2s;
 }
 
-.modal-close-btn:hover {
+.contact-modal-close-btn:hover {
     color: var(--text-primary, #1a1a1a);
 }
 
 /* ========================================================= */
 /* 4. FORM FIELDS (TEXTAREA)                                 */
 /* ========================================================= */
-.modal-textarea {
+.contact-modal-textarea {
     width: 100%;
     /* 📏 Đảm bảo khung nhập không quá lùn trên Desktop và không quá chiếm chỗ trên iPhone */
     min-height: clamp(100px, 15vh, 140px);
@@ -102,7 +102,7 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.modal-textarea:focus {
+.contact-modal-textarea:focus {
     outline: none;
     border-color: var(--accent-yellow, #E6C27A);
     box-shadow: 0 0 0 3px rgba(230, 194, 122, 0.15);
@@ -111,7 +111,7 @@
 /* ========================================================= */
 /* 5. CỤM NÚT BẤM (SMART GRID LAYOUT)                        */
 /* ========================================================= */
-.modal-actions {
+.contact-modal-actions {
     margin-top: clamp(1.25rem, 3vw, 1.75rem);
     
     /* 🚀 BÍ QUYẾT GRID KHÔNG CẦN MEDIA QUERY: 
@@ -123,7 +123,7 @@
     gap: clamp(0.75rem, 2vw, 1rem);
 }
 
-.modal-send-btn, .modal-cancel-btn {
+.contact-modal-send-btn, .contact-modal-cancel-btn {
     padding: clamp(0.75rem, 1.5vw, 1rem);
     border-radius: 8px;
     font-weight: 600;
@@ -132,15 +132,15 @@
     transition: opacity 0.2s, background-color 0.2s;
 }
 
-.modal-send-btn {
+.contact-modal-send-btn {
     background-color: var(--text-primary, #1c1917);
     color: #ffffff;
     border: none;
 }
 
-.modal-send-btn:hover { opacity: 0.9; }
+.contact-modal-send-btn:hover { opacity: 0.9; }
 
-.cancel-btn {
+.contact-modal-cancel-btn { /* 🚀 Đã sửa lỗi đánh máy từ .cancel-btn */
     background-color: transparent;
     color: var(--text-secondary, #57534e);
     border: 1px solid var(--border-color, #e5e5e5);
@@ -148,9 +148,9 @@
     order: -1; 
 }
 
-.modal-cancel-btn:hover { background-color: #f9fafb; }
+.contact-modal-cancel-btn:hover { background-color: #f9fafb; }
 
 /* Desktop override: Trả lại thứ tự chuẩn (Cancel nằm bên phải) */
 @media (min-width: 480px) {
-    .modal-cancel-btn { order: 1; }
+    .contact-modal-cancel-btn { order: 1; }
 }
