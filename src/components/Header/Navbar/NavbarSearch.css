@@ -1,5 +1,5 @@
 /* --- LỚP VỎ CHÍNH (WRAPPER TỐI GIẢN) --- */
-.search-wrapper {
+.navbar-search-wrapper {
     position: relative;
     width: 100%;
     /* Chiều cao linh hoạt nhưng giữ thiết kế phẳng, trung tính */
@@ -11,13 +11,14 @@
 }
 
 /* Tập trung (Focus) cơ bản, không màu mè */
-.search-wrapper:focus-within {
+.navbar-search-wrapper:focus-within {
     background-color: #ffffff;
     border-color: #999999;
 }
 
 /* --- ĐỊNH VỊ ICONS CƠ BẢN --- */
-.search-icon, .clear-btn {
+.navbar-search-icon, 
+.navbar-search-clear-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -27,14 +28,14 @@
     justify-content: center;
 }
 
-.search-icon {
+.navbar-search-icon {
     left: clamp(10px, 1.5vw, 16px);
     font-size: clamp(1rem, 1.2vw, 1.2rem);
     pointer-events: none;
     padding-right: 10px;
 }
 
-.clear-btn {
+.navbar-search-clear-btn {
     right: 8px;
     background: none;
     border: none;
@@ -45,13 +46,13 @@
 }
 
 /* Hover trung tính, không dùng màu đỏ */
-.clear-btn:hover {
+.navbar-search-clear-btn:hover {
     color: #000000;
     background-color: #e5e5e5;
 }
 
 /* --- VÙNG NHẬP LIỆU (INPUT) --- */
-.search-wrapper input {
+.navbar-search-input {
     width: 100%;
     height: 100%;
     border: none;
@@ -69,7 +70,7 @@
 
 /* Tối ưu Placeholder cho mobile nhỏ */
 @media screen and (max-width: 375px) {
-    .search-wrapper input::placeholder {
+    .navbar-search-input::placeholder {
         font-size: 0.8rem;
     }
 }

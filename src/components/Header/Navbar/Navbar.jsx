@@ -4,10 +4,9 @@ import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/features/auth/AuthProvider";
 import { useCart } from "@/context/CartProvider";
 import { useTranslation } from "react-i18next";
-// Bổ sung FiMessageCircle cho icon Contact trên mobile
 import { FiShoppingCart, FiSettings, FiUser, FiMessageCircle } from "react-icons/fi";
 
-import NavbarSearch from "./NavbarSearch"; // Component Search của bạn
+import NavbarSearch from "./NavbarSearch";
 import NavbarDropdown from "./NavbarDropdown";
 import NavbarModals from "./NavbarModals";
 
@@ -58,52 +57,47 @@ const Navbar = () => {
 
     return (
         <>
-            {/* Thẻ nav bọc ngoài cùng sẽ là Flex Container có khả năng Wrap */}
             <nav className="navbar" role="navigation">
-
                 {/* 🏠 LEFT SECTION: Brand Logo & Admin */}
-                <div className="nav-links-left">
-                    <NavLink to="/" className="brand-link" aria-label="Trang chủ">
+                <div className="navbar-left">
+                    <NavLink to="/" className="navbar-brand-link" aria-label="Trang chủ">
                         <picture>
-                            {/* Mobile: Hiển thị icon vỏ sò */}
                             <source media="(max-width: 768px)" srcSet="/src/assets/shell-icon.png" />
-                            {/* Desktop: Hiển thị Logo chữ ngang */}
-                            <img src="/src/assets/bigbrandlogo.jpg" alt="Aphrodite Logo" className="brand-logo" />
+                            <img src="/src/assets/bigbrandlogo.jpg" alt="Aphrodite Logo" className="navbar-brand-logo" />
                         </picture>
                     </NavLink>
                     
                     {isAdmin && (
-                        <NavLink to="/admin" className="nav-btn admin-btn">
-                            <FiSettings />
+                        <NavLink to="/admin" className="navbar-btn navbar-admin-btn">
+                            <FiSettings className="navbar-btn-icon admin-icon" />
                         </NavLink>
                     )}
                 </div>
 
-                {/* 🔍 MIDDLE SECTION: Search Bar (Sẽ tự rớt xuống dòng trên Mobile nhờ CSS) */}
-                {/* Lưu ý: Container của NavbarSearch cần class .nav-search-container */}
-                <div className="nav-search-container">
+                {/* 🔍 MIDDLE SECTION: Search Bar */}
+                <div className="navbar-center-search">
                     <NavbarSearch/>
                 </div>
 
                 {/* 🛒 RIGHT SECTION: Actions (Contact, Cart, Account) */}
-                <div className={`nav-links-right ${isMobileOpen ? 'mobile-active' : ''}`}>
+                <div className={`navbar-right ${isMobileOpen ? 'mobile-active' : ''}`}>
                     
-                    {/* Nút Contact: Icon trên Mobile, Chữ trên Desktop */}
-                    <button className="nav-btn action-btn" onClick={() => openModal('contact')}>
-                        <FiMessageCircle/> 
-                        <span className="nav-text hide-on-mobile">Liên hệ</span>
+                    {/* 1. Nút Liên hệ */}
+                    <button className="navbar-btn navbar-contact-btn" onClick={() => openModal('contact')}>
+                        <FiMessageCircle className="navbar-btn-icon contact-icon" /> 
+                        <span className="navbar-btn-text contact-text hide-on-mobile">Liên hệ</span>
                     </button>
 
-                    {/* Nút Giỏ hàng: Thêm text trên Desktop */}
-                    <NavLink to="/cart" className="nav-btn action-btn cart-nav-btn">
-                        <div className="icon-wrapper">
-                            <FiShoppingCart />
-                            {totalItems > 0 && <span className="cart-badge">{totalItems}</span>}
+                    {/* 2. Nút Giỏ hàng */}
+                    <NavLink to="/cart" className="navbar-btn navbar-cart-btn">
+                        <div className="navbar-cart-icon-wrapper">
+                            <FiShoppingCart className="navbar-btn-icon cart-icon" />
+                            {totalItems > 0 && <span className="navbar-cart-badge">{totalItems}</span>}
                         </div>
-                        <span className="nav-text hide-on-mobile">Giỏ hàng</span>
+                        <span className="navbar-btn-text cart-text hide-on-mobile">Giỏ hàng</span>
                     </NavLink>
 
-                    {/* Nút Tài khoản */}
+                    {/* 3. Nút Tài khoản / Đăng nhập */}
                     {isLoggedIn ? (
                         <NavbarDropdown 
                             accountName={auth?.accountName} 
@@ -111,12 +105,9 @@ const Navbar = () => {
                             onLogout={handleLogout} 
                         />
                     ) : (
-                        <button className="nav-btn action-btn login-trigger" onClick={() => openModal('login')}>
-                            <FiUser />
-                            <div className="auth-text-wrapper">
-                                {/* Mobile hiển thị chữ ngắn, Desktop hiển thị chữ dài */}
-                                <span className="nav-text">Đăng nhập</span>
-                            </div>
+                        <button className="navbar-btn navbar-login-btn" onClick={() => openModal('login')}>
+                            <FiUser className="navbar-btn-icon login-icon" />
+                            <span className="navbar-btn-text login-text">Đăng nhập</span>
                         </button>
                     )}
                 </div>

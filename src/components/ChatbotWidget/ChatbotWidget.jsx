@@ -90,7 +90,7 @@ const ChatbotWidget = () => {
         <div className="chatbot-widget-root" aria-live="polite">
             <button
                 type="button"
-                className="chatbot-fab"
+                className="chatbot-widget-fab"
                 onClick={() => setIsOpen((prev) => !prev)}
                 aria-label={isOpen ? "Dong chatbot" : "Mo chatbot"}
                 title={isOpen ? "Dong chatbot" : "Mo chatbot"}
@@ -99,35 +99,35 @@ const ChatbotWidget = () => {
             </button>
 
             {isOpen && (
-                <section className="chatbot-panel" role="dialog" aria-label="Ho tro chatbot">
-                    <header className="chatbot-panel-header">
-                        <div className="chatbot-header-left">
-                            <span className="chatbot-avatar">AI</span>
+                <section className="chatbot-widget-panel" role="dialog" aria-label="Ho tro chatbot">
+                    <header className="chatbot-widget-header">
+                        <div className="chatbot-widget-header-left">
+                            <span className="chatbot-widget-avatar">AI</span>
                             <div>
                                 <h3>Trợ lý chăm sóc da</h3>
                                 <p>Online</p>
                             </div>
                         </div>
-                        <button type="button" className="chatbot-clear-btn" onClick={clearHistory}>
+                        <button type="button" className="chatbot-widget-clear-btn" onClick={clearHistory}>
                             Xóa lịch sử
                         </button>
                     </header>
 
-                    <div className="chatbot-messages" ref={listRef}>
+                    <div className="chatbot-widget-messages" ref={listRef}>
                         {messages.map((message) => (
                             <article
                                 key={message.id}
-                                className={`chat-message ${message.role === "user" ? "chat-message-user" : "chat-message-bot"}`}
+                                className={`chatbot-widget-message ${message.role === "user" ? "chatbot-widget-message-user" : "chatbot-widget-message-bot"}`}
                             >
-                                {message.role === "bot" && <span className="chat-inline-avatar">AI</span>}
+                                {message.role === "bot" && <span className="chatbot-widget-inline-avatar">AI</span>}
                                 <p>{message.text}</p>
                             </article>
                         ))}
 
                         {isTyping && (
-                            <article className="chat-message chat-message-bot">
-                                <span className="chat-inline-avatar">AI</span>
-                                <p className="chat-typing" aria-label="Chatbot dang tra loi">
+                            <article className="chatbot-widget-message chatbot-widget-message-bot">
+                                <span className="chatbot-widget-inline-avatar">AI</span>
+                                <p className="chatbot-widget-typing" aria-label="Chatbot dang tra loi">
                                     <span>.</span>
                                     <span>.</span>
                                     <span>.</span>
@@ -136,7 +136,7 @@ const ChatbotWidget = () => {
                         )}
                     </div>
 
-                    <form className="chatbot-input-row" onSubmit={handleSubmit}>
+                    <form className="chatbot-widget-input-row" onSubmit={handleSubmit}>
                         <input
                             type="text"
                             value={input}

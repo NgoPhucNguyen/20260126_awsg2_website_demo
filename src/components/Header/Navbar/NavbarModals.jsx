@@ -32,25 +32,24 @@ const ContactModal = ({ isOpen, onClose }) => {
         /* Thêm aria-modal và role để đạt chuẩn Accessibility (a11y) */
         <div className="contact-modal-overlay" onClick={onClose} aria-modal="true" role="dialog">
             <div className="contact-modal-box" onClick={(e) => e.stopPropagation()}>
-                <div className="modal-header">
-                    <h3 className="modal-title">Contact Us</h3>
-                    <button onClick={onClose} className="modal-close-btn" aria-label="Đóng hộp thoại">✕</button>
+                <div className="contact-modal-header">
+                    <h3 className="contact-modal-title">Liên hệ với chúng tôi</h3>
+                    <button onClick={onClose} className="contact-modal-close-btn" aria-label="Đóng hộp thoại">✕</button>
                 </div>
                 
                 <form onSubmit={handleSubmit}>
-                    <p className="modal-subtitle">Email: support@aphrodite.com</p>
+                    <p className="contact-modal-subtitle">Email: support@aphrodite.com</p>
                     <textarea
-                        className="modal-textarea"
+                        className="contact-modal-textarea"
                         placeholder="How can we help?"
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         rows={4}
-                        required
                         aria-label="Nội dung tin nhắn"
                     />
-                    <div className="modal-actions">
-                        <button type="submit" className="modal-send-btn">Send</button>
-                        <button type="button" className="modal-cancel-btn" onClick={onClose}>Cancel</button>
+                    <div className="contact-modal-actions">
+                        <button type="submit" className="contact-modal-send-btn">Gửi</button>
+                        <button type="button" className="contact-modal-cancel-btn" onClick={onClose}>Hủy</button>
                     </div>
                 </form>
             </div>
