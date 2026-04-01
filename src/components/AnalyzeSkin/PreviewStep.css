@@ -1,0 +1,105 @@
+/* ==========================================================================
+   PREVIEW STEP COMPONENT STYLES
+   ========================================================================== */
+
+/* Khung viền ngoài giống chiếc điện thoại (khớp với CameraStep) */
+.analyzeskin-previewstep-container {
+  width: 100%;
+  max-width: 450px; /* Chiều rộng chuẩn điện thoại */
+  margin: 0 auto;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px; /* Bo góc mềm mại */
+  padding: 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05); /* Bóng đổ êm */
+}
+
+.analyzeskin-previewstep-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a; /* Slate 900 */
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+/* Khung chứa ảnh chân dung (Ép tỷ lệ 3:4) */
+.analyzeskin-previewstep-image-wrapper {
+  width: 100%;
+  aspect-ratio: 3 / 4; /* Tỷ lệ dọc Portrait */
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #f8fafc; /* Màu lót khi ảnh tải */
+  margin-bottom: 24px;
+}
+
+.analyzeskin-previewstep-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Đảm bảo ảnh luôn lấp đầy khung mà không bị méo */
+  display: block;
+}
+
+/* Khu vực nút bấm */
+.analyzeskin-previewstep-action-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Nút Phân Tích (Xanh Ngọc - Emerald) */
+.analyzeskin-previewstep-btn-analyze {
+  width: 100%;
+  background-color: #E6C27A;
+  color: #ffffff;
+  border: none;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.analyzeskin-previewstep-btn-analyze:hover:not(:disabled) {
+  background-color: #E6C27A;
+}
+
+.analyzeskin-previewstep-btn-analyze:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Trạng thái đang tải (Loading) */
+.analyzeskin-previewstep-btn-analyze.loading,
+.analyzeskin-previewstep-btn-analyze:disabled {
+  background-color: #94a3b8; /* Xám Slate 400 */
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* Nút Chụp Lại */
+.analyzeskin-previewstep-btn-secondary {
+  width: 100%;
+  background-color: transparent;
+  color: #64748b; /* Slate 500 */
+  border: 1px solid #cbd5e1; /* Slate 300 */
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.analyzeskin-previewstep-btn-secondary:hover:not(:disabled) {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.analyzeskin-previewstep-btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

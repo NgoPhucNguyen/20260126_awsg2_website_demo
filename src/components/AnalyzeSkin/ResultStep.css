@@ -1,0 +1,120 @@
+/* ==========================================================================
+   RESULT STEP COMPONENT STYLES
+   ========================================================================== */
+
+.analyzeskin-component-result-view {
+  background-color: #f8fafc;
+  padding: 30px;
+  border-radius: 16px;
+  margin-top: 20px;
+  border: 1px solid #e2e8f0;
+  width: 100%;
+}
+
+.analyzeskin-component-result-title {
+  font-size: 22px;
+  color: #1e293b;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+/* Tone Da */
+.analyzeskin-component-result-skintone-box {
+  background-color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #475569;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 25px;
+  width: 100%;
+  text-align: left;
+}
+
+.analyzeskin-component-result-highlight {
+  color: #d946ef; 
+  font-size: 18px;
+}
+
+.analyzeskin-component-result-error-text {
+  color: #ef4444;
+  font-size: 14px;
+}
+
+/* Lưới hiển thị các chỉ số */
+.analyzeskin-component-result-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* Thẻ (Card) chứa từng chỉ số */
+.analyzeskin-component-result-metric-card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  text-align: left;
+  border-left: 4px solid #ccc; /* Viền trái mặc định, sẽ bị ghi đè bởi style inline */
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.analyzeskin-component-result-metric-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+.analyzeskin-component-result-metric-name {
+  font-size: 16px;
+  color: #334155;
+  margin: 0 0 12px 0;
+}
+
+/* Thanh Tiến Trình (Progress Bar) */
+.analyzeskin-component-result-score-bar-bg {
+  width: 100%;
+  height: 8px;
+  background-color: #e2e8f0;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.analyzeskin-component-result-score-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.8s ease-in-out, background-color 0.3s ease;
+}
+
+.analyzeskin-component-result-metric-score {
+  font-size: 15px;
+  color: #64748b;
+  margin: 0 0 5px 0;
+}
+
+.analyzeskin-component-result-metric-confidence {
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* Nút bấm */
+.analyzeskin-component-result-btn-secondary {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid #cbd5e1;
+  background-color: white;
+  color: #475569;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+}
+
+.analyzeskin-component-result-btn-secondary:hover {
+  background-color: #f1f5f9;
+}

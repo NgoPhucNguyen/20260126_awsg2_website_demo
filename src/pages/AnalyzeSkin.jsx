@@ -1,130 +1,136 @@
-// AnalyzeSkin.jsx Page
-import './AnalyzeSkin.css'; 
-import { useState, useRef, useCallback } from "react";
-import Webcam from "react-webcam";
+import React, { useState, useRef } from 'react';
+import axios from '@/api/axios';
+import './AnalyzeSkin.css';
+
+// Import 4 component con
+import InstructionsStep from '@/components/AnalyzeSkin/InstructionsStep';
+import CameraStep from '@/components/AnalyzeSkin/CameraStep';
+import PreviewStep from '@/components/AnalyzeSkin/PreviewStep';
+import ResultStep from '@/components/AnalyzeSkin/ResultStep';
 
 const AnalyzeSkin = () => {
-    const webcamRef = useRef(null);
-    const fileInputRef = useRef(null);
-    const [image, setImage] = useState(null);
-    const [isCameraOpen, setIsCameraOpen] = useState(false);
-    // 1. CAPTURE FROM WEBCAM
-    const capture = useCallback(() => {
-        if (webcamRef.current) {
-        const imageSrc = webcamRef.current.getScreenshot();
-        setImage(imageSrc);
-        setIsCameraOpen(false);
-        }
-    }, [webcamRef]);
+  // --- ĐIỀU PHỐI MÀN HÌNH ---
+  const [currentStep, setCurrentStep] = useState('instructions'); 
+  
+  // --- LƯU TRỮ DỮ LIỆU ---
+  const [imageFile, setImageFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [result, setResult] = useState(null);
+  
+  // --- TRẠNG THÁI XỬ LÝ ---
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-    // 2. UPLOAD FROM COMPUTER (This was missing!)
-    const handleFileUpload = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-        const previewUrl = URL.createObjectURL(file);
-        setImage(previewUrl);
-        }
-    };
-    const triggerFileSelect = () => {
-        if (fileInputRef.current) {
-            fileInputRef.current.click();
-        }
+  const fileInputRef = useRef(null);
+
+  // --- 1. XỬ LÝ UPLOAD ẢNH CÓ SẴN ---
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+      setResult(null);
+      setError(null);
+      setCurrentStep('preview'); // Chuyển thẳng sang bước xem trước
     }
+  };
 
-    // 3. SEND TO BACKEND (This was missing!)
-    const submitImage = async () => {
-        if (!image) return;
+  const triggerFileInput = () => {
+    if (fileInputRef.current) fileInputRef.current.click();
+  };
 
-        // Convert Base64 to Blob if it came from Camera
-        const blob = await (await fetch(image)).blob(); 
+  // --- 2. XỬ LÝ ẢNH TỪ CAMERA ---
+  const handlePhotoCaptured = (file, url) => {
+    setImageFile(file);
+    setPreviewUrl(url);
+    setCurrentStep('preview'); // Chụp xong chuyển sang xem trước
+  };
 
-        const formData = new FormData();
-        formData.append("skinImage", blob, "scan.jpg");
+  // --- 3. GỌI API PYTHON ---
+  const handleAnalyze = async () => {
+    if (!imageFile) return;
+    setLoading(true);
+    setError(null);
+    setResult(null);
 
-        try {
-        // This Will have changes in the future 02/10
-        const response = await fetch("http://localhost:3500/upload", {
-            method: "POST",
-            body: formData,
-        });
-        const data = await response.json();
-        console.log("Success:", data);
-        alert("Image sent to backend! Check your server console.");
-        } catch (error) {
-        console.error("Error:", error);
-        alert("Failed to send image.");
-        }
-    };
+    const formData = new FormData();
+    formData.append('image', imageFile);
 
-    return (
-        <div className="analyze-container">
-        <h2>Skin Analysis</h2>
+    try {
+      const response = await axios.post('/api/analyze-skin', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setResult(response.data);
+      setCurrentStep('result'); // Thành công thì chuyển sang bảng điểm
+    } catch (err) {
+      console.error(err);
+      const errorMessage = err.response?.data?.error || err.message || 'Có lỗi xảy ra khi phân tích.';
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        {image ? (
-            /* VIEW 1: PREVIEW MODE */
-            <div>
-            <div className="media-box">
-                <img src={image} alt="Preview" />
-            </div>
-            <div className="action-buttons">
-                <button className="btn-secondary" onClick={() => setImage(null)}>Retake</button>
-                <button className="btn-success" onClick={submitImage}>Analyze Now</button>
-            </div>
-            </div>
-        ) : (
-            /* VIEW 2: SELECTION MODE */
-            <div>
-            {isCameraOpen ? (
-                /* CAMERA OPEN */
-                <div>
-                <div className="media-box">
-                    <Webcam
-                    audio={false}
-                    ref={webcamRef}
-                    screenshotFormat="image/jpeg"
-                    videoConstraints={{ facingMode: "user" }}
-                    />
-                </div>
-                <div className="action-buttons">
-                    <button className="btn-secondary" onClick={() => setIsCameraOpen(false)}>Cancel</button>
-                    <button className="btn-primary" onClick={capture}>📸 Snap Photo</button>
-                </div>
-                </div>
-            ) : (
-                /* DEFAULT START STATE */
-                <div>
-                <div className="media-box" style={{ backgroundColor: '#f9f9f9', flexDirection: 'column' }}>
-                    <p style={{ color: '#aaa' }}>No image selected</p>
-                </div>
-                
-                <div className="action-buttons-stacked">
-                    <button className="btn-primary" onClick={() => setIsCameraOpen(true)}>
-                    Open Camera
-                    </button>
-                
-                    <div className="separator">OR</div>
+  // --- 4. RESET LÀM LẠI TỪ ĐẦU ---
+  const resetFlow = () => {
+    setImageFile(null);
+    setPreviewUrl(null);
+    setResult(null);
+    setError(null);
+    setCurrentStep('instructions');
+  };
 
-                    <button className="btn-upload" onClick={triggerFileSelect}>
-                        📂 Upload from Computer
-                    </button>
+  return (
+    <div className="analyze-skin-page-container">
+      {/* Nút Upload ẩn */}
+      <input 
+        type="file" 
+        accept="image/*" 
+        ref={fileInputRef} 
+        onChange={handleFileChange} 
+        style={{ display: 'none' }} 
+      />
 
-                    {/* HIDDEN INPUT: The actual worker */}
-                    <input 
-                        type="file" 
-                        accept="image/*" 
-                        ref={fileInputRef} 
-                        onChange={handleFileUpload} 
-                        style={{ display: "none" }} // Hide it!
-                    />
-                </div>
-
-                
-                </div>
-            )}
-            </div>
-        )}
+      {/* HIỆN LỖI CHUNG (Nếu có) */}
+      {error && (
+        <div className="analyze-skin-page-error-box" style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span>⚠️ {error}</span>
+          <button onClick={() => setError(null)} style={{background:'none', border:'none', color:'red', fontWeight:'bold', cursor:'pointer'}}>X</button>
         </div>
-    );
+      )}
+
+      {/* LUÂN CHUYỂN 4 MÀN HÌNH */}
+      {currentStep === 'instructions' && (
+        <InstructionsStep 
+          onStartCamera={() => setCurrentStep('camera')} 
+          triggerFileInput={triggerFileInput} 
+        />
+      )}
+
+      {currentStep === 'camera' && (
+        <CameraStep 
+          onCapture={handlePhotoCaptured} 
+          onCancel={resetFlow} 
+        />
+      )}
+
+      {currentStep === 'preview' && (
+        <PreviewStep 
+          previewUrl={previewUrl} 
+          loading={loading} 
+          onAnalyze={handleAnalyze} 
+          onRetake={resetFlow} 
+        />
+      )}
+
+      {currentStep === 'result' && (
+        <ResultStep 
+          result={result} 
+          onReset={resetFlow} 
+        />
+      )}
+    </div>
+  );
 };
 
 export default AnalyzeSkin;

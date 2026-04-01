@@ -1,152 +1,68 @@
-/* AnalyzeSkin.css */
-
-/* 1. Main Card Container */
-.analyze-container {
-  /* 📏 Tự động co giãn từ 300px (Mobile) đến tối đa 550px (PC) */
-  width: clamp(300px, 90vw, 550px);
-  margin: clamp(2rem, 5vh, 4rem) auto;
-  padding: clamp(1.5rem, 4vw, 2.5rem);
-  
-  background-color: var(--bg-primary, #ffffff);
-  border-radius: clamp(12px, 2vw, 16px);
-  box-shadow: 0 clamp(8px, 2vw, 16px) clamp(20px, 4vw, 30px) rgba(0, 0, 0, 0.08);
-  text-align: center;
+/* AnalyzeSkin.css - L'Oreal + Modal Style */
+.analyze-skin-layout {
+  max-width: 600px;
+  margin: 40px auto;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #333;
 }
 
-.analyze-container h2 {
-  margin-bottom: clamp(15px, 4vw, 25px);
-  color: var(--text-primary, #1c1917);
-  font-size: clamp(1.5rem, 4vw, 1.8rem);
-  font-family: var(--font-heading, 'Inter', sans-serif);
-  font-weight: 700;
+/* Nút bấm chung */
+.btn {
+  padding: 14px 24px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; margin-bottom: 12px; transition: 0.2s; border: none;
+}
+.btn-primary { background: #df224b; color: white; }
+.btn-outline { background: transparent; border: 2px solid #df224b; color: #df224b; }
+.btn-analyze { background: #111; color: white; padding: 18px; font-size: 18px; margin-top: 20px;}
+
+/* STEP 1: HOME */
+.step-home h1 { text-align: center; }
+.guidelines { list-style: none; padding: 0; background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 30px;}
+.guidelines li { margin-bottom: 10px; font-size: 16px; }
+
+/* STEP 2: CAMERA MODAL */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 1000;
+}
+.modal-camera-content {
+  width: 100%; max-width: 500px; background: #111; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; align-items: center; position: relative;
+}
+.camera-header { width: 100%; display: flex; justify-content: space-between; color: white; margin-bottom: 15px;}
+.btn-close { background: transparent; color: white; border: none; font-size: 20px; cursor: pointer; }
+
+.video-wrapper { position: relative; width: 100%; border-radius: 12px; overflow: hidden; background: #000; display: flex; justify-content: center;}
+.video-feed { width: 100%; height: 60vh; object-fit: cover; transform: scaleX(-1); }
+.face-guide-oval {
+  position: absolute; top: 10%; width: 60%; height: 70%; border: 2px dashed rgba(255,255,255,0.7); border-radius: 50% / 60%; box-shadow: 0 0 0 1000px rgba(0,0,0,0.5); pointer-events: none;
 }
 
-/* 2. The Media Box (Camera or Image Preview) */
-.media-box {
-  width: 100%;
-  /* 📏 Thay vì fix 350px, ta cho nó linh hoạt từ 250px đến 350px tùy chiều cao màn hình */
-  height: clamp(250px, 45vh, 350px);
-  
-  background-color: #fcfcfc;
-  border: 2px dashed var(--border-color, #e5e5e5);
-  border-radius: clamp(8px, 1.5vw, 12px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  margin-bottom: clamp(15px, 4vw, 25px);
-  position: relative;
+.btn-capture {
+  width: 70px; height: 70px; background: white; border-radius: 50%; border: 4px solid #555; margin-top: 20px; cursor: pointer;
 }
+.btn-capture:active { transform: scale(0.9); }
+.hint-text { color: #888; font-size: 12px; margin-top: 10px; }
 
-.media-box img,
-.media-box video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: clamp(6px, 1vw, 10px);
-}
+/* STEP 3: SURVEY */
+.step-survey { text-align: center; }
+.preview-small img { max-width: 150px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 10px;}
+.survey-form { text-align: left; background: #f8f9fa; padding: 20px; border-radius: 12px; margin-top: 20px;}
+.survey-form label { display: block; font-weight: bold; margin-bottom: 8px; margin-top: 15px;}
+.survey-form select { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 16px;}
 
-/* 3. Button Styles - GENERAL */
-.analyze-container button {
-  padding: clamp(10px, 2vw, 14px) clamp(16px, 4vw, 24px);
-  border: none;
-  border-radius: clamp(6px, 1vw, 8px);
-  font-size: clamp(0.9rem, 1.5vw, 1rem);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
+/* STEP 4: ANALYZING */
+.step-analyzing { text-align: center; padding: 50px 0; }
+.progress-bar-bg { width: 100%; height: 12px; background: #eee; border-radius: 10px; overflow: hidden; margin-top: 20px;}
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, #df224b, #ff4d6d); transition: width 0.4s ease; }
 
-/* 4. MÀU SẮC ĐỒNG BỘ THƯƠNG HIỆU (THAY THẾ BOOTSTRAP COLORS) */
+/* STEP 5: RESULT GRID */
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;}
+.result-card { background: white; border: 1px solid #eaeaea; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: left;}
+.tone-card { grid-column: 1 / -1; background: #fff5f7; border-color: #fbcfe8; }
+.tone-card .value { font-size: 24px; font-weight: bold; color: #df224b; }
+.metric-card h3 { font-size: 14px; color: #555; margin: 0 0 10px 0;}
+.score-visual { display: flex; align-items: center; gap: 10px; margin-bottom: 5px;}
+.score-num { font-size: 20px; font-weight: bold; }
+.mini-bar-bg { flex: 1; height: 6px; background: #eee; border-radius: 3px; }
+.mini-bar-fill { height: 100%; background: #df224b; border-radius: 3px; }
 
-/* Đen Sang Trọng (Primary - Open Camera / Snap) */
-.btn-primary {
-  background-color: var(--text-primary, #1c1917);
-  color: #ffffff;
-}
-.btn-primary:hover {
-  background-color: #333333;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-/* Xám Nhạt (Secondary - Cancel / Retake) */
-.btn-secondary {
-  background-color: #f5f5f5;
-  color: var(--text-primary, #1c1917);
-}
-.btn-secondary:hover {
-  background-color: #e5e5e5;
-}
-
-/* Vàng Gold (Success - Analyze Now) */
-.btn-success {
-  background-color: var(--accent-yellow, #cca858);
-  color: var(--text-primary, #1c1917);
-}
-.btn-success:hover {
-  filter: brightness(1.05);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(204, 168, 88, 0.3);
-}
-
-/* Nút Ghost (Upload) */
-.btn-upload {
-  background-color: transparent;
-  border: 2px solid var(--text-primary, #1c1917);
-  color: var(--text-primary, #1c1917);
-}
-.btn-upload:hover {
-  background-color: var(--text-primary, #1c1917);
-  color: #ffffff;
-}
-
-/* 5. Layout for Buttons */
-
-.action-buttons {
-  display: flex;
-  justify-content: center;
-  gap: clamp(10px, 3vw, 15px);
-}
-
-.action-buttons button {
-  flex: 1; /* Nút tự động chia đều chiều ngang */
-}
-
-.action-buttons-stacked {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(12px, 3vw, 16px);
-  width: 100%;
-}
-
-.action-buttons-stacked button {
-  width: clamp(200px, 80%, 300px);
-}
-
-/* 6. The "OR" Separator */
-.separator {
-  display: flex;
-  align-items: center;
-  width: clamp(200px, 80%, 300px);
-  margin: clamp(5px, 1.5vw, 10px) auto;
-  color: var(--text-secondary, #666);
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.separator::before,
-.separator::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: var(--border-color, #e5e5e5);
-  margin: 0 10px;
-}
+.error-msg { color: #d32f2f; background: #ffebe9; padding: 10px; border-radius: 6px; margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
