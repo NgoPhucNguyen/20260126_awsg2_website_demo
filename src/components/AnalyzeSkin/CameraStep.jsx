@@ -134,6 +134,18 @@ const CameraStep = ({ onCapture, onCancel }) => {
 
   return (
     <div className="analyzeskin-camerastep-container">
+
+      {/* CÂU NHẮC NHỞ */}
+      <div className="analyzeskin-camerastep-guide-wrapper">
+        <p className="analyzeskin-camerastep-guide-text">
+          {faceStatus === 'Không thấy mặt' ? 'Vui lòng đưa mặt vào khung hình' :
+           faceStatus === 'Chỉ 1 người chụp' ? 'Vui lòng đảm bảo chỉ có 1 người trong khung hình' :
+           faceStatus === 'Quá xa' ? 'Tiến lại gần màn hình một chút' :
+           faceStatus === 'Quá gần' ? 'Lùi ra xa màn hình một chút' :
+           lightStatus !== 'Tốt' ? 'Hãy điều chỉnh lại ánh sáng xung quanh' : 
+           'Khuôn mặt hoàn hảo! Hãy giữ yên và bấm chụp.'}
+        </p>
+      </div>
       
       {/* THANH TRẠNG THÁI AI */}
       <div className="analyzeskin-camerastep-status-bar">
@@ -163,18 +175,6 @@ const CameraStep = ({ onCapture, onCancel }) => {
             style={{ borderColor: isReadyToCapture ? 'var(--accent-yellow)' : 'var(--border-color)' }}
           ></div>
         </div>
-      </div>
-
-      {/* CÂU NHẮC NHỞ */}
-      <div className="analyzeskin-camerastep-guide-wrapper">
-        <p className="analyzeskin-camerastep-guide-text">
-          {faceStatus === 'Không thấy mặt' ? 'Vui lòng đưa mặt vào khung hình' :
-           faceStatus === 'Chỉ 1 người chụp' ? 'Vui lòng đảm bảo chỉ có 1 người trong khung hình' :
-           faceStatus === 'Quá xa' ? 'Tiến lại gần màn hình một chút' :
-           faceStatus === 'Quá gần' ? 'Lùi ra xa màn hình một chút' :
-           lightStatus !== 'Tốt' ? 'Hãy điều chỉnh lại ánh sáng xung quanh' : 
-           'Khuôn mặt hoàn hảo! Hãy giữ yên và bấm chụp.'}
-        </p>
       </div>
 
       {/* KHU VỰC ĐIỀU KHIỂN */}

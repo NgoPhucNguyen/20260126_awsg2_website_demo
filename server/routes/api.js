@@ -13,7 +13,9 @@ import promotionRoutes from './promotionRoutes.js';
 import categoryRoutes from './categoryRoute.js';
 import chatbotRoute from './chatbotRoute.js';
 import orderRoutes from './orderRoutes.js'; 
+import analyticsRoutes from './analyticsRoutes.js';
 import analyzeRoutes from './analyzeRoutes.js';
+import recommendationRoutes from './recommendationRoutes.js';
 const router = express.Router();
 
 // --- MOUNT ROUTES ---
@@ -26,9 +28,12 @@ router.use('/categories', categoryRoutes);
 router.use('/customers', customerRoutes);
 router.use('/coupons', couponRoutes);
 router.use('/promotions', promotionRoutes);
-router.use('/chatbot', chatbotRoute);
+router.use('/analytics', analyticsRoutes);
 
+router.use('/chatbot', chatbotRoute);
 router.use('/analyze-skin', analyzeRoutes);
+router.use('/recommend-routine', recommendationRoutes);
+
 router.use('/upload', uploadRoutes);
 router.use('/profile', profileRoutes);
 

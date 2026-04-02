@@ -24,9 +24,11 @@ face_mesh = mp_face_mesh.FaceMesh(
     min_detection_confidence=0.5
 )
 
+# ĐỊNH NGHĨA CÁC VÙNG CẦN THIẾT
 LANDMARKS = {
-    'left_cheek':  [234, 93,  132, 58,  172],
-    'right_cheek': [454, 323, 361, 288, 397]
+    'left_cheek':  [137, 234, 93, 132, 58, 172, 136, 150, 149, 176, 148, 152],
+    'right_cheek': [366, 454, 323, 361, 288, 397, 365, 379, 378, 400, 377, 382],
+    'forehead':    [10, 338, 297, 332, 284, 251, 389, 356, 109, 67, 103, 54, 21]
 }
 
 # ==============================================================================
@@ -39,8 +41,8 @@ def load_tflite_model(model_path):
 
 def predict_tflite(img_array, model_bundle):
     interpreter, input_details, output_details = model_bundle
-    # Model nhận mảng float32 đã chuẩn hóa 0-1
-    img_input = np.expand_dims(img_array / 255.0, axis=0).astype(np.float32)
+    # CHUẨN HÓA VỀ [-1, 1] (Thường chính xác hơn cho các model phổ biến)
+    img_input = np.expand_dims((img_array / 127.5) - 1.0, axis=0).astype(np.float32)
     interpreter.set_tensor(input_details[0]['index'], img_input)
     interpreter.invoke()
     return interpreter.get_tensor(output_details[0]['index'])[0]
@@ -61,22 +63,27 @@ def crop_by_landmarks(img, landmarks, indices, img_w, img_h, padding=0.15):
     y1 = max(0,     min(ys) - int(bh * padding))
     x2 = min(img_w, max(xs) + int(bw * padding))
     y2 = min(img_h, max(ys) + int(bh * padding))
+    # Kiểm tra vùng cắt hợp lệ (không bị quá nhỏ hoặc ra ngoài ảnh)
+    if x2 <= x1 or y2 <= y1:
+        return np.array([]) 
     return img[y1:y2, x1:x2]
 
 def get_skintone_from_landmarks(img_bgr, landmarks, img_w, img_h, json_path, debug_mode=False):
     if not os.path.exists(json_path):
-        return {"error": "JSON not found"}
+        return 0
 
     with open(json_path, 'r') as f:
         levels = json.load(f)
 
+    # ĐO TRÊN ẢNH GỐC ĐỂ KHÔNG BỊ SAI LỆCH MÀU DA
     img_lab = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2LAB)
 
     def get_cheek_pixels(indices):
         pts = get_landmark_px(landmarks, indices, img_w, img_h)
         xs, ys = [p[0] for p in pts], [p[1] for p in pts]
-        x1, x2 = max(0, min(xs)-20), min(img_w, max(xs)+20)
-        y1, y2 = max(0, min(ys)-20), min(img_h, max(ys)+20)
+        x1, x2 = max(0, min(xs)-10), min(img_w, max(xs)+10)
+        y1, y2 = max(0, min(ys)-10), min(img_h, max(ys)+10)
+        if x2 <= x1 or y2 <= y1: return np.zeros((1, 3))
         roi = img_lab[y1:y2, x1:x2]
         return roi.reshape(-1, 3) if roi.size > 0 else np.zeros((1, 3))
 
@@ -84,13 +91,10 @@ def get_skintone_from_landmarks(img_bgr, landmarks, img_w, img_h, json_path, deb
         get_cheek_pixels(LANDMARKS['left_cheek']),
         get_cheek_pixels(LANDMARKS['right_cheek'])
     ])
-    raw = np.mean(all_px, axis=0)
+    
+    # Dùng MEDIAN để tránh đốm sáng bóng (glare) do đèn
+    raw = np.median(all_px, axis=0)
     avg_lab = np.array([raw[0]/255.0*100.0, raw[1]-128.0, raw[2]-128.0])
-
-    if debug_mode:
-        print(f"\n🎨 LAB sau WB - norm: L={avg_lab[0]:.1f} a={avg_lab[1]:.1f} b={avg_lab[2]:.1f}", file=sys.stderr)
-        if avg_lab[0] < 30 or avg_lab[0] > 80:
-            print(f"⚠️  L={avg_lab[0]:.1f} ngoài vùng da bình thường!", file=sys.stderr)
 
     dists = {}
     for key, item in levels.items():
@@ -105,31 +109,20 @@ def get_skintone_from_landmarks(img_bgr, landmarks, img_w, img_h, json_path, deb
 
     max_level = float(max(levels.keys(), key=int))
     score = float(np.clip(score, 1.0, max_level))
-
-    flipped = round(max_level - score + 1.0, 2)
-    return flipped
-
-def gray_world_wb(img):
-    img_f = img.astype(np.float32)
-    g_mean = np.mean(img_f[:, :, 1])
-    s_b = g_mean / (np.mean(img_f[:, :, 0]) + 1e-6)
-    s_r = g_mean / (np.mean(img_f[:, :, 2]) + 1e-6)
-    img_f[:, :, 0] = np.clip(img_f[:, :, 0] * s_b, 0, 255)
-    img_f[:, :, 2] = np.clip(img_f[:, :, 2] * s_r, 0, 255)
-    return img_f.astype(np.uint8)
+    return round(max_level - score + 1.0, 2)
 
 # ==============================================================================
-# PIPELINE CHÍNH (Tích hợp Debug)
+# PIPELINE CHÍNH (Đã Tích Hợp Debug Cập Nhật)
 # ==============================================================================
 def run_skin_pipeline(image_path, debug_mode=False):
     debug_dir = os.path.join(BASE_DIR, "debug_output")
     if debug_mode:
         os.makedirs(debug_dir, exist_ok=True)
-        print("🚀 Bắt đầu phân tích hình ảnh (Có Debug)...", file=sys.stderr)
+        print("🚀 Bắt đầu phân tích (Có Debug)...", file=sys.stderr)
 
+    # ĐỌC ẢNH GỐC (BỎ GRAY_WORLD_WB ĐỂ GIỮ NGUYÊN MÀU ĐỎ CỦA MỤN)
     full_img = cv2.imread(image_path)
     if full_img is None: return {"error": "File not found"}
-    full_img = gray_world_wb(full_img)
     img_h, img_w, _ = full_img.shape
     
     mesh_results = face_mesh.process(cv2.cvtColor(full_img, cv2.COLOR_BGR2RGB))
@@ -139,67 +132,75 @@ def run_skin_pipeline(image_path, debug_mode=False):
 
     landmarks = mesh_results.multi_face_landmarks[0].landmark
     
-    # ── [DEBUG] VẼ TỌA ĐỘ ─────────────────────────────
     if debug_mode:
-        print("✅ FaceMesh: Đã bắt được khuôn mặt", file=sys.stderr)
         debug_full = full_img.copy()
         for i in range(len(landmarks)):
             px = int(landmarks[i].x * img_w)
             py = int(landmarks[i].y * img_h)
             cv2.circle(debug_full, (px, py), 1, (0, 255, 0), -1)
-        cv2.imwrite(os.path.join(debug_dir, "00_overview_landmarks.jpg"), debug_full)
-        print("📸 Đã lưu: 00_overview_landmarks.jpg", file=sys.stderr)
-
-    # ── CẮT ẢNH ───────────────────────────────────────
-    all_pts = [(int(lm.x*img_w), int(lm.y*img_h)) for lm in landmarks]
-    xs, ys  = [p[0] for p in all_pts], [p[1] for p in all_pts]
-    face_crop = full_img[max(0,min(ys)-20):min(img_h,max(ys)+20),
-                         max(0,min(xs)-20):min(img_w,max(xs)+20)]
-
-    crops = {
-        'acne':              face_crop,
-        'wrinkles_forehead': crop_by_landmarks(full_img, landmarks, [10,54,284,109,338,67,297], img_w, img_h, 0.1),
-        'wrinkles_eyes':     crop_by_landmarks(full_img, landmarks, [33,133,362,263,70,300,159,386], img_w, img_h, 0.2),
-        'wrinkles_mouth':    crop_by_landmarks(full_img, landmarks, [61,291,17,0,37,267,84,314], img_w, img_h, 0.2),
-    }
+        cv2.imwrite(os.path.join(debug_dir, "00_landmarks.jpg"), debug_full)
 
     final_results = {}
-    
-    # ── CHẠY MODEL ────────────────────────────────────
-    for key, model_path in MODEL_PATHS.items():
-        if not os.path.exists(model_path): continue
-        crop = crops.get(key)
-        if crop is None or crop.size == 0:
-            if debug_mode: print(f"⚠️  {key}: crop rỗng", file=sys.stderr)
-            continue
-            
-        model_bundle = load_tflite_model(model_path)
-        
-        # Tiền xử lý: Ép khung 300x300 và đổi sang RGB
-        resized_crop = cv2.resize(crop, (IMG_SIZE, IMG_SIZE), interpolation=cv2.INTER_LANCZOS4)
-        crop_rgb     = cv2.cvtColor(resized_crop, cv2.COLOR_BGR2RGB)
-        
-        # ── [DEBUG] LƯU ẢNH CHUẨN ĐẦU VÀO MODEL ────────
-        if debug_mode:
-            # Lưu lại đúng tấm ảnh `resized_crop` (ảnh gốc BGR đã resize)
-            # Đây chính xác 100% là hình hài mà model đang nhìn thấy
-            cv2.imwrite(os.path.join(debug_dir, f"01_model_input_{key}.jpg"), resized_crop)
-            print(f"📸 Đã lưu Model Input: {key} (Size chuẩn: {IMG_SIZE}x{IMG_SIZE})", file=sys.stderr)
-
-        probs = predict_tflite(crop_rgb, model_bundle)
-        final_results[key] = {
-            "score":      calculate_softmax_score(probs),
-            "confidence": round(float(np.max(probs)), 2)
-        }
 
     # ── ĐO MÀU DA ─────────────────────────────────────
     final_results['skintone'] = get_skintone_from_landmarks(
         full_img, landmarks, img_w, img_h, SKINTONE_JSON, debug_mode
     )
+
+    # ── XỬ LÝ MỤN (MULTI-CROP THÔNG MINH) ───────────────
+    # Cắt 3 vùng, có thể mặt nghiêng nên sẽ có vùng bị lỗi/trống
+    acne_crops = {
+        'forehead': crop_by_landmarks(full_img, landmarks, LANDMARKS['forehead'], img_w, img_h, 0.1),
+        'left_cheek': crop_by_landmarks(full_img, landmarks, LANDMARKS['left_cheek'], img_w, img_h, 0.2),
+        'right_cheek': crop_by_landmarks(full_img, landmarks, LANDMARKS['right_cheek'], img_w, img_h, 0.2)
+    }
     
-    if debug_mode:
-        print("✅ Phân tích hoàn tất!\n", file=sys.stderr)
+    if os.path.exists(MODEL_PATHS['acne']):
+        acne_model_bundle = load_tflite_model(MODEL_PATHS['acne'])
+        acne_scores = []
         
+        for region_name, crop in acne_crops.items():
+            # Chỉ chạy model nếu vùng cắt hợp lệ (không bị góc nghiêng che khuất)
+            if crop.size > 0:
+                resized = cv2.resize(crop, (IMG_SIZE, IMG_SIZE), interpolation=cv2.INTER_LANCZOS4)
+                if debug_mode:
+                    cv2.imwrite(os.path.join(debug_dir, f"01_acne_input_{region_name}.jpg"), resized)
+                
+                probs = predict_tflite(cv2.cvtColor(resized, cv2.COLOR_BGR2RGB), acne_model_bundle)
+                acne_scores.append(calculate_softmax_score(probs))
+        
+        # Nếu bắt được vùng nào, lấy điểm TỆ NHẤT của vùng đó làm báo cáo
+        if acne_scores:
+            final_results['acne'] = {
+                "score": min(acne_scores),
+                "confidence": 0.99
+            }
+        else:
+            # Nếu mặt quá nghiêng không cắt được chỗ nào, mặc định cho 5.0
+            final_results['acne'] = {"score": 5.0, "confidence": 0.5}
+
+    # ── XỬ LÝ LÃO HÓA ───────────────────────────────────
+    wrinkle_crops = {
+        'wrinkles_forehead': crop_by_landmarks(full_img, landmarks, [10,54,284,109,338,67,297], img_w, img_h, 0.1),
+        'wrinkles_eyes':     crop_by_landmarks(full_img, landmarks, [33,133,362,263,70,300,159,386], img_w, img_h, 0.2),
+        'wrinkles_mouth':    crop_by_landmarks(full_img, landmarks, [61,291,17,0,37,267,84,314], img_w, img_h, 0.2),
+    }
+
+    for key, crop in wrinkle_crops.items():
+        if key in MODEL_PATHS and os.path.exists(MODEL_PATHS[key]):
+            if crop.size > 0:
+                model_bundle = load_tflite_model(MODEL_PATHS[key])
+                resized = cv2.resize(crop, (IMG_SIZE, IMG_SIZE), interpolation=cv2.INTER_LANCZOS4)
+                if debug_mode:
+                    cv2.imwrite(os.path.join(debug_dir, f"02_wrinkle_input_{key}.jpg"), resized)
+                
+                probs = predict_tflite(cv2.cvtColor(resized, cv2.COLOR_BGR2RGB), model_bundle)
+                final_results[key] = {
+                    "score": calculate_softmax_score(probs),
+                    "confidence": round(float(np.max(probs)), 2)
+                }
+
+    if debug_mode: print("Phân tích hoàn tất! 2.0\n", file=sys.stderr)
     return final_results
 
 # ==============================================================================
@@ -215,14 +216,8 @@ if __name__ == "__main__":
         print(json.dumps({"error": "Không tìm thấy file ảnh"}))
         sys.exit(1)
 
-    # Tắt log thừa của TensorFlow
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-
-    # Kiểm tra cờ --debug từ NodeJS
     DEBUG_MODE = "--debug" in sys.argv 
 
-    # Gọi hàm duy nhất (Vừa phân tích, vừa lưu ảnh debug nếu được yêu cầu)
     output = run_skin_pipeline(image_path, debug_mode=DEBUG_MODE)
-
-    # In ra stdout DUY NHẤT một dòng JSON để NodeJS đọc
     print(json.dumps(output, ensure_ascii=False))

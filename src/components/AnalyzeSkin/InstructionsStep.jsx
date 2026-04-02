@@ -1,36 +1,40 @@
 import React from 'react';
-import "./InstructionsStep.css";
-const InstructionsStep = ({ onStartCamera, triggerFileInput }) => {
+import './InstructionsStep.css';
+
+const InstructionsStep = ({ skinType, setSkinType, onStartCamera, triggerFileInput }) => {
+  // Đã sửa 'id' thành chuỗi Tiếng Việt 100% theo ý bạn
+  const skinTypesList = [
+    { id: 'Da thường', label: 'Da thường' },
+    { id: 'Da khô', label: 'Da khô' },
+    { id: 'Da dầu', label: 'Da dầu' },
+    { id: 'Da nhạy cảm', label: 'Da nhạy cảm' }
+  ];
+
   return (
     <div className="analyzeskin-instructionstep-container">
-      <h1 className="analyzeskin-instructionstep-title">Hướng Dẫn Chụp Ảnh</h1>
+      <h1 className="analyzeskin-instructionstep-title">Phân Tích Da AI</h1>
       <p className="analyzeskin-instructionstep-subtitle">
-        Để chuyên gia AI chẩn đoán chính xác nhất tình trạng da của bạn, vui lòng đảm bảo:
+        Hãy cho chúng tôi biết loại da hiện tại của bạn để AI đưa ra gợi ý chính xác nhất.
       </p>
 
-      <ul className="analyzeskin-instructionstep-list">
-        <li className="analyzeskin-instructionstep-list-item">
-          <strong>Mặt mộc hoàn toàn:</strong> Tẩy trang sạch sẽ và tháo kính râm/kính cận.
-        </li>
-        <li className="analyzeskin-instructionstep-list-item">
-          <strong>Không bị che khuất:</strong> Vén tóc mái gọn gàng để lộ rõ vùng trán và hai bên má.
-        </li>
-        <li className="analyzeskin-instructionstep-list-item">
-          <strong>Góc chụp chuẩn:</strong> Nhìn thẳng trực diện vào ống kính và giữ khuôn mặt thư giãn.
-        </li>
-        <li className="analyzeskin-instructionstep-list-item">
-          <strong>Ánh sáng tốt:</strong> Tìm nơi có ánh sáng tự nhiên đều đặn, tránh bị đổ bóng trên mặt.
-        </li>
-      </ul>
-
-      <div className="analyzeskin-instructionstep-privacy">
-        <p className="analyzeskin-instructionstep-privacy-text">
-          Dine Ease Cosmetics yêu cầu quyền truy cập máy ảnh để phân tích trực tiếp.
-        </p>
-        <p className="analyzeskin-instructionstep-privacy-highlight">
-          Cam kết bảo mật: Hình ảnh của bạn KHÔNG bị lưu trữ trên hệ thống.
-        </p>
+      {/* --- KHU VỰC CHỌN LOẠI DA --- */}
+      <div className="analyzeskin-instructionstep-skintype-group">
+        {skinTypesList.map(item => (
+          <button
+            key={item.id}
+            className={`analyzeskin-instructionstep-skintype-btn ${skinType === item.id ? 'active' : ''}`}
+            onClick={() => setSkinType(item.id)}
+          >
+            {item.label}
+          </button>
+        ))}
       </div>
+
+      <ul className="analyzeskin-instructionstep-list">
+        <li className="analyzeskin-instructionstep-list-item"><strong>Mặt mộc hoàn toàn:</strong> Tẩy trang sạch sẽ và tháo kính.</li>
+        <li className="analyzeskin-instructionstep-list-item"><strong>Không bị che khuất:</strong> Vén tóc mái gọn gàng.</li>
+        <li className="analyzeskin-instructionstep-list-item"><strong>Ánh sáng tốt:</strong> Tìm nơi có ánh sáng tự nhiên đều đặn.</li>
+      </ul>
 
       <div className="analyzeskin-instructionstep-actions">
         <button className="analyzeskin-instructionstep-btn-primary" onClick={onStartCamera}>

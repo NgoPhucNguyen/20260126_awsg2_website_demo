@@ -87,7 +87,7 @@ const ProductSlider = ({ title, products }) => {
             ? (rawImageUrl.startsWith('http') ? rawImageUrl : getImageUrl(rawImageUrl)) 
             : "https://via.placeholder.com/300";
 
-          const brandName = product.brand || product.brandName || "";
+          const brandName = product.brand?.name || product.brandName || "";
           const variantId = product.variantId || "";
           const label = product.size || "";
 

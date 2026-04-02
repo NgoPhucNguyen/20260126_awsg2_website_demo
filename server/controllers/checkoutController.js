@@ -1,3 +1,4 @@
+// controllers/checkoutController.js
 import { PrismaClient } from '@prisma/client';
 import moment from 'moment';
 import crypto from 'crypto';
@@ -5,6 +6,7 @@ import qs from 'qs';
 
 const prisma = new PrismaClient();
 
+// Hàm hỗ trợ cho VNPAY
 function sortObject(obj) {
     let sorted = {};
     let str = [];
@@ -21,27 +23,19 @@ function sortObject(obj) {
     return sorted;
 }
 
+// 1. ĐẶT HÀNG (CHECKOUT)
 export const checkoutOrder = async (req, res) => {
     const customerId = req.user?.id; 
     const { shippingAddress, paymentMethod, note, couponCode, cartItems } = req.body;
 
-    if (!customerId) {
-        return res.status(401).json({ message: "Vui lòng đăng nhập để thanh toán." });
-    }
-
-    if (!cartItems || cartItems.length === 0) {
-        return res.status(400).json({ message: "Giỏ hàng của bạn đang trống!" });
-    }
+    if (!customerId) return res.status(401).json({ message: "Vui lòng đăng nhập để thanh toán." });
+    if (!cartItems || cartItems.length === 0) return res.status(400).json({ message: "Giỏ hàng của bạn đang trống!" });
 
     try {
         const variantIds = cartItems.map(item => item.variantId);
         const dbVariants = await prisma.productVariant.findMany({
             where: { id: { in: variantIds } },
-            include: {
-                promotions: {
-                    include: { promotion: true }
-                }
-            }
+            include: { promotions: { include: { promotion: true } } }
         });
 
         if (dbVariants.length !== variantIds.length) {
@@ -58,11 +52,9 @@ export const checkoutOrder = async (req, res) => {
             }
 
             const realVariant = dbVariants.find(v => v.id === item.variantId);
-            
             let currentUnitPrice = realVariant.unitPrice;
             let appliedPromotionId = null;
 
-            // 🚀 FIX: Bọc thép an toàn cho Array và Date
             if (realVariant.promotions && Array.isArray(realVariant.promotions)) {
                 const activePromoLink = realVariant.promotions.find(p => {
                     if (!p.promotion) return false;
@@ -74,7 +66,6 @@ export const checkoutOrder = async (req, res) => {
                 if (activePromoLink) {
                     const promo = activePromoLink.promotion;
                     appliedPromotionId = promo.id; 
-                    
                     if (promo.type === 'PERCENTAGE') {
                         currentUnitPrice = currentUnitPrice * (1 - promo.value / 100);
                     } else if (promo.type === 'FIXED') {
@@ -84,22 +75,16 @@ export const checkoutOrder = async (req, res) => {
             }
 
             totalPrice += (currentUnitPrice * item.quantity);
-
             orderDetailsData.push({
                 productVariantId: realVariant.id,
-                promotionId: appliedPromotionId, // Lưu chuẩn ID
+                promotionId: appliedPromotionId,
                 quantity: item.quantity,
                 originalPrice: realVariant.unitPrice, 
                 unitPrice: currentUnitPrice, 
             });
         }
 
-        // =======================================================
-        // 3. TÍNH TOÁN MÃ GIẢM GIÁ
-        // =======================================================
-        // =======================================================
-        // 3. TÍNH TOÁN MÃ GIẢM GIÁ (ĐÃ FIX LỖI PUBLIC COUPON)
-        // =======================================================
+        // TÍNH MÃ GIẢM GIÁ
         let baseShippingFee = 30000; 
         let orderDiscount = 0;
         let shippingDiscount = 0;
@@ -110,7 +95,6 @@ export const checkoutOrder = async (req, res) => {
 
         if (couponCode) {
             const coupon = await prisma.coupon.findUnique({ where: { code: couponCode } });
-
             if (coupon) {
                 const now = new Date();
                 if (now >= coupon.createdAt && now <= coupon.expireAt) {
@@ -140,7 +124,6 @@ export const checkoutOrder = async (req, res) => {
                             }
                         }
 
-                        // 🚀 FIX Ở ĐÂY: canApply chạy độc lập, không bị kẹt trong if(walletItem)
                         if (canApply) {
                             const rule = coupon.rule || {};
                             const minOrderValue = rule.minOrderValue || 0;
@@ -165,11 +148,8 @@ export const checkoutOrder = async (req, res) => {
         }
 
         const finalShippingFee = baseShippingFee - shippingDiscount;
-        const finalPrice = Math.max(0, (totalPrice - orderDiscount)) + finalShippingFee; // Không âm
+        const finalPrice = Math.max(0, (totalPrice - orderDiscount)) + finalShippingFee;
 
-        // =======================================================
-        // 4, 5, 6: CÁC BƯỚC KHÁC GIỮ NGUYÊN HOÀN TOÀN...
-        // =======================================================
         let currentCart = await prisma.cart.findFirst({
             where: { customerId: customerId, status: 'DRAFT' }
         });
@@ -202,7 +182,6 @@ export const checkoutOrder = async (req, res) => {
             }
 
             await tx.orderDetail.deleteMany({ where: { orderId: currentCart.id } });
-            
             await tx.orderDetail.createMany({
                 data: orderDetailsData.map(detail => ({
                     ...detail,
@@ -229,12 +208,8 @@ export const checkoutOrder = async (req, res) => {
             if (couponUsageIdToUpdate) {
                 const updatedUsage = await tx.couponUsage.update({
                     where: { id: couponUsageIdToUpdate },
-                    data: {
-                        remaining: { decrement: 1 }, 
-                        usedAt: new Date()
-                    }
+                    data: { remaining: { decrement: 1 }, usedAt: new Date() }
                 });
-
                 if (updatedUsage.remaining <= 0) {
                     await tx.couponUsage.update({
                         where: { id: couponUsageIdToUpdate },
@@ -242,7 +217,6 @@ export const checkoutOrder = async (req, res) => {
                     });
                 }
             } else if (isPublicCoupon && (appliedOrderCouponId || appliedShippingCouponId)) {
-                // 🚀 NẾU KHÁCH XÀI MÃ GÕ TAY: Tự động ghi vào lịch sử ví để chống khách xài lặp lại
                 await tx.couponUsage.create({
                     data: {
                         couponId: appliedOrderCouponId || appliedShippingCouponId,
@@ -283,24 +257,15 @@ export const checkoutOrder = async (req, res) => {
             vnp_Params['vnp_CreateDate'] = createDate;
 
             vnp_Params = sortObject(vnp_Params);
-
             let signData = qs.stringify(vnp_Params, { encode: false });
             let hmac = crypto.createHmac("sha512", secretKey);
             let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex"); 
-            
             vnp_Params['vnp_SecureHash'] = signed;
             vnpUrl += '?' + qs.stringify(vnp_Params, { encode: false });
 
-            return res.status(200).json({ 
-                message: "Đang chuyển hướng sang VNPAY...", 
-                paymentUrl: vnpUrl 
-            });
-
+            return res.status(200).json({ message: "Đang chuyển hướng sang VNPAY...", paymentUrl: vnpUrl });
         } else {
-            return res.status(200).json({ 
-                message: "🎉 Đặt hàng thành công!", 
-                orderId: currentCart.id 
-            });
+            return res.status(200).json({ message: "🎉 Đặt hàng thành công!", orderId: currentCart.id });
         }
 
     } catch (error) {
@@ -313,63 +278,17 @@ export const checkoutOrder = async (req, res) => {
     }
 };
 
-
-export const getMyOrders = async (req, res) => {
-    const customerId = req.user?.id;
-
-    if (!customerId) {
-        return res.status(401).json({ message: "Vui lòng đăng nhập để xem lịch sử." });
-    }
-
-    try {
-        const orders = await prisma.cart.findMany({
-            where: {
-                customerId: customerId,
-                // Loại bỏ những cái đang là Giỏ hàng, chỉ lấy Đơn hàng đã checkout
-                status: { notIn: ['CART', 'DRAFT'] } 
-            },
-            include: {
-                mainCoupon: true,
-                shippingCoupon: true,
-                orderDetails: {
-                    include: {
-                        variant: {
-                            include: { product: true } // Kéo tên sản phẩm gốc ra
-                        },
-                        promotion: true
-                    }
-                }
-            },
-            orderBy: {
-                createdAt: 'desc' // Đơn hàng mới nhất lên đầu
-            }
-        });
-
-        res.status(200).json(orders);
-    } catch (error) {
-        console.error("[ERROR] getMyOrders:", error);
-        res.status(500).json({ message: "Lỗi hệ thống khi tải lịch sử mua hàng." });
-    }
-};
-
-
-// 🔍 KIỂM TRA KẾT QUẢ TRẢ VỀ TỪ VNPAY
+// 2. KẾT QUẢ VNPAY TRẢ VỀ
 export const verifyVnpayReturn = async (req, res) => {
     try {
         let vnp_Params = req.query;
-
         let secureHash = vnp_Params['vnp_SecureHash'];
-        
-        // Cần copy ra một object mới để đảm bảo tính toàn vẹn khi sort
         let signDataParams = Object.assign({}, vnp_Params);
         delete signDataParams['vnp_SecureHash'];
         delete signDataParams['vnp_SecureHashType']; 
-
         signDataParams = sortObject(signDataParams);
-
         let secretKey = process.env.VNP_HASH_SECRET;
         
-        // 🚀 FIX LỖI CHỮ KÝ: Dùng đúng chuẩn của VNPAY
         let signData = qs.stringify(signDataParams, { encode: false });
         let hmac = crypto.createHmac("sha512", secretKey);
         let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");
@@ -378,38 +297,26 @@ export const verifyVnpayReturn = async (req, res) => {
             const responseCode = vnp_Params['vnp_ResponseCode'];
             const orderIdStr = vnp_Params['vnp_TxnRef']; 
 
-            // 🚀 FIX LỖI 500 SLICE: Kiểm tra độ dài trước khi cắt
-            if (!orderIdStr || orderIdStr.length < 32) {
-                return res.status(400).json({ message: "Mã đơn hàng không hợp lệ!" });
-            }
-
-            // Khôi phục lại UUID chuẩn
+            if (!orderIdStr || orderIdStr.length < 32) return res.status(400).json({ message: "Mã đơn hàng không hợp lệ!" });
             const orderId = `${orderIdStr.slice(0,8)}-${orderIdStr.slice(8,12)}-${orderIdStr.slice(12,16)}-${orderIdStr.slice(16,20)}-${orderIdStr.slice(20)}`;
 
             if (responseCode === '00') {
-                // ✅ THÀNH CÔNG: Chốt đơn
                 await prisma.cart.update({
                     where: { id: orderId },
                     data: { paymentStatus: 'PAID' }
                 });
                 return res.status(200).json({ message: "Thanh toán thành công", code: "00" });
-                
             } else {
-                // ❌ THẤT BẠI HOẶC HỦY: Trả lại tồn kho và Hủy đơn
                 const failedOrder = await prisma.cart.findUnique({
                     where: { id: orderId },
                     include: { orderDetails: true }
                 });
-
                 if (failedOrder && failedOrder.status !== 'CANCELLED') {
-                    // Dùng Transaction để đảm bảo trả lại kho an toàn
                     await prisma.$transaction(async (tx) => {
-                        // Trả lại tồn kho cho từng sản phẩm
                         for (const item of failedOrder.orderDetails) {
                             const inventory = await tx.inventory.findFirst({
                                 where: { productVariantId: item.productVariantId }
                             });
-
                             if (inventory) {
                                 await tx.inventory.update({
                                     where: { id: inventory.id },
@@ -417,8 +324,6 @@ export const verifyVnpayReturn = async (req, res) => {
                                 });
                             }
                         }
-
-                        // Trả lại lượt dùng Voucher (Nếu có)
                         if (failedOrder.couponId) {
                             const usage = await tx.couponUsage.findFirst({
                                 where: { couponId: failedOrder.couponId, customerId: failedOrder.customerId }
@@ -430,191 +335,20 @@ export const verifyVnpayReturn = async (req, res) => {
                                 });
                             }
                         }
-
-                        // Cuối cùng: Hủy đơn hàng
                         await tx.cart.update({
                             where: { id: orderId },
                             data: { paymentStatus: 'FAILED', status: 'CANCELLED' } 
                         });
                     });
                 }
-                
                 return res.status(200).json({ message: "Giao dịch bị hủy hoặc thất bại", code: responseCode });
             }
         } else {
-            console.error("Sai chữ ký VNPAY. Chuỗi ký gốc:", secureHash, "Chuỗi băm:", signed);
+            console.error("Sai chữ ký VNPAY.");
             return res.status(400).json({ message: "Chữ ký không hợp lệ (Bị giả mạo)!" });
         }
     } catch (error) {
         console.error("VNPAY Return Error:", error);
         res.status(500).json({ message: "Lỗi hệ thống khi xác thực VNPAY" });
-    }
-};
-// =========================================================================
-// 🚀 TÍNH NĂNG MỚI: HỦY ĐƠN HÀNG (ĐÃ FIX BUG 403)
-// =========================================================================
-export const cancelOrder = async (req, res) => {
-    const { id } = req.params;
-    
-    // 🚀 Lấy ID từ token (Hỗ trợ cả 2 chuẩn lưu trữ)
-    const currentUserId = req.user?.id || req.user?.userId; 
-    const userRole = req.user?.role; 
-
-    if (!currentUserId) return res.status(401).json({ message: "Vui lòng đăng nhập." });
-
-    try {
-        const order = await prisma.cart.findUnique({
-            where: { id },
-            include: { orderDetails: true }
-        });
-
-        if (!order) return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
-
-        // 🚀 Kiểm tra quyền (Hỗ trợ nhiều kiểu lưu Role)
-        const isAdmin = userRole === 5150 || userRole === 'Admin' || userRole === 'ADMIN';
-        
-        // 🚀 Debug xem tại sao nó vướng 403
-        console.log("Check Quyền Hủy Đơn ->", {
-            Nguoi_Bam_Huy: currentUserId, 
-            Chu_Don_Hang: order.customerId, 
-            La_Admin_Khong: isAdmin 
-        });
-
-        if (!isAdmin && order.customerId !== currentUserId) {
-            return res.status(403).json({ message: "Bạn không có quyền hủy đơn hàng này." });
-        }
-
-        if (order.status !== 'PENDING') {
-            return res.status(400).json({ message: "Không thể hủy đơn hàng đã được xử lý hoặc đang giao." });
-        }
-
-        if (!isAdmin) {
-            const now = new Date();
-            const orderTime = new Date(order.createdAt);
-            const diffInHours = (now - orderTime) / (1000 * 60 * 60);
-
-            if (diffInHours > 2) {
-                return res.status(400).json({ message: "Đã quá 2 tiếng kể từ lúc đặt hàng. Vui lòng liên hệ Admin để được hỗ trợ." });
-            }
-        }
-
-        // THỰC HIỆN HỦY VÀ HOÀN TRẢ
-        await prisma.$transaction(async (tx) => {
-            // A. Hoàn trả Tồn kho 
-            for (const item of order.orderDetails) {
-                const inventory = await tx.inventory.findFirst({
-                    where: { productVariantId: item.productVariantId }
-                });
-
-                if (inventory) {
-                    await tx.inventory.update({
-                        where: { id: inventory.id },
-                        data: { quantity: { increment: item.quantity } }
-                    });
-                }
-            }
-
-            // B. Hoàn trả lượt dùng Mã giảm giá (nếu là mã được phát hành vào ví)
-            if (order.couponId) {
-                const usage = await tx.couponUsage.findFirst({
-                    where: { couponId: order.couponId, customerId: order.customerId }
-                });
-                if (usage) {
-                    await tx.couponUsage.update({
-                        where: { id: usage.id },
-                        data: { remaining: { increment: 1 }, status: 'ACTIVE' }
-                    });
-                }
-            }
-
-            // C. Hoàn trả Mã giảm giá Vận chuyển
-            if (order.shippingCouponId) {
-                const shippingUsage = await tx.couponUsage.findFirst({
-                    where: { couponId: order.shippingCouponId, customerId: order.customerId }
-                });
-                if (shippingUsage) {
-                    await tx.couponUsage.update({
-                        where: { id: shippingUsage.id },
-                        data: { remaining: { increment: 1 }, status: 'ACTIVE' }
-                    });
-                }
-            }
-
-            // C. Cập nhật trạng thái
-            await tx.cart.update({
-                where: { id },
-                data: { status: 'CANCELLED', paymentStatus: 'FAILED' }
-            });
-        });
-
-        res.json({ message: "Hủy đơn hàng thành công. Tồn kho và Voucher đã được hoàn trả." });
-
-    } catch (error) {
-        console.error("Lỗi khi hủy đơn:", error);
-        res.status(500).json({ message: "Lỗi hệ thống khi hủy đơn hàng." });
-    }
-};
-
-
-// =========================================================================
-// 🚀 TÍNH NĂNG MỚI: ADMIN CẬP NHẬT TRẠNG THÁI ĐƠN HÀNG
-// =========================================================================
-export const updateOrderStatus = async (req, res) => {
-    const { id } = req.params;
-    const { status } = req.body; 
-
-    const validStatuses = ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
-
-    if (!validStatuses.includes(status)) {
-        return res.status(400).json({ message: "Trạng thái không hợp lệ." });
-    }
-
-    try {
-        const order = await prisma.cart.findUnique({ where: { id } });
-        
-        if (!order) return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
-        if (order.status === 'CANCELLED') return res.status(400).json({ message: "Đơn hàng đã bị hủy, không thể cập nhật trạng thái." });
-
-        let updateData = { status };
-        // Tự động chốt tiền nếu giao thành công đơn COD
-        if (status === 'DELIVERED' && order.paymentMethod === 'COD') {
-            updateData.paymentStatus = 'PAID';
-        }
-
-        const updatedOrder = await prisma.cart.update({
-            where: { id },
-            data: updateData
-        });
-
-        res.json({ message: `Cập nhật trạng thái thành ${status} thành công.`, order: updatedOrder });
-
-    } catch (error) {
-        console.error("Lỗi khi cập nhật trạng thái đơn:", error);
-        res.status(500).json({ message: "Lỗi hệ thống." });
-    }
-};
-
-// =========================================================================
-// 🚀 TÍNH NĂNG MỚI: ADMIN LẤY TẤT CẢ ĐƠN HÀNG
-// =========================================================================
-export const getAllOrdersAdmin = async (req, res) => {
-    try {
-        const orders = await prisma.cart.findMany({
-            where: { status: { notIn: ['DRAFT'] } }, // Không lấy các giỏ hàng đang chọn dở
-            include: {
-                customer: { select: { firstName: true, lastName: true, mail: true, phoneNumber: true, accountName: true } },
-                orderDetails: {
-                    include: {
-                        variant: { include: { product: true } }
-                    }
-                }
-            },
-            orderBy: { createdAt: 'desc' }
-        });
-
-        res.json(orders);
-    } catch (error) {
-        console.error("Lỗi lấy danh sách đơn Admin:", error);
-        res.status(500).json({ message: "Lỗi hệ thống." });
     }
 };

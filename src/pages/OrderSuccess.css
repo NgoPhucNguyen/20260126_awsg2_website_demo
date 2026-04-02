@@ -4,7 +4,6 @@
     align-items: center;
     min-height: 70vh;
     padding: clamp(1rem, 3vw, 2rem);
-    background-color: #f9fafb;
     font-family: var(--font-body, 'Inter', sans-serif);
 }
 

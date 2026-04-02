@@ -1,0 +1,173 @@
+/* src/pages/admin/Orders.css */
+
+.admin-orders-page-container {
+    padding-bottom: 40px;
+    color: #0f172a;
+    font-family: inherit;
+}
+
+.admin-orders-page-header {
+    margin-bottom: 24px;
+}
+
+.admin-orders-page-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.admin-orders-page-subtitle {
+    margin: 4px 0 0 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+/* Controls & Search */
+.admin-orders-page-controls {
+    margin-bottom: 24px;
+}
+
+.admin-orders-page-search {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 14px;
+    outline: none;
+}
+
+.admin-orders-page-search:focus {
+    border-color: #94a3b8;
+}
+
+/* Loading & Error */
+.admin-orders-page-error {
+    padding: 12px 16px;
+    background-color: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    font-size: 14px;
+}
+
+.admin-orders-page-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 0;
+    color: #64748b;
+}
+
+.admin-orders-page-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #e2e8f0;
+    border-top: 3px solid #64748b;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 12px;
+}
+
+/* Table Styles */
+.admin-orders-page-table-wrapper {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow-x: auto;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.admin-orders-page-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+}
+
+.admin-orders-page-table th {
+    background-color: #f8fafc;
+    color: #475569;
+    font-weight: 600;
+    padding: 16px;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+.admin-orders-page-table td {
+    padding: 16px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #1e293b;
+}
+
+.admin-orders-page-table tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-orders-page-table tr:hover td {
+    background-color: #f8fafc;
+}
+
+.admin-orders-page-col-id {
+    font-family: monospace;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.admin-orders-page-col-price {
+    font-weight: 600;
+}
+
+.admin-orders-page-text-sm {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.admin-orders-page-empty {
+    text-align: center;
+    padding: 40px !important;
+    color: #64748b;
+}
+
+/* Badges (Payment Status) */
+.admin-orders-page-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.payment-paid { background-color: #ecfdf5; color: #10b981; }
+.payment-unpaid { background-color: #fef2f2; color: #ef4444; }
+.payment-pending { background-color: #fffbeb; color: #f59e0b; }
+.payment-refunding { background-color: #eff6ff; color: #3b82f6; }
+
+/* Status Select Dropdown (Trạng thái đơn hàng) */
+.admin-orders-page-status-select {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid transparent;
+    cursor: pointer;
+    outline: none;
+    appearance: auto;
+}
+
+.status-cancelled {
+    background-color: #f1f5f9;
+    color: #64748b;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Màu sắc thay đổi theo Status được chọn */
+.status-pending { background-color: #fef3c7; color: #d97706; border-color: #fde68a; }
+.status-processing { background-color: #e0f2fe; color: #2563eb; border-color: #bae6fd; }
+.status-shipped { background-color: #f3e8ff; color: #7c3aed; border-color: #e9d5ff; }
+.status-delivered { background-color: #d1fae5; color: #059669; border-color: #a7f3d0; }
