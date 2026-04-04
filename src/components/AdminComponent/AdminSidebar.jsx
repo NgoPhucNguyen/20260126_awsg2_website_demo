@@ -11,7 +11,8 @@ import {
     faTicket, 
     faFire, 
     faChartLine, 
-    faRightFromBracket 
+    faRightFromBracket,
+    faClipboardList
 } from '@fortawesome/free-solid-svg-icons';
 
 const AdminSidebar = ({ isOpen, closeSidebar }) => {
@@ -31,6 +32,10 @@ const AdminSidebar = ({ isOpen, closeSidebar }) => {
             </div>
 
             <nav className="drawer-menu">
+                <NavLink to="orders" className="menu-item" onClick={closeSidebar}>
+                    <FontAwesomeIcon icon={faClipboardList} className="menu-icon" style={{ fontSize: '20px' }} />
+                    <span className="menu-text">Đơn hàng</span>
+                </NavLink>
                 <NavLink to="customers" className="menu-item" onClick={closeSidebar}>
                     <FontAwesomeIcon icon={faUsers} className="menu-icon" style={{ fontSize: '20px' }} />
                     <span className="menu-text">Khách hàng</span>
@@ -51,6 +56,7 @@ const AdminSidebar = ({ isOpen, closeSidebar }) => {
                     <FontAwesomeIcon icon={faChartLine} className="menu-icon" style={{ fontSize: '20px' }} />
                     <span className="menu-text">Thống kê</span>
                 </NavLink>
+
             </nav>
 
             <div className="drawer-footer">

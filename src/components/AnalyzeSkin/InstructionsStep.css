@@ -1,0 +1,129 @@
+/* ==========================================================================
+   INSTRUCTION STEP COMPONENT STYLES
+   ========================================================================== */
+
+.analyzeskin-instructionstep-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  text-align: center;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: #1e293b;
+}
+
+.analyzeskin-instructionstep-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #0f172a;
+}
+
+.analyzeskin-instructionstep-subtitle {
+  font-size: 16px;
+  color: #64748b;
+  margin-bottom: 32px;
+  line-height: 1.5;
+}
+
+/* Danh sách hướng dẫn */
+.analyzeskin-instructionstep-list {
+  text-align: left;
+  background-color: #f8fafc;
+  padding: 24px 24px 24px 40px; /* Thêm padding trái để chứa dấu chấm */
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 32px;
+}
+
+.analyzeskin-instructionstep-list-item {
+  font-size: 15px;
+  color: #334155;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.analyzeskin-instructionstep-list-item:last-child {
+  margin-bottom: 0;
+}
+
+.analyzeskin-instructionstep-list-item strong {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+/* Hộp bảo mật (Privacy) */
+.analyzeskin-instructionstep-privacy {
+  margin-bottom: 40px;
+}
+
+.analyzeskin-instructionstep-privacy-text {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.analyzeskin-instructionstep-privacy-highlight {
+  font-size: 14px;
+  color: #10b981; /* Xanh lá tạo sự an tâm */
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Khu vực nút bấm */
+.analyzeskin-instructionstep-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.analyzeskin-instructionstep-btn-primary {
+  width: 100%;
+  max-width: 320px;
+  background-color: #0f172a; /* Nút chính màu đen/xanh đen sang trọng */
+  color: white;
+  border: none;
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.analyzeskin-instructionstep-btn-primary:hover {
+  background-color: #1e293b;
+}
+
+.analyzeskin-instructionstep-btn-primary:active {
+  transform: scale(0.98);
+}
+
+.analyzeskin-instructionstep-btn-secondary {
+  width: 100%;
+  max-width: 320px;
+  background-color: transparent;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  padding: 14px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.analyzeskin-instructionstep-btn-secondary:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+/* Responsive cho điện thoại nhỏ */
+@media (max-width: 480px) {
+  .analyzeskin-instructionstep-title {
+    font-size: 24px;
+  }
+  .analyzeskin-instructionstep-list {
+    padding: 20px 20px 20px 32px;
+  }
+}

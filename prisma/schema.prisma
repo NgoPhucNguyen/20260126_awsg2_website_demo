@@ -328,7 +328,7 @@ model Inventory {
 model Cart {
   id               String   @id @default(uuid())
   customerId       String   @map("customer_id")
-  status           String   // Trạng thái: "DRAFT", "PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"
+  status           String   // Trạng thái: "DRAFT", "PENDING", "PROCESSING", "DELIVERED", "CANCELLED"
   createdAt        DateTime @default(now()) @map("create_at")
   
   

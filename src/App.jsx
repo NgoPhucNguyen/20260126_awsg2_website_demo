@@ -13,24 +13,22 @@ import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import Profile from './pages/Profile';
 import History from './pages/CustomerHistory';
-import AnalyzeSkin from './pages/AnalyzeSkin';
 import Checkout from './pages/Checkout';
 import OrderSuccess from './pages/OrderSuccess';
 
 
 // Admin Imports
 import AdminLayout from './components/AdminComponent/AdminLayout';
+import Orders from './pages/admin/Orders';
 import Customers from './pages/admin/Customers';
 import Inventory from './pages/admin/Inventory';
 import Coupons from './pages/admin/Coupons';
 import Promotions from './pages/admin/Promotions';
+import Analytics from './pages/admin/Analytics';
 
-const Analytics = () => (
-    <div className="admin-content-wrapper fade-in">
-        <h2>📈 Analytics Dashboard</h2>
-        <p>Tính năng đang được phát triển dành cho quản trị viên...</p>
-    </div>
-);
+import AnalyzeSkin from '@/pages/AnalyzeSkin/AnalyzeSkin';
+import SkinResultPage from '@/pages/AnalyzeSkin/SkinResultPage'; // Page mới sắp tạo
+
 
 const ROLES = { 'User': 2001, 'Admin': 5150 };
 
@@ -41,23 +39,21 @@ function App() {
             <Route path="unauthorized" element={<Unauthorized />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="reset-password" element={<ResetPassword />} />
-
+            
             {/* 🛡️ BỌC PERSIST LOGIN CHO CẢ 2 THẾ GIỚI */}
             <Route element={<PersistLogin />}>
-
-                {/* ======================================================= */}
-                {/* 🌍 WORLD 1: PUBLIC SHELL (Dành cho Khách hàng)        */}
-                {/* ======================================================= */}
                 <Route path="/" element={<Layout />}>
                     
                     {/* Nhóm trang công khai */}
                     <Route index element={<Product />} />
                     <Route path="product/:id" element={<ProductDetail />} />
                     <Route path="cart" element={<Cart />} />
-                    <Route path="analyze-skin" element={<AnalyzeSkin />} />
                     <Route path="checkout" element={<Checkout />} />
                     <Route path="order-success" element={<OrderSuccess />} />
                     <Route path="vnpay-return" element={<OrderSuccess />} />
+
+                    <Route path="analyze-skin" element={<AnalyzeSkin />} />
+                    <Route path="/analyze-skin/result" element={<SkinResultPage />} />
 
                     {/* Nhóm trang yêu cầu đăng nhập (User/Admin đều vào được) */}
                     <Route element={<RequireAuth allowedRoles={[ROLES.User, ROLES.Admin]} />}>
@@ -81,6 +77,7 @@ function App() {
                         <Route path="coupons" element={<Coupons />} />
                         <Route path="promotions" element={<Promotions />} />
                         <Route path="analytics" element={<Analytics />} />
+                        <Route path="orders" element={<Orders />} />
                     </Route>
                 </Route>
                 {/* 🔚 KẾT THÚC WORLD 2 */}

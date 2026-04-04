@@ -1,0 +1,198 @@
+/* src/pages/admin/Analytics.css */
+
+.admin-analytics-page-container {
+    padding-bottom: 40px;
+    color: #0f172a;
+    font-family: inherit;
+}
+
+/* --- HEADER --- */
+.admin-analytics-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.admin-analytics-page-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.admin-analytics-page-subtitle {
+    margin: 4px 0 0 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.admin-analytics-page-select {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background-color: #ffffff;
+    color: #334155;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+}
+
+.admin-analytics-page-select:focus {
+    border-color: #94a3b8;
+}
+
+/* --- TRẠNG THÁI (LỖI & LOADING) --- */
+.admin-analytics-page-error {
+    padding: 12px 16px;
+    background-color: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    font-size: 14px;
+}
+
+.admin-analytics-page-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 0;
+    color: #64748b;
+}
+
+.admin-analytics-page-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #e2e8f0;
+    border-top: 3px solid #64748b;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 12px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* --- KPI CARDS (TỐI GIẢN) --- */
+.admin-analytics-page-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.admin-analytics-page-kpi-card {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Icon Monochrome tiệp với chữ */
+.admin-analytics-page-kpi-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    background-color: #f8fafc; /* Nền xám rất nhạt */
+    margin-right: 16px;
+    flex-shrink: 0;
+}
+
+.admin-analytics-page-icon {
+    font-size: 20px;
+    color: #475569; /* Icon màu xám chì */
+}
+
+.admin-analytics-page-kpi-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-analytics-page-kpi-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #64748b;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.admin-analytics-page-kpi-value {
+    font-size: 24px;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0;
+}
+
+/* --- CHARTS AREA --- */
+.admin-analytics-page-charts-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+}
+
+.admin-analytics-page-chart-box {
+    background-color: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.admin-analytics-page-chart-title {
+    margin: 0 0 20px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.admin-analytics-page-text-center {
+    text-align: center;
+}
+
+.admin-analytics-page-chart-wrapper {
+    width: 100%;
+    height: 300px;
+}
+
+.admin-analytics-page-mt-24 {
+    margin-top: 24px;
+}
+
+/* Tooltip Custom */
+.admin-analytics-page-tooltip {
+    background-color: #ffffff;
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.admin-analytics-page-tooltip-label {
+    margin: 0 0 4px 0;
+    font-weight: 600;
+    font-size: 13px;
+    color: #334155;
+}
+
+.admin-analytics-page-tooltip-value {
+    margin: 0;
+    font-size: 14px;
+    color: #0f172a;
+}
+
+/* Responsive cho layout Biểu đồ */
+@media (max-width: 1024px) {
+    .admin-analytics-page-charts-layout {
+        grid-template-columns: 1fr;
+    }
+}

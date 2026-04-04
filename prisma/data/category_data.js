@@ -1,8 +1,7 @@
 // prisma/category_data.js
 export const categories = [
-  // --- LEVEL 1 (PARENTS) ---
-  { id: 1, name: 'Skin Care', nameVn: 'Chăm sóc da', categoryLevel: 1 },
   // --- LEVEL 2 (CHILDREN) ---
+  { id: 1, name: 'Moisturizer', nameVn: 'Kem dưỡng', categoryLevel: 2, parentId: 1 },
   { id: 2, name: 'Sunscreen', nameVn: 'Kem Chống Nắng', categoryLevel: 2, parentId: 1 },
   { id: 3, name: 'Mask', nameVn: 'Mặt Nạ', categoryLevel: 2, parentId: 1 },
   { id: 4, name: 'Serum', nameVn: 'Serum', categoryLevel: 2, parentId: 1 },

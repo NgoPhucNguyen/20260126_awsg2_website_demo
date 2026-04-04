@@ -1,4 +1,4 @@
-import axios from "../api/axios";
+import axios from "@/api/axios";
 import { useEffect, useState, useRef, useMemo } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { useCart } from "@/context/CartProvider";

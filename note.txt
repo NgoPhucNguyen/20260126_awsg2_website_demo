@@ -1,4 +1,5 @@
-🏦 Hành động tại VNPAY: 
+
+Thanh toán bằng VNPAY: 
 Phải đi đúng trình tự và nhập đúng
 * Chọn Thẻ nội địa.
 * Chọn ngân hàng NCB.
@@ -11,74 +12,3 @@ Ngày phát hành: 07/15
 
 Bấm thanh toán, Bấm đồng ý 
 nhập mã OTP 123456 và Thanh Toán.
-
-
-
-// 3/3 : Push to update amplify
-
-// 2/ March/ 2026 :  
-// 1/ March/ 2026 : 
-
-
-!IMPORTANT : /home/ubuntu/20260126_awsg2_website_demo/prisma/data/product_data.js
-// Phải có dấu chấm cuối command
-scp -i "myshop-key.pem" ubuntu@52.36.205.93:/home/ubuntu/20260126_awsg2_website_demo/prisma/data/product_data.js .
-
-
-27/02 : schema change : account_name -> accountName
---> Normally fix all things related (AUTHITENCATION)
-
-Fullsetup 22/02 : S3, EC2, 
-
-19/02/2026
-Google [Aphrodite Shop] 16 num code: wpab beyj wkbu jmsy 
-
-
-
-16/02/2026 : add filter and search bar , filter very complex -> debate
-
-BIG update 13/02/2026: Nguyên merge nhánh /setup-aws/ tạo folder middleware, controllers, ... 
-IMPORTANT: Nhất là phần [schema.prisma], t vẫn giữ nguyên cái bảng và thêm 1 cột refreshToken vào bảng Customer , để hỗ trợ cho phần Authentication ( bắt buộc ). 
-Tách file server.js sang nhánh nhỏ, trong /routes folder sẽ có api.js , FIle này chứa những function API , từ những cái đó có thể truy ngược ra là file nào ở trong folder khác controllers, ... 
-
-
-10 Feb 2026 : the schema.prisma change : shippingCouponId String? / couponId         String?
-10 Feb 2026 : The Cart.jsx  
-
-
-20262601 : Database 
-
-2026 27 01 : server.js improvement. 
-2026 27 01 : postgres and S3 
-2026 27 01 :  
-03/Feb/2026  : nextval('customer_id_seq'::regclass) 
-
-# 1. Create a new branch specifically for this AWS experiment
-git checkout -b feature/aws-backend-setup
-
-# 2. Now, when you push, you push ONLY to this branch
-git add .
-git commit -m "Setting up AWS backend structure"
-git push origin feature/aws-backend-setup
-
-04/ Feb/ 2026 - create a column account_name in Database
-
--- 1. ENFORCE ESSENTIALS (Make them Required)
-ALTER TABLE customer ALTER COLUMN mail SET NOT NULL;
-ALTER TABLE customer ALTER COLUMN password_hash SET NOT NULL;
-ALTER TABLE customer ALTER COLUMN account_name SET NOT NULL;
-
--- 2. UNLOCK OPTIONAL DATA (Allow them to be Empty/Null)
-ALTER TABLE customer ALTER COLUMN first_name DROP NOT NULL;
-ALTER TABLE customer ALTER COLUMN last_name DROP NOT NULL;
-ALTER TABLE customer ALTER COLUMN phone_number DROP NOT NULL;
-ALTER TABLE customer ALTER COLUMN address_id DROP NOT NULL;
-ALTER TABLE customer ALTER COLUMN gender DROP NOT NULL;
-ALTER TABLE customer ALTER COLUMN birthday DROP NOT NULL;
-ALTER TABLE customer ALTER COLUMN avatar_url DROP NOT NULL;
-
--- 3. ENSURE UNIQUENESS (Crucial for Login)
--- You don't want two people with the same Email or Account Name
-ALTER TABLE customer ADD CONSTRAINT unique_mail UNIQUE (mail);
-ALTER TABLE customer ADD CONSTRAINT unique_account_name UNIQUE (account_name);
-

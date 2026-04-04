@@ -3,13 +3,80 @@
 
 export const products = [
   {
+    "id": 1,
+    "name": "Sensibio H2O",
+    "nameVn": "Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm",
+    "brandId": "brand-bioderma",
+    "categoryId": 7,
+    "description": null,
+    "ingredient": "Aqua/Water/Eau, Peg-6 Caprylic/Capric Glycerides, Fructooligosaccharides, Mannitol, Xylitol, Rhamnose, Cucumis Sativus (Cucumber) Fruit Extract, Propylene Glycol, Cetrimonium Bromide, Disodium Edta",
+    "skinType": "Da nhạy cảm",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 1,
+        "sku": "BDM-TT-250",
+        "specification": {
+          "volume": "250ml",
+          "packaging": "Medium Bottle"
+        },
+        "unitPrice": 361000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm 250ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm 250ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "sku": "BDM-TT-500",
+        "specification": {
+          "volume": "500ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 380000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm 500ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm 500ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "sku": "BDM-TT-100",
+        "specification": {
+          "volume": "100ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 204000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm 100ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm 100ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 2,
-    "name": "La Roche-Posay Effaclar Purifying Foaming Gel",
+    "name": "Gel Rửa Mặt La Roche-Posay Dành Cho Da Dầu, Nhạy Cảm",
     "nameVn": "Gel Rửa Mặt La Roche-Posay Dành Cho Da Dầu, Nhạy Cảm",
     "brandId": "brand-larocheposay",
     "categoryId": 5,
-    "description": "Sản phẩm rửa mặt dành cho da dầu, nhạy cảm",
-    "ingredient": "Niacinamide, Salicylic Acid, Thermal Spring Water",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da dầu/Da nhạy cảm",
     "isActive": true,
     "variants": [
@@ -27,7 +94,7 @@ export const products = [
           {
             "imageUrl": "images/pic_product/Sữa rửa mặt/La Roche-possay/Gel Rửa Mặt La Roche-Posay Dành Cho Da Dầu, Nhạy Cảm 200ml.jpg",
             "displayOrder": 1,
-            "altText": ""
+            "altText": "Front View"
           }
         ]
       },
@@ -70,13 +137,62 @@ export const products = [
     ]
   },
   {
+    "id": 3,
+    "name": "Gel Rửa Mặt La Roche-Posay Giảm Mụn Cho Mặt, Toàn Thân",
+    "nameVn": "Gel Rửa Mặt La Roche-Posay Giảm Mụn Cho Mặt, Toàn Thân",
+    "brandId": "brand-larocheposay",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "Aqua / Water, Sodium Laureth Sulfate, Decyl Glucoside, Glycerin, Sodium Chloride, Coco-betaine, Salicylic Acid, Peg-150 Pentaerythrityl Tetrastearate, Peg-6 Caprylic/capric Glycerides, Zinc Gluconate, Sodium Hydroxide, Capryloyl Salicylic Acid, Tetrasodium Edta, Citric Acid, Menthol, Polyquaternium-47, Hexylene Glycol, Sodium Benzoate",
+    "skinType": "Da mụn",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 7,
+        "sku": "LRP-RM-50",
+        "specification": {
+          "volume": "50ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 79000,
+        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/La Roche-possay/[Mini] Gel Rửa Mặt La Roche-Posay Giảm Mụn Cho Mặt, Toàn Thân 50ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Sữa rửa mặt/La Roche-possay/[Mini] Gel Rửa Mặt La Roche-Posay Giảm Mụn Cho Mặt, Toàn Thân 50ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "sku": "LRP-RM-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 480000,
+        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/La Roche-possay/Gel Rửa Mặt & Tắm La Roche-Posay Làm Sạch & Giảm Mụn 400ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Sữa rửa mặt/La Roche-possay/Gel Rửa Mặt & Tắm La Roche-Posay Làm Sạch & Giảm Mụn 400ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 4,
-    "name": "Cocoon Pumpkin Cleansing Water",
+    "name": "Winter Melon Micellar Water",
     "nameVn": "Nước Tẩy Trang Bí Đao Cocoon Làm Sạch và Giảm Dầu",
     "brandId": "brand-cocoon",
     "categoryId": 7,
-    "description": "Làm sạch và giảm dầu trên da",
-    "ingredient": "Bí đao, Glycerin, Niacinamide",
+    "description": null,
+    "ingredient": "Aqua/Water, Polyglyceryl-4 Laurate/Sebacate, Polyglyceryl-4 Caprylate/Caprate, Betaine, Benincasa Cerifera Fruit Extract, Centella Asiatica Extract, o-Cymen-5-ol, Propanediol, Glycereth-26, Glycerin, Trisodium Ethylenediamine Disuccinate, Sodium Lactate, Cetylpyridinium Chloride, Melaleuca Alternifolia Leaf Oil, Lactic Acid",
     "skinType": "Da dầu/Da hỗn hợp",
     "isActive": true,
     "variants": [
@@ -120,12 +236,12 @@ export const products = [
   },
   {
     "id": 5,
-    "name": "Bioderma Sebium H2O Micellar Water",
+    "name": "Sébium H2O",
     "nameVn": "Nước Tẩy Trang Bioderma Dành Cho Da Dầu & Hỗn Hợp",
     "brandId": "brand-bioderma",
     "categoryId": 7,
-    "description": "Nước tẩy trang dành cho da dầu và hỗn hợp, giúp làm sạch và cân bằng da.",
-    "ingredient": "Nước, Glycerin, Poloxamer 184, Sodium Chloride, Citric Acid, Copper PCA, Zinc PCA",
+    "description": null,
+    "ingredient": "Water (Aqua), Peg-6 Caprylic/Capric Glycerides, Sodium Citrate , Zinc Gluconate, Copper Sulfate, Ginkgo Biloba Extract – Chiết Xuất Lá Bạch Quả, Mannitol, Xylitol, Rhamnose, Fructooligosaccharides, Propylene Glycol, Citric Acid, Disodium Edta, Cetrimonium Bromide, Fragrance (Parfum)",
     "skinType": "Da dầu/Da hỗn hợp",
     "isActive": true,
     "variants": [
@@ -187,12 +303,12 @@ export const products = [
   },
   {
     "id": 6,
-    "name": "Bioderma Sensibio H2O Micellar Water",
+    "name": "Sensibio Micellar Cleansing Oil",
     "nameVn": "Dầu Tẩy Trang Bioderma Hỗ Trợ Sạch Sâu Dịu Nhẹ",
     "brandId": "brand-bioderma",
     "categoryId": 7,
-    "description": "Dầu tẩy trang dịu nhẹ, hỗ trợ làm sạch sâu",
-    "ingredient": "Nước, Glycerin, Poloxamer, Mannitol, Xylitol, Rhamnose, Fructooligosaccharides, Propylene Glycol, Cucumis Sativus Fruit Extract",
+    "description": null,
+    "ingredient": "Ethylhexyl Palmitate, Brassica Campestris (Rapeseed) Seed Oil, Polyglyceryl-4 Oleate, Aqua/Water/Eau, Sodium Pca, Propanediol, Caprylic/Capric Triglyceride, Benzotriazolyl Dodecyl P-Cresol, Tocopherol, Helianthus Annuus (Sunflower) Seed Oil, Laminaria Ochroleuca Extract, Stearyl Glycyrrhetinate",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -218,12 +334,12 @@ export const products = [
   },
   {
     "id": 7,
-    "name": "Bioderma Sensibio H2O Micellar Water Sensitive Skin Makeup Removing Wipes",
+    "name": "Sensibio H2O Lingettes (Wipes)",
     "nameVn": "Khăn Ướt Tẩy Trang Bioderma Làm Sạch Da Nhạy Cảm 25 Miếng",
     "brandId": "brand-bioderma",
     "categoryId": 7,
-    "description": "Tẩy trang nhẹ nhàng, phù hợp với da nhạy cảm",
-    "ingredient": "Nước, Glycerin, Poloxamer 184, Mannitol, Xylitol, Rhamnose, Fructooligosaccharides, Propylene Glycol, Disodium EDTA, Citric Acid, Cetrimonium Bromide",
+    "description": null,
+    "ingredient": "Water (Aqua), Peg-6 Caprylic/Capric Glycerides, Cucumis Sativus (Cucumber) Fruit Extract, Mannitol, Xylitol, Rhamnose, Fructooligosaccharides, Propylene Glycol, Disodium Edta, Cetrimonium Bromide",
     "skinType": "Da nhạy cảm",
     "isActive": true,
     "variants": [
@@ -249,12 +365,12 @@ export const products = [
   },
   {
     "id": 8,
-    "name": "Anessa Perfect UV Sunscreen Mild Milk",
+    "name": "",
     "nameVn": "Gel Chống Nắng Anessa Dưỡng Ẩm Bảo Vệ Hoàn Hảo ",
     "brandId": "brand-anessa",
     "categoryId": 2,
-    "description": "Kem chống nắng dưỡng ẩm, bảo vệ da hoàn hảo",
-    "ingredient": "Avobenzone, Titanium Dioxide, Zinc Oxide",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da khô/ Da hỗn hợp",
     "isActive": true,
     "variants": [
@@ -280,12 +396,12 @@ export const products = [
   },
   {
     "id": 9,
-    "name": "Anessa Brightening UV Sunscreen (New)",
+    "name": "",
     "nameVn": "Gel Chống Nắng Anessa Dưỡng Sáng Nâng Tông (Mới)",
     "brandId": "brand-anessa",
     "categoryId": 2,
-    "description": "Kem chống nắng dưỡng sáng, nâng tông da",
-    "ingredient": "Khong tim thay thong tin",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da khô/ Da hỗn hợp",
     "isActive": true,
     "variants": [
@@ -311,12 +427,12 @@ export const products = [
   },
   {
     "id": 10,
-    "name": "Anessa UV Aqua Booster Oil Control",
+    "name": "",
     "nameVn": "Sữa Chống Nắng Anessa Dưỡng Da Kiềm Dầu",
     "brandId": "brand-anessa",
     "categoryId": 2,
-    "description": "Kem chống nắng kiềm dầu, phù hợp với da dầu",
-    "ingredient": "Avobenzone, Titanium Dioxide, Zinc Oxide",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da dầu/ Da hỗn hợp",
     "isActive": true,
     "variants": [
@@ -360,12 +476,12 @@ export const products = [
   },
   {
     "id": 11,
-    "name": "L'Oreal Paris UV Perfect Matte & Fresh Sunscreen",
+    "name": "",
     "nameVn": "Kem Chống Nắng L'Oreal Mịn Nhẹ Kiềm Dầu Thoáng Mịn Da",
     "brandId": "brand-loreal",
     "categoryId": 2,
-    "description": "Kem chống nắng kiềm dầu, thoáng mát, phù hợp với da dầu.",
-    "ingredient": "Avobenzone, Titanium Dioxide, Zinc Oxide",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da dầu/ Da hỗn hợp",
     "isActive": true,
     "variants": [
@@ -391,12 +507,12 @@ export const products = [
   },
   {
     "id": 12,
-    "name": "Cocoon Lotus Makeup Remover for Sensitive Skin",
+    "name": "Hau Giang Lotus Soothing Micellar Water",
     "nameVn": "Nước Tẩy Trang Cocoon Sen Hậu Giang Cho Da Rất Nhạy Cảm ",
     "brandId": "brand-cocoon",
     "categoryId": 7,
-    "description": "Dung cho da rat nham cam",
-    "ingredient": "Khong tim thay thong tin",
+    "description": null,
+    "ingredient": "Aqua/Water, Polyglyceryl-4 Caprylate/Caprate, Polyglyceryl-4 Laurate/Sebacate, Betaine, Nelumbo Nucifera Flower Extract, Alpha-Glucan Oligosaccharide, Inulin, Beta-Glucan, Trehalose, Xylitol, Propanediol, Glycerin, Glycereth-26, Sodium Lactate, Lactic Acid, Hydroxyacetophenone, Cetylpyridinium Chloride, Trisodium Ethylenediamine Disuccinate, Citric Acid, O-Cymen-5-Ol, Sodium Benzoate, Potassium Sorbate",
     "skinType": "Da nhạy cảm",
     "isActive": true,
     "variants": [
@@ -440,12 +556,12 @@ export const products = [
   },
   {
     "id": 13,
-    "name": "L'Oreal Fresh Cleansing Water for Oily, Combination Skin",
+    "name": "Micellar Water 3-in-1 Refreshing Even For Sensitive Skin",
     "nameVn": "Nước Tẩy Trang L'Oreal Tươi Mát Cho Da Dầu, Hỗn Hợp",
     "brandId": "brand-loreal",
     "categoryId": 7,
-    "description": "Tẩy trang dịu nhẹ, phù hợp với da dầu, da hỗn hợp",
-    "ingredient": "Nước, Glycerin, Propylene Glycol, Poloxamer 184, Phenoxyethanol, Parfum",
+    "description": null,
+    "ingredient": "Aqua / Water, Hexylene Glycol, Glycerin, Rosa Gallica Flower Extract, Sorbitol, Poloxamer 184, Disodium Cocoamphodiacetate, Disodium Edta, Propylene Glycol, BHT , Polyaminopropyl Biguanide",
     "skinType": "Da dầu/Da hỗn hợp",
     "isActive": true,
     "variants": [
@@ -471,12 +587,12 @@ export const products = [
   },
   {
     "id": 14,
-    "name": "La Roche-Posay Effaclar Purifying Foaming Gel",
+    "name": "Sữa Rửa Mặt La Roche-Posay Cho Da Hỗn Hợp & Da Dầu",
     "nameVn": "Sữa Rửa Mặt La Roche-Posay Cho Da Hỗn Hợp & Da Dầu",
     "brandId": "brand-larocheposay",
     "categoryId": 5,
-    "description": "Sữa rửa mặt dành cho da hỗn hợp và da dầu, giúp làm sạch sâu và kiểm soát bã nhờn.",
-    "ingredient": "Niacinamide, Salicylic Acid, Thermal Spring Water",
+    "description": null,
+    "ingredient": "Aqua / Water, Glycerin, Myristic Acid, Potassium Hydroxide, Glyceryl Stearate Se, Stearic Acid, Lauric Acid, Palmitic Acid, Coco-Glucoside, Tetrasodium Edta",
     "skinType": "Da dầu",
     "isActive": true,
     "variants": [
@@ -502,12 +618,12 @@ export const products = [
   },
   {
     "id": 15,
-    "name": "La Roche-Posay Pigmentclar Foaming Cream",
+    "name": "Gel Rửa Mặt La Roche-Posay Mờ Thâm, Sáng Da",
     "nameVn": "Gel Rửa Mặt La Roche-Posay Mờ Thâm, Sáng Da",
     "brandId": "brand-larocheposay",
     "categoryId": 5,
-    "description": "Sản phẩm rửa mặt giúp làm mờ thâm, sáng da",
-    "ingredient": "Niacinamide, Glycerin, Salicylic Acid",
+    "description": null,
+    "ingredient": "Aqua / Water / Eau, Glycerin, Coco-Betaine, Propanediol, Sodium Cocoyl Glycinate, Peg-120 Methyl Glucose Dioleate, Sodium Hydroxide, Sodium Chloride, Citric Acid, Gluconolactone, Ceramide Np, Niacinamide, 2-Mercaptonicotinoyl Glycine, Sodium Thiosulfate, Disodium Edta, Capryloyl Glycine, Caprylyl Glycol, Trisodium Ethylenediamine Disuccinate, Pentylene Glycol, Acrylates Copolymer, Tocopherol, Tocopheryl Acetate, Parfum / Fragrance",
     "skinType": "Da thường/Mọi loại da",
     "isActive": true,
     "variants": [
@@ -533,12 +649,12 @@ export const products = [
   },
   {
     "id": 16,
-    "name": "CeraVe Foaming Facial Cleanser for Normal to Oily Skin",
+    "name": "Sữa Rửa Mặt CeraVe Sạch Sâu Cho Da Thường Đến Da Dầu",
     "nameVn": "Sữa Rửa Mặt CeraVe Sạch Sâu Cho Da Thường Đến Da Dầu",
     "brandId": "brand-cerave",
     "categoryId": 5,
-    "description": "Sữa rửa mặt sạch sâu, phù hợp với da thường đến da dầu.",
-    "ingredient": "Niacinamide, Ceramide NP, Ceramide AP, Ceramide EOP, Hyaluronic Acid, Glycerin",
+    "description": null,
+    "ingredient": "Purified Water (Aqua), Cocamidopropyl Hydroxysultaine, Glycerin, Sodium Lauroyl Sarcosinate, Peg-150 Pentaerythrityl Tetrastearate (And) Peg-6 Caprylic/Capric Glycerides, Niacinamide, Propylene Glycol, Sodium Methyl Cocoyl Taurate, Ceramide 3, Ceramide 6-Ii, Ceramide 1, Hyaluronic Acid, Cholesterol, Sodium Chloride, Phytosphingosine, Citric Acid, Edetate Disodium Dihydrate, Sodium Lauroyl Lactylate, Methylparaben, Propylparaben, Carbomer, Xanthan Gum",
     "skinType": "Da dầu/Hỗn hợp dầu",
     "isActive": true,
     "variants": [
@@ -618,12 +734,12 @@ export const products = [
   },
   {
     "id": 17,
-    "name": "CeraVe Foaming Facial Cleanser for Oily Skin",
+    "name": "Sữa Rửa Mặt Cerave Cho Da Dầu Mụn",
     "nameVn": "Sữa Rửa Mặt Cerave Cho Da Dầu Mụn",
     "brandId": "brand-cerave",
     "categoryId": 5,
-    "description": "Sữa rửa mặt dành cho da dầu, mụn. Giúp làm sạch sâu và cân bằng da.",
-    "ingredient": "Niacinamide, Ceramides, Hyaluronic Acid",
+    "description": null,
+    "ingredient": "Aqua / Water, Ocamidopropyl Hydroxysultaine, Glycerin, Sodium Lauroyl Sarcosinate, Niacinamide, Salicylic Acid, Sodium Methyl Cocoyl Taurate, Peg-150 Pentaerythrityl, Tetrastearate, Tetrastearate, Gluconolactone, Sodium Cocoyl Isethionate, Ceramide Np, Ceramide Ap, Ceramide Eop, Carbomer, Calcium Gluconate, Calcium Gluconate, Triethyl Citrate, Sodium Hydroxide, Sodium Benzoate, Sodium Chloride, Sodium Lauroyl Lactylate, Cholesterol, Coconut Acid, Tetrasodium Edta, Caprylyl Glycol, Hydrolyzed Hyaluronic Acid, Trisodium Ethylenediamine, Disuccinate, Hectorite, Phytosphingosine, Xanthan Gum, Acrylates Copolymer, Benzoic Acid",
     "skinType": "Da mụn",
     "isActive": true,
     "variants": [
@@ -667,24 +783,24 @@ export const products = [
   },
   {
     "id": 18,
-    "name": "CeraVe Hydrating Facial Cleanser",
+    "name": "",
     "nameVn": "[Mini] Sữa Rửa Mặt CeraVe Cho Da Thường Đến Khô",
     "brandId": "brand-cerave",
     "categoryId": 5,
-    "description": "Sữa rửa mặt dịu nhẹ, phù hợp với da thường đến da khô.",
-    "ingredient": "Niacinamide, Ceramide NP, Ceramide AP, Ceramide EOP, Hyaluronic Acid",
+    "description": null,
+    "ingredient": "",
     "skinType": null,
     "isActive": true,
     "variants": []
   },
   {
     "id": 19,
-    "name": "Pyunkang Yul Moisture Toner",
+    "name": "Essence Toner",
     "nameVn": "Toner Pyunkang Yul Cấp Ẩm, Làm Dịu Da",
     "brandId": "brand-pyukhang yul",
     "categoryId": 8,
-    "description": "Toner dưỡng ẩm, làm dịu da",
-    "ingredient": "Niacinamide, Panthenol, Allantoin",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường/ Mọi loại da",
     "isActive": true,
     "variants": [
@@ -746,12 +862,12 @@ export const products = [
   },
   {
     "id": 20,
-    "name": "Cocoon Lotus Hau Giang Balancing Toner for Sensitive Skin",
+    "name": "Hau Giang Lotus Soothing Toner",
     "nameVn": "Nước Cân Bằng Cocoon Sen Hậu Giang Làm Dịu Da Nhạy Cảm",
     "brandId": "brand-cocoon",
     "categoryId": 8,
-    "description": "Dung cho da nhạy cảm, làm dịu da.",
-    "ingredient": "Chiết xuất sen, glycerin",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da nhạy cảm",
     "isActive": true,
     "variants": [
@@ -813,12 +929,12 @@ export const products = [
   },
   {
     "id": 21,
-    "name": "Cocoon Pumpkin Balancing Toner",
+    "name": "Winter Melon Toner",
     "nameVn": "Nước Cân Bằng Cocoon Bí Đao Giảm Dầu & Mụn",
     "brandId": "brand-cocoon",
     "categoryId": 8,
-    "description": "Dung cho da dau, mụn. Cân bằng độ ẩm, giảm dầu thừa và mụn.",
-    "ingredient": "Bí đao, Niacinamide, Vitamin B3",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường/ Mọi loại da",
     "isActive": true,
     "variants": [
@@ -862,12 +978,12 @@ export const products = [
   },
   {
     "id": 22,
-    "name": "Cocoon Turmeric Extract Balancing Water",
+    "name": "Hung Yen Turmeric Toner",
     "nameVn": "Nước Cân Bằng Cocoon Chiết Xuất Từ Nghệ Hưng Yên",
     "brandId": "brand-cocoon",
     "categoryId": 8,
-    "description": "Dung cho da thuong, da nhay cam. Cân bằng độ ẩm và bảo vệ da.",
-    "ingredient": "Chiết xuất từ nghệ Hưng Yên",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường/ Mọi loại da",
     "isActive": true,
     "variants": [
@@ -911,12 +1027,12 @@ export const products = [
   },
   {
     "id": 23,
-    "name": "Klairs Supple Preparation Facial Toner with PDRN",
+    "name": "Freshly Juiced Vitamin Essence Toner",
     "nameVn": "Toner Klairs Hỗ Trợ Làm Sáng Da PDRN Thuần Chay",
     "brandId": "brand-klairs",
     "categoryId": 8,
-    "description": "Toner dưỡng ẩm, hỗ trợ làm sáng da, phù hợp với mọi loại da.",
-    "ingredient": "PDRN, Panthenol, Allantoin",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường/ Mọi loại da",
     "isActive": true,
     "variants": [
@@ -942,12 +1058,12 @@ export const products = [
   },
   {
     "id": 24,
-    "name": "Caryophy Revitalizing Multi-Purpose Face Mask",
+    "name": "",
     "nameVn": "Mặt Nạ Caryophy Phục Hồi Da Đa Năng ",
     "brandId": "brand-caryophy",
     "categoryId": 3,
-    "description": "Mặt nạ phục hồi da đa năng, phù hợp với mọi loại da.",
-    "ingredient": "Khong tim thay thong tin",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -972,13 +1088,75 @@ export const products = [
     ]
   },
   {
+    "id": 25,
+    "name": "Glycolic Bright Melasyl 8% [Melasyl+Glycolic+Niacinamide]",
+    "nameVn": "Serum L'Oreal Sáng Da, Mờ Thâm Mụn & Nám",
+    "brandId": "brand-loreal",
+    "categoryId": 4,
+    "description": null,
+    "ingredient": "...",
+    "skinType": "Da thường/ Mọi loại da",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 44,
+        "sku": "LR-SR-MN-30",
+        "specification": {
+          "volume": "30ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 285000,
+        "thumbnailUrl": "images/pic_product/Serum/L'oreal/Serum L'Oreal Sáng Da, Mờ Thâm Mụn & Nám 30ml (Mới).jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Serum/L'oreal/Serum L'Oreal Sáng Da, Mờ Thâm Mụn & Nám 30ml (Mới).jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "name": "Glycolic Bright 1.0% Glycolic Acid (AHA)",
+    "nameVn": "Serum L'Oreal Dưỡng Sáng Và Mờ Thâm Nám",
+    "brandId": "brand-loreal",
+    "categoryId": 4,
+    "description": null,
+    "ingredient": "...",
+    "skinType": "Da thường/ Mọi loại da",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 45,
+        "sku": "LR-SR-DS-15",
+        "specification": {
+          "volume": "15ml",
+          "packaging": "Mini Bottle"
+        },
+        "unitPrice": 236000,
+        "thumbnailUrl": "images/pic_product/Serum/L'oreal/Serum L'Oreal Dưỡng Sáng Và Mờ Thâm Nám 15ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Serum/L'oreal/Serum L'Oreal Dưỡng Sáng Và Mờ Thâm Nám 15ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 27,
-    "name": "L'Oreal Hyaluronic Acid Hydrating Serum",
+    "name": "Revitalift Hyaluronic Acid 1.5% Hyaluron Serum",
     "nameVn": "Serum L'Oreal Hyaluronic Acid Cấp Ẩm Sáng Da",
     "brandId": "brand-loreal",
     "categoryId": 4,
-    "description": "Serum cấp ẩm, sáng da",
-    "ingredient": "Acid Hyaluronic",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường/ Mọi loại da",
     "isActive": true,
     "variants": [
@@ -1022,12 +1200,12 @@ export const products = [
   },
   {
     "id": 28,
-    "name": "La Roche-Posay Pigment Control Serum",
+    "name": "Mela B3 Serum",
     "nameVn": "Serum La Roche-Posay Giảm Thâm Nám & Dưỡng Sáng Da",
     "brandId": "brand-larocheposay",
     "categoryId": 4,
-    "description": "Serum giảm thâm nám và dưỡng sáng da, phù hợp với mọi loại da.",
-    "ingredient": "Vitamin C, Niacinamide, Glycerin",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường/ Mọi loại da",
     "isActive": true,
     "variants": [
@@ -1052,13 +1230,44 @@ export const products = [
     ]
   },
   {
+    "id": 29,
+    "name": "Revitalift Hyaluronic Acid Oil Control 4% [Hyaluron + Salicylic Acid + Niacinamide]",
+    "nameVn": "Serum L'Oreal Niacinamide 2% Kiềm Dầu Ban Đêm ",
+    "brandId": "brand-loreal",
+    "categoryId": 4,
+    "description": null,
+    "ingredient": "...",
+    "skinType": "Da thường/ Mọi loại da",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 49,
+        "sku": "LR-SR-NI-30",
+        "specification": {
+          "volume": "30ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 419000,
+        "thumbnailUrl": "images/pic_product/Serum/L'oreal/Serum L'Oreal Niacinamide 2% Kiềm Dầu Ban Đêm 30ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Serum/L'oreal/Serum L'Oreal Niacinamide 2% Kiềm Dầu Ban Đêm 30ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 30,
-    "name": "BNBG Glutathione Brightening Face Mask",
+    "name": "",
     "nameVn": "Mặt Nạ BNBG Glutathione Hỗ Trợ Dưỡng Sáng Da",
     "brandId": "brand-bnbg",
     "categoryId": 3,
-    "description": "Mặt nạ dưỡng sáng da, phù hợp với mọi loại da.",
-    "ingredient": "Glutathione",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -1084,12 +1293,12 @@ export const products = [
   },
   {
     "id": 31,
-    "name": "La Roche-Posay Micellar Cleansing Water for Sensitive Skin",
+    "name": "Micellar Water Ultra Sensitive Skin",
     "nameVn": "Nước Tẩy Trang La Roche-Posay Dành Cho Da Nhạy Cảm",
     "brandId": "brand-larocheposay",
     "categoryId": 7,
-    "description": "Dung cho da nhạy cảm, làm sạch nhẹ nhàng và cân bằng da.",
-    "ingredient": "Nước micellar, glycerin, Thermal Spring Water",
+    "description": null,
+    "ingredient": "Aqua / Water, Peg-7 Caprylic/Capric Glycerides, Poloxamer 124, Poloxamer 184, Peg-6 Caprylic/Capric Glycerides, Glycerin, Polysorbate 80, Disodium Edta, Bht, Myrtrimonium Bromide, Parfum / Fragrance",
     "skinType": "Da nhạy cảm",
     "isActive": true,
     "variants": [
@@ -1151,36 +1360,48 @@ export const products = [
   },
   {
     "id": 32,
-    "name": "BNBG Multi-Layer Moisturizing Face Mask",
+    "name": "",
     "nameVn": "Mặt Nạ Kem BNBG Cấp Ẩm Đa Tầng",
     "brandId": "brand-bnbg",
     "categoryId": 3,
-    "description": "Mặt nạ dưỡng ẩm da nhiều lớp",
-    "ingredient": "Khong tim thay thong tin",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": []
   },
   {
     "id": 33,
-    "name": "BNBG Firming Face Mask, Anti-Aging",
+    "name": "",
     "nameVn": "Mặt Nạ BNBG Dưỡng Săn Chắc Da, Ngăn Ngừa Lão Hóa ",
     "brandId": "brand-bnbg",
     "categoryId": 3,
-    "description": "Dưỡng săn chắc da, ngăn ngừa lão hóa",
-    "ingredient": "Khong tim thay thong tin",
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "id": 34,
+    "name": "",
+    "nameVn": "Mặt Nạ BNBG Vita Complex Dưỡng Sáng Da, Mờ Thâm Nám",
+    "brandId": "brand-bnbg",
+    "categoryId": 3,
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": []
   },
   {
     "id": 35,
-    "name": "BNBG Deep Moisturizing Face Mask",
+    "name": "",
     "nameVn": "Mặt Nạ BNBG Dưỡng Ẩm Chuyên Sâu Cho Mọi Loại Da",
     "brandId": "brand-bnbg",
     "categoryId": 3,
-    "description": "Dưỡng ẩm sâu cho mọi loại da",
-    "ingredient": "Khong tim thay thong tin",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da khô/ Da hỗn hợp",
     "isActive": true,
     "variants": [
@@ -1205,13 +1426,44 @@ export const products = [
     ]
   },
   {
+    "id": 36,
+    "name": "",
+    "nameVn": "Mặt Nạ Naruko Tràm Trà Kiểm Soát Dầu Và Giảm Mụn ",
+    "brandId": "brand-naruko",
+    "categoryId": 3,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da dầu/ Da hỗn hợp",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 55,
+        "sku": "NR-TT-MN-26",
+        "specification": {
+          "volume": "26ml",
+          "packaging": "Box"
+        },
+        "unitPrice": 25000,
+        "thumbnailUrl": "images/pic_product/Mặt nạ/Naruko/Mặt Nạ Naruko Tràm Trà Kiểm Soát Dầu Và Giảm Mụn 26ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Mặt nạ/Naruko/Mặt Nạ Naruko Tràm Trà Kiểm Soát Dầu Và Giảm Mụn 26ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 37,
-    "name": "Naruko Red Algae Pore Minimizing & Brightening Mask",
+    "name": "",
     "nameVn": "Mặt Nạ Naruko Ý Dĩ Nhân Đỏ Se Lỗ Chân Lông, Sáng Da",
     "brandId": "brand-naruko",
     "categoryId": 3,
-    "description": "Mặt nạ se lỗ chân lông, sáng da",
-    "ingredient": "Ý dĩ, Vitamin C",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -1237,24 +1489,55 @@ export const products = [
   },
   {
     "id": 38,
-    "name": "BNBG Moisturizing Face Mask",
+    "name": "",
     "nameVn": "Mặt Nạ BNBG Dưỡng Ẩm Cho Mọi Loại Da",
     "brandId": "brand-bnbg",
     "categoryId": 3,
-    "description": "Dưỡng ẩm cho mọi loại da",
-    "ingredient": "Khong tim thay thong tin",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da khô/ Da hỗn hợp",
     "isActive": true,
     "variants": []
   },
   {
+    "id": 39,
+    "name": "",
+    "nameVn": "Kem Chống Nắng La Roche-Posay Kiểm Soát Dầu SPF50+",
+    "brandId": "brand-larocheposay",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da dầu/ Da hỗn hợp",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 57,
+        "sku": "LRP-CN-15",
+        "specification": {
+          "volume": "15ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 259000,
+        "thumbnailUrl": "images/pic_product/Kem chống nắng/La Roche-possay/Sữa Chống Nắng La Roche-Posay Dưỡng Sáng Mờ Thâm SPF50+ 50ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem chống nắng/La Roche-possay/[Mini] Kem Chống Nắng La Roche-Posay Kiểm Soát Dầu SPF50+ 15ml (Mới).jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 40,
-    "name": "La Roche-Posay Acne Reducing Serum",
+    "name": "Serum La Roche-Posay Giảm Mụn 3 Tác Động ",
     "nameVn": "Serum La Roche-Posay Giảm Mụn 3 Tác Động ",
     "brandId": "brand-larocheposay",
     "categoryId": 4,
-    "description": "Serum giảm mụn, phù hợp với da dầu, da mụn.",
-    "ingredient": "Salicylic Acid, Niacinamide, Thermal Spring Water",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da mụn",
     "isActive": true,
     "variants": [
@@ -1298,12 +1581,12 @@ export const products = [
   },
   {
     "id": 41,
-    "name": "Vichy 89 Mineral Replenishing Serum",
+    "name": "Vichy 89 Minerals Intensive Repair Serum",
     "nameVn": "Serum Vichy 89 Khoáng Chất Phục Hồi Chuyên Sâu",
     "brandId": "brand-vichy",
     "categoryId": 4,
-    "description": "Serum phục hồi chuyên sâu, phù hợp với mọi loại da.",
-    "ingredient": "Niacinamide, Hyaluronic Acid, Thermal Spa Water",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da nhạy cảm",
     "isActive": true,
     "variants": [
@@ -1364,13 +1647,44 @@ export const products = [
     ]
   },
   {
+    "id": 42,
+    "name": "Sữa Rửa Mặt CeraVe Làm Sạch & Tẩy Tế Bào Chết Dịu Nhẹ",
+    "nameVn": "Sữa Rửa Mặt CeraVe Làm Sạch & Tẩy Tế Bào Chết Dịu Nhẹ",
+    "brandId": "brand-cerave",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "Purified Water (Aqua), Cocamidopropyl Hydroxysultaine, Glycerin, Sodium Lauroyl Sarcosinate, Peg-150 Pentaerythrityl Tetrastearate (And) Peg-6 Caprylic/Capric Glycerides, Niacinamide, Propylene Glycol, Sodium Methyl Cocoyl Taurate, Ceramide 3, Ceramide 6-Ii, Ceramide 1, Hyaluronic Acid, Cholesterol, Sodium Chloride, Phytosphingosine, Citric Acid, Edetate Disodium Dihydrate, Sodium Lauroyl Lactylate, Methylparaben, Propylparaben, Carbomer, Xanthan Gum",
+    "skinType": "Da nhạy cảm",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 63,
+        "sku": "CV-RM-236",
+        "specification": {
+          "volume": "236ml",
+          "packaging": "Medium Bottle"
+        },
+        "unitPrice": 305000,
+        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/CeraVe/Sữa Rửa Mặt CeraVe Làm Sạch & Tẩy Tế Bào Chết Dịu Nhẹ 236ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Sữa rửa mặt/CeraVe/Sữa Rửa Mặt CeraVe Làm Sạch & Tẩy Tế Bào Chết Dịu Nhẹ 236ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 43,
-    "name": "Vichy Mineral 89 Skin Fortifying & Plumping Daily Booster",
+    "name": "",
     "nameVn": "Serum Vichy Hỗ Trợ Trẻ Hoá Và Săn Chắc Da ",
     "brandId": "brand-vichy",
     "categoryId": 4,
-    "description": "Serum dưỡng da, hỗ trợ trẻ hoá và săn chắc da.",
-    "ingredient": "Niacinamide, Hyaluronic Acid, Glycerin",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da nhạy cảm",
     "isActive": true,
     "variants": [
@@ -1396,12 +1710,12 @@ export const products = [
   },
   {
     "id": 44,
-    "name": "Vichy Mineral 89 Instant Rescue Serum",
+    "name": "",
     "nameVn": "Serum Vichy Giải Cứu Làn Da Tức Thì ",
     "brandId": "brand-vichy",
     "categoryId": 4,
-    "description": "Serum cấp ẩm và phục hồi da tức thì",
-    "ingredient": "Niacinamide, Hyaluronic Acid, Glycerin",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -1427,12 +1741,12 @@ export const products = [
   },
   {
     "id": 45,
-    "name": "Vichy Anti-Wrinkle and Rejuvenating Skincare",
+    "name": "",
     "nameVn": "Dưỡng Chất Vichy Giảm Nếp Nhăn Và Giúp Trẻ Hoá Da",
     "brandId": "brand-vichy",
     "categoryId": 4,
-    "description": "Dưỡng chất giúp giảm nếp nhăn và trẻ hoá da",
-    "ingredient": "Khong tim thay thong tin",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -1458,12 +1772,12 @@ export const products = [
   },
   {
     "id": 46,
-    "name": "Eucerin Sun Protection Brightening Cream",
+    "name": "",
     "nameVn": "Kem Chống Nắng Eucerin Chứa Tinh Chất Sáng Da ",
     "brandId": "brand-eucerin",
     "categoryId": 2,
-    "description": "Kem chống nắng dưỡng sáng da, phù hợp với mọi loại da.",
-    "ingredient": "Tinh chất sáng da, Avobenzone, Homosalate, Octinoxate, Titanium Dioxide",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -1489,12 +1803,12 @@ export const products = [
   },
   {
     "id": 47,
-    "name": "Eucerin Oil Control Sun Cream (Tinted)",
+    "name": "",
     "nameVn": "Kem Chống Nắng Eucerin Kiềm Dầu (Có Màu)",
     "brandId": "brand-eucerin",
     "categoryId": 2,
-    "description": "Kem chống nắng kiềm dầu, có màu, phù hợp với da dầu.",
-    "ingredient": "Avobenzone, Titanium Dioxide, Zinc Oxide",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da dầu",
     "isActive": true,
     "variants": [
@@ -1519,13 +1833,75 @@ export const products = [
     ]
   },
   {
+    "id": 48,
+    "name": "",
+    "nameVn": "Kem Chống Nắng Eucerin Cho Da Nhạy Cảm",
+    "brandId": "brand-eucerin",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da nhạy cảm",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 69,
+        "sku": "EC-CN-50",
+        "specification": {
+          "volume": "50ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 648000,
+        "thumbnailUrl": "images/pic_product/Kem chống nắng/Eucerin/Kem Chống Nắng Eucerin Cho Da Nhạy Cảm 50ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy tế bào chết/Eucerin/Tẩy Tế Bào Chết Eucerin Dành Cho Da Nhờn Mụn 100ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View "
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 49,
+    "name": "",
+    "nameVn": "Kem Chống Nắng Eucerin SPF 50 Ngăn Ngừa Da Lão Hóa",
+    "brandId": "brand-eucerin",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 70,
+        "sku": "EC-CN-50",
+        "specification": {
+          "volume": "50ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 485000,
+        "thumbnailUrl": "images/pic_product/Kem chống nắng/Eucerin/Kem Chống Nắng Eucerin Cho Da Nhạy Cảm 50ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem chống nắng/Eucerin/Kem Chống Nắng Eucerin Cho Da Nhạy Cảm 50ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View "
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 50,
-    "name": "Hada Labo Premium Whitening Facial Cleanser",
+    "name": "Sữa Rửa Mặt Hada Labo Dưỡng Sáng Cao Cấp",
     "nameVn": "Sữa Rửa Mặt Hada Labo Dưỡng Sáng Cao Cấp",
     "brandId": "brand-hadalabo",
     "categoryId": 5,
-    "description": "Sữa rửa mặt dưỡng sáng da cao cấp, phù hợp với mọi loại da",
-    "ingredient": "Glycerin, Sodium Hyaluronate, Vitamin C",
+    "description": null,
+    "ingredient": "Water, Sodium Cocoyl Glycinate, Propylene Glycol, Pentylene Glycol, Coco-Betaine, Acrylates Copolymer, PEG-150 Pentaerythrityl Tetrastearate, Glycerin, PPG-2 Hydroxyethyl Cocamide, Fortunella Margarita Fruit Extract, Actinidia Chinensis (Kiwi) Fruit Extract, Sodium Dilauramidoglutamide Lysine, Vaccinium Myrtillus Fruit Extract (Bilberry), Melia Azadirachta Extract, Pogostemon Cablin Oil, Saccharum Officinarum (Sugarcane) Extract, Sodium Hyaluronate (HA), Citrus Aurantium Dulcis (Orange) Fruit Extract, Citrus Limon (Lemon) Fruit Extract, Acer Saccharum (Sugar Maple) Extract, Hydrolyzed Sodium Hyaluronate (Nano HA), Sodium Acetylated Hyaluronate (Super HA), Butylene Glycol, Sodium Hyaluronate Crosspolymer (3D HA), Hydroxypropyltrimonium Hyaluronate (Binding HA), Lactococcus/Hyaluronic Acid Ferment Filtrate (Fermented HA), Polyquaternium-39. Titanium Dioxide, Disodium EDTA, Sodium Hydroxide, Phenoxyethanol, Sodium Benzoate",
     "skinType": "Da thường/Mọi loại da",
     "isActive": true,
     "variants": [
@@ -1551,12 +1927,12 @@ export const products = [
   },
   {
     "id": 51,
-    "name": "Vichy Normaderm Phytosolution Purifying Gel Cleanser",
+    "name": "Sữa Rửa Mặt Vichy Dạng Gel Làm Sạch Sâu & Giảm Nhờn",
     "nameVn": "Sữa Rửa Mặt Vichy Dạng Gel Làm Sạch Sâu & Giảm Nhờn",
     "brandId": "brand-vichy",
     "categoryId": 5,
-    "description": "Sữa rửa mặt dạng gel làm sạch sâu và giảm nhờn",
-    "ingredient": "Salicylic Acid, Glycerin, Zinc PCA",
+    "description": null,
+    "ingredient": "Aqua / Water, Sodium Laureth Sulfate, Peg-8, Coco-Betaine, Hexylene Glycol, Sodium Chloride, Peg-120 Methyl Glucose Dioleate, Ci 19140 / Yellow 5, Ci 42053 / Green 3, Glycolic Acid, Triethanolamine, Salicylic Acid, Sodium Benzoate, Sodium Hydroxide, Dipotassium Glycyrrhizate, Caprylyl Glycol, Capryloyl Salicylic Acid, Citric Acid, Parfum / Fragrance",
     "skinType": "Da dầu/Hỗn hợp dầu",
     "isActive": true,
     "variants": [
@@ -1600,12 +1976,12 @@ export const products = [
   },
   {
     "id": 52,
-    "name": "Cocoon Rose Extract Makeup Remover",
+    "name": "Rose Cleansing Oil",
     "nameVn": "Dầu Tẩy Trang Cocoon Chiết Xuất Hoa Hồng ",
     "brandId": "brand-cocoon",
     "categoryId": 7,
-    "description": "Dầu tẩy trang chiết xuất từ hoa hồng, phù hợp với mọi loại da.",
-    "ingredient": "Chiết xuất hoa hồng, glycerin, vitamin E",
+    "description": null,
+    "ingredient": "Glycerin, Aqua/Water, Peg-7 Glyceryl Cocoate, C15-19 Alkane, Glycereth-26, Polysorbate 20, Rosa Damascena Flower Oil, Tocopheryl Acetate, Caramel",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -1649,12 +2025,12 @@ export const products = [
   },
   {
     "id": 53,
-    "name": "Naruko Red Ginseng Brightening Mask",
+    "name": "",
     "nameVn": "Mặt Nạ Naruko Ý Dĩ Nhân Đỏ Dưỡng Sáng Da",
     "brandId": "brand-naruko",
     "categoryId": 3,
-    "description": "Mặt nạ dưỡng sáng da, phù hợp với mọi loại da.",
-    "ingredient": "Ý dĩ nhân đỏ, vitamin C, vitamin E",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -1680,12 +2056,12 @@ export const products = [
   },
   {
     "id": 54,
-    "name": "innisfree Jeju Volcanic Color Clay Mask",
+    "name": "",
     "nameVn": "Mặt Nạ Tẩy Tế Bào Chết innisfree Từ Lúa Mạch Xanh",
     "brandId": "brand-innisfree",
     "categoryId": 6,
-    "description": "Mặt nạ tẩy tế bào chết từ lúa mạch xanh, làm sạch và làm mịn da",
-    "ingredient": "Lúa mạch xanh, đất sét núi lửa Jeju",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -1711,12 +2087,12 @@ export const products = [
   },
   {
     "id": 55,
-    "name": "L'Oreal Micellar Cleansing Water for Normal to Dry Skin",
+    "name": "Micellar Water 3-in-1 Moisturizing Even For Sensitive Skin",
     "nameVn": "Nước Tẩy Trang L'Oreal Dưỡng Ẩm Cho Da Thường, Khô",
     "brandId": "brand-loreal",
     "categoryId": 7,
-    "description": "Dưỡng ẩm cho da thường và da khô",
-    "ingredient": "Nước, Glycerin, Propylene Glycol, Poloxamer 184, Disodium EDTA, Parfum",
+    "description": null,
+    "ingredient": " Aqua / Water, Cyclopentasiloxane, Isohexadecane, Potassium Phosphate, Sodium Chloride, Dipotassium Phosphate, Disodium Edta, Decyl Glucoside, Hexylene Glycol, Polyaminopropyl Biguanide, CI 61565 / Green 6",
     "skinType": "Da khô/Da hỗn hợp",
     "isActive": true,
     "variants": [
@@ -1742,12 +2118,12 @@ export const products = [
   },
   {
     "id": 56,
-    "name": "Naruko Daffodil Nourishing & Repairing Mask",
+    "name": "",
     "nameVn": "Mặt Nạ Naruko Hoa Thủy Tiên Hỗ Trợ Phục Hồi Da",
     "brandId": "brand-naruko",
     "categoryId": 3,
-    "description": "Mặt nạ dưỡng ẩm và phục hồi da",
-    "ingredient": "Daffodil extract, Hyaluronic acid, Ceramide",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -1773,12 +2149,12 @@ export const products = [
   },
   {
     "id": 57,
-    "name": "La Roche-Posay Anthelios Anti-Shine Mattifying Sunscreen for Oily Skin",
+    "name": "",
     "nameVn": "Sữa Chống Nắng La Roche-Posay Cho Da Dầu Mụn ",
     "brandId": "brand-larocheposay",
     "categoryId": 2,
-    "description": "Kem chống nắng dành cho da dầu, mụn. Giúp kiểm soát bóng nhờn và mang lại làn da mịn màng.",
-    "ingredient": "Tinosorb S, Avobenzone, Homosalate",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da dầu/ Da hỗn hợp",
     "isActive": true,
     "variants": [
@@ -1804,12 +2180,12 @@ export const products = [
   },
   {
     "id": 58,
-    "name": "BNBG PDRN Multi-Layer Moisturizing & Brightening Face Mask",
+    "name": "",
     "nameVn": "Mặt Nạ BNBG PDRN Cấp Ẩm Đa Tầng, Căng Bóng Da",
     "brandId": "brand-bnbg",
     "categoryId": 3,
-    "description": "Mặt nạ cấp ẩm, căng bóng da",
-    "ingredient": "PDRN, Hyaluronic Acid",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da khô/ Da hỗn hợp",
     "isActive": true,
     "variants": [
@@ -1835,12 +2211,12 @@ export const products = [
   },
   {
     "id": 59,
-    "name": "Eucerin DermatoCLEAN Refreshing Cleansing Gel",
+    "name": "",
     "nameVn": "Tẩy Tế Bào Chết Eucerin Dành Cho Da Nhờn Mụn ",
     "brandId": "brand-eucerin",
     "categoryId": 6,
-    "description": "Sản phẩm tẩy tế bào chết dành cho da nhờn, mụn",
-    "ingredient": "Glycerin, Panthenol, Allantoin",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da dầu/Da hỗn hợp",
     "isActive": true,
     "variants": [
@@ -1866,12 +2242,12 @@ export const products = [
   },
   {
     "id": 60,
-    "name": "BNBG Tea Tree Purifying & Acne Reducing Face Mask",
+    "name": "",
     "nameVn": "Mặt Nạ BNBG Tràm Trà Giúp Thải Độc Da, Giảm Mụn",
     "brandId": "brand-bnbg",
     "categoryId": 3,
-    "description": "Mặt nạ giúp thải độc da, giảm mụn",
-    "ingredient": "Trà tràm",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -1897,12 +2273,12 @@ export const products = [
   },
   {
     "id": 61,
-    "name": "BNBG Vitamin B3 Brightening Face Mask",
+    "name": "",
     "nameVn": "Mặt Nạ BNBG Vitamin B3 Làm Sáng Da",
     "brandId": "brand-bnbg",
     "categoryId": 3,
-    "description": "Mặt nạ dưỡng sáng da, phù hợp với mọi loại da.",
-    "ingredient": "Vitamin B3, Khong tim thay thong tin",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -1928,12 +2304,12 @@ export const products = [
   },
   {
     "id": 62,
-    "name": "BNBG Vitamin A Firming Face Mask",
+    "name": "",
     "nameVn": "Mặt Nạ BNBG Vitamin A Hỗ Trợ Nâng Cơ ",
     "brandId": "brand-bnbg",
     "categoryId": 3,
-    "description": "Mặt nạ hỗ trợ nâng cơ, phù hợp với mọi loại da.",
-    "ingredient": "Vitamin A",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -1958,13 +2334,44 @@ export const products = [
     ]
   },
   {
+    "id": 63,
+    "name": "",
+    "nameVn": "Sữa Chống Nắng La Roche-Posay Bảo Vệ Khỏi Tia UVA",
+    "brandId": "brand-larocheposay",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 86,
+        "sku": "LRP-CN-50",
+        "specification": {
+          "volume": "50ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 512000,
+        "thumbnailUrl": "images/pic_product/Kem chống nắng/La Roche-possay/Sữa Chống Nắng La Roche-Posay Bảo Vệ Khỏi Tia UVA Dài 50ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem chống nắng/La Roche-possay/Sữa Chống Nắng La Roche-Posay Bảo Vệ Khỏi Tia UVA Dài 50ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View "
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 64,
-    "name": "La Roche-Posay Balancing Toner for Normal, Sensitive Skin",
+    "name": "",
     "nameVn": "Nước Cân Bằng La Roche-Posay Cho Da Thường, Nhạy Cảm",
     "brandId": "brand-larocheposay",
     "categoryId": 8,
-    "description": "Dung cho da thường, nhạy cảm. Cân bằng độ ẩm và pH da.",
-    "ingredient": "Niacinamide, Glycerin, Thermal Spring Water",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường, Nhạy cảm",
     "isActive": true,
     "variants": [
@@ -1989,25 +2396,87 @@ export const products = [
     ]
   },
   {
+    "id": 65,
+    "name": "",
+    "nameVn": "Sữa Chống Nắng La Roche-Posay Dưỡng Sáng Mờ Thâm",
+    "brandId": "brand-larocheposay",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 88,
+        "sku": "LRP-CN-50",
+        "specification": {
+          "volume": "50ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 714764,
+        "thumbnailUrl": "images/pic_product/Kem chống nắng/La Roche-possay/Sữa Chống Nắng La Roche-Posay Dưỡng Sáng Mờ Thâm SPF50+ 50ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem chống nắng/La Roche-possay/Sữa Chống Nắng La Roche-Posay Dưỡng Sáng Mờ Thâm SPF50+ 50ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View "
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 66,
-    "name": "La Roche-Posay Anthelios Anti-Blemish Sunscreen",
+    "name": "",
     "nameVn": "Kem Chống Nắng La Roche-Posay Giúp Giảm Mụn & Bóng Nhờn",
     "brandId": "brand-larocheposay",
     "categoryId": 2,
-    "description": "Kem chống nắng giúp giảm mụn và bóng nhờn",
-    "ingredient": "Avobenzone, Homosalate, Octocrylene, Titanium Dioxide",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da dầu",
     "isActive": true,
     "variants": []
   },
   {
+    "id": 67,
+    "name": "Micellar Water 3-in-1 Deep Cleansing Even For Sensitive Skin",
+    "nameVn": "Nước Tẩy Trang L'Oreal Làm Sạch Sâu Trang Điểm",
+    "brandId": "brand-loreal",
+    "categoryId": 7,
+    "description": null,
+    "ingredient": "Aqua / Water, Hexylene Glycol, Glycerin, Rosa Gallica Flower Extract, Sorbitol, Poloxamer 184, Disodium Cocoamphodiacetate, Disodium Edta, Propylene Glycol, BHT , Polyaminopropyl Biguanide",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 89,
+        "sku": "LR-TT-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 164000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/L'oreal/Nước Tẩy Trang L'Oreal Làm Sạch Sâu Trang Điểm 400ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/L'oreal/Nước Tẩy Trang L'Oreal Làm Sạch Sâu Trang Điểm 400ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 68,
-    "name": "L'Oreal X20 Lightweight Breathable Sunscreen",
+    "name": "",
     "nameVn": "Kem Chống Nắng L'Oreal X20 Thoáng Da Mỏng Nhẹ",
     "brandId": "brand-loreal",
     "categoryId": 2,
-    "description": "Kem chống nắng nhẹ, thoáng da, phù hợp với mọi loại da.",
-    "ingredient": "Avobenzone, Homosalate, Octocrylene, Titanium Dioxide",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -2051,12 +2520,12 @@ export const products = [
   },
   {
     "id": 69,
-    "name": "L'Oreal Paris UV Perfect Matte & Glow Sunscreen",
+    "name": "",
     "nameVn": "Kem Chống Nắng L'Oreal Mịn Nhẹ Nâng Tông Giảm Thâm",
     "brandId": "brand-loreal",
     "categoryId": 2,
-    "description": "Kem chống nắng nhẹ, giúp da mịn màng và tự nhiên.",
-    "ingredient": "Avobenzone, Titanium Dioxide, Zinc Oxide",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -2082,12 +2551,12 @@ export const products = [
   },
   {
     "id": 70,
-    "name": "Klairs Unscented Supple Preparation Facial Toner",
+    "name": "Supple Preparation Unscented Toner",
     "nameVn": "Nước Hoa Hồng Klairs Không Mùi Cho Da Nhạy Cảm ",
     "brandId": "brand-klairs",
     "categoryId": 8,
-    "description": "Nước hoa hồng dịu nhẹ, phù hợp với da nhạy cảm.",
-    "ingredient": "Niacinamide, Panthenol, Sodium Hyaluronate",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da Nhạy cảm",
     "isActive": true,
     "variants": [
@@ -2166,1018 +2635,13 @@ export const products = [
     ]
   },
   {
-    "id": 72,
-    "name": "Eucerin Sensitive Skin Toner",
-    "nameVn": "Toner Eucerin Dưỡng Ẩm Cho Da Nhạy Cảm",
-    "brandId": "brand-eucerin",
-    "categoryId": 8,
-    "description": "Dưỡng ẩm và làm dịu da nhạy cảm",
-    "ingredient": "Glycerin, Panthenol, Allantoin",
-    "skinType": "Da nhạy cảm",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 99,
-        "sku": "EC-TO-DA-200",
-        "specification": {
-          "volume": "200ml",
-          "packaging": "Large Bottle"
-        },
-        "unitPrice": 540000,
-        "thumbnailUrl": "images/pic_product/Toner/Eucerin/Toner Eucerin Dưỡng Ẩm Cho Da Nhạy Cảm 200ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Toner/Eucerin/Toner Eucerin Dưỡng Ẩm Cho Da Nhạy Cảm 200ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 74,
-    "name": "Serum d'Alba White Truffle Brightening Mist",
-    "nameVn": "Serum d'Alba Dạng Xịt Nấm Truffle Trắng Căng Bóng Da",
-    "brandId": "brand-dAlba",
-    "categoryId": 4,
-    "description": "Serum dạng xịt dưỡng trắng da, phù hợp với mọi loại da.",
-    "ingredient": "Nấm truffle trắng",
-    "skinType": "Da thường/ Mọi loại da",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 102,
-        "sku": "DA-SR-TF-100",
-        "specification": {
-          "volume": "100ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 369000,
-        "thumbnailUrl": "images/pic_product/Serum/d'Alba/Serum d'Alba Dạng Xịt Nấm Truffle Trắng Căng Bóng Da 100ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Serum/d'Alba/Serum d'Alba Dạng Xịt Nấm Truffle Trắng Căng Bóng Da 100ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 75,
-    "name": "Serum d'Alba Red Flower Oil Hydrating Soothing Mist",
-    "nameVn": "Serum d'Alba Dạng Xịt 8 Loại Dầu Hoa Đỏ Cấp Ẩm Dịu Da",
-    "brandId": "brand-dAlba",
-    "categoryId": 4,
-    "description": "Dạng xịt dịu da, cấp ẩm cho da.",
-    "ingredient": "Các loại dầu hoa đỏ",
-    "skinType": "Da nhạy cảm",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 103,
-        "sku": "DA-SR-8L-100",
-        "specification": {
-          "volume": "100ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 381000,
-        "thumbnailUrl": "images/pic_product/Serum/d'Alba/Serum d'Alba Dạng Xịt 8 Loại Dầu Hoa Đỏ Cấp Ẩm Dịu Da 100ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Serum/d'Alba/Serum d'Alba Dạng Xịt 8 Loại Dầu Hoa Đỏ Cấp Ẩm Dịu Da 100ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 77,
-    "name": "Serum d'Alba Hydrating Mist",
-    "nameVn": "Serum d'Alba Dạng Xịt Cấp Ẩm, Làm Mát Da",
-    "brandId": "brand-dAlba",
-    "categoryId": 4,
-    "description": "Dạng xịt cấp ẩm, làm mát da",
-    "ingredient": "Khong tim thay thong tin",
-    "skinType": "Da thường/ Mọi loại da",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 105,
-        "sku": "DA-SR-CA-100",
-        "specification": {
-          "volume": "100ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 371000,
-        "thumbnailUrl": "images/pic_product/Serum/d'Alba/Serum d'Alba Dạng Xịt Cấp Ẩm, Làm Mát Da 100ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Serum/d'Alba/Serum d'Alba Dạng Xịt Cấp Ẩm, Làm Mát Da 100ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 78,
-    "name": "La Roche-Posay Broad Spectrum, Mattifying Sunscreen",
-    "nameVn": "Kem Chống Nắng La Roche-Posay Phổ Rộng, Nâng Tông Kiềm Dầu ",
-    "brandId": "brand-larocheposay",
-    "categoryId": 2,
-    "description": "Kem chống nắng phổ rộng, kiềm dầu, nâng tông da",
-    "ingredient": "Titanium Dioxide, Zinc Oxide, Silica",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 106,
-        "sku": "LRP-CN-50",
-        "specification": {
-          "volume": "50ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 428000,
-        "thumbnailUrl": "images/pic_product/Kem chống nắng/La Roche-possay/Kem Chống Nắng La Roche-Posay Phổ Rộng, Nâng Tông Kiềm Dầu 50ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Kem chống nắng/La Roche-possay/Kem Chống Nắng La Roche-Posay Phổ Rộng, Nâng Tông Kiềm Dầu 50ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View "
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 80,
-    "name": "L'Oreal Watergel New Generation Sunscreen",
-    "nameVn": "Gel Chống Nắng L'Oreal Watergel Thế Hệ Mới",
-    "brandId": "brand-loreal",
-    "categoryId": 2,
-    "description": "Gel chống nắng dạng gel, thích hợp cho mọi loại da",
-    "ingredient": "Avobenzone, Homosalate, Octocrylene, Titanium Dioxide",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 108,
-        "sku": "LR-CN-50",
-        "specification": {
-          "volume": "50ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 254000,
-        "thumbnailUrl": "images/pic_product/Kem chống nắng/L'oreal/Gel Chống Nắng L'Oreal Watergel Thế Hệ Mới.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Kem chống nắng/L'oreal/Gel Chống Nắng L'Oreal Watergel Thế Hệ Mới.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 82,
-    "name": "Anessa Sensitive & Kids Sunscreen",
-    "nameVn": "Sữa Chống Nắng Anessa Cho Da Nhạy Cảm & Trẻ Em ",
-    "brandId": "brand-anessa",
-    "categoryId": 2,
-    "description": "Kem chống nắng dành cho da nhạy cảm và trẻ em",
-    "ingredient": "Khong tim thay thong tin",
-    "skinType": "Da nhạy cảm ",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 110,
-        "sku": "AE-CN-60",
-        "specification": {
-          "volume": "60ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 432000,
-        "thumbnailUrl": "images/pic_product/Kem chống nắng/Anessa/Sữa Chống Nắng Anessa Cho Da Nhạy Cảm & Trẻ Em 60ml (Mới).jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Kem chống nắng/Anessa/Sữa Chống Nắng Anessa Cho Da Nhạy Cảm & Trẻ Em 60ml (Mới).jpg",
-            "displayOrder": 1,
-            "altText": "Front View "
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 84,
-    "name": "Anessa UV Sunscreen Skincare Essence",
-    "nameVn": "Serum Chống Nắng Anessa Dưỡng Da Nâng Tông ",
-    "brandId": "brand-anessa",
-    "categoryId": 2,
-    "description": "Dưỡng da nâng tông, chống nắng hiệu quả",
-    "ingredient": "Avobenzone, Titanium Dioxide, Zinc Oxide",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 112,
-        "sku": "AE-CN-30",
-        "specification": {
-          "volume": "30ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 518000,
-        "thumbnailUrl": "images/pic_product/Kem chống nắng/Anessa/Serum Chống Nắng Anessa Dưỡng Da Nâng Tông 30ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Kem chống nắng/Anessa/Serum Chống Nắng Anessa Dưỡng Da Nâng Tông 30ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View "
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 85,
-    "name": "Anessa All Purpose Sunscreen",
-    "nameVn": "Xịt Chống Nắng Anessa Dưỡng Da Đa Năng",
-    "brandId": "brand-anessa",
-    "categoryId": 2,
-    "description": "Kem chống nắng dưỡng da đa năng, phù hợp với mọi loại da.",
-    "ingredient": "Avobenzone, Titanium Dioxide, Zinc Oxide",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 113,
-        "sku": "AE-CN-60",
-        "specification": {
-          "volume": "60g",
-          "packaging": "Large Bottle"
-        },
-        "unitPrice": 306000,
-        "thumbnailUrl": "images/pic_product/Kem chống nắng/Anessa/Xịt Chống Nắng Anessa Dưỡng Da Đa Năng 60g (Mới).jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Kem chống nắng/Anessa/Xịt Chống Nắng Anessa Dưỡng Da Đa Năng 60g (Mới).jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 87,
-    "name": "BNBG Vitamin E Moisturizing Face Mask",
-    "nameVn": "Mặt Nạ BNBG Vitamin E Dưỡng Ẩm Da",
-    "brandId": "brand-bnbg",
-    "categoryId": 3,
-    "description": "Dưỡng ẩm da, phù hợp với mọi loại da",
-    "ingredient": "Vitamin E",
-    "skinType": "Da khô\\ Da hỗn hợp",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 115,
-        "sku": "BB-VE-MN-30",
-        "specification": {
-          "volume": "30ml",
-          "packaging": "Box"
-        },
-        "unitPrice": 15000,
-        "thumbnailUrl": "images/pic_product/Mặt nạ/BNBG/Mặt Nạ BNBG Vitamin E Dưỡng Ẩm Da 30ml (Mới).jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Mặt nạ/BNBG/Mặt Nạ BNBG Vitamin E Dưỡng Ẩm Da 30ml (Mới).jpg",
-            "displayOrder": 1,
-            "altText": "Front View "
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 89,
-    "name": "Naruko Magnolia Brightening and Firming Mask",
-    "nameVn": "Mặt Nạ Naruko Bạch Ngọc Lan Dưỡng Sáng, Săn Chắc Da",
-    "brandId": "brand-naruko",
-    "categoryId": 3,
-    "description": "Dưỡng sáng, săn chắc da",
-    "ingredient": "Bạch ngọc lan, vitamin C, collagen",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 117,
-        "sku": "NR-BN-MN-26",
-        "specification": {
-          "volume": "26ml",
-          "packaging": "Box"
-        },
-        "unitPrice": 22000,
-        "thumbnailUrl": "images/pic_product/Mặt nạ/Naruko/Mặt Nạ Naruko Bạch Ngọc Lan Dưỡng Sáng, Săn Chắc Da 30ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Mặt nạ/Naruko/Mặt Nạ Naruko Bạch Ngọc Lan Dưỡng Sáng, Săn Chắc Da 30ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 91,
-    "name": "BNBG Placenta Energy Replenishing & Skin Regenerating Face Mask",
-    "nameVn": "Mặt Nạ BNBG Placenta Truyền Năng Lượng, Phục Hồi Da",
-    "brandId": "brand-bnbg",
-    "categoryId": 3,
-    "description": "Mặt nạ phục hồi và cung cấp năng lượng cho da",
-    "ingredient": "Placenta, Khong tim thay thong tin",
-    "skinType": "Da nhạy cảm ",
-    "isActive": true,
-    "variants": []
-  },
-  {
-    "id": 92,
-    "name": "BNBG Exosome Lifting and Rejuvenating Face Mask",
-    "nameVn": "Mặt Nạ BNBG Exosome Nâng Cơ, Trẻ Hoá Da",
-    "brandId": "brand-bnbg",
-    "categoryId": 3,
-    "description": "Nâng cơ, trẻ hoá da",
-    "ingredient": "Exosome",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 119,
-        "sku": "BB-EX-MN-30",
-        "specification": {
-          "volume": "30ml",
-          "packaging": "Box"
-        },
-        "unitPrice": 22000,
-        "thumbnailUrl": "images/pic_product/Mặt nạ/BNBG/Mặt Nạ BNBG Exosome Nâng Cơ, Trẻ Hoá Da 30ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Mặt nạ/BNBG/Mặt Nạ BNBG Exosome Nâng Cơ, Trẻ Hoá Da 30ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View "
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 94,
-    "name": "Caryophy Acne Reducing & Moisturizing Face Mask",
-    "nameVn": "Mặt Nạ Caryophy Làm Giảm Mụn, Thâm & Dưỡng Ẩm Da",
-    "brandId": "brand-caryophy",
-    "categoryId": 3,
-    "description": "Giảm mụn, thâm và dưỡng ẩm da",
-    "ingredient": "Khong tim thay thong tin",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 121,
-        "sku": "CR-GM-MN-22",
-        "specification": {
-          "volume": "22G",
-          "packaging": "Box"
-        },
-        "unitPrice": 220000,
-        "thumbnailUrl": "images/pic_product/Mặt nạ/Caryophy/Mặt Nạ Caryophy Làm Giảm Mụn, Thâm & Dưỡng Ẩm Da 22g.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Mặt nạ/Caryophy/Mặt Nạ Caryophy Làm Giảm Mụn, Thâm & Dưỡng Ẩm Da 22g.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 96,
-    "name": "Sur.Medic+ Rapid Recovery & Soothing Mask",
-    "nameVn": "Mặt Nạ Sur.Medic+ Phục Hồi & Làm Dịu Da Cấp Tốc",
-    "brandId": "brand-surmedic",
-    "categoryId": 3,
-    "description": "Mặt Nạ phục hồi và làm dịu da cấp tốc",
-    "ingredient": "Khong tim thay thong tin",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 123,
-        "sku": "SM-PH-MN-28",
-        "specification": {
-          "volume": "28G",
-          "packaging": "Box"
-        },
-        "unitPrice": 25000,
-        "thumbnailUrl": "images/pic_product/Mặt nạ/Surmedic/Phục Hồi Làm Dịu Da Cấp Tốc 28g.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Mặt nạ/Surmedic/Phục Hồi Làm Dịu Da Cấp Tốc 28g.jpg",
-            "displayOrder": 1,
-            "altText": "Front View "
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 98,
-    "name": "Cocoon Dak Lak Coffee Face Scrub",
-    "nameVn": "Tẩy Da Chết Mặt Cocoon Cà Phê Đắk Lắk ",
-    "brandId": "brand-cocoon",
-    "categoryId": 6,
-    "description": "Tẩy da chết, làm sạch sâu và cân bằng da mặt.",
-    "ingredient": "Cà phê Đắk Lắk, Cocoon",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 125,
-        "sku": "CC-TC-150",
-        "specification": {
-          "volume": "150ml",
-          "packaging": "Large Bottle"
-        },
-        "unitPrice": 142000,
-        "thumbnailUrl": "images/pic_product/Tẩy tế bào chết/Cocoon/Tẩy Da Chết Mặt Cocoon Cà Phê Đắk Lắk 150ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy tế bào chết/Cocoon/Tẩy Da Chết Mặt Cocoon Cà Phê Đắk Lắk 150ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View "
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 100,
-    "name": "Paula's Choice 2% BHA Exfoliant",
-    "nameVn": "Dung Dịch Tẩy Da Chết Paula’s Choice 2% BHA ",
-    "brandId": "brand-paulachoice",
-    "categoryId": 6,
-    "description": "Dung dịch tẩy da chết, phù hợp với mọi loại da.",
-    "ingredient": "Salicylic Acid",
-    "skinType": "Da dầu/Da hỗn hợp",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 127,
-        "sku": "PL-2-TC-118",
-        "specification": {
-          "volume": "118ml",
-          "packaging": "Large Bottle"
-        },
-        "unitPrice": 590000,
-        "thumbnailUrl": "images/pic_product/Tẩy tế bào chết/pl/2-118ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy tế bào chết/pl/2-118ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      },
-      {
-        "id": 128,
-        "sku": "PL-2-TC-30",
-        "specification": {
-          "volume": "30ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 278000,
-        "thumbnailUrl": "images/pic_product/Tẩy tế bào chết/pl/2-30ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy tế bào chết/pl/2-30ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View "
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 102,
-    "name": "Vichy Brightening & Dark Spot Correcting Serum",
-    "nameVn": "Serum Vichy Cải Thiện & Ngăn Ngừa Thâm Nám Đốm Nâu",
-    "brandId": "brand-vichy",
-    "categoryId": 4,
-    "description": "Serum cải thiện và ngăn ngừa thâm nám, đốm nâu trên da.",
-    "ingredient": "Vitamin C, Glycerin, Niacinamide",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 130,
-        "sku": "VC-SR-30",
-        "specification": {
-          "volume": "30ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 817000,
-        "thumbnailUrl": "images/pic_product/Serum/Vichy/Serum Vichy Cải Thiện & Ngăn Ngừa Thâm Nám Đốm Nâu 30ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Serum/Vichy/Serum Vichy 89 Khoáng Chất Phục Hồi Chuyên Sâu 50ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View "
-          },
-          {
-            "imageUrl": "images/pic_product/Serum/Vichy/Serum Vichy Cải Thiện & Ngăn Ngừa Thâm Nám Đốm Nâu 30ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View "
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 103,
-    "name": "BNBG Placenta Energy Replenishing & Skin Regenerating Face Mask",
-    "nameVn": "Mặt Nạ BNBG Placenta Truyền Năng Lượng, Phục Hồi Da",
-    "brandId": "brand-bnbg",
-    "categoryId": 3,
-    "description": "Mặt nạ phục hồi và cung cấp năng lượng cho da",
-    "ingredient": "Placenta, Khong tim thay thong tin",
-    "skinType": "Da thường/ Mọi loại da",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 131,
-        "sku": "BB-PC-MN-30",
-        "specification": {
-          "volume": "30ml",
-          "packaging": "Box"
-        },
-        "unitPrice": 22000,
-        "thumbnailUrl": "images/pic_product/Mặt nạ/BNBG/Mặt Nạ BNBG Placenta Truyền Năng Lượng, Phục Hồi Da 30ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Mặt nạ/BNBG/Mặt Nạ BNBG Placenta Truyền Năng Lượng, Phục Hồi Da 30ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View "
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 104,
-    "name": "Skin Brightening Cream",
-    "nameVn": "",
-    "brandId": "brand-cerave",
-    "categoryId": 5,
-    "description": "Kem duong da trang sang, phu hop cho da nham, da xam.",
-    "ingredient": "Vitamin C, Glutathione, Niacinamide",
-    "skinType": null,
-    "isActive": false,
-    "variants": []
-  },
-  {
-    "id": 105,
-    "name": "Garnier Micellar Water for Oily, Acne-Prone Skin 125ml (Old Version)",
-    "nameVn": "Nước Tẩy Trang Garnier Cho Da Dầu, Mụn 125ml (Mẫu Cũ)",
-    "brandId": "brand-garnier",
-    "categoryId": 7,
-    "description": "Tẩy trang, làm sạch sâu và kiểm soát nhờn, mụn cho da dầu, da mụn.",
-    "ingredient": "Nước, Glycerin, Propylene Glycol, Poloxamer 184, Disodium EDTA, Parfum",
-    "skinType": "Da khô/ Da hỗn hợp ",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 132,
-        "sku": "GN-TT-125-C",
-        "specification": {
-          "volume": "125ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 69000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Cho Da Dầu, Mụn 125ml (Mẫu Cũ).jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Cho Da Dầu, Mụn 125ml (Mẫu Cũ).jpg",
-            "displayOrder": 1,
-            "altText": "Front View "
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 65,
-    "name": "La Roche-Posay Anthelios Brightening Sunscreen",
-    "nameVn": "Sữa Chống Nắng La Roche-Posay Dưỡng Sáng Mờ Thâm",
-    "brandId": "brand-larocheposay",
-    "categoryId": 2,
-    "description": "Dưỡng sáng, giảm thâm nám da",
-    "ingredient": "Avobenzone, Homosalate, Octocrylene, Titanium Dioxide",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 88,
-        "sku": "LRP-CN-50",
-        "specification": {
-          "volume": "50ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 714764,
-        "thumbnailUrl": "images/pic_product/Kem chống nắng/La Roche-possay/Sữa Chống Nắng La Roche-Posay Dưỡng Sáng Mờ Thâm SPF50+ 50ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Kem chống nắng/La Roche-possay/Sữa Chống Nắng La Roche-Posay Dưỡng Sáng Mờ Thâm SPF50+ 50ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View "
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 108,
-    "name": "L'Oreal Micellar Cleansing Water for Oily Skin",
-    "nameVn": "Nước Tẩy Trang L'Oreal Làm Sạch Sâu Cho Da Dầu",
-    "brandId": "brand-loreal",
-    "categoryId": 7,
-    "description": "Làm sạch sâu, thích hợp cho da dầu",
-    "ingredient": "Nước, Glycerin, Propylene Glycol, Poloxamer 184, Polyaminopropyl Biguanide, Parfum",
-    "skinType": "Da dầu/Da hỗn hợp",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 138,
-        "sku": "LR-TT-400",
-        "specification": {
-          "volume": "400ml",
-          "packaging": "Large Bottle"
-        },
-        "unitPrice": 179000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/L'oreal/Nước Tẩy Trang L'Oreal Làm Sạch Sâu Cho Da Dầu 400ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/L'oreal/Nước Tẩy Trang L'Oreal Làm Sạch Sâu Cho Da Dầu 400ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      },
-      {
-        "id": 139,
-        "sku": "LR-TT-95",
-        "specification": {
-          "volume": "95ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 29000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/L'oreal/[Mini] Nước Tẩy Trang L'Oreal Làm Sạch Sâu Cho Da Dầu 95ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/L'oreal/[Mini] Nước Tẩy Trang L'Oreal Làm Sạch Sâu Cho Da Dầu 95ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 109,
-    "name": "L'Oreal Micellar Cleansing Water",
-    "nameVn": "Nước Tẩy Trang L'Oreal Căng Mịn Da",
-    "brandId": "brand-loreal",
-    "categoryId": 7,
-    "description": "Dung cho da nhạy cảm, làm sạch sâu và cân bằng da.",
-    "ingredient": "Nước, Glycerin, Poloxamer, Propylene Glycol, Benzyl Alcohol, Parfum",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 140,
-        "sku": "LR-TT-95",
-        "specification": {
-          "volume": "95ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 29000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/L'oreal/[Mini] Nước Tẩy Trang L'Oreal Căng Mịn Da 95ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/L'oreal/[Mini] Nước Tẩy Trang L'Oreal Căng Mịn Da 95ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      },
-      {
-        "id": 141,
-        "sku": "LR-TT-400",
-        "specification": {
-          "volume": "400ml",
-          "packaging": "Large Bottle"
-        },
-        "unitPrice": 209000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/L'oreal/Nước Tẩy Trang L'Oreal Căng Mịn Da 400ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/L'oreal/Nước Tẩy Trang L'Oreal Căng Mịn Da 400ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 110,
-    "name": "CeraVe Foaming Facial Cleanser for Normal to Dry Skin",
-    "nameVn": "Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô",
-    "brandId": "brand-cerave",
-    "categoryId": 5,
-    "description": "Sữa rửa mặt dạng kem tạo bọt, phù hợp với da thường và da khô.",
-    "ingredient": "Niacinamide, Ceramide NP, Ceramide AP, Ceramide EOP, Hyaluronic Acid, Glycerin",
-    "skinType": "Da thường/Mọi loại da",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 142,
-        "sku": "CV-RM-236",
-        "specification": {
-          "volume": "236ml",
-          "packaging": "Large Bottle"
-        },
-        "unitPrice": 389000,
-        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/CeraVe/Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô 236ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Sữa rửa mặt/CeraVe/Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô 236ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View "
-          }
-        ]
-      },
-      {
-        "id": 143,
-        "sku": "CV-RM-100",
-        "specification": {
-          "volume": "100ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 181800,
-        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/CeraVe/Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô 100ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Sữa rửa mặt/CeraVe/Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô 100ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View "
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 111,
-    "name": "Hada Labo Moisturizing Face Wash for Sensitive Skin",
-    "nameVn": "Gel Rửa Mặt Hada Labo Dưỡng Ẩm Cho Da Nhạy Cảm",
-    "brandId": "brand-hadalabo",
-    "categoryId": 5,
-    "description": "Sữa rửa mặt dưỡng ẩm cho da nhạy cảm",
-    "ingredient": "Glycerin, Sodium Hyaluronate, Ceramide",
-    "skinType": "Da nhạy cảm",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 144,
-        "sku": "HL-RM-80",
-        "specification": {
-          "volume": "80g",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 89000,
-        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Gel Rửa Mặt Hada Labo Dưỡng Ẩm Cho Da Nhạy Cảm 80g.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Gel Rửa Mặt Hada Labo Dưỡng Ẩm Cho Da Nhạy Cảm 80g.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 112,
-    "name": "Vichy Volcanic Mineral Water and Clay Cleansing Foam",
-    "nameVn": "Sữa Rửa Mặt Vichy Từ Đất Sét Và Đá Khoáng Núi Lửa",
-    "brandId": "brand-vichy",
-    "categoryId": 5,
-    "description": "Sữa rửa mặt dành cho da nhờn và da hỗn hợp, làm sạch sâu và cân bằng da.",
-    "ingredient": "Nước khoáng núi lửa Vichy, đất sét, glycerin",
-    "skinType": "Da dầu/Hỗn hợp dầu",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 145,
-        "sku": "VC-RM-125",
-        "specification": {
-          "volume": "125ml",
-          "packaging": "Medium Bottle"
-        },
-        "unitPrice": 432000,
-        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/Vichy/Sữa Rửa Mặt Vichy Từ Đất Sét Và Đá Khoáng Núi Lửa 125ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Sữa rửa mặt/Vichy/Sữa Rửa Mặt Vichy Từ Đất Sét Và Đá Khoáng Núi Lửa 125ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 113,
-    "name": "CeraVe Foaming Facial Cleanser for Normal to Dry Skin",
-    "nameVn": "Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô",
-    "brandId": "brand-cerave",
-    "categoryId": 5,
-    "description": "Sữa rửa mặt dạng kem tạo bọt, phù hợp với da thường và da khô.",
-    "ingredient": "Niacinamide, Ceramide NP, Ceramide AP, Ceramide EOP, Hyaluronic Acid, Glycerin",
-    "skinType": "Da thường/Mọi loại da",
-    "isActive": true,
-    "variants": []
-  },
-  {
-    "id": 114,
-    "name": "CeraVe Foaming Facial Cleanser for Normal to Oily Skin",
-    "nameVn": "Sữa Rửa Mặt CeraVe Sạch Sâu Cho Da Thường Đến Da Dầu",
-    "brandId": "brand-cerave",
-    "categoryId": 5,
-    "description": "Sữa rửa mặt sạch sâu, phù hợp với da thường đến da dầu.",
-    "ingredient": "Niacinamide, Ceramide NP, Ceramide AP, Ceramide EOP, Hyaluronic Acid, Glycerin",
-    "skinType": "Da dầu/Hỗn hợp dầu",
-    "isActive": true,
-    "variants": []
-  },
-  {
-    "id": 115,
-    "name": "La Roche-Posay Effaclar Purifying Foaming Gel",
-    "nameVn": "Gel Rửa Mặt La Roche-Posay Dành Cho Da Dầu, Nhạy Cảm",
-    "brandId": "brand-larocheposay",
-    "categoryId": 5,
-    "description": "Sản phẩm dành cho da dầu, nhạy cảm.",
-    "ingredient": "Niacinamide, Salicylic Acid, Thermal Spring Water",
-    "skinType": "\tDa dầu/Hỗn hợp dầu",
-    "isActive": true,
-    "variants": []
-  },
-  {
-    "id": 116,
-    "name": "Hada Labo Deep Cleansing and Moisturizing Face Wash",
-    "nameVn": "Kem Rửa Mặt Hada Labo Sạch Sâu Dưỡng Ẩm",
-    "brandId": "brand-hadalabo",
-    "categoryId": 5,
-    "description": "Sữa rửa mặt sạch sâu, dưỡng ẩm da",
-    "ingredient": "Glycerin, Sodium Hyaluronate, Ceramide",
-    "skinType": "Da khô/Hỗn hợp khô",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 146,
-        "sku": "HL-RM-80",
-        "specification": {
-          "volume": "80g",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 69000,
-        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Kem Rửa Mặt Hada Labo Sạch Sâu Dưỡng Ẩm 80g.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Kem Rửa Mặt Hada Labo Sạch Sâu Dưỡng Ẩm 80g.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 117,
-    "name": "Hada Labo Deep Cleansing Face Wash, Brightening",
-    "nameVn": "Kem Rửa Mặt Hada Labo Sạch Sâu, Dưỡng Sáng Da",
-    "brandId": "brand-hadalabo",
-    "categoryId": 5,
-    "description": "Sữa rửa mặt sạch sâu, dưỡng sáng da",
-    "ingredient": "Glycerin, Sodium Hyaluronate, Ceramide",
-    "skinType": "Da thường/Mọi loại da",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 147,
-        "sku": "HL-RM-SD-80",
-        "specification": {
-          "volume": "80g",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 66000,
-        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Kem Rửa Mặt Hada Labo Sạch Sâu, Dưỡng Sáng Da 80g.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Kem Rửa Mặt Hada Labo Sạch Sâu, Dưỡng Sáng Da 80g.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 67,
-    "name": "L'Oreal Micellar Cleansing Water",
-    "nameVn": "Nước Tẩy Trang L'Oreal Làm Sạch Sâu Trang Điểm",
-    "brandId": "brand-loreal",
-    "categoryId": 7,
-    "description": "Làm sạch sâu trang điểm, phù hợp với mọi loại da",
-    "ingredient": "Nước, Glycerin, Propylene Glycol, Poloxamer 184, Polyaminopropyl Biguanide, Parfum",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 89,
-        "sku": "LR-TT-400",
-        "specification": {
-          "volume": "400ml",
-          "packaging": "Large Bottle"
-        },
-        "unitPrice": 164000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/L'oreal/Nước Tẩy Trang L'Oreal Làm Sạch Sâu Trang Điểm 400ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/L'oreal/Nước Tẩy Trang L'Oreal Làm Sạch Sâu Trang Điểm 400ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
     "id": 71,
-    "name": "Eucerin Oil Control Toner",
+    "name": "Dermopure Clinical Purifying Toner",
     "nameVn": "Toner Eucerin Dành Cho Da Nhờn Mụn",
     "brandId": "brand-eucerin",
     "categoryId": 8,
-    "description": "Toner dành cho da nhờn, mụn. Giúp cân bằng độ ẩm và kiểm soát bã nhờn.",
-    "ingredient": "Niacinamide, Salicylic Acid, Panthenol",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da mụn",
     "isActive": true,
     "variants": [
@@ -3220,1001 +2684,29 @@ export const products = [
     ]
   },
   {
-    "id": 119,
-    "name": "Hada Labo Advanced Anti-Aging Facial Cleanser",
-    "nameVn": "Sữa Rửa Mặt Hada Labo Chăm Sóc Da Lão Hóa Cao Cấp",
-    "brandId": "brand-hadalabo",
-    "categoryId": 5,
-    "description": "Sữa rửa mặt dành cho da lão hóa, cung cấp dưỡng chất sâu cho da.",
-    "ingredient": "Glycerin, Hyaluronic Acid, Ceramide",
-    "skinType": "Da thường/Mọi loại da",
+    "id": 72,
+    "name": "DermatoCLEAN Hyaluron Toner",
+    "nameVn": "Toner Eucerin Dưỡng Ẩm Cho Da Nhạy Cảm",
+    "brandId": "brand-eucerin",
+    "categoryId": 8,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da nhạy cảm",
     "isActive": true,
     "variants": [
       {
-        "id": 149,
-        "sku": "HL-RM-100",
-        "specification": {
-          "volume": "100g",
-          "packaging": "Medium Bottle"
-        },
-        "unitPrice": 104000,
-        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Sữa Rửa Mặt Hada Labo Chăm Sóc Da Lão Hóa Cao Cấp 100g.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Sữa Rửa Mặt Hada Labo Chăm Sóc Da Lão Hóa Cao Cấp 100g.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 120,
-    "name": "Hada Labo Premium Hydrating Facial Cleanser",
-    "nameVn": "Sữa Rửa Mặt Hada Labo Dưỡng Ẩm Cao Cấp",
-    "brandId": "brand-hadalabo",
-    "categoryId": 5,
-    "description": "Sữa rửa mặt dưỡng ẩm cao cấp, phù hợp với mọi loại da",
-    "ingredient": "Glycerin, Hyaluronic Acid, Ceramide",
-    "skinType": "Da khô/Hỗn hợp khô",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 150,
-        "sku": "HL-RM-100",
-        "specification": {
-          "volume": "100ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 104000,
-        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Sữa Rửa Mặt Hada Labo Dưỡng Ẩm Cao Cấp 100g.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Sữa Rửa Mặt Hada Labo Dưỡng Ẩm Cao Cấp 100g.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 121,
-    "name": "CeraVe Foaming Facial Cleanser for Normal to Oily Skin",
-    "nameVn": "Sữa Rửa Mặt CeraVe Sạch Sâu Cho Da Thường Đến Da Dầu",
-    "brandId": "brand-cerave",
-    "categoryId": 5,
-    "description": "Sữa rửa mặt sạch sâu, phù hợp với da thường đến da dầu.",
-    "ingredient": "Niacinamide, Ceramide NP, Ceramide AP, Ceramide EOP, Hyaluronic Acid",
-    "skinType": "Da dầu/Hỗn hợp dầu",
-    "isActive": true,
-    "variants": []
-  },
-  {
-    "id": 122,
-    "name": "CeraVe Hydrating Facial Cleanser",
-    "nameVn": "Sữa Rửa Mặt CeraVe Cho Da Thường Đến Khô",
-    "brandId": "brand-cerave",
-    "categoryId": 5,
-    "description": "Sữa rửa mặt dịu nhẹ, phù hợp với da thường đến da khô.",
-    "ingredient": "Niacinamide, Ceramide NP, Ceramide AP, Ceramide EOP, Hyaluronic Acid",
-    "skinType": "Da khô/Hỗn hợp khô",
-    "isActive": true,
-    "variants": []
-  },
-  {
-    "id": 123,
-    "name": "La Roche-Posay Micellar Cleansing Water for Oily, Sensitive Skin",
-    "nameVn": "Nước Tẩy Trang La Roche-Posay Cho Da Dầu, Nhạy Cảm",
-    "brandId": "brand-larocheposay",
-    "categoryId": 7,
-    "description": "Nước tẩy trang dành cho da dầu, nhạy cảm",
-    "ingredient": "Nước, Glycerin, Propylene Glycol, Poloxamer 124, Sodium Citrate, Citric Acid, Disodium EDTA",
-    "skinType": "Da dầu/Hỗn hợp dầu",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 151,
-        "sku": "LRP-TT-50",
-        "specification": {
-          "volume": "50ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 79000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/La roche-posay/[Mini] Nước Tẩy Trang La Roche-Posay Cho Da Dầu, Nhạy Cảm 50ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Serum/La Roche-possay/[Mini] Serum La Roche-Posay Phục Hồi, Cấp Ẩm & Tái Tạo Da 10ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      },
-      {
-        "id": 152,
-        "sku": "LRP-TT-200",
+        "id": 99,
+        "sku": "EC-TO-DA-200",
         "specification": {
           "volume": "200ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 387000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/La roche-posay/Nước Tẩy Trang La Roche-Posay Cho Da Dầu, Nhạy Cảm 200ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/La roche-posay/Nước Tẩy Trang La Roche-Posay Cho Da Dầu, Nhạy Cảm 200ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      },
-      {
-        "id": 153,
-        "sku": "LRP-TT-400",
-        "specification": {
-          "volume": "400ml",
           "packaging": "Large Bottle"
         },
-        "unitPrice": 354000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/La roche-posay/Nước Tẩy Trang La Roche-Posay Cho Da Dầu, Nhạy Cảm 400ml.jpg",
+        "unitPrice": 540000,
+        "thumbnailUrl": "images/pic_product/Toner/Eucerin/Toner Eucerin Dưỡng Ẩm Cho Da Nhạy Cảm 200ml.jpg",
         "slug": null,
         "images": [
           {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/La roche-posay/Nước Tẩy Trang La Roche-Posay Cho Da Dầu, Nhạy Cảm 400ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 124,
-    "name": "Skin Brightening Cream",
-    "nameVn": "",
-    "brandId": "brand-cerave",
-    "categoryId": 5,
-    "description": "Kem duong da trang sang, phu hop cho moi loai da.",
-    "ingredient": "Vitamin C, Glutathione, Niacinamide",
-    "skinType": "Da nhạy cảm",
-    "isActive": true,
-    "variants": []
-  },
-  {
-    "id": 125,
-    "name": "Skin Brightening Cream",
-    "nameVn": "",
-    "brandId": "brand-cerave",
-    "categoryId": 5,
-    "description": "Kem dưỡng da trắng sáng, phù hợp với mọi loại da.",
-    "ingredient": "Vitamin C, Niacinamide, Glutathione",
-    "skinType": "Da dầu/Hỗn hợp dầu",
-    "isActive": true,
-    "variants": []
-  },
-  {
-    "id": 126,
-    "name": "Garnier Micellar Cleansing Water for Oily and Blemish-Prone Skin",
-    "nameVn": "Nước Tẩy Trang Garnier Dành Cho Da Dầu Và Mụn ",
-    "brandId": "brand-garnier",
-    "categoryId": 7,
-    "description": "Tẩy trang dịu nhẹ, phù hợp với da dầu và da mụn.",
-    "ingredient": "Nước micellar, glycerin, vitamin E",
-    "skinType": "Da dầu/Da hỗn hợp",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 154,
-        "sku": "GN-TT-125",
-        "specification": {
-          "volume": "125ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 65000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Dành Cho Da Dầu Và Mụn 125ml (Mới).jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Dành Cho Da Dầu Và Mụn 125ml (Mới).jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      },
-      {
-        "id": 155,
-        "sku": "GN-TT-400",
-        "specification": {
-          "volume": "400ml",
-          "packaging": "Large Bottle"
-        },
-        "unitPrice": 129000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Dành Cho Da Dầu Và Mụn 400ml (Mới).jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Dành Cho Da Dầu Và Mụn 400ml (Mới).jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 127,
-    "name": "Garnier Micellar Cleansing Water",
-    "nameVn": "Nước Tẩy Trang Garnier Làm Sạch Sâu Lớp Trang Điểm",
-    "brandId": "brand-garnier",
-    "categoryId": 7,
-    "description": "Sản phẩm tẩy trang sâu, làm sạch lớp trang điểm hiệu quả.",
-    "ingredient": "Nước, Glycerin, Propylene Glycol, Poloxamer 184, Disodium EDTA, Parfum, Benzyl Alcohol, Methylisothiazolinone, Chlorhexidine Digluconate",
-    "skinType": "Da khô/Da hỗn hợp",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 156,
-        "sku": "GN-TT-SS-125",
-        "specification": {
-          "volume": "125ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 80000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Làm Sạch Sâu Lớp Trang Điểm 125ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Làm Sạch Sâu Lớp Trang Điểm 125ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      },
-      {
-        "id": 157,
-        "sku": "GN-TT-SS-400",
-        "specification": {
-          "volume": "400ml",
-          "packaging": "Large Bottle"
-        },
-        "unitPrice": 159000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Làm Sạch Sâu Lớp Trang Điểm 400ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Làm Sạch Sâu Lớp Trang Điểm 400ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 128,
-    "name": "Garnier Micellar Cleansing Water (Old Version)",
-    "nameVn": "Nước Tẩy Trang Garnier Làm Sạch Sâu Lớp Trang Điểm (Mẫu Cũ)",
-    "brandId": "brand-garnier",
-    "categoryId": 7,
-    "description": "Tẩy trang sâu, làm sạch lớp trang điểm hiệu quả",
-    "ingredient": "Nước, Glycerin, Propylene Glycol, Poloxamer 184, Disodium EDTA, Parfum, Methylparaben, Propylparaben",
-    "skinType": null,
-    "isActive": true,
-    "variants": [
-      {
-        "id": 158,
-        "sku": "GN-TT-MC-125",
-        "specification": {
-          "volume": "125ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 70000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Làm Sạch Sâu Lớp Trang Điểm 125ml (Mẫu Cũ).jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Làm Sạch Sâu Lớp Trang Điểm 125ml (Mẫu Cũ).jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 1,
-    "name": "Bioderma Sensibio H2O Micellar Water",
-    "nameVn": "Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm",
-    "brandId": "brand-bioderma",
-    "categoryId": 7,
-    "description": "Dung cho da nhạy cảm, giúp làm sạch và cân bằng da.",
-    "ingredient": "Nước, Glycerin, Poloxamer 188, Mannitol, Xylitol, Rhamnose, Fructooligosaccharides, Propylene Glycol, Cetrimonium Bromide",
-    "skinType": "Da nhạy cảm",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 1,
-        "sku": "BDM-TT-250",
-        "specification": {
-          "volume": "250ml",
-          "packaging": "Medium Bottle"
-        },
-        "unitPrice": 361000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm 250ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm 250ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      },
-      {
-        "id": 2,
-        "sku": "BDM-TT-500",
-        "specification": {
-          "volume": "500ml",
-          "packaging": "Large Bottle"
-        },
-        "unitPrice": 380000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm 500ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm 500ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      },
-      {
-        "id": 3,
-        "sku": "BDM-TT-100",
-        "specification": {
-          "volume": "100ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 204000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm 100ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/Bioderma/Nước Tẩy Trang Bioderma Dành Cho Da Nhạy Cảm 100ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 3,
-    "name": "La Roche-Posay Acne Cleansing Gel for Face and Body",
-    "nameVn": "Gel Rửa Mặt La Roche-Posay Giảm Mụn Cho Mặt, Toàn Thân",
-    "brandId": "brand-larocheposay",
-    "categoryId": 5,
-    "description": "Sữa rửa mặt giảm mụn, phù hợp với mọi loại da",
-    "ingredient": "Niacinamide, Salicylic Acid, Thermal Spring Water",
-    "skinType": "Da mụn",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 7,
-        "sku": "LRP-RM-50",
-        "specification": {
-          "volume": "50ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 79000,
-        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/La Roche-possay/[Mini] Gel Rửa Mặt La Roche-Posay Giảm Mụn Cho Mặt, Toàn Thân 50ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Sữa rửa mặt/La Roche-possay/[Mini] Gel Rửa Mặt La Roche-Posay Giảm Mụn Cho Mặt, Toàn Thân 50ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      },
-      {
-        "id": 8,
-        "sku": "LRP-RM-400",
-        "specification": {
-          "volume": "400ml",
-          "packaging": "Large Bottle"
-        },
-        "unitPrice": 480000,
-        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/La Roche-possay/Gel Rửa Mặt & Tắm La Roche-Posay Làm Sạch & Giảm Mụn 400ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Sữa rửa mặt/La Roche-possay/Gel Rửa Mặt & Tắm La Roche-Posay Làm Sạch & Giảm Mụn 400ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 25,
-    "name": "L'Oreal Bright Skin, Acne & Pigmentation Serum",
-    "nameVn": "Serum L'Oreal Sáng Da, Mờ Thâm Mụn & Nám",
-    "brandId": "brand-loreal",
-    "categoryId": 4,
-    "description": "Serum dưỡng sáng da, giảm thâm mụn và nám",
-    "ingredient": "Vitamin C, Niacinamide, Hyaluronic Acid",
-    "skinType": "Da thường/ Mọi loại da",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 44,
-        "sku": "LR-SR-MN-30",
-        "specification": {
-          "volume": "30ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 285000,
-        "thumbnailUrl": "images/pic_product/Serum/L'oreal/Serum L'Oreal Sáng Da, Mờ Thâm Mụn & Nám 30ml (Mới).jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Serum/L'oreal/Serum L'Oreal Sáng Da, Mờ Thâm Mụn & Nám 30ml (Mới).jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 26,
-    "name": "L'Oreal Bright Reveal Brightening Serum",
-    "nameVn": "Serum L'Oreal Dưỡng Sáng Và Mờ Thâm Nám",
-    "brandId": "brand-loreal",
-    "categoryId": 4,
-    "description": "Serum dưỡng sáng da và giảm thâm nám",
-    "ingredient": "Vitamin C, Glycerin, Niacinamide",
-    "skinType": "Da thường/ Mọi loại da",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 45,
-        "sku": "LR-SR-DS-15",
-        "specification": {
-          "volume": "15ml",
-          "packaging": "Mini Bottle"
-        },
-        "unitPrice": 236000,
-        "thumbnailUrl": "images/pic_product/Serum/L'oreal/Serum L'Oreal Dưỡng Sáng Và Mờ Thâm Nám 15ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Serum/L'oreal/Serum L'Oreal Dưỡng Sáng Và Mờ Thâm Nám 15ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 29,
-    "name": "L'Oreal Paris Niacinamide 2% Mattifying Night Serum",
-    "nameVn": "Serum L'Oreal Niacinamide 2% Kiềm Dầu Ban Đêm ",
-    "brandId": "brand-loreal",
-    "categoryId": 4,
-    "description": "Serum dưỡng da ban đêm, kiềm dầu, phù hợp với da dầu",
-    "ingredient": "Niacinamide, Vitamin E",
-    "skinType": "Da thường/ Mọi loại da",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 49,
-        "sku": "LR-SR-NI-30",
-        "specification": {
-          "volume": "30ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 419000,
-        "thumbnailUrl": "images/pic_product/Serum/L'oreal/Serum L'Oreal Niacinamide 2% Kiềm Dầu Ban Đêm 30ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Serum/L'oreal/Serum L'Oreal Niacinamide 2% Kiềm Dầu Ban Đêm 30ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 34,
-    "name": "BNBG Vita Complex Brightening and Blemish Reducing Face Mask",
-    "nameVn": "Mặt Nạ BNBG Vita Complex Dưỡng Sáng Da, Mờ Thâm Nám",
-    "brandId": "brand-bnbg",
-    "categoryId": 3,
-    "description": "Dưỡng sáng da, mờ thâm nám",
-    "ingredient": "Vitamin C, Niacinamide, Glutathione",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": []
-  },
-  {
-    "id": 36,
-    "name": "Naruko Tea Tree Shine Control and Blemish Clear Mask",
-    "nameVn": "Mặt Nạ Naruko Tràm Trà Kiểm Soát Dầu Và Giảm Mụn ",
-    "brandId": "brand-naruko",
-    "categoryId": 3,
-    "description": "Mặt nạ kiểm soát dầu và giảm mụn",
-    "ingredient": "Trà tràm, Salicylic Acid",
-    "skinType": "Da dầu/ Da hỗn hợp",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 55,
-        "sku": "NR-TT-MN-26",
-        "specification": {
-          "volume": "26ml",
-          "packaging": "Box"
-        },
-        "unitPrice": 25000,
-        "thumbnailUrl": "images/pic_product/Mặt nạ/Naruko/Mặt Nạ Naruko Tràm Trà Kiểm Soát Dầu Và Giảm Mụn 26ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Mặt nạ/Naruko/Mặt Nạ Naruko Tràm Trà Kiểm Soát Dầu Và Giảm Mụn 26ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 39,
-    "name": "La Roche-Posay Anthelios Oil-Control Sunscreen SPF50+",
-    "nameVn": "Kem Chống Nắng La Roche-Posay Kiểm Soát Dầu SPF50+",
-    "brandId": "brand-larocheposay",
-    "categoryId": 2,
-    "description": "Kem chống nắng kiểm soát dầu, phù hợp với da dầu.",
-    "ingredient": "Avobenzone, Homosalate, Octocrylene, Titanium Dioxide",
-    "skinType": "Da dầu/ Da hỗn hợp",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 57,
-        "sku": "LRP-CN-15",
-        "specification": {
-          "volume": "15ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 259000,
-        "thumbnailUrl": "images/pic_product/Kem chống nắng/La Roche-possay/Sữa Chống Nắng La Roche-Posay Dưỡng Sáng Mờ Thâm SPF50+ 50ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Kem chống nắng/La Roche-possay/[Mini] Kem Chống Nắng La Roche-Posay Kiểm Soát Dầu SPF50+ 15ml (Mới).jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 42,
-    "name": "CeraVe Foaming Facial Cleanser",
-    "nameVn": "Sữa Rửa Mặt CeraVe Làm Sạch & Tẩy Tế Bào Chết Dịu Nhẹ",
-    "brandId": "brand-cerave",
-    "categoryId": 5,
-    "description": "Sữa rửa mặt dịu nhẹ, làm sạch và tẩy tế bào chết",
-    "ingredient": "Niacinamide, Ceramide NP, Ceramide AP, Ceramide EOP, Hyaluronic Acid, Glycerin",
-    "skinType": "Da nhạy cảm",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 63,
-        "sku": "CV-RM-236",
-        "specification": {
-          "volume": "236ml",
-          "packaging": "Medium Bottle"
-        },
-        "unitPrice": 305000,
-        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/CeraVe/Sữa Rửa Mặt CeraVe Làm Sạch & Tẩy Tế Bào Chết Dịu Nhẹ 236ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Sữa rửa mặt/CeraVe/Sữa Rửa Mặt CeraVe Làm Sạch & Tẩy Tế Bào Chết Dịu Nhẹ 236ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 48,
-    "name": "Eucerin Sun Protection Sensitive Skin",
-    "nameVn": "Kem Chống Nắng Eucerin Cho Da Nhạy Cảm",
-    "brandId": "brand-eucerin",
-    "categoryId": 2,
-    "description": "Kem chống nắng dành cho da nhạy cảm, bảo vệ da khỏi tác hại của tia UV.",
-    "ingredient": "Avobenzone, Titanium Dioxide, Zinc Oxide",
-    "skinType": "Da nhạy cảm",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 69,
-        "sku": "EC-CN-50",
-        "specification": {
-          "volume": "50ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 648000,
-        "thumbnailUrl": "images/pic_product/Kem chống nắng/Eucerin/Kem Chống Nắng Eucerin Cho Da Nhạy Cảm 50ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy tế bào chết/Eucerin/Tẩy Tế Bào Chết Eucerin Dành Cho Da Nhờn Mụn 100ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View "
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 49,
-    "name": "Eucerin Sun Protection Anti-Aging Sunscreen SPF 50",
-    "nameVn": "Kem Chống Nắng Eucerin SPF 50 Ngăn Ngừa Da Lão Hóa",
-    "brandId": "brand-eucerin",
-    "categoryId": 2,
-    "description": "Kem chống nắng ngăn ngừa lão hóa da, phù hợp với mọi loại da.",
-    "ingredient": "Avobenzone, Homosalate, Octinoxate, Titanium Dioxide",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 70,
-        "sku": "EC-CN-50",
-        "specification": {
-          "volume": "50ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 485000,
-        "thumbnailUrl": "images/pic_product/Kem chống nắng/Eucerin/Kem Chống Nắng Eucerin Cho Da Nhạy Cảm 50ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Kem chống nắng/Eucerin/Kem Chống Nắng Eucerin Cho Da Nhạy Cảm 50ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View "
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 63,
-    "name": "La Roche-Posay Anthelios Sunscreen",
-    "nameVn": "Sữa Chống Nắng La Roche-Posay Bảo Vệ Khỏi Tia UVA",
-    "brandId": "brand-larocheposay",
-    "categoryId": 2,
-    "description": "Sản phẩm bảo vệ da khỏi tia UVA, phù hợp với mọi loại da.",
-    "ingredient": "Avobenzone, Titanium Dioxide, Zinc Oxide",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 86,
-        "sku": "LRP-CN-50",
-        "specification": {
-          "volume": "50ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 512000,
-        "thumbnailUrl": "images/pic_product/Kem chống nắng/La Roche-possay/Sữa Chống Nắng La Roche-Posay Bảo Vệ Khỏi Tia UVA Dài 50ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Kem chống nắng/La Roche-possay/Sữa Chống Nắng La Roche-Posay Bảo Vệ Khỏi Tia UVA Dài 50ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View "
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 130,
-    "name": "BNBG Vita Complex Brightening and Pigmentation Reducing Face Mask (New)",
-    "nameVn": "Mặt Nạ BNBG Vita Complex Dưỡng Sáng, Mờ Thâm Nám (Mới)",
-    "brandId": "brand-bnbg",
-    "categoryId": 3,
-    "description": "Dưỡng sáng da, mờ thâm nám",
-    "ingredient": "Khong tim thay thong tin",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": []
-  },
-  {
-    "id": 131,
-    "name": "Vichy Soothing and Blemish Reducing Serum",
-    "nameVn": "Serum Vichy Làm Dịu Da Và Giảm Mụn",
-    "brandId": "brand-vichy",
-    "categoryId": 4,
-    "description": "Dung cho da nhạy cảm, giảm mụn và làm dịu da.",
-    "ingredient": "Niacinamide, Glycerin, Hyaluronic Acid",
-    "skinType": "Da mụn",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 159,
-        "sku": "VC-SR-30",
-        "specification": {
-          "volume": "30ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 1035000,
-        "thumbnailUrl": "images/pic_product/Serum/Vichy/Serum Vichy Làm Dịu Da Và Giảm Mụn 30ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Serum/Vichy/Serum Vichy Làm Dịu Da Và Giảm Mụn 30ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 132,
-    "name": "BNBG Vita Complex Brightening and Pigmentation Reducing Face Mask (New)",
-    "nameVn": "Mặt Nạ BNBG Vita Complex Dưỡng Sáng Da, Mờ Thâm Nám(Mới)",
-    "brandId": "brand-bnbg",
-    "categoryId": 3,
-    "description": "Dưỡng sáng da, mờ thâm nám",
-    "ingredient": "Khong tim thay thong tin",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 160,
-        "sku": "BB-VT-MN-30",
-        "specification": {
-          "volume": "30ml",
-          "packaging": "Box"
-        },
-        "unitPrice": 25000,
-        "thumbnailUrl": "images/pic_product/Mặt nạ/BNBG/Mặt Nạ BNBG Vita Complex Dưỡng Sáng, Mờ Thâm Nám 30ml (Mới).jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Mặt nạ/BNBG/Mặt Nạ BNBG Vita Complex Dưỡng Sáng, Mờ Thâm Nám 30ml (Mới).jpg",
-            "displayOrder": 1,
-            "altText": "Front View "
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 133,
-    "name": "Paula's Choice 5% AHA Exfoliant for Normal to Dry Skin",
-    "nameVn": "Tẩy Da Chết Paula’s Choice 5% AHA Cho Da Thường Khô",
-    "brandId": "brand-paulachoice",
-    "categoryId": 6,
-    "description": "Sản phẩm tẩy da chết dành cho da thường đến da khô, giúp loại bỏ tế bào chết, làm sáng và mịn da.",
-    "ingredient": "Acid alpha hydroxy (AHA), glycerin",
-    "skinType": "Da khô/ Da hỗn hợp ",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 161,
-        "sku": "PL-5-TC-50",
-        "specification": {
-          "volume": "50ml",
-          "packaging": "Large Bottle"
-        },
-        "unitPrice": 919000,
-        "thumbnailUrl": "images/pic_product/Tẩy tế bào chết/pl/5-50ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy tế bào chết/pl/5-50ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 135,
-    "name": "La Roche-Posay Serum for Skin Repair, Protection & Hydration",
-    "nameVn": "Serum La Roche-Posay Giúp Phục Hồi, Bảo Vệ & Cấp Ẩm Da",
-    "brandId": "brand-larocheposay",
-    "categoryId": 4,
-    "description": "Serum giúp phục hồi, bảo vệ và cấp ẩm da.",
-    "ingredient": "Khong tim thay thong tin",
-    "skinType": "Da nhạy cảm",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 163,
-        "sku": "LRP-SR-30",
-        "specification": {
-          "volume": "30ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 1135000,
-        "thumbnailUrl": "images/pic_product/Serum/La Roche-possay/Serum La Roche-Posay Giúp Phục Hồi, Bảo Vệ & Cấp Ẩm Da 30ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Serum/La Roche-possay/Serum La Roche-Posay Giúp Phục Hồi, Bảo Vệ & Cấp Ẩm Da 30ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 136,
-    "name": "Klairs Supple Preparation Facial Toner for Sensitive Skin",
-    "nameVn": "Nước Hoa Hồng Klairs Dành Cho Da Nhạy Cảm",
-    "brandId": "brand-klairs",
-    "categoryId": 8,
-    "description": "Nước hoa hồng dịu nhẹ, phù hợp với da nhạy cảm.",
-    "ingredient": "Niacinamide, Panthenol, Sodium Hyaluronate",
-    "skinType": null,
-    "isActive": true,
-    "variants": [
-      {
-        "id": 164,
-        "sku": "KL-TO-180",
-        "specification": {
-          "volume": "180ml",
-          "packaging": "Large Bottle"
-        },
-        "unitPrice": 212000,
-        "thumbnailUrl": "images/pic_product/Toner/Klairs/Nước Hoa Hồng Klairs Dành Cho Da Nhạy Cảm 180ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Toner/Klairs/Nước Hoa Hồng Klairs Dành Cho Da Nhạy Cảm 180ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 139,
-    "name": "Skin Brightening Serum",
-    "nameVn": "",
-    "brandId": "brand-larocheposay",
-    "categoryId": 5,
-    "description": "Serum dưỡng da, làm sáng da",
-    "ingredient": "Vitamin C, Niacinamide, Glutathione",
-    "skinType": "Da dầu/Da nhạy cảm",
-    "isActive": false,
-    "variants": []
-  },
-  {
-    "id": 140,
-    "name": "Garnier Micellar Cleansing Water for Sensitive Skin",
-    "nameVn": "Nước Tẩy Trang Garnier Dành Cho Da Nhạy Cảm",
-    "brandId": "brand-garnier",
-    "categoryId": 7,
-    "description": "Nước tẩy trang dành cho da nhạy cảm, giúp làm sạch sâu và dịu nhẹ da.",
-    "ingredient": "Nước, Glycerin, Propylene Glycol, Poloxamer 184, Disodium EDTA, Parfum, Polyaminopropyl Biguanide",
-    "skinType": "Da nhạy cảm",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 167,
-        "sku": "GN-TT-NC-125",
-        "specification": {
-          "volume": "125ml",
-          "packaging": "Small Bottle"
-        },
-        "unitPrice": 65000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Dành Cho Da Nhạy Cảm 125ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Dành Cho Da Nhạy Cảm 125ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      },
-      {
-        "id": 168,
-        "sku": "GN-TT-NC-400",
-        "specification": {
-          "volume": "400ml",
-          "packaging": "Large Bottle"
-        },
-        "unitPrice": 139000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Dành Cho Da Nhạy Cảm 400ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Dành Cho Da Nhạy Cảm 400ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 141,
-    "name": "Garnier Vitamin C Brightening Micellar Water",
-    "nameVn": "Nước Tẩy Trang Garnier Vitamin C Làm Sáng Da",
-    "brandId": "brand-garnier",
-    "categoryId": 7,
-    "description": "Nước tẩy trang dịu nhẹ, làm sáng da",
-    "ingredient": "Vitamin C, Glycerin",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 169,
-        "sku": "GN-TT-VTMC-400",
-        "specification": {
-          "volume": "400ml",
-          "packaging": "Large Bottle"
-        },
-        "unitPrice": 139000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Vitamin C Làm Sáng Da 400ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Vitamin C Làm Sáng Da 400ml.jpg",
-            "displayOrder": 1,
-            "altText": "Front View"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 142,
-    "name": "Garnier Micellar Cleansing Water",
-    "nameVn": "Nước Tẩy Trang Garnier Làm Sạch Tế Bào Da Chết",
-    "brandId": "brand-garnier",
-    "categoryId": 7,
-    "description": "Làm sạch tế bào da chết, phù hợp với mọi loại da",
-    "ingredient": "Nước, Glycerin, Propylene Glycol, Poloxamer 184, Disodium EDTA, Parfum",
-    "skinType": "Da thường",
-    "isActive": true,
-    "variants": [
-      {
-        "id": 170,
-        "sku": "GN-TT-400",
-        "specification": {
-          "volume": "400ml",
-          "packaging": "Large Bottle"
-        },
-        "unitPrice": 146000,
-        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Làm Sạch Tế Bào Da Chết 400ml.jpg",
-        "slug": null,
-        "images": [
-          {
-            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Làm Sạch Tế Bào Da Chết 400ml.jpg",
+            "imageUrl": "images/pic_product/Toner/Eucerin/Toner Eucerin Dưỡng Ẩm Cho Da Nhạy Cảm 200ml.jpg",
             "displayOrder": 1,
             "altText": "Front View"
           }
@@ -4224,12 +2716,12 @@ export const products = [
   },
   {
     "id": 73,
-    "name": "Eucerin Bright Skin Illuminating Moisturizer",
+    "name": "Boosting Essence",
     "nameVn": "Nước Dưỡng Eucerin Làm Sáng Và Cấp Ẩm Cho Da",
     "brandId": "brand-eucerin",
     "categoryId": 8,
-    "description": "Dưỡng ẩm và làm sáng da",
-    "ingredient": "Vitamin C, Glycerin, Panthenol",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường/ Mọi loại da",
     "isActive": true,
     "variants": [
@@ -4272,13 +2764,75 @@ export const products = [
     ]
   },
   {
+    "id": 74,
+    "name": "First Spray Serum",
+    "nameVn": "Serum d'Alba Dạng Xịt Nấm Truffle Trắng Căng Bóng Da",
+    "brandId": "brand-dAlba",
+    "categoryId": 4,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường/ Mọi loại da",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 102,
+        "sku": "DA-SR-TF-100",
+        "specification": {
+          "volume": "100ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 369000,
+        "thumbnailUrl": "images/pic_product/Serum/d'Alba/Serum d'Alba Dạng Xịt Nấm Truffle Trắng Căng Bóng Da 100ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Serum/d'Alba/Serum d'Alba Dạng Xịt Nấm Truffle Trắng Căng Bóng Da 100ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 75,
+    "name": "Vital Spray Serum",
+    "nameVn": "Serum d'Alba Dạng Xịt 8 Loại Dầu Hoa Đỏ Cấp Ẩm Dịu Da",
+    "brandId": "brand-dAlba",
+    "categoryId": 4,
+    "description": null,
+    "ingredient": "...",
+    "skinType": "Da nhạy cảm",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 103,
+        "sku": "DA-SR-8L-100",
+        "specification": {
+          "volume": "100ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 381000,
+        "thumbnailUrl": "images/pic_product/Serum/d'Alba/Serum d'Alba Dạng Xịt 8 Loại Dầu Hoa Đỏ Cấp Ẩm Dịu Da 100ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Serum/d'Alba/Serum d'Alba Dạng Xịt 8 Loại Dầu Hoa Đỏ Cấp Ẩm Dịu Da 100ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 76,
-    "name": "d'Alba Brightening Serum",
+    "name": "Vita Toning Capsule Serum",
     "nameVn": "Serum d'Alba Viên Nang Dưỡng Sáng Da ",
     "brandId": "brand-dAlba",
     "categoryId": 4,
-    "description": "Serum dưỡng sáng da, phù hợp với mọi loại da",
-    "ingredient": "Vitamin C, Niacinamide, Glutathione",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường/ Mọi loại da",
     "isActive": true,
     "variants": [
@@ -4303,13 +2857,75 @@ export const products = [
     ]
   },
   {
+    "id": 77,
+    "name": "Refresh Aqua Serum",
+    "nameVn": "Serum d'Alba Dạng Xịt Cấp Ẩm, Làm Mát Da",
+    "brandId": "brand-dAlba",
+    "categoryId": 4,
+    "description": null,
+    "ingredient": "1",
+    "skinType": "Da thường/ Mọi loại da",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 105,
+        "sku": "DA-SR-CA-100",
+        "specification": {
+          "volume": "100ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 371000,
+        "thumbnailUrl": "images/pic_product/Serum/d'Alba/Serum d'Alba Dạng Xịt Cấp Ẩm, Làm Mát Da 100ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Serum/d'Alba/Serum d'Alba Dạng Xịt Cấp Ẩm, Làm Mát Da 100ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 78,
+    "name": "",
+    "nameVn": "Kem Chống Nắng La Roche-Posay Phổ Rộng, Nâng Tông Kiềm Dầu ",
+    "brandId": "brand-larocheposay",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 106,
+        "sku": "LRP-CN-50",
+        "specification": {
+          "volume": "50ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 428000,
+        "thumbnailUrl": "images/pic_product/Kem chống nắng/La Roche-possay/Kem Chống Nắng La Roche-Posay Phổ Rộng, Nâng Tông Kiềm Dầu 50ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem chống nắng/La Roche-possay/Kem Chống Nắng La Roche-Posay Phổ Rộng, Nâng Tông Kiềm Dầu 50ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View "
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 79,
-    "name": "L'Oreal Paris UV Protect Whitening Sunscreen",
+    "name": "",
     "nameVn": "Sữa Chống Nắng L’Oreal Bảo Vệ Phổ Rộng Sáng Da Mờ Thâm",
     "brandId": "brand-loreal",
     "categoryId": 2,
-    "description": "Kem chống nắng bảo vệ da, làm sáng da, giảm thâm nám.",
-    "ingredient": "Avobenzone, Titanium Dioxide, Zinc Oxide",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -4334,13 +2950,44 @@ export const products = [
     ]
   },
   {
+    "id": 80,
+    "name": "",
+    "nameVn": "Gel Chống Nắng L'Oreal Watergel Thế Hệ Mới",
+    "brandId": "brand-loreal",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 108,
+        "sku": "LR-CN-50",
+        "specification": {
+          "volume": "50ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 254000,
+        "thumbnailUrl": "images/pic_product/Kem chống nắng/L'oreal/Gel Chống Nắng L'Oreal Watergel Thế Hệ Mới.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem chống nắng/L'oreal/Gel Chống Nắng L'Oreal Watergel Thế Hệ Mới.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 81,
-    "name": "La Roche-Posay Revitalizing, Hydrating & Skin Renewing Serum",
+    "name": "La Roche-Posay Serum for Skin Repair, Hydration & Regeneration",
     "nameVn": "Serum La Roche-Posay Phục Hồi, Cấp Ẩm & Tái Tạo Da",
     "brandId": "brand-larocheposay",
     "categoryId": 4,
-    "description": "Serum phục hồi, cấp ẩm và tái tạo da. Phù hợp với mọi loại da.",
-    "ingredient": "Vitamin B3, Ceramides, Hyaluronic Acid",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da nhạy cảm ",
     "isActive": true,
     "variants": [
@@ -4365,13 +3012,44 @@ export const products = [
     ]
   },
   {
+    "id": 82,
+    "name": "",
+    "nameVn": "Sữa Chống Nắng Anessa Cho Da Nhạy Cảm & Trẻ Em ",
+    "brandId": "brand-anessa",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da nhạy cảm ",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 110,
+        "sku": "AE-CN-60",
+        "specification": {
+          "volume": "60ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 432000,
+        "thumbnailUrl": "images/pic_product/Kem chống nắng/Anessa/Sữa Chống Nắng Anessa Cho Da Nhạy Cảm & Trẻ Em 60ml (Mới).jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem chống nắng/Anessa/Sữa Chống Nắng Anessa Cho Da Nhạy Cảm & Trẻ Em 60ml (Mới).jpg",
+            "displayOrder": 1,
+            "altText": "Front View "
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 83,
-    "name": "La Roche-Posay Serum for Skin Regeneration & Repair",
+    "name": "La Roche-Posay Serum Helps Regenerate & Restore Skin",
     "nameVn": "Serum La Roche-Posay Giúp Tái Tạo & Phục Hồi Da ",
     "brandId": "brand-larocheposay",
     "categoryId": 4,
-    "description": "Serum giúp tái tạo và phục hồi da, phù hợp với mọi loại da.",
-    "ingredient": "Vitamin B3, Ceramide, Hyaluronic Acid",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -4396,13 +3074,75 @@ export const products = [
     ]
   },
   {
+    "id": 84,
+    "name": "",
+    "nameVn": "Serum Chống Nắng Anessa Dưỡng Da Nâng Tông ",
+    "brandId": "brand-anessa",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 112,
+        "sku": "AE-CN-30",
+        "specification": {
+          "volume": "30ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 518000,
+        "thumbnailUrl": "images/pic_product/Kem chống nắng/Anessa/Serum Chống Nắng Anessa Dưỡng Da Nâng Tông 30ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem chống nắng/Anessa/Serum Chống Nắng Anessa Dưỡng Da Nâng Tông 30ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View "
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 85,
+    "name": "",
+    "nameVn": "Xịt Chống Nắng Anessa Dưỡng Da Đa Năng",
+    "brandId": "brand-anessa",
+    "categoryId": 2,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 113,
+        "sku": "AE-CN-60",
+        "specification": {
+          "volume": "60g",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 306000,
+        "thumbnailUrl": "images/pic_product/Kem chống nắng/Anessa/Xịt Chống Nắng Anessa Dưỡng Da Đa Năng 60g (Mới).jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem chống nắng/Anessa/Xịt Chống Nắng Anessa Dưỡng Da Đa Năng 60g (Mới).jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 86,
-    "name": "Anessa Sensitive & Kids Sunscreen Gel",
+    "name": "",
     "nameVn": "Gel Chống Nắng Anessa Cho Da Nhạy Cảm & Trẻ Em ",
     "brandId": "brand-anessa",
     "categoryId": 2,
-    "description": "Gel chống nắng dành cho da nhạy cảm và trẻ em",
-    "ingredient": "Titanium Dioxide, Zinc Oxide, Hyaluronic Acid",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da nhạy cảm ",
     "isActive": true,
     "variants": [
@@ -4427,13 +3167,44 @@ export const products = [
     ]
   },
   {
+    "id": 87,
+    "name": "",
+    "nameVn": "Mặt Nạ BNBG Vitamin E Dưỡng Ẩm Da",
+    "brandId": "brand-bnbg",
+    "categoryId": 3,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da khô\\ Da hỗn hợp",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 115,
+        "sku": "BB-VE-MN-30",
+        "specification": {
+          "volume": "30ml",
+          "packaging": "Box"
+        },
+        "unitPrice": 15000,
+        "thumbnailUrl": "images/pic_product/Mặt nạ/BNBG/Mặt Nạ BNBG Vitamin E Dưỡng Ẩm Da 30ml (Mới).jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Mặt nạ/BNBG/Mặt Nạ BNBG Vitamin E Dưỡng Ẩm Da 30ml (Mới).jpg",
+            "displayOrder": 1,
+            "altText": "Front View "
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 88,
-    "name": "BNBG Vitamin B Restorative Face Mask",
+    "name": "",
     "nameVn": "Mặt Nạ BNBG Vitamin B Phục Hồi Da",
     "brandId": "brand-bnbg",
     "categoryId": 3,
-    "description": "Mặt nạ phục hồi da, phù hợp với mọi loại da.",
-    "ingredient": "Vitamin B, Khong tim thay thong tin",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da nhạy cảm ",
     "isActive": true,
     "variants": [
@@ -4458,13 +3229,44 @@ export const products = [
     ]
   },
   {
+    "id": 89,
+    "name": "",
+    "nameVn": "Mặt Nạ Naruko Bạch Ngọc Lan Dưỡng Sáng, Săn Chắc Da",
+    "brandId": "brand-naruko",
+    "categoryId": 3,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 117,
+        "sku": "NR-BN-MN-26",
+        "specification": {
+          "volume": "26ml",
+          "packaging": "Box"
+        },
+        "unitPrice": 22000,
+        "thumbnailUrl": "images/pic_product/Mặt nạ/Naruko/Mặt Nạ Naruko Bạch Ngọc Lan Dưỡng Sáng, Săn Chắc Da 30ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Mặt nạ/Naruko/Mặt Nạ Naruko Bạch Ngọc Lan Dưỡng Sáng, Săn Chắc Da 30ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 90,
-    "name": "Naruko Rose & Botanic HA Aqua Cubic Mask",
+    "name": "",
     "nameVn": "Mặt Nạ Naruko Hoa Hồng Nhung Cấp Nước Cho Da",
     "brandId": "brand-naruko",
     "categoryId": 3,
-    "description": "Mặt nạ dưỡng ẩm sâu cho da, phù hợp với mọi loại da.",
-    "ingredient": "Chiết xuất hoa hồng, Hyaluronic Acid",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da khô\\ Da hỗn hợp",
     "isActive": true,
     "variants": [
@@ -4489,13 +3291,56 @@ export const products = [
     ]
   },
   {
+    "id": 91,
+    "name": "",
+    "nameVn": "Mặt Nạ BNBG Placenta Truyền Năng Lượng, Phục Hồi Da",
+    "brandId": "brand-bnbg",
+    "categoryId": 3,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da nhạy cảm ",
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "id": 92,
+    "name": "",
+    "nameVn": "Mặt Nạ BNBG Exosome Nâng Cơ, Trẻ Hoá Da",
+    "brandId": "brand-bnbg",
+    "categoryId": 3,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 119,
+        "sku": "BB-EX-MN-30",
+        "specification": {
+          "volume": "30ml",
+          "packaging": "Box"
+        },
+        "unitPrice": 22000,
+        "thumbnailUrl": "images/pic_product/Mặt nạ/BNBG/Mặt Nạ BNBG Exosome Nâng Cơ, Trẻ Hoá Da 30ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Mặt nạ/BNBG/Mặt Nạ BNBG Exosome Nâng Cơ, Trẻ Hoá Da 30ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View "
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 93,
-    "name": "BNBG Vita Complex Brightening and Fading Mask",
+    "name": "",
     "nameVn": "Mặt Nạ BNBG Vita Complex Dưỡng Sáng, Mờ Thâm Nám",
     "brandId": "brand-bnbg",
     "categoryId": 3,
-    "description": "Mặt nạ dưỡng sáng, mờ thâm nám",
-    "ingredient": "Vitamin C, Niacinamide, Glutathione",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -4520,13 +3365,44 @@ export const products = [
     ]
   },
   {
+    "id": 94,
+    "name": "",
+    "nameVn": "Mặt Nạ Caryophy Làm Giảm Mụn, Thâm & Dưỡng Ẩm Da",
+    "brandId": "brand-caryophy",
+    "categoryId": 3,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 121,
+        "sku": "CR-GM-MN-22",
+        "specification": {
+          "volume": "22G",
+          "packaging": "Box"
+        },
+        "unitPrice": 220000,
+        "thumbnailUrl": "images/pic_product/Mặt nạ/Caryophy/Mặt Nạ Caryophy Làm Giảm Mụn, Thâm & Dưỡng Ẩm Da 22g.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Mặt nạ/Caryophy/Mặt Nạ Caryophy Làm Giảm Mụn, Thâm & Dưỡng Ẩm Da 22g.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 95,
-    "name": "Sur.Medic+ Glutathione Brightening Face Mask",
+    "name": "",
     "nameVn": "Mặt Nạ Sur.Medic+ Tinh Chất Glutathione Làm Sáng Da ",
     "brandId": "brand-surmedic",
     "categoryId": 3,
-    "description": "Tinh chất Glutathione làm sáng da, phù hợp với mọi loại da.",
-    "ingredient": "Glutathione",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -4551,13 +3427,44 @@ export const products = [
     ]
   },
   {
+    "id": 96,
+    "name": "",
+    "nameVn": "Mặt Nạ Sur.Medic+ Phục Hồi & Làm Dịu Da Cấp Tốc",
+    "brandId": "brand-surmedic",
+    "categoryId": 3,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 123,
+        "sku": "SM-PH-MN-28",
+        "specification": {
+          "volume": "28G",
+          "packaging": "Box"
+        },
+        "unitPrice": 25000,
+        "thumbnailUrl": "images/pic_product/Mặt nạ/Surmedic/Phục Hồi Làm Dịu Da Cấp Tốc 28g.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Mặt nạ/Surmedic/Phục Hồi Làm Dịu Da Cấp Tốc 28g.jpg",
+            "displayOrder": 1,
+            "altText": "Front View "
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 97,
-    "name": "Sur.Medic+ Multi Vitamin Mask",
+    "name": "",
     "nameVn": "Mặt Nạ Sur.Medic+ Cung Cấp Multi Vitamin",
     "brandId": "brand-surmedic",
     "categoryId": 3,
-    "description": "Cung cấp dưỡng chất đa vitamin cho da",
-    "ingredient": "Vitamin A, Vitamin C, Vitamin E",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -4582,13 +3489,44 @@ export const products = [
     ]
   },
   {
+    "id": 98,
+    "name": "",
+    "nameVn": "Tẩy Da Chết Mặt Cocoon Cà Phê Đắk Lắk ",
+    "brandId": "brand-cocoon",
+    "categoryId": 6,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 125,
+        "sku": "CC-TC-150",
+        "specification": {
+          "volume": "150ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 142000,
+        "thumbnailUrl": "images/pic_product/Tẩy tế bào chết/Cocoon/Tẩy Da Chết Mặt Cocoon Cà Phê Đắk Lắk 150ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy tế bào chết/Cocoon/Tẩy Da Chết Mặt Cocoon Cà Phê Đắk Lắk 150ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View "
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 99,
-    "name": "innisfree Jeju Barley Exfoliating Gel",
+    "name": "",
     "nameVn": "Gel Tẩy Tế Bào Chết innisfree Từ Lúa Mạch Xanh",
     "brandId": "brand-innisfree",
     "categoryId": 6,
-    "description": "Gel tẩy tế bào chết từ lúa mạch xanh, phù hợp với mọi loại da.",
-    "ingredient": "Lúa mạch xanh, Glycerin, Axit Salicylic",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -4613,13 +3551,62 @@ export const products = [
     ]
   },
   {
+    "id": 100,
+    "name": "",
+    "nameVn": "Dung Dịch Tẩy Da Chết Paula’s Choice 2% BHA ",
+    "brandId": "brand-paulachoice",
+    "categoryId": 6,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da dầu/Da hỗn hợp",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 127,
+        "sku": "PL-2-TC-118",
+        "specification": {
+          "volume": "118ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 590000,
+        "thumbnailUrl": "images/pic_product/Tẩy tế bào chết/pl/2-118ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy tế bào chết/pl/2-118ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      },
+      {
+        "id": 128,
+        "sku": "PL-2-TC-30",
+        "specification": {
+          "volume": "30ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 278000,
+        "thumbnailUrl": "images/pic_product/Tẩy tế bào chết/pl/2-30ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy tế bào chết/pl/2-30ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View "
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 101,
-    "name": "La Roche-Posay Effaclar Purifying Foaming Gel Refill",
+    "name": "",
     "nameVn": "Túi Refill Gel Rửa Mặt La Roche-Posay Cho Da Dầu, Nhạy Cảm",
     "brandId": "brand-larocheposay",
     "categoryId": 5,
-    "description": "Sữa rửa mặt dành cho da dầu, nhạy cảm",
-    "ingredient": "Nước, Glycerin, Sodium Laureth Sulfate, Coco-Betaine, Zinc PCA, Capryloyl Glycine, Salicylic Acid",
+    "description": null,
+    "ingredient": "Aqua / Water, Sodium Laureth Sulfate, Decyl Glucoside, Glycerin, Sodium Chloride, Coco-betaine, Salicylic Acid, Peg-150 Pentaerythrityl Tetrastearate, Peg-6 Caprylic/capric Glycerides, Zinc Gluconate, Sodium Hydroxide, Capryloyl Salicylic Acid, Tetrasodium Edta, Citric Acid, Menthol, Polyquaternium-47, Hexylene Glycol, Sodium Benzoate",
     "skinType": "Da mụn",
     "isActive": true,
     "variants": [
@@ -4644,13 +3631,123 @@ export const products = [
     ]
   },
   {
+    "id": 102,
+    "name": "Vichy Serum Improves & Prevents Dark Spots and Brown Spots",
+    "nameVn": "Serum Vichy Cải Thiện & Ngăn Ngừa Thâm Nám Đốm Nâu",
+    "brandId": "brand-vichy",
+    "categoryId": 4,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 130,
+        "sku": "VC-SR-30",
+        "specification": {
+          "volume": "30ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 817000,
+        "thumbnailUrl": "images/pic_product/Serum/Vichy/Serum Vichy Cải Thiện & Ngăn Ngừa Thâm Nám Đốm Nâu 30ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Serum/Vichy/Serum Vichy 89 Khoáng Chất Phục Hồi Chuyên Sâu 50ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View "
+          },
+          {
+            "imageUrl": "images/pic_product/Serum/Vichy/Serum Vichy Cải Thiện & Ngăn Ngừa Thâm Nám Đốm Nâu 30ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View "
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 103,
+    "name": "",
+    "nameVn": "Mặt Nạ BNBG Placenta Truyền Năng Lượng, Phục Hồi Da",
+    "brandId": "brand-bnbg",
+    "categoryId": 3,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường/ Mọi loại da",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 131,
+        "sku": "BB-PC-MN-30",
+        "specification": {
+          "volume": "30ml",
+          "packaging": "Box"
+        },
+        "unitPrice": 22000,
+        "thumbnailUrl": "images/pic_product/Mặt nạ/BNBG/Mặt Nạ BNBG Placenta Truyền Năng Lượng, Phục Hồi Da 30ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Mặt nạ/BNBG/Mặt Nạ BNBG Placenta Truyền Năng Lượng, Phục Hồi Da 30ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View "
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 104,
+    "name": "Blemish Control Cleanser",
+    "nameVn": "",
+    "brandId": "brand-cerave",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": false,
+    "variants": []
+  },
+  {
+    "id": 105,
+    "name": "",
+    "nameVn": "Nước Tẩy Trang Garnier Cho Da Dầu, Mụn 125ml (Mẫu Cũ)",
+    "brandId": "brand-garnier",
+    "categoryId": 7,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da khô/ Da hỗn hợp ",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 132,
+        "sku": "GN-TT-125-C",
+        "specification": {
+          "volume": "125ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 69000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Cho Da Dầu, Mụn 125ml (Mẫu Cũ).jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Cho Da Dầu, Mụn 125ml (Mẫu Cũ).jpg",
+            "displayOrder": 1,
+            "altText": "Front View "
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 106,
-    "name": "CeraVe Hydrating Facial Cleanser",
+    "name": "Sữa Rửa Mặt CeraVe Cho Da Thường Đến Khô",
     "nameVn": "Sữa Rửa Mặt CeraVe Cho Da Thường Đến Khô",
     "brandId": "brand-cerave",
     "categoryId": 5,
-    "description": "Sữa rửa mặt dịu nhẹ, phù hợp với da thường đến da khô.",
-    "ingredient": "Niacinamide, Ceramide NP, Ceramide AP, Ceramide EOP, Hyaluronic Acid",
+    "description": null,
+    "ingredient": "Aqua / Water / Eau, Cocamidopropyl Hydroxysultaine, Glycerin, Sodium Lauroyl Sarcosinate, Niacinamide, Gluconolactone, Peg-150 Pentaerythrityl Tetrastearate, Sodium Methyl Cocoyl Taurate, Zea Mays Oil / Corn Oil, Ceramide Np, Ceramide Ap, Ceramide Eop, Carbomer , Natri Clorua, Axit Salicylic, Natri Benzoat, Natri Lauroyl Lactylat, Cholecalciferol, Cholesterol, Phenoxyethanol, Disodium Edta, Tetrasodium Edta, Axit Hyaluronic Thủy Phân, Phytosphingosine, Xanthan Gum, Ethylhexylglycerin",
     "skinType": "Da khô/Hỗn hợp khô",
     "isActive": true,
     "variants": [
@@ -4717,12 +3814,12 @@ export const products = [
   },
   {
     "id": 107,
-    "name": "Cocoon Rose Hydrating Makeup Remover",
+    "name": "Rose Bi-Phase Micellar Water",
     "nameVn": "Nước Tẩy Trang Cocoon Hoa Hồng Cấp Ẩm Da",
     "brandId": "brand-cocoon",
     "categoryId": 7,
-    "description": "Dung cho da kho, da nhat. Cap am da.",
-    "ingredient": "Nước hoa hồng, glycerin, vitamin E",
+    "description": null,
+    "ingredient": "Aqua, Isohexadecane, Cyclopentasiloxane, Isononyl Isononanoate, Sodium Lactate, Rosa Damascena Flower Water, Polyglyceryl-4 Laurate/Sebacate, Polyglyceryl-4 Caprylate/Caprate, Caprylic/Capric Triglyceride, Haematococcus luvialis Extract, Rosmarinus Officinalis Leaf Extract, Panthenol, Glycerin, Hydroxymethoxyphe - Nyl Decanone, Trisodium Ethylenediamine Disuccinate, Lactic Acid, Cetylpyridinium Chloride",
     "skinType": "Da khô/Da hỗn hợp",
     "isActive": true,
     "variants": [
@@ -4765,13 +3862,320 @@ export const products = [
     ]
   },
   {
+    "id": 108,
+    "name": "Revitalift Crystal Purifying Micellar Water",
+    "nameVn": "Nước Tẩy Trang L'Oreal Làm Sạch Sâu Cho Da Dầu",
+    "brandId": "brand-loreal",
+    "categoryId": 7,
+    "description": null,
+    "ingredient": " Aqua / Water, Cyclopentasiloxane, Isohexadecane, Potassium Phosphate, Sodium Chloride, Dipotassium Phosphate, Disodium Edta, Decyl Glucoside, Hexylene Glycol, Polyaminopropyl Biguanide, CI 61565 / Green 6",
+    "skinType": "Da dầu/Da hỗn hợp",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 138,
+        "sku": "LR-TT-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 179000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/L'oreal/Nước Tẩy Trang L'Oreal Làm Sạch Sâu Cho Da Dầu 400ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/L'oreal/Nước Tẩy Trang L'Oreal Làm Sạch Sâu Cho Da Dầu 400ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      },
+      {
+        "id": 139,
+        "sku": "LR-TT-95",
+        "specification": {
+          "volume": "95ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 29000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/L'oreal/[Mini] Nước Tẩy Trang L'Oreal Làm Sạch Sâu Cho Da Dầu 95ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/L'oreal/[Mini] Nước Tẩy Trang L'Oreal Làm Sạch Sâu Cho Da Dầu 95ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 109,
+    "name": "Revitalift Hyaluronic Acid Hydrating Micellar Water",
+    "nameVn": "Nước Tẩy Trang L'Oreal Căng Mịn Da",
+    "brandId": "brand-loreal",
+    "categoryId": 7,
+    "description": null,
+    "ingredient": "Aqua / Water, Hexylene Glycol, Glycerin, Rosa Gallica Flower Extract, Sorbitol, Poloxamer 184, Disodium Cocoamphodiacetate, Disodium Edta, Propylene Glycol, BHT , Polyaminopropyl Biguanide",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 140,
+        "sku": "LR-TT-95",
+        "specification": {
+          "volume": "95ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 29000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/L'oreal/[Mini] Nước Tẩy Trang L'Oreal Căng Mịn Da 95ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/L'oreal/[Mini] Nước Tẩy Trang L'Oreal Căng Mịn Da 95ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      },
+      {
+        "id": 141,
+        "sku": "LR-TT-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 209000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/L'oreal/Nước Tẩy Trang L'Oreal Căng Mịn Da 400ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/L'oreal/Nước Tẩy Trang L'Oreal Căng Mịn Da 400ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 110,
+    "name": "Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô",
+    "nameVn": "Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô",
+    "brandId": "brand-cerave",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "Aqua / Water / Eau, Glycerin, Sodium Methyl Cocoyl Taurate, Coco-Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Pca, Ppg-5-Ceteth-20, Peg-100 Stearate, Peg-150 Pentaerythrityl Tetrastearate, Peg-6 Caprylic/Capric Glycerides, Peg-30 Dipolyhydroxystearate, Ci 77891 / Titanium Dioxide, Aspartic Acid, Ceramide Np, Ceramide Ap, Ceramide Eop, Sorbitan Isostearate, Carbomer, Glycol Distearate, Glyceryl Stearate, Glyceryl Oleate, Glycine, Trideceth-6, Cetearyl Alcohol, Behentrimonium Methosulfate, Threonine, Sodium Hydroxide, Salicylic Acid, Sodium Pca, Sodium Lactate, Arginine, Sodium Lauroyl Lactylate, Serine, Sodium Benzoate, Valine, Sodium Hyaluronate, Proline, Isoleucine, Cholesterol, Phenoxyethanol, Alanine, Phenylalanine, Coconut Acid, Coco-Glucoside, Chlorphenesin, Disodium Edta, Hydroxyethyl Urea, Citric Acid, Hydroxyethyl Acrylate/Sodium Acryloyldimethyl Taurate Copolymer, Caprylyl Glycol, Phytosphingosine, Xanthan Gum, Histidine, Acrylates/C10-30 Alkyl Acrylate Crosspolymer, Polyquaternium-53, Polyquaternium-39, Polysorbate 60, Ethylhexylglycerin, Benzoic Acid",
+    "skinType": "Da thường/Mọi loại da",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 142,
+        "sku": "CV-RM-236",
+        "specification": {
+          "volume": "236ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 389000,
+        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/CeraVe/Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô 236ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Sữa rửa mặt/CeraVe/Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô 236ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View "
+          }
+        ]
+      },
+      {
+        "id": 143,
+        "sku": "CV-RM-100",
+        "specification": {
+          "volume": "100ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 181800,
+        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/CeraVe/Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô 100ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Sữa rửa mặt/CeraVe/Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô 100ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View "
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 111,
+    "name": "Gel Rửa Mặt Hada Labo Dưỡng Ẩm Cho Da Nhạy Cảm",
+    "nameVn": "Gel Rửa Mặt Hada Labo Dưỡng Ẩm Cho Da Nhạy Cảm",
+    "brandId": "brand-hadalabo",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "Water, Disodium Cocoyl Glutamate, Laureth-6 Carboxylic Acid, Cocamide DEA, Glycerin, Pentylene Glycol, Acrylates Copolymer, Coco-Betaine, PEG-150 Pentaerythrityl Tetrastearate, PPG-2 Hydroxyethyl Cocamide, Sodium Hyaluronate (HA), Hydrolyzed Sodium Hyaluronate (Nano HA), Lactococcus/Hyaluronic Acid Ferment Filtrate (Fermented HA), Sodium Acetylated Hyaluronate (Super HA), Panthenol, Citric Acid, Polyquaternium-7, Polyquaternium-39, Phenoxyethanol, Sodium Hydroxide, Disodium EDTA, Sodium Chloride, Sodium Metabisulfite, Butylene Glycol, Sodium Citrate, Sodium Benzoate, Pelargonium Graveolens Oil",
+    "skinType": "Da nhạy cảm",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 144,
+        "sku": "HL-RM-80",
+        "specification": {
+          "volume": "80g",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 89000,
+        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Gel Rửa Mặt Hada Labo Dưỡng Ẩm Cho Da Nhạy Cảm 80g.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Gel Rửa Mặt Hada Labo Dưỡng Ẩm Cho Da Nhạy Cảm 80g.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 112,
+    "name": "Sữa Rửa Mặt Vichy Từ Đất Sét Và Đá Khoáng Núi Lửa",
+    "nameVn": "Sữa Rửa Mặt Vichy Từ Đất Sét Và Đá Khoáng Núi Lửa",
+    "brandId": "brand-vichy",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "Salicylic Acid, Probiotic Fraction",
+    "skinType": "Da dầu/Hỗn hợp dầu",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 145,
+        "sku": "VC-RM-125",
+        "specification": {
+          "volume": "125ml",
+          "packaging": "Medium Bottle"
+        },
+        "unitPrice": 432000,
+        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/Vichy/Sữa Rửa Mặt Vichy Từ Đất Sét Và Đá Khoáng Núi Lửa 125ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Sữa rửa mặt/Vichy/Sữa Rửa Mặt Vichy Từ Đất Sét Và Đá Khoáng Núi Lửa 125ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 113,
+    "name": "Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô",
+    "nameVn": "Sữa Rửa Mặt CeraVe Dạng Kem Tạo Bọt Cho Da Thường, Khô",
+    "brandId": "brand-cerave",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "Aqua / Water / Eau, Glycerin, Sodium Methyl Cocoyl Taurate, Coco-Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Pca, Ppg-5-Ceteth-20, Peg-100 Stearate, Peg-150 Pentaerythrityl Tetrastearate, Peg-6 Caprylic/Capric Glycerides, Peg-30 Dipolyhydroxystearate, Ci 77891 / Titanium Dioxide, Aspartic Acid, Ceramide Np, Ceramide Ap, Ceramide Eop, Sorbitan Isostearate, Carbomer, Glycol Distearate, Glyceryl Stearate, Glyceryl Oleate, Glycine, Trideceth-6, Cetearyl Alcohol, Behentrimonium Methosulfate, Threonine, Sodium Hydroxide, Salicylic Acid, Sodium Pca, Sodium Lactate, Arginine, Sodium Lauroyl Lactylate, Serine, Sodium Benzoate, Valine, Sodium Hyaluronate, Proline, Isoleucine, Cholesterol, Phenoxyethanol, Alanine, Phenylalanine, Coconut Acid, Coco-Glucoside, Chlorphenesin, Disodium Edta, Hydroxyethyl Urea, Citric Acid, Hydroxyethyl Acrylate/Sodium Acryloyldimethyl Taurate Copolymer, Caprylyl Glycol, Phytosphingosine, Xanthan Gum, Histidine, Acrylates/C10-30 Alkyl Acrylate Crosspolymer, Polyquaternium-53, Polyquaternium-39, Polysorbate 60, Ethylhexylglycerin, Benzoic Acid",
+    "skinType": "Da thường/Mọi loại da",
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "id": 114,
+    "name": "Sữa Rửa Mặt CeraVe Sạch Sâu Cho Da Thường Đến Da Dầu",
+    "nameVn": "Sữa Rửa Mặt CeraVe Sạch Sâu Cho Da Thường Đến Da Dầu",
+    "brandId": "brand-cerave",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "Purified Water (Aqua), Cocamidopropyl Hydroxysultaine, Glycerin, Sodium Lauroyl Sarcosinate, Peg-150 Pentaerythrityl Tetrastearate (And) Peg-6 Caprylic/Capric Glycerides, Niacinamide, Propylene Glycol, Sodium Methyl Cocoyl Taurate, Ceramide 3, Ceramide 6-Ii, Ceramide 1, Hyaluronic Acid, Cholesterol, Sodium Chloride, Phytosphingosine, Citric Acid, Edetate Disodium Dihydrate, Sodium Lauroyl Lactylate, Methylparaben, Propylparaben, Carbomer, Xanthan Gum",
+    "skinType": "Da dầu/Hỗn hợp dầu",
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "id": 115,
+    "name": "Gel Rửa Mặt La Roche-Posay Dành Cho Da Dầu, Nhạy Cảm",
+    "nameVn": "Gel Rửa Mặt La Roche-Posay Dành Cho Da Dầu, Nhạy Cảm",
+    "brandId": "brand-larocheposay",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "Aqua / Water, Sodium Laureth Sulfate, Peg-8, Coco-Betaine, Hexylene Glycol, Sodium Chloride, Peg-120 Methyl Glucose Dioleate, Zinc Pca, Sodium Hydroxide, Citric Acid, Sodium Benzoate, Phenoxyethanol, Caprylyl Glycol, Parfum / Fragrance",
+    "skinType": "\tDa dầu/Hỗn hợp dầu",
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "id": 116,
+    "name": "Kem Rửa Mặt Hada Labo Sạch Sâu Dưỡng Ẩm",
+    "nameVn": "Kem Rửa Mặt Hada Labo Sạch Sâu Dưỡng Ẩm",
+    "brandId": "brand-hadalabo",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "Water, Glycerin, Sodium Cocoyl Glycinate, Butylene Glycol, Cocamidopropyl Betaine, Hydroxypropyl Starch Phosphate, PEG-20M, Lauryl Glucoside, Sodium Lauroyl Aspartate, Potassium Cocoyl Glycinate, Sodium Stearoyl Glutamate, Sodium Acetylated Hyaluronate, Hydrolyzed Hyaluronic Acid, Hydroxypropyltrimonium Hyaluronate, Cananga Odorata (Ylang Ylang) Flower Oil, Polyquaternium-7, Polyquaternium-52, Hydroxypropyl Methylcellulose, PEG-32, Citric Acid, Lauric Acid, Stearic Acid, Glyceryl Stearate SE, PEG-60 Glyceryl Stearate, BHT, Disodium EDTA, Methylparaben, Propylparaben",
+    "skinType": "Da khô/Hỗn hợp khô",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 146,
+        "sku": "HL-RM-80",
+        "specification": {
+          "volume": "80g",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 69000,
+        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Kem Rửa Mặt Hada Labo Sạch Sâu Dưỡng Ẩm 80g.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Kem Rửa Mặt Hada Labo Sạch Sâu Dưỡng Ẩm 80g.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 117,
+    "name": "Kem Rửa Mặt Hada Labo Sạch Sâu, Dưỡng Sáng Da",
+    "nameVn": "Kem Rửa Mặt Hada Labo Sạch Sâu, Dưỡng Sáng Da",
+    "brandId": "brand-hadalabo",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "Water, Glycerin, Sodium Cocoyl Glycinate, Butylene Glycol, Hydroxypropyl Starch Phosphate, Cocamidopropyl Betaine, PEG-400, Lauryl Glucoside, Sodium Lauroyl Aspartate, Stearyl Alcohol, Citric Acid, Polyquaternium-7, Glyceryl Stearate, PEG-60 Glyceryl Stearate, Sodium Hyaluronate (HA), Magnesium Ascorbyl Phosphate, Hydroxypropyltrimonium Hyaluronate, Tranexamic Acid, Hydrolyzed Hyaluronic Acid (Nano HA), Tocopherol, Saccharomyces/Coix Lacryma-Jobi Ma-Yuen Seed Ferment Filtrate, Coix Lacryma-Jobi Ma-Yuen (Job's Tears) Seed Extract, Hydroxypropyl Methylcellulose, Disodium EDTA, BHT, Sodium Metabisulfite, Sodium Benzoate, Phenoxyethanol",
+    "skinType": "Da thường/Mọi loại da",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 147,
+        "sku": "HL-RM-SD-80",
+        "specification": {
+          "volume": "80g",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 66000,
+        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Kem Rửa Mặt Hada Labo Sạch Sâu, Dưỡng Sáng Da 80g.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Kem Rửa Mặt Hada Labo Sạch Sâu, Dưỡng Sáng Da 80g.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 118,
-    "name": "Hada Labo Anti-Aging Facial Cleanser",
+    "name": "Kem Rửa Mặt Hada Labo Dưỡng Chuyên Biệt Ngừa Lão Hóa",
     "nameVn": "Kem Rửa Mặt Hada Labo Dưỡng Chuyên Biệt Ngừa Lão Hóa",
     "brandId": "brand-hadalabo",
     "categoryId": 5,
-    "description": "Sản phẩm rửa mặt dưỡng da chuyên biệt ngừa lão hóa",
-    "ingredient": "Glycerin, Hyaluronic Acid, Ceramide",
+    "description": null,
+    "ingredient": "Water, Glycerin, Sodium Cocoyl Glycinate, Butylene Glycol, Hydroxypropyl Starch Phosphate, Cocamidopropyl Betaine, PEG-20M, Lauryl Glucoside, Sodium Lauroyl Aspartate, Potassium Cocoyl Glycinate, Sodium Stearoyl Glutamate, Soluble Collagen, Hydrolyzed Soy Protein, Sodium Hyaluronate Crosspolymer, Hydrolyzed Hyaluronic Acid, Sodium Hyaluronate, Hydroxypropyltrimonium Hyaluronate, Cananga Odorata (YlangYlang) Flower Oil, Helianthus Annuus (Sunflower) Seed Oil, Hydrolyzed Elastin,Retinyl Palmitate, Beta-Carotene, Zea Mays (Corn) Oil, Tocopherol, PEG-32, Polyquaternium-52, Glyceryl Stearate, PEG-60 Glyceryl Stearate, Polyquaternium-7, Lauric Acid, Stearic Acid, Pullulan, Hydroxypropyl Methylcellulose, Citric Acid, Sodium Citrate, BHT, Pentylene Glycol, Disodium EDTA, Ethylhexylglycerin, Phenoxyethanol, Propylparaben, Methylparaben",
     "skinType": "Da khô/Hỗn hợp khô",
     "isActive": true,
     "variants": [
@@ -4796,25 +4200,424 @@ export const products = [
     ]
   },
   {
-    "id": 129,
-    "name": "Skin Brightening Cream",
-    "nameVn": "",
+    "id": 119,
+    "name": "Sữa Rửa Mặt Hada Labo Chăm Sóc Da Lão Hóa Cao Cấp",
+    "nameVn": "Sữa Rửa Mặt Hada Labo Chăm Sóc Da Lão Hóa Cao Cấp",
+    "brandId": "brand-hadalabo",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "Water, Sodium Cocoyl Glycinate, Propylene Glycol, Pentylene Glycol, Coco-Betaine, Acrylates Copolymer, PEG-150 Pentaerythrityl Tetrastearate, Glycerin, PPG-2 Hydroxyethyl Cocamide, Fortunella Margarita Fruit Extract, Actinidia Chinensis (Kiwi) Fruit Extract, Sodium Dilauramidoglutamide Lysine, Vaccinium Myrtillus Fruit Extract (Bilberry), Melia Azadirachta Extract, Pogostemon Cablin Oil, Saccharum Officinarum (Sugarcane) Extract, Sodium Hyaluronate (HA), Citrus Aurantium Dulcis (Orange) Fruit Extract, Citrus Limon (Lemon) Fruit Extract, Acer Saccharum (Sugar Maple) Extract, Hydrolyzed Sodium Hyaluronate (Nano HA), Sodium Acetylated Hyaluronate (Super HA), Butylene Glycol, Sodium Hyaluronate Crosspolymer (3D HA), Hydroxypropyltrimonium Hyaluronate (Binding HA), Lactococcus/Hyaluronic Acid Ferment Filtrate (Fermented HA), Polyquaternium-39. Titanium Dioxide, Disodium EDTA, Sodium Hydroxide, Phenoxyethanol, Sodium Benzoate",
+    "skinType": "Da thường/Mọi loại da",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 149,
+        "sku": "HL-RM-100",
+        "specification": {
+          "volume": "100g",
+          "packaging": "Medium Bottle"
+        },
+        "unitPrice": 104000,
+        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Sữa Rửa Mặt Hada Labo Chăm Sóc Da Lão Hóa Cao Cấp 100g.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Sữa Rửa Mặt Hada Labo Chăm Sóc Da Lão Hóa Cao Cấp 100g.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 120,
+    "name": "Sữa Rửa Mặt Hada Labo Dưỡng Ẩm Cao Cấp",
+    "nameVn": "Sữa Rửa Mặt Hada Labo Dưỡng Ẩm Cao Cấp",
+    "brandId": "brand-hadalabo",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "Water, Sodium Cocoyl Glycinate, Propylene Glycol, Coco-Betaine, Pentylene Glycol, Acrylates Copolymer, PEG-150 Pentaerythrityl Tetrastearate, Glycerin, PPG-2 Hydroxyethyl Cocamide, Fortunella Margarita Fruit Extract, Actinidia Chinensis (Kiwi) Fruit Extract, Sodium Dilauramidoglutamide Lysine, Melia Azadirachta Extract, Ocimum Basilicum (Basil) Oil, Sodium Hyaluronate (HA), Hydrolyzed Sodium Hyaluronate (Nano HA), Sodium Acetylated Hyaluronate (Super HA), Hydrolyzed Soy Protein, Polyquaternium-39, Titanium Dioxide, Disodium EDTA, Sodium Hydroxide, Phenoxyethanol, Sodium Benzoate",
+    "skinType": "Da khô/Hỗn hợp khô",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 150,
+        "sku": "HL-RM-100",
+        "specification": {
+          "volume": "100ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 104000,
+        "thumbnailUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Sữa Rửa Mặt Hada Labo Dưỡng Ẩm Cao Cấp 100g.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Sữa rửa mặt/Hada Labo/Sữa Rửa Mặt Hada Labo Dưỡng Ẩm Cao Cấp 100g.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 121,
+    "name": "Sữa Rửa Mặt CeraVe Sạch Sâu Cho Da Thường Đến Da Dầu",
+    "nameVn": "Sữa Rửa Mặt CeraVe Sạch Sâu Cho Da Thường Đến Da Dầu",
     "brandId": "brand-cerave",
     "categoryId": 5,
-    "description": "Kem dưỡng da trắng sáng, phù hợp với mọi loại da.",
-    "ingredient": "Vitamin C, Niacinamide, Glutathione",
-    "skinType": "Da mụn",
+    "description": null,
+    "ingredient": "Purified Water (Aqua), Cocamidopropyl Hydroxysultaine, Glycerin, Sodium Lauroyl Sarcosinate, Peg-150 Pentaerythrityl Tetrastearate (And) Peg-6 Caprylic/Capric Glycerides, Niacinamide, Propylene Glycol, Sodium Methyl Cocoyl Taurate, Ceramide 3, Ceramide 6-Ii, Ceramide 1, Hyaluronic Acid, Cholesterol, Sodium Chloride, Phytosphingosine, Citric Acid, Edetate Disodium Dihydrate, Sodium Lauroyl Lactylate, Methylparaben, Propylparaben, Carbomer, Xanthan Gum",
+    "skinType": "Da dầu/Hỗn hợp dầu",
     "isActive": true,
     "variants": []
   },
   {
+    "id": 122,
+    "name": "Sữa Rửa Mặt CeraVe Cho Da Thường Đến Khô",
+    "nameVn": "Sữa Rửa Mặt CeraVe Cho Da Thường Đến Khô",
+    "brandId": "brand-cerave",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "Purified Water (Aqua), Cocamidopropyl Hydroxysultaine, Glycerin, Sodium Lauroyl Sarcosinate, Peg-150 Pentaerythrityl Tetrastearate (And) Peg-6 Caprylic/Capric Glycerides, Niacinamide, Propylene Glycol, Sodium Methyl Cocoyl Taurate, Ceramide 3, Ceramide 6-Ii, Ceramide 1, Hyaluronic Acid, Cholesterol, Sodium Chloride, Phytosphingosine, Citric Acid, Edetate Disodium Dihydrate, Sodium Lauroyl Lactylate, Methylparaben, Propylparaben, Carbomer, Xanthan Gum",
+    "skinType": "Da khô/Hỗn hợp khô",
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "id": 123,
+    "name": "Micellar Water Ultra Sensitive Skin",
+    "nameVn": "Nước Tẩy Trang La Roche-Posay Cho Da Dầu, Nhạy Cảm",
+    "brandId": "brand-larocheposay",
+    "categoryId": 7,
+    "description": null,
+    "ingredient": "Aqua / Water, Peg-7 Caprylic/Capric Glycerides, Poloxamer 124, Poloxamer 184, Peg-6 Caprylic/Capric Glycerides, Glycerin, Polysorbate 80, Zinc Pca, Sodium Hydroxide, Disodium Edta, Bht, Myrtrimonium Bromide, Parfum / Fragrance",
+    "skinType": "Da dầu/Hỗn hợp dầu",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 151,
+        "sku": "LRP-TT-50",
+        "specification": {
+          "volume": "50ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 79000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/La roche-posay/[Mini] Nước Tẩy Trang La Roche-Posay Cho Da Dầu, Nhạy Cảm 50ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Serum/La Roche-possay/[Mini] Serum La Roche-Posay Phục Hồi, Cấp Ẩm & Tái Tạo Da 10ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      },
+      {
+        "id": 152,
+        "sku": "LRP-TT-200",
+        "specification": {
+          "volume": "200ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 387000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/La roche-posay/Nước Tẩy Trang La Roche-Posay Cho Da Dầu, Nhạy Cảm 200ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/La roche-posay/Nước Tẩy Trang La Roche-Posay Cho Da Dầu, Nhạy Cảm 200ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      },
+      {
+        "id": 153,
+        "sku": "LRP-TT-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 354000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/La roche-posay/Nước Tẩy Trang La Roche-Posay Cho Da Dầu, Nhạy Cảm 400ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/La roche-posay/Nước Tẩy Trang La Roche-Posay Cho Da Dầu, Nhạy Cảm 400ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 124,
+    "name": "",
+    "nameVn": "",
+    "brandId": "brand-cerave",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "Purified Water (Aqua), Cocamidopropyl Hydroxysultaine, Glycerin, Sodium Lauroyl Sarcosinate, Peg-150 Pentaerythrityl Tetrastearate (And) Peg-6 Caprylic/Capric Glycerides, Niacinamide, Propylene Glycol, Sodium Methyl Cocoyl Taurate, Ceramide 3, Ceramide 6-Ii, Ceramide 1, Hyaluronic Acid, Cholesterol, Sodium Chloride, Phytosphingosine, Citric Acid, Edetate Disodium Dihydrate, Sodium Lauroyl Lactylate, Methylparaben, Propylparaben, Carbomer, Xanthan Gum",
+    "skinType": "Da nhạy cảm",
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "id": 125,
+    "name": "",
+    "nameVn": "",
+    "brandId": "brand-cerave",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "Purified Water (Aqua), Cocamidopropyl Hydroxysultaine, Glycerin, Sodium Lauroyl Sarcosinate, Peg-150 Pentaerythrityl Tetrastearate (And) Peg-6 Caprylic/Capric Glycerides, Niacinamide, Propylene Glycol, Sodium Methyl Cocoyl Taurate, Ceramide 3, Ceramide 6-Ii, Ceramide 1, Hyaluronic Acid, Cholesterol, Sodium Chloride, Phytosphingosine, Citric Acid, Edetate Disodium Dihydrate, Sodium Lauroyl Lactylate, Methylparaben, Propylparaben, Carbomer, Xanthan Gum",
+    "skinType": "Da dầu/Hỗn hợp dầu",
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "id": 126,
+    "name": "Micellar Cleansing Water For Oily & Acne-Prone Skin New",
+    "nameVn": "Nước Tẩy Trang Garnier Dành Cho Da Dầu Và Mụn ",
+    "brandId": "brand-garnier",
+    "categoryId": 7,
+    "description": null,
+    "ingredient": "Aqua / Water, Cyclopentasiloxane, Isohexadecane, Argania Spinosa Oil / Argania Spinosa Kernel Oil, Benzyl Alcohol, Benzyl Salicylate, Butyl Methoxydibenzoylmethane, Ci 60725 / Violet 2, Decyl Glucoside, Dipotassium Phosphate, Disodium Edta, Ethylhexyl Methoxycinnamate, Geraniol, Haematococcus Pluvialis / Haematococcus Pluvialis Extract, Hexylene Glycol, Limonene, Linalool, Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate, Polyaminopropyl Biguanide, Potassium Phosphate, Sodium Chloride, Parfum / Fragrance",
+    "skinType": "Da dầu/Da hỗn hợp",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 154,
+        "sku": "GN-TT-125",
+        "specification": {
+          "volume": "125ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 65000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Dành Cho Da Dầu Và Mụn 125ml (Mới).jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Dành Cho Da Dầu Và Mụn 125ml (Mới).jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      },
+      {
+        "id": 155,
+        "sku": "GN-TT-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 129000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Dành Cho Da Dầu Và Mụn 400ml (Mới).jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Dành Cho Da Dầu Và Mụn 400ml (Mới).jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 127,
+    "name": "Micellar Oil Infused Cleansing Water",
+    "nameVn": "Nước Tẩy Trang Garnier Làm Sạch Sâu Lớp Trang Điểm",
+    "brandId": "brand-garnier",
+    "categoryId": 7,
+    "description": null,
+    "ingredient": "Aqua / Water, Cyclopentasiloxane, Isohexadecane, Argania Spinosa Oil / Argania Spinosa Kernel Oil, Benzyl Alcohol, Benzyl Salicylate, Butyl Methoxydibenzoylmethane, Ci 60725 / Violet 2, Decyl Glucoside, Dipotassium Phosphate, Disodium Edta, Ethylhexyl Methoxycinnamate, Geraniol, Haematococcus Pluvialis / Haematococcus Pluvialis Extract, Hexylene Glycol, Limonene, Linalool, Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate, Polyaminopropyl Biguanide, Potassium Phosphate, Sodium Chloride, Parfum / Fragrance",
+    "skinType": "Da khô/Da hỗn hợp",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 156,
+        "sku": "GN-TT-SS-125",
+        "specification": {
+          "volume": "125ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 80000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Làm Sạch Sâu Lớp Trang Điểm 125ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Làm Sạch Sâu Lớp Trang Điểm 125ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      },
+      {
+        "id": 157,
+        "sku": "GN-TT-SS-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 159000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Làm Sạch Sâu Lớp Trang Điểm 400ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Làm Sạch Sâu Lớp Trang Điểm 400ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 128,
+    "name": "Micellar Oil Infused Cleansing Water",
+    "nameVn": "Nước Tẩy Trang Garnier Làm Sạch Sâu Lớp Trang Điểm (Mẫu Cũ)",
+    "brandId": "brand-garnier",
+    "categoryId": 7,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": [
+      {
+        "id": 158,
+        "sku": "GN-TT-MC-125",
+        "specification": {
+          "volume": "125ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 70000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Làm Sạch Sâu Lớp Trang Điểm 125ml (Mẫu Cũ).jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Làm Sạch Sâu Lớp Trang Điểm 125ml (Mẫu Cũ).jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 130,
+    "name": "",
+    "nameVn": "Mặt Nạ BNBG Vita Complex Dưỡng Sáng, Mờ Thâm Nám (Mới)",
+    "brandId": "brand-bnbg",
+    "categoryId": 3,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "id": 131,
+    "name": "",
+    "nameVn": "Serum Vichy Làm Dịu Da Và Giảm Mụn",
+    "brandId": "brand-vichy",
+    "categoryId": 4,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da mụn",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 159,
+        "sku": "VC-SR-30",
+        "specification": {
+          "volume": "30ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 1035000,
+        "thumbnailUrl": "images/pic_product/Serum/Vichy/Serum Vichy Làm Dịu Da Và Giảm Mụn 30ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Serum/Vichy/Serum Vichy Làm Dịu Da Và Giảm Mụn 30ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 132,
+    "name": "",
+    "nameVn": "Mặt Nạ BNBG Vita Complex Dưỡng Sáng Da, Mờ Thâm Nám(Mới)",
+    "brandId": "brand-bnbg",
+    "categoryId": 3,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 160,
+        "sku": "BB-VT-MN-30",
+        "specification": {
+          "volume": "30ml",
+          "packaging": "Box"
+        },
+        "unitPrice": 25000,
+        "thumbnailUrl": "images/pic_product/Mặt nạ/BNBG/Mặt Nạ BNBG Vita Complex Dưỡng Sáng, Mờ Thâm Nám 30ml (Mới).jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Mặt nạ/BNBG/Mặt Nạ BNBG Vita Complex Dưỡng Sáng, Mờ Thâm Nám 30ml (Mới).jpg",
+            "displayOrder": 1,
+            "altText": "Front View "
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 133,
+    "name": "",
+    "nameVn": "Tẩy Da Chết Paula’s Choice 5% AHA Cho Da Thường Khô",
+    "brandId": "brand-paulachoice",
+    "categoryId": 6,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da khô/ Da hỗn hợp ",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 161,
+        "sku": "PL-5-TC-50",
+        "specification": {
+          "volume": "50ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 919000,
+        "thumbnailUrl": "images/pic_product/Tẩy tế bào chết/pl/5-50ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy tế bào chết/pl/5-50ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 134,
-    "name": "La Roche-Posay Serum for Reducing Dark Spots and Unifying Skin Tone",
+    "name": "",
     "nameVn": "Serum La Roche-Posay Giúp Giảm Thâm Nám, Làm Đều Màu Da",
     "brandId": "brand-larocheposay",
     "categoryId": 4,
-    "description": "Serum giúp giảm thâm nám và làm đều màu da, phù hợp với mọi loại da.",
-    "ingredient": "Vitamin C, Niacinamide, Hyaluronic Acid",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da thường",
     "isActive": true,
     "variants": [
@@ -4839,13 +4642,75 @@ export const products = [
     ]
   },
   {
+    "id": 135,
+    "name": "",
+    "nameVn": "Serum La Roche-Posay Giúp Phục Hồi, Bảo Vệ & Cấp Ẩm Da",
+    "brandId": "brand-larocheposay",
+    "categoryId": 4,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da nhạy cảm",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 163,
+        "sku": "LRP-SR-30",
+        "specification": {
+          "volume": "30ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 1135000,
+        "thumbnailUrl": "images/pic_product/Serum/La Roche-possay/Serum La Roche-Posay Giúp Phục Hồi, Bảo Vệ & Cấp Ẩm Da 30ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Serum/La Roche-possay/Serum La Roche-Posay Giúp Phục Hồi, Bảo Vệ & Cấp Ẩm Da 30ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 136,
+    "name": "",
+    "nameVn": "Nước Hoa Hồng Klairs Dành Cho Da Nhạy Cảm",
+    "brandId": "brand-klairs",
+    "categoryId": 8,
+    "description": null,
+    "ingredient": "",
+    "skinType": null,
+    "isActive": true,
+    "variants": [
+      {
+        "id": 164,
+        "sku": "KL-TO-180",
+        "specification": {
+          "volume": "180ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 212000,
+        "thumbnailUrl": "images/pic_product/Toner/Klairs/Nước Hoa Hồng Klairs Dành Cho Da Nhạy Cảm 180ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Toner/Klairs/Nước Hoa Hồng Klairs Dành Cho Da Nhạy Cảm 180ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 137,
-    "name": "Hada Labo Acne and Sensitive Skin Facial Cleanser",
+    "name": "",
     "nameVn": "Kem Rửa Mặt Hada Labo Cho Da Mụn Và Nhạy Cảm",
     "brandId": "brand-hadalabo",
     "categoryId": 5,
-    "description": "Sữa rửa mặt dành cho da mụn và da nhạy cảm",
-    "ingredient": "Glycerin, Sodium Hyaluronate, Ceramide",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da mụn",
     "isActive": true,
     "variants": [
@@ -4871,12 +4736,12 @@ export const products = [
   },
   {
     "id": 138,
-    "name": "Eucerin Oil Control & Acne Prevention Sun Cream",
+    "name": "",
     "nameVn": "Kem Chống Nắng Eucerin Kiềm Dầu & Ngừa Mụn",
     "brandId": "brand-eucerin",
     "categoryId": 2,
-    "description": "Kem chống nắng kiềm dầu và ngừa mụn, phù hợp với da dầu và da mụn.",
-    "ingredient": "Tinh chất Licorice, Niacinamide, Zinc Oxide",
+    "description": null,
+    "ingredient": "",
     "skinType": "Da dầu/ Da hỗn hợp",
     "isActive": true,
     "variants": [
@@ -4899,5 +4764,597 @@ export const products = [
         ]
       }
     ]
+  },
+  {
+    "id": 140,
+    "name": "Micellar Cleansing Water For Sensitive Skin",
+    "nameVn": "Nước Tẩy Trang Garnier Dành Cho Da Nhạy Cảm",
+    "brandId": "brand-garnier",
+    "categoryId": 7,
+    "description": null,
+    "ingredient": "Aqua / Water, Cyclopentasiloxane, Isohexadecane, Argania Spinosa Oil / Argania Spinosa Kernel Oil, Benzyl Alcohol, Benzyl Salicylate, Butyl Methoxydibenzoylmethane, Ci 60725 / Violet 2, Decyl Glucoside, Dipotassium Phosphate, Disodium Edta, Ethylhexyl Methoxycinnamate, Geraniol, Haematococcus Pluvialis / Haematococcus Pluvialis Extract, Hexylene Glycol, Limonene, Linalool, Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate, Polyaminopropyl Biguanide, Potassium Phosphate, Sodium Chloride, Parfum / Fragrance",
+    "skinType": "Da nhạy cảm",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 167,
+        "sku": "GN-TT-NC-125",
+        "specification": {
+          "volume": "125ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 65000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Dành Cho Da Nhạy Cảm 125ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Dành Cho Da Nhạy Cảm 125ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      },
+      {
+        "id": 168,
+        "sku": "GN-TT-NC-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 139000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Dành Cho Da Nhạy Cảm 400ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Dành Cho Da Nhạy Cảm 400ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 141,
+    "name": "Micellar Cleansing Water Vitamin C",
+    "nameVn": "Nước Tẩy Trang Garnier Vitamin C Làm Sáng Da",
+    "brandId": "brand-garnier",
+    "categoryId": 7,
+    "description": null,
+    "ingredient": "Aqua / Water, Cyclopentasiloxane, Isohexadecane, Argania Spinosa Oil / Argania Spinosa Kernel Oil, Benzyl Alcohol, Benzyl Salicylate, Butyl Methoxydibenzoylmethane, Ci 60725 / Violet 2, Decyl Glucoside, Dipotassium Phosphate, Disodium Edta, Ethylhexyl Methoxycinnamate, Geraniol, Haematococcus Pluvialis / Haematococcus Pluvialis Extract, Hexylene Glycol, Limonene, Linalool, Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate, Polyaminopropyl Biguanide, Potassium Phosphate, Sodium Chloride, Parfum / Fragrance",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 169,
+        "sku": "GN-TT-VTMC-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 139000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Vitamin C Làm Sáng Da 400ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Vitamin C Làm Sáng Da 400ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 142,
+    "name": "Micellar Exfoliating Water 1% PHA+AHA",
+    "nameVn": "Nước Tẩy Trang Garnier Làm Sạch Tế Bào Da Chết",
+    "brandId": "brand-garnier",
+    "categoryId": 7,
+    "description": null,
+    "ingredient": "Aqua / Water, Cyclopentasiloxane, Isohexadecane, Argania Spinosa Oil / Argania Spinosa Kernel Oil, Benzyl Alcohol, Benzyl Salicylate, Butyl Methoxydibenzoylmethane, Ci 60725 / Violet 2, Decyl Glucoside, Dipotassium Phosphate, Disodium Edta, Ethylhexyl Methoxycinnamate, Geraniol, Haematococcus Pluvialis / Haematococcus Pluvialis Extract, Hexylene Glycol, Limonene, Linalool, Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate, Polyaminopropyl Biguanide, Potassium Phosphate, Sodium Chloride, Parfum / Fragrance",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 170,
+        "sku": "GN-TT-400",
+        "specification": {
+          "volume": "400ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 146000,
+        "thumbnailUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Làm Sạch Tế Bào Da Chết 400ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Tẩy trang mặt/Gariner/Nước Tẩy Trang Garnier Làm Sạch Tế Bào Da Chết 400ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 143,
+    "name": "",
+    "nameVn": "Kem Dưỡng La Roche-Posay Giúp Phục Hồi Da Đa Công Dụng",
+    "brandId": "brand-larocheposay",
+    "categoryId": 1,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da nhạy cảm",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 171,
+        "sku": "",
+        "specification": {
+          "volume": "15ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 170000,
+        "thumbnailUrl": "images/pic_product/Kem dưỡng da/La roche/Kem Dưỡng La Roche-Posay Giúp Phục Hồi Da Đa Công Dụng 15ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem dưỡng da/La roche/Kem Dưỡng La Roche-Posay Giúp Phục Hồi Da Đa Công Dụng 15ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      },
+      {
+        "id": 172,
+        "sku": "",
+        "specification": {
+          "volume": "40ml",
+          "packaging": "Medium Bottle"
+        },
+        "unitPrice": 320000,
+        "thumbnailUrl": "images/pic_product/Kem dưỡng da/La roche/Kem Dưỡng La Roche-Posay Giúp Phục Hồi Da Đa Công Dụng 40ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem dưỡng da/La roche/Kem Dưỡng La Roche-Posay Giúp Phục Hồi Da Đa Công Dụng 40ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      },
+      {
+        "id": 173,
+        "sku": "",
+        "specification": {
+          "volume": "100ml",
+          "packaging": "Large Bottle"
+        },
+        "unitPrice": 711000,
+        "thumbnailUrl": "images/pic_product/Kem dưỡng da/La roche/Kem Dưỡng La Roche-Posay Giúp Phục Hồi Da Đa Công Dụng 100ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem dưỡng da/La roche/Kem Dưỡng La Roche-Posay Giúp Phục Hồi Da Đa Công Dụng 100ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 145,
+    "name": "",
+    "nameVn": "Kem Dưỡng La Roche-Posay Giảm Thâm Nám & Dưỡng Sáng Da",
+    "brandId": "brand-larocheposay",
+    "categoryId": 1,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 175,
+        "sku": "",
+        "specification": {
+          "volume": "40ml",
+          "packaging": "Medium Bottle"
+        },
+        "unitPrice": 800000,
+        "thumbnailUrl": "images/pic_product/Kem dưỡng da/La roche/Kem Dưỡng La Roche-Posay Giảm Thâm Nám & Dưỡng Sáng Da 40ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem dưỡng da/La roche/Kem Dưỡng La Roche-Posay Giảm Thâm Nám & Dưỡng Sáng Da 40ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 144,
+    "name": "",
+    "nameVn": "Kem Dưỡng La Roche-Posay Làm Dịu Da Cho Trẻ Em",
+    "brandId": "brand-larocheposay",
+    "categoryId": 1,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da nhạy cảm",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 174,
+        "sku": "",
+        "specification": {
+          "volume": "75ml",
+          "packaging": "Medium Bottle"
+        },
+        "unitPrice": 350000,
+        "thumbnailUrl": "images/pic_product/Kem dưỡng da/La roche/Kem Dưỡng La Roche-Posay Làm Dịu Da Cho Trẻ Em 75ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem dưỡng da/La roche/Kem Dưỡng La Roche-Posay Làm Dịu Da Cho Trẻ Em 75ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 146,
+    "name": "",
+    "nameVn": "Kem Dưỡng La Roche-Posay Cấp Ẩm, Làm Dịu & Phục Hồi Da",
+    "brandId": "brand-larocheposay",
+    "categoryId": 1,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da nhạy cảm",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 176,
+        "sku": "",
+        "specification": {
+          "volume": "40ml",
+          "packaging": "Medium Bottle"
+        },
+        "unitPrice": 500000,
+        "thumbnailUrl": "images/pic_product/Kem dưỡng da/La roche/Kem Dưỡng La Roche-Posay Cấp Ẩm, Làm Dịu & Phục Hồi Da 40ml.jpgimages/pic_product/Kem dưỡng da/La roche/Kem Dưỡng La Roche-Posay Cấp Ẩm, Làm Dịu & Phục Hồi Da 40ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem dưỡng da/La roche/Kem Dưỡng La Roche-Posay Cấp Ẩm, Làm Dịu & Phục Hồi Da 40ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 147,
+    "name": "",
+    "nameVn": "Gel Dưỡng La Roche-Posay Làm Mờ Sẹo, Giúp Tái Tạo Da",
+    "brandId": "brand-larocheposay",
+    "categoryId": 1,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 177,
+        "sku": "",
+        "specification": {
+          "volume": "40ml",
+          "packaging": "Medium Bottle"
+        },
+        "unitPrice": 400000,
+        "thumbnailUrl": "images/pic_product/Kem dưỡng da/La roche/Gel Dưỡng La Roche-Posay Làm Mờ Sẹo, Giúp Tái Tạo Da 40ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem dưỡng da/La roche/Gel Dưỡng La Roche-Posay Làm Mờ Sẹo, Giúp Tái Tạo Da 40ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 148,
+    "name": "",
+    "nameVn": "Kem Dưỡng L'Oreal Sáng Mịn Mờ Thâm Nám Ban Đêm",
+    "brandId": "brand-loreal",
+    "categoryId": 1,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 178,
+        "sku": "",
+        "specification": {
+          "volume": "50ml",
+          "packaging": "medium Bottle"
+        },
+        "unitPrice": 270000,
+        "thumbnailUrl": "images/pic_product/Kem dưỡng da/L'oreal/Kem Dưỡng L'Oreal Sáng Mịn Mờ Thâm Nám Ban Đêm 50ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem dưỡng da/L'oreal/Kem Dưỡng L'Oreal Sáng Mịn Mờ Thâm Nám Ban Đêm 50ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 149,
+    "name": "",
+    "nameVn": "Kem Dưỡng L'Oreal Sáng Mịn Mờ Thâm Nám Ban Ngày",
+    "brandId": "brand-loreal",
+    "categoryId": 1,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 179,
+        "sku": "",
+        "specification": {
+          "volume": "50ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 270000,
+        "thumbnailUrl": "images/pic_product/Kem dưỡng da/L'oreal/Kem Dưỡng L'Oreal Sáng Mịn Mờ Thâm Nám Ban Ngày 50ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem dưỡng da/L'oreal/Kem Dưỡng L'Oreal Sáng Mịn Mờ Thâm Nám Ban Ngày 50ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 150,
+    "name": "",
+    "nameVn": "Kem Dưỡng L'Oreal Siêu Cấp Ẩm Căng Mịn Da",
+    "brandId": "brand-loreal",
+    "categoryId": 1,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da khô/ Da hỗn hợp",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 180,
+        "sku": "",
+        "specification": {
+          "volume": "15ml",
+          "packaging": "Small Bottle"
+        },
+        "unitPrice": 60000,
+        "thumbnailUrl": "images/pic_product/Kem dưỡng da/L'oreal/Kem Dưỡng L'Oreal Siêu Cấp Ẩm Căng Mịn Da 15ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem dưỡng da/L'oreal/Kem Dưỡng L'Oreal Siêu Cấp Ẩm Căng Mịn Da 15ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      },
+      {
+        "id": 181,
+        "sku": "",
+        "specification": {
+          "volume": "50ml",
+          "packaging": "Medium Bottle"
+        },
+        "unitPrice": 300000,
+        "thumbnailUrl": "images/pic_product/Kem dưỡng da/L'oreal/Kem Dưỡng L'Oreal Siêu Cấp Ẩm Căng Mịn Da 50ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem dưỡng da/L'oreal/Kem Dưỡng L'Oreal Siêu Cấp Ẩm Căng Mịn Da 50ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 151,
+    "name": "",
+    "nameVn": "Kem Dưỡng L'Oreal Ngừa Rãnh Nhăn Lão Hóa Sớm Ban Đêm",
+    "brandId": "brand-loreal",
+    "categoryId": 1,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 182,
+        "sku": "",
+        "specification": {
+          "volume": "50ml",
+          "packaging": "Medium Bottle"
+        },
+        "unitPrice": 300000,
+        "thumbnailUrl": "images/pic_product/Kem dưỡng da/L'oreal/Kem Dưỡng L'Oreal Ngừa Rãnh Nhăn Lão Hóa Sớm Ban Đêm 50ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem dưỡng da/L'oreal/Kem Dưỡng L'Oreal Ngừa Rãnh Nhăn Lão Hóa Sớm Ban Đêm 50ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 129,
+    "name": "",
+    "nameVn": "Sữa Rửa Mặt Cerave Cho Da Dầu Mụn",
+    "brandId": "brand-cerave",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "Aqua / Water, Ocamidopropyl Hydroxysultaine, Glycerin, Sodium Lauroyl Sarcosinate, Niacinamide, Salicylic Acid, Sodium Methyl Cocoyl Taurate, Peg-150 Pentaerythrityl, Tetrastearate, Tetrastearate, Gluconolactone, Sodium Cocoyl Isethionate, Ceramide Np, Ceramide Ap, Ceramide Eop, Carbomer, Calcium Gluconate, Calcium Gluconate, Triethyl Citrate, Sodium Hydroxide, Sodium Benzoate, Sodium Chloride, Sodium Lauroyl Lactylate, Cholesterol, Coconut Acid, Tetrasodium Edta, Caprylyl Glycol, Hydrolyzed Hyaluronic Acid, Trisodium Ethylenediamine, Disuccinate, Hectorite, Phytosphingosine, Xanthan Gum, Acrylates Copolymer, Benzoic Acid",
+    "skinType": "Da mụn",
+    "isActive": true,
+    "variants": []
+  },
+  {
+    "id": 152,
+    "name": "",
+    "nameVn": "Kem Dưỡng L'Oreal Cấp Ẩm, Kiềm Dầu & Giảm Bóng Nhờn 8H",
+    "brandId": "brand-loreal",
+    "categoryId": 1,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 183,
+        "sku": "",
+        "specification": {
+          "volume": "50ml",
+          "packaging": "Medium Bottle"
+        },
+        "unitPrice": 370000,
+        "thumbnailUrl": "images/pic_product/Kem dưỡng da/L'oreal/Kem Dưỡng L'Oreal Cấp Ẩm, Kiềm Dầu & Giảm Bóng Nhờn 8H 50ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem dưỡng da/L'oreal/Kem Dưỡng L'Oreal Cấp Ẩm, Kiềm Dầu & Giảm Bóng Nhờn 8H 50ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 153,
+    "name": "",
+    "nameVn": "Kem Dưỡng Vichy Ngừa Lão Hóa, Săn Chắc Da Ban Ngày",
+    "brandId": "brand-vichy",
+    "categoryId": 1,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 184,
+        "sku": "",
+        "specification": {
+          "volume": "50ml",
+          "packaging": "Medium Bottle"
+        },
+        "unitPrice": 920000,
+        "thumbnailUrl": "images/pic_product/Kem dưỡng da/Vichy/Kem Dưỡng Vichy Ngừa Lão Hóa, Săn Chắc Da Ban Ngày 50ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem dưỡng da/Vichy/Kem Dưỡng Vichy Ngừa Lão Hóa, Săn Chắc Da Ban Ngày 50ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 154,
+    "name": "",
+    "nameVn": "Kem Dưỡng Vichy Sáng Da, Mờ Thâm Nám Ban Đêm",
+    "brandId": "brand-vichy",
+    "categoryId": 1,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 185,
+        "sku": "",
+        "specification": {
+          "volume": "50ml",
+          "packaging": "Medium Bottle"
+        },
+        "unitPrice": 915000,
+        "thumbnailUrl": "images/pic_product/Kem dưỡng da/Vichy/Kem Dưỡng Vichy Sáng Da, Mờ Thâm Nám Ban Đêm 50ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem dưỡng da/Vichy/Kem Dưỡng Vichy Sáng Da, Mờ Thâm Nám Ban Đêm 50ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 155,
+    "name": "",
+    "nameVn": "Kem Dưỡng Vichy Hỗ Trợ Mờ Thâm Nám, Sáng Khỏe Da",
+    "brandId": "brand-vichy",
+    "categoryId": 1,
+    "description": null,
+    "ingredient": "",
+    "skinType": "Da thường",
+    "isActive": true,
+    "variants": [
+      {
+        "id": 186,
+        "sku": "",
+        "specification": {
+          "volume": "50ml",
+          "packaging": "Medium Bottle"
+        },
+        "unitPrice": 1374000,
+        "thumbnailUrl": "images/pic_product/Kem dưỡng da/Vichy/Kem Dưỡng Vichy Hỗ Trợ Mờ Thâm Nám, Sáng Khỏe Da 50ml.jpg",
+        "slug": null,
+        "images": [
+          {
+            "imageUrl": "images/pic_product/Kem dưỡng da/Vichy/Kem Dưỡng Vichy Hỗ Trợ Mờ Thâm Nám, Sáng Khỏe Da 50ml.jpg",
+            "displayOrder": 1,
+            "altText": "Front View"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 139,
+    "name": "",
+    "nameVn": "Túi Refill Gel Rửa Mặt La Roche-Posay Cho Da Dầu, Nhạy Cảm",
+    "brandId": "brand-larocheposay",
+    "categoryId": 5,
+    "description": null,
+    "ingredient": "Aqua / Water, Sodium Laureth Sulfate, Peg-8, Coco-Betaine, Hexylene Glycol, Sodium Chloride, Peg-120 Methyl Glucose Dioleate, Zinc Pca, Sodium Hydroxide, Citric Acid, Sodium Benzoate, Phenoxyethanol, Caprylyl Glycol, Parfum / Fragrance",
+    "skinType": "Da dầu/Da nhạy cảm",
+    "isActive": false,
+    "variants": []
   }
 ];

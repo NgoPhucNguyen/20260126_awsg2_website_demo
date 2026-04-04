@@ -1,25 +1,41 @@
-# Đổi sang bản Slim (Tương thích 100% với Prisma)
+# 1. Base image Node 18 Slim
 FROM node:18-slim
 
-# Cài đặt thư viện OpenSSL (Bắt buộc cho Prisma)
-RUN apt-get update -y && apt-get install -y openssl
+# 2. Cài OpenSSL, Python3, Pip, thư viện OpenCV VÀ tạo bí danh python -> python3
+RUN apt-get update -y && apt-get install -y \
+  openssl \
+  python3 \
+  python3-pip \
+  libgl1-mesa-glx \
+  libglib2.0-0 \
+  python-is-python3 \
+  && rm -rf /var/lib/apt/lists/*
 
-# Cài đặt thư mục làm việc trong Container
+# 3. Chuyển thư mục làm việc
 WORKDIR /app
 
-# Copy package.json vào trước để cài thư viện
+# 4. Dùng pip3 cài thư viện AI (Chốt cứng phiên bản)
+RUN pip3 install --no-cache-dir \
+  tensorflow==2.15.0 \
+  mediapipe==0.10.14 \
+  opencv-python==4.9.0.80 \
+  opencv-contrib-python==4.9.0.80 \
+  jax==0.4.23 \
+  jaxlib==0.4.23 \
+  numpy==1.26.4 \
+  --break-system-packages
+
+# 5. Cài đặt thư viện NodeJS
 COPY package*.json ./
 RUN npm install
 
-# Copy thư mục Prisma và build Prisma Client
+# 6. Build Prisma
 COPY prisma ./prisma/
 RUN npx prisma generate
 
-# Copy toàn bộ code Backend (đã bị lọc bởi .dockerignore)
+# 7. Copy toàn bộ source code
 COPY . .
 
-# Mở cổng 3500
+# 8. Mở cổng và chạy server
 EXPOSE 3500
-
-# Khởi động server
 CMD ["npm", "run", "start:prod"]
