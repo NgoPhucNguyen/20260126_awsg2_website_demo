@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-// 🎨 Import chuẩn Tree-shaking của Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
     faUser, 
@@ -31,10 +30,10 @@ const NavbarDropdown = ({ accountName, isAdmin, onLogout }) => {
     useEffect(() => setIsOpen(false), [location.pathname]);
 
     return (
-        <div className="navbar-dropdown-wrapper" ref={dropdownRef}>
+        <div className="main-navbar-dropdown-wrapper" ref={dropdownRef}>
             <button 
-                // Giữ lại nav-btn nếu nó là class dùng chung của Navbar cha, thêm class riêng của component này
-                className={`nav-btn navbar-dropdown-trigger ${isOpen ? 'active' : ''}`} 
+                // Gắn thêm class `main-navbar-btn` để đồng bộ thuộc tính hover chung nếu cần
+                className={`main-navbar-btn main-navbar-dropdown-trigger ${isOpen ? 'active' : ''}`} 
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label="Tài khoản người dùng"
             >
@@ -42,30 +41,30 @@ const NavbarDropdown = ({ accountName, isAdmin, onLogout }) => {
             </button>
             
             {isOpen && (
-                <div className="navbar-dropdown-menu" role="menu">
-                    <div className="navbar-dropdown-user-info">
-                        <p className="navbar-dropdown-user-name" title={accountName}>
+                <div className="main-navbar-dropdown-menu" role="menu">
+                    <div className="main-navbar-dropdown-user-info">
+                        <p className="main-navbar-dropdown-user-name" title={accountName}>
                             {accountName || "Khách truy cập"}
                         </p> 
-                        <span className="navbar-dropdown-user-role">
+                        <span className="main-navbar-dropdown-user-role">
                             {isAdmin ? "Quản trị viên" : "Thành viên"}
                         </span>
                     </div>
                     
-                    <hr className="navbar-dropdown-divider" />
+                    <hr className="main-navbar-dropdown-divider" />
                     
-                    <NavLink to="/profile" className="navbar-dropdown-link" role="menuitem">
-                        <FontAwesomeIcon icon={faAddressCard} className="navbar-dropdown-icon" /> 
+                    <NavLink to="/profile" className="main-navbar-dropdown-link" role="menuitem">
+                        <FontAwesomeIcon icon={faAddressCard} className="main-navbar-dropdown-icon" /> 
                         Thông tin cá nhân
                     </NavLink>
                     
-                    <NavLink to="/history" className="navbar-dropdown-link" role="menuitem">
-                        <FontAwesomeIcon icon={faClockRotateLeft} className="navbar-dropdown-icon" /> 
+                    <NavLink to="/history" className="main-navbar-dropdown-link" role="menuitem">
+                        <FontAwesomeIcon icon={faClockRotateLeft} className="main-navbar-dropdown-icon" /> 
                         Lịch sử mua hàng
                     </NavLink>
                     
-                    <button className="navbar-dropdown-link navbar-dropdown-logout-btn" onClick={onLogout} role="menuitem">
-                        <FontAwesomeIcon icon={faArrowRightFromBracket} className="navbar-dropdown-icon" /> 
+                    <button className="main-navbar-dropdown-link main-navbar-dropdown-logout-btn" onClick={onLogout} role="menuitem">
+                        <FontAwesomeIcon icon={faArrowRightFromBracket} className="main-navbar-dropdown-icon" /> 
                         Đăng xuất
                     </button>
                 </div>

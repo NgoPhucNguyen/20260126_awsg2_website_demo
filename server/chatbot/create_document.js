@@ -15,10 +15,10 @@ function toVectorLiteral(values) {
 }
 
 function buildProductDocument(product) {
-	const name = product.name?.trim() || "Khong co ten tieng Anh";
-	const nameVn = product.nameVn?.trim() || "Khong co ten tieng Viet";
-	const description = product.description?.trim() || "Khong co mo ta";
-	const ingredient = product.ingredient?.trim() || "Khong co thanh phan";
+	const name = product.name?.trim() || "Không có tên tieng Anh";
+	const nameVn = product.nameVn?.trim() || "Không có tên tieng Việt";
+	const description = product.description?.trim() || "Không có mô tả";
+	const ingredient = product.ingredient?.trim() || "Không có thành phần";
 
 	return [
 		`Product ID: ${product.id}`,

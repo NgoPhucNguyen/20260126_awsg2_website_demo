@@ -18,7 +18,7 @@
     transform: translateY(clamp(-3px, -0.5vw, -6px));
 }
 
-.card-link {
+.product-card-link {
     text-decoration: none;
     color: inherit;
     display: flex;
@@ -29,32 +29,31 @@
 /* ========================================================= */
 /* 2. KHU VỰC HÌNH ẢNH (IMAGE AREA)                          */
 /* ========================================================= */
-.card-image {
+.product-card-image-container {
     position: relative;
-    /* 📏 Ép chiều cao ảnh linh hoạt: Mobile nhỏ nhắn, PC to rõ */
     height: clamp(160px, 25vh, 240px); 
     padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #ffffff; /* Nền xám cực nhạt để tôn ảnh sản phẩm */
+    background-color: #ffffff; 
     border-bottom: 1px solid #f5f5f5;
     overflow: hidden;
 }
 
-.card-image img {
+.product-card-img, 
+.product-card-grayscale-img {
     width: 100%;
     height: 100%;
     object-fit: contain;
     transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.product-card:hover .card-image img {
+.product-card:hover .product-card-img {
     transform: scale(1.2); 
 }
 
-/* Nhãn Thương Hiệu */
-.brand-tag {
+.product-card-brand-tag {
     position: absolute;
     top: clamp(6px, 1vw, 12px);
     left: clamp(6px, 1vw, 12px);
@@ -69,12 +68,11 @@
     letter-spacing: 0.05em;
 }
 
-/* Nhãn Giảm Giá */
-.sale-badge-overlay {
+.product-card-sale-badge-overlay {
     position: absolute;
     top: clamp(6px, 1vw, 12px);
     right: clamp(6px, 1vw, 12px);
-    background-color: #ff0000; /* Đỏ đô sang trọng */
+    background-color: #ff0000; 
     color: white;
     font-size: clamp(0.7rem, 1vw, 0.8rem);
     font-weight: 800;
@@ -88,12 +86,12 @@
 /* ========================================================= */
 /* 3. KHU VỰC TEXT (TITLE & DESCRIPTION)                     */
 /* ========================================================= */
-.card-info {
+.product-card-info {
     padding: clamp(0.75rem, 1.5vw, 1.1rem);
-    padding-bottom: 0; /* Tránh đẩy footer quá xa */
+    padding-bottom: 0; 
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* Cực kỳ quan trọng để đẩy footer xuống đáy */
+    flex-grow: 1; 
 }
 
 .product-card-title {
@@ -103,27 +101,24 @@
     font-weight: 700;
     color: #1c1917;
     line-height: 1.3;
-    
-    /* Truncate 2 dòng chuẩn xác */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
-.skin-type-tag {
+.product-card-skin-type-tag {
     font-size: clamp(0.7rem, 1vw, 0.8rem);
-    color: #c6a87c; /* Vàng Aphrodite */
+    color: #c6a87c; 
     margin-bottom: clamp(4px, 1vw, 8px);
     font-weight: 600;
 }
 
-.description {
+.product-card-description {
     font-size: clamp(0.75rem, 1vw, 0.85rem);
     color: #57534e;
     line-height: 1.4;
     margin: 0;
-    
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -133,37 +128,37 @@
 /* ========================================================= */
 /* 4. CHÂN THẺ: GIÁ & NÚT BẤM (FOOTER)                       */
 /* ========================================================= */
-.card-footer {
+.product-card-footer {
     padding: clamp(0.75rem, 1.5vw, 1.25rem);
     margin-top: auto; 
     display: flex;
     justify-content: space-between;
     align-items: flex-end; 
-    gap: 8px; /* Đảm bảo giá và nút không dính vào nhau trên màn hẹp */
+    gap: 8px; 
 }
 
-.price-container {
+.product-card-price-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.price-wrapper-sale {
+.product-card-price-wrapper-sale {
     display: flex;
     flex-direction: column;
 }
 
-.price {
+.product-card-price {
     font-size: clamp(0.8rem, 1.5vw + 0.2rem, 1.2rem);
     font-weight: 800;
     color: #1c1917;
 }
 
-.sale-price {
-    color: #dc2626; /* Đỏ tươi nổi bật */
+.product-card-sale-price {
+    color: #dc2626; 
 }
 
-.original-price-strike {
+.product-card-original-price-strike {
     color: #a8a29e;
     text-decoration: line-through;
     font-size: clamp(0.75rem, 1vw, 0.85rem);
@@ -174,11 +169,10 @@
 /* ========================================================= */
 /* 5. NÚT THÊM VÀO GIỎ (ADD TO CART BUTTON)                  */
 /* ========================================================= */
-.btn-add-cart {
-    /* 📏 Kích thước hút co giãn: Giữ nút Vuông/Chữ nhật tỷ lệ chuẩn */
+.product-card-btn-add {
     width: clamp(36px, 4vw + 10px, 44px); 
     height: clamp(36px, 4vw + 10px, 44px);
-    flex-shrink: 0; /* Chống bị bóp méo khi Flexbox thiếu chỗ */
+    flex-shrink: 0; 
     
     display: flex;
     align-items: center;
@@ -195,44 +189,51 @@
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.btn-add-cart:hover:not(.btn-disabled) {
+.product-card-btn-add:hover:not(.product-card-btn-disabled) {
     background-color: #1c1917; 
     color: #ffffff; 
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(28, 25, 23, 0.15);
 }
 
-.btn-add-cart:active:not(.btn-disabled) {
+.product-card-btn-add:active:not(.product-card-btn-disabled) {
     transform: translateY(0);
     box-shadow: none;
 }
 
-.btn-disabled {
+.product-card-btn-disabled {
     background-color: #f5f5f5;
     color: #d6d3d1;
     cursor: not-allowed;
     box-shadow: none;
 }
 
-.btn-spinner {
-    color: #1c1917; /* Màu của icon loading */
+.product-card-btn-spinner {
+    color: #1c1917; 
+}
+
+.product-card-btn-at-limit {
+    background-color: #f0f0f0 !important;
+    color: #999 !important;
+    border: 1px dashed #ccc !important;
+    cursor: not-allowed;
 }
 
 /* ========================================================= */
 /* 6. TRẠNG THÁI HẾT HÀNG (OUT OF STOCK)                     */
 /* ========================================================= */
 
-.out-of-stock-card .product-title,
-.out-of-stock-card .price,
-.out-of-stock-card .description {
+.product-card-out-of-stock .product-card-title,
+.product-card-out-of-stock .product-card-price,
+.product-card-out-of-stock .product-card-description {
     color: #a8a29e !important; 
 }
 
-.grayscale-img {
+.product-card-grayscale-img {
     filter: grayscale(100%) opacity(0.6);
 }
 
-.out-of-stock-overlay {
+.product-card-out-of-stock-overlay {
     position: absolute;
     inset: 0;
     background-color: rgba(255, 255, 255, 0.5);
@@ -242,7 +243,7 @@
     z-index: 3;
 }
 
-.out-of-stock-overlay span {
+.product-card-out-of-stock-overlay span {
     background-color: rgba(28, 25, 23, 0.85);
     backdrop-filter: blur(4px);
     color: #ffffff;

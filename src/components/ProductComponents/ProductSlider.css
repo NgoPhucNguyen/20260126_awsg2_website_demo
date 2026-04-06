@@ -1,13 +1,12 @@
-/* src/components/ProductSlider.css */
-
 .product-slider-section {
     margin-top: clamp(2rem, 5vw, 4rem);
     padding: clamp(1.5rem, 3vw, 2.5rem) 0; 
     border-top: 1px solid var(--border-color, #eee);
     overflow: hidden; 
+    width: 100%;
 }
 
-.slider-title {
+.product-slider-title {
     font-size: clamp(1.2rem, 3vw, 1.5rem);
     margin-bottom: clamp(1rem, 3vw, 2rem);
     text-align: left; 
@@ -19,10 +18,10 @@
 /* ========================================================= */
 /* KỸ THUẬT LƯỚT CHUỘT TRÊN DESKTOP (DRAG TO SCROLL)         */
 /* ========================================================= */
-.slider-grid {
+.product-slider-grid {
     display: flex; 
     gap: clamp(1rem, 2vw, 1.5rem);
-    padding: 10px clamp(16px, 3vw, 24px);
+    padding: 10px clamp(16px, 3vw, 24px) 20px; /* Thêm padding-bottom để chừa chỗ cho bóng đổ/scrollbar */
     
     /* 🛑 CỐT LÕI CHO SCROLL NGANG */
     overflow-x: auto; 
@@ -42,44 +41,44 @@
 }
 
 /* Khi mới nhấn chuột xuống (chưa kéo) */
-.slider-grid.active {
+.product-slider-grid.active {
     cursor: grabbing;
 }
 
 /* 🛑 KHI ĐÃ BẮT ĐẦU KÉO (.dragging) */
-.slider-grid.dragging {
+.product-slider-grid.dragging {
     scroll-behavior: auto; /* Tắt mượt để kéo không bị giật */
     scroll-snap-type: none; /* Tắt neo để kéo tự do */
 }
 
 /* Khóa chết mọi tương tác với thẻ con khi đang kéo */
-.slider-grid.dragging .slider-card {
+.product-slider-grid.dragging .product-slider-card {
     pointer-events: none; 
     user-select: none;
     -webkit-user-select: none;
 }
 
 /* Ẩn scrollbar cho Chrome/Safari trên Mobile */
-.slider-grid::-webkit-scrollbar {
+.product-slider-grid::-webkit-scrollbar {
     display: none;
 }
 
 /* 💻 Tùy chỉnh Scrollbar thanh lịch chỉ hiển thị trên Desktop */
 @media (min-width: 769px) {
-    .slider-grid::-webkit-scrollbar {
+    .product-slider-grid::-webkit-scrollbar {
         display: block;
-        height: 6px; 
+        height: 8px; 
     }
-    .slider-grid::-webkit-scrollbar-track {
+    .product-slider-grid::-webkit-scrollbar-track {
         background: #f1f1f1; 
         border-radius: 4px;
         margin: 0 clamp(16px, 3vw, 24px); 
     }
-    .slider-grid::-webkit-scrollbar-thumb {
+    .product-slider-grid::-webkit-scrollbar-thumb {
         background: #d4d4d4; 
         border-radius: 4px;
     }
-    .slider-grid::-webkit-scrollbar-thumb:hover {
+    .product-slider-grid::-webkit-scrollbar-thumb:hover {
         background: #a3a3a3; 
     }
 }
@@ -87,8 +86,12 @@
 /* ========================================================= */
 /* THẺ SẢN PHẨM BÊN TRONG SLIDER                             */
 /* ========================================================= */
-.slider-card {
-    flex: 0 0 clamp(160px, 35vw, 220px); 
+.product-slider-card {
+    /* 🚀 TĂNG KÍCH THƯỚC THẺ: Rộng hơn và Cao hơn */
+    flex: 0 0 clamp(180px, 40vw, 240px); 
+    max-width: 240px;
+    min-height: 320px;
+    
     scroll-snap-align: start; 
     border: 1px solid var(--border-color, #f0f0f0);
     border-radius: clamp(6px, 1vw, 8px);
@@ -103,13 +106,13 @@
     user-select: none;
 }
 
-.slider-card:hover {
+.product-slider-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(0,0,0,0.08);
     border-color: var(--accent-yellow, #d4af37); 
 }
 
-.slider-link {
+.product-slider-link {
     text-decoration: none;
     color: inherit;
     display: flex;
@@ -117,8 +120,10 @@
     height: 100%;
 }
 
-.slider-image {
-    height: clamp(140px, 20vh, 180px);
+.product-slider-image {
+    width: 100%;
+    /* 🚀 ĐỔI TỶ LỆ ẢNH THÀNH VUÔNG ĐỂ ẢNH TO RÕ HƠN */
+    aspect-ratio: 1 / 1; 
     padding: clamp(0.75rem, 1.5vw, 1rem);
     display: flex;
     align-items: center;
@@ -127,7 +132,7 @@
     border-bottom: 1px solid #f9f9f9;
 }
 
-.slider-image img {
+.product-slider-image img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
@@ -136,14 +141,14 @@
     pointer-events: none; /* Khóa ảnh để tránh lỗi Ghost Drag */
 }
 
-.slider-card:hover .slider-image img {
+.product-slider-card:hover .product-slider-image img {
     transform: scale(1.05);
 }
 
 /* ========================================================= */
 /* NHÃN (BADGES & OVERLAYS)                                  */
 /* ========================================================= */
-.slider-sale-badge {
+.product-slider-sale-badge {
     position: absolute;
     top: clamp(6px, 1vw, 10px);
     right: clamp(6px, 1vw, 10px);
@@ -157,7 +162,7 @@
     box-shadow: 0 2px 6px rgba(153, 27, 27, 0.2);
 }
 
-.slider-out-of-stock {
+.product-slider-out-of-stock {
     position: absolute;
     inset: 0;
     background-color: rgba(255, 255, 255, 0.6);
@@ -167,7 +172,7 @@
     z-index: 3;
 }
 
-.slider-out-of-stock span {
+.product-slider-out-of-stock span {
     background-color: rgba(28, 25, 23, 0.85);
     color: #ffffff;
     padding: 6px 12px;
@@ -179,15 +184,15 @@
 /* ========================================================= */
 /* TEXT & THÔNG TIN                                          */
 /* ========================================================= */
-.slider-info {
+.product-slider-info {
     padding: clamp(0.75rem, 1.5vw, 1rem);
     text-align: left; 
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
+    flex-grow: 1; /* Căng không gian dư thừa ra */
 }
 
-.slider-brand {
+.product-slider-brand {
     font-size: clamp(0.65rem, 1vw, 0.75rem);
     color: #888;
     text-transform: uppercase;
@@ -195,7 +200,7 @@
     margin-bottom: 4px;
 }
 
-.slider-name {
+.product-slider-name {
     font-size: clamp(0.85rem, 1.2vw, 0.95rem);
     margin: 0 0 8px 0;
     color: #1c1917;
@@ -207,31 +212,32 @@
     overflow: hidden;
 }
 
-.slider-name small {
+.product-slider-name small {
     color: #888;
     font-weight: normal;
+    white-space: nowrap; /* Giữ dung tích nằm trên 1 dòng */
 }
 
-.slider-price-container {
+.product-slider-price-container {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    margin-top: auto; 
+    margin-top: auto; /* Luôn đẩy khối giá tiền xuống sát đáy thẻ */
 }
 
-.slider-price-regular {
+.product-slider-price-regular {
     font-weight: 700;
     font-size: clamp(0.95rem, 1.5vw, 1.1rem);
     color: #1c1917;
 }
 
-.slider-price-sale {
+.product-slider-price-sale {
     font-weight: 700;
     font-size: clamp(0.95rem, 1.5vw, 1.1rem);
     color: #dc2626; 
 }
 
-.slider-price-original {
+.product-slider-price-original {
     text-decoration: line-through;
     color: #a8a29e;
     font-size: clamp(0.75rem, 1vw, 0.85rem);

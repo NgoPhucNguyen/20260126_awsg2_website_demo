@@ -153,26 +153,26 @@ const Login = ({ onClose, onSwitchToRegister }) => {
     
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="login-container" onClick={(e) => e.stopPropagation()}>
+        <div className="login-modal-overlay" onClick={onClose}>
+            <div className="login-modal-container" onClick={(e) => e.stopPropagation()}>
                 
-                <button className="close-modal-btn" onClick={onClose}>
+                <button className="login-modal-close-btn" onClick={onClose} aria-label="Đóng">
                     <FontAwesomeIcon icon={faXmark} />
                 </button>
 
                 <p 
                     ref={errRef} 
-                    className={generalErr ? "generalErr" : "offscreen"} aria-live="assertive"
+                    className={generalErr ? "login-modal-generalErr" : "login-modal-offscreen"} aria-live="assertive"
                     tabIndex="-1"
                 >
                     {generalErr}
                 </p>
                 
                 <h1>Xin Chào</h1>
-                <p className="auth-subtitle">Đăng nhập để tiếp tục</p>
+                <p className="login-modal-auth-subtitle">Đăng nhập để tiếp tục</p>
                 
                 <form onSubmit={handleSubmit} noValidate>
-                    <label htmlFor="email"> Email</label>
+                    <label htmlFor="email">Email</label>
                     <input
                         type="text"
                         id="email"
@@ -180,68 +180,68 @@ const Login = ({ onClose, onSwitchToRegister }) => {
                         autoComplete="username"
                         onChange={(e) => setEmail(e.target.value)}
                         value={email}
-                        className={emailErr ? "input-error" : ""} 
+                        className={emailErr ? "login-modal-input-error" : ""} 
                     />
-                    {emailErr && <span className="field-error-text">{emailErr}</span>}
+                    {emailErr && <span className="login-modal-field-error-text">{emailErr}</span>}
 
                     <label htmlFor="password">Mật Khẩu</label>
                     
-                    <div className="password-input-wrapper">
+                    <div className="login-modal-password-input-wrapper">
                         <input
                             type={showPwd ? "text" : "password"} 
                             id="password"
                             autoComplete='current-password'
                             onChange={(e) => setPwd(e.target.value)}
                             value={pwd}
-                            className={pwdErr ? "input-error" : ""}
+                            className={pwdErr ? "login-modal-input-error" : ""}
                         />
                         <button 
                             type="button" 
-                            className="password-toggle-icon"
+                            className="login-modal-password-toggle-icon"
                             onClick={() => setShowPwd(!showPwd)}
                             tabIndex="-1" 
+                            aria-label={showPwd ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
                         >
-                            {/* 🎨 3. SỬ DỤNG FONT AWESOME CHO NÚT MẮT */}
                             <FontAwesomeIcon icon={showPwd ? faEyeSlash : faEye} />
                         </button>
                     </div>
-                    {pwdErr && <span className="field-error-text">{pwdErr}</span>}
+                    {pwdErr && <span className="login-modal-field-error-text">{pwdErr}</span>}
                     
-                    <div className="form-actions">
-                        <div className="checkbox-group">
+                    <div className="login-modal-form-actions">
+                        <div className="login-modal-checkbox-group">
                             <input
                                 type="checkbox"
                                 id="remember"
                                 onChange={(e) => setRemember(e.target.checked)}
                                 checked={remember}
                             />
-                            <label htmlFor="remember">Ghi Nhớ Tôi</label>
+                            <label htmlFor="remember">Ghi nhớ đăng nhập</label>
                         </div>
 
                         <button 
                             type="button" 
                             onClick={handleForgotClick} 
-                            className="forgot-password-link"
+                            className="login-modal-forgot-password-link"
                         >
-                            Quên Mật Khẩu?
+                            Quên mật khẩu?
                         </button>
                     </div>
 
-                    <button className="auth-btn" type="submit">
+                    <button className="login-modal-auth-btn" type="submit">
                         Đăng Nhập
                     </button>
                 </form>
                 
                 {/* 🆕 4. THÊM NÚT GOOGLE LOGIN Ở ĐÂY */}
-                <div className="auth-divider" style={{ textAlign: 'center', margin: '15px 0', color: '#888' }}>
+                <div className="login-modal-auth-divider" style={{ textAlign: 'center', margin: '15px 0', color: '#888' }}>
                     <span>HOẶC</span>
                 </div>
                 
-                <div className="google-btn-wrapper" style={{ display: 'flex', justifyContent: 'center', marginBottom: '15px' }}>
+                <div className="login-modal-google-btn-wrapper" style={{ display: 'flex', justifyContent: 'center', marginBottom: '15px' }}>
                     <GoogleLogin 
                         onSuccess={handleGoogleSuccess} 
                         onError={handleGoogleError}
-                        theme="outline" // hoặc "filled_blue"
+                        theme="outline" 
                         shape="rectangular"
                         text="continue_with"
                         size="large"
@@ -249,9 +249,9 @@ const Login = ({ onClose, onSwitchToRegister }) => {
                 </div>
                 {/* -------------------------------------- */}
                 
-                <p className="auth-footer">
+                <p className="login-modal-auth-footer">
                     Chưa có tài khoản?
-                    <button onClick={onSwitchToRegister} className="switch-btn">
+                    <button onClick={onSwitchToRegister} className="login-modal-switch-btn">
                         Đăng ký ngay
                     </button>
                 </p>

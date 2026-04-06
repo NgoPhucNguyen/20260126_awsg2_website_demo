@@ -1,4 +1,3 @@
-// controllers/checkoutController.js
 import { PrismaClient } from '@prisma/client';
 import moment from 'moment';
 import crypto from 'crypto';
@@ -48,7 +47,7 @@ export const checkoutOrder = async (req, res) => {
 
         for (const item of cartItems) {
             if (!Number.isInteger(item.quantity) || item.quantity <= 0 || item.quantity > 10) {
-                return res.status(400).json({ message: "Phát hiện số lượng sản phẩm không hợp lệ! Hành vi đã bị ghi nhận." });
+                return res.status(400).json({ message: "Phát hiện số lượng sản phẩm không hợp lệ! Vui lòng kiểm tra lại giỏ hàng." });
             }
 
             const realVariant = dbVariants.find(v => v.id === item.variantId);
@@ -263,18 +262,18 @@ export const checkoutOrder = async (req, res) => {
             vnp_Params['vnp_SecureHash'] = signed;
             vnpUrl += '?' + qs.stringify(vnp_Params, { encode: false });
 
-            return res.status(200).json({ message: "Đang chuyển hướng sang VNPAY...", paymentUrl: vnpUrl });
+            return res.status(200).json({ message: "Đang chuyển hướng sang cổng thanh toán VNPAY...", paymentUrl: vnpUrl });
         } else {
             return res.status(200).json({ message: "🎉 Đặt hàng thành công!", orderId: currentCart.id });
         }
 
     } catch (error) {
-        console.error("[ERROR] Checkout:", error);
+        console.error("[CHECKOUT_ERROR]:", error);
         if (error.message && error.message.includes("SẢN PHẨM_HẾT_HÀNG")) {
             const userMsg = error.message.split('|')[1];
             return res.status(400).json({ message: userMsg });
         }
-        res.status(500).json({ message: "Lỗi hệ thống khi xử lý thanh toán. Vui lòng thử lại!" });
+        res.status(500).json({ message: "Lỗi hệ thống khi xử lý thanh toán. Vui lòng thử lại sau!" });
     }
 };
 
@@ -313,6 +312,7 @@ export const verifyVnpayReturn = async (req, res) => {
                 });
                 if (failedOrder && failedOrder.status !== 'CANCELLED') {
                     await prisma.$transaction(async (tx) => {
+                        // Trả lại hàng vào kho
                         for (const item of failedOrder.orderDetails) {
                             const inventory = await tx.inventory.findFirst({
                                 where: { productVariantId: item.productVariantId }
@@ -324,6 +324,7 @@ export const verifyVnpayReturn = async (req, res) => {
                                 });
                             }
                         }
+                        // Trả lại mã giảm giá
                         if (failedOrder.couponId) {
                             const usage = await tx.couponUsage.findFirst({
                                 where: { couponId: failedOrder.couponId, customerId: failedOrder.customerId }
@@ -344,11 +345,11 @@ export const verifyVnpayReturn = async (req, res) => {
                 return res.status(200).json({ message: "Giao dịch bị hủy hoặc thất bại", code: responseCode });
             }
         } else {
-            console.error("Sai chữ ký VNPAY.");
-            return res.status(400).json({ message: "Chữ ký không hợp lệ (Bị giả mạo)!" });
+            console.error("[VNPAY_SIGNATURE_ERROR]: Chữ ký không hợp lệ.");
+            return res.status(400).json({ message: "Chữ ký không hợp lệ (Nghi ngờ giả mạo)!" });
         }
     } catch (error) {
-        console.error("VNPAY Return Error:", error);
-        res.status(500).json({ message: "Lỗi hệ thống khi xác thực VNPAY" });
+        console.error("[VNPAY_VERIFY_ERROR]:", error);
+        res.status(500).json({ message: "Lỗi hệ thống khi xác thực thanh toán VNPAY" });
     }
 };

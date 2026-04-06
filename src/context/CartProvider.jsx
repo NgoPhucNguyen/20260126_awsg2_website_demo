@@ -57,8 +57,20 @@ export const CartProvider = ({ children }) => {
     // 🌟 2. ADD THE DATABASE ENGINE TO ADD TO CART (Đã fix lỗi undefined)
     const addToCart = async (product, quantityToAdd = 1) => {
         if (isAdding) return; // Khóa chống spam click
-        setIsAdding(true);
+        
+        // 🔍 KIỂM TRA GIỚI HẠN 5 TRƯỚC KHI LÀM BẤT CỨ GÌ
+        const existingItem = cartItems.find(
+            (item) => item.id === product.id && item.variantId === product.variantId
+        );
+        const currentQty = existingItem ? existingItem.quantity : 0;
 
+        if (currentQty + quantityToAdd > 5) {
+            // Thông báo cho người dùng biết lý do bị chặn
+            showToast(`Bạn đã có ${currentQty} sản phẩm này. Giới hạn tối đa là 5.`, "error");
+            return; 
+        }
+        
+        setIsAdding(true);
         const token = currentToken;
         let addSuccess = false; // Cờ kiểm soát
 
@@ -80,7 +92,7 @@ export const CartProvider = ({ children }) => {
                 // 🚨 BACKEND TỪ CHỐI (Lỗi hết hàng)
                 console.error("Lỗi khi thêm vào giỏ DB:", error);
                 const errorMsg = error.response?.data?.message || "Lỗi mạng. Vui lòng thử lại.";
-                alert(errorMsg); 
+                showToast(errorMsg, "error");
             }
         } else {
             // Cho phép khách vãng lai thêm vào LocalStorage

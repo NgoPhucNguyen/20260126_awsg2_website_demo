@@ -16,7 +16,7 @@ const ProductSlider = ({ title, products }) => {
   const formatPrice = (price) => 
     new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
 
-  // --- LOGIC XỬ LÝ KÉO CHUỘT (ĐÃ FIX LỖI KẸT SCROLL) ---
+  // --- LOGIC XỬ LÝ KÉO CHUỘT ---
   const handleMouseDown = (e) => {
     setIsMouseDown(true);
     setIsDragging(false); 
@@ -38,7 +38,7 @@ const ProductSlider = ({ title, products }) => {
     e.preventDefault(); 
     
     const x = e.pageX - sliderRef.current.offsetLeft;
-    const walk = (x - startX) * 1; // Tăng tốc độ cuộn lên một chút cho mượt
+    const walk = (x - startX) * 1.2; // Tăng tốc độ cuộn lên một chút cho mượt
     
     if (Math.abs(walk) > 5) {
       setIsDragging(true);
@@ -58,11 +58,10 @@ const ProductSlider = ({ title, products }) => {
 
   return (
     <div className="product-slider-section">
-      <h2 className="slider-title">{title}</h2>
+      <h2 className="product-slider-title">{title}</h2>
       
-      {/* GẮN SỰ KIỆN VÀO ĐÚNG THẺ GRID */}
       <div 
-        className={`slider-grid ${isMouseDown ? 'active' : ''} ${isDragging ? 'dragging' : ''}`}
+        className={`product-slider-grid ${isMouseDown ? 'active' : ''} ${isDragging ? 'dragging' : ''}`}
         ref={sliderRef}
         onMouseDown={handleMouseDown}
         onMouseLeave={handleMouseLeave}
@@ -90,55 +89,55 @@ const ProductSlider = ({ title, products }) => {
           const brandName = product.brand?.name || product.brandName || "";
           const variantId = product.variantId || "";
           const label = product.size || "";
+          const displayName = product.nameVn || product.name;
 
           return (
-            <div key={`${product.id}-${variantId || Math.random()}`} className="slider-card">
+            <div key={`${product.id}-${variantId || Math.random()}`} className="product-slider-card">
               
               {isOutOfStock ? (
-                  <div className="slider-out-of-stock">
+                  <div className="product-slider-out-of-stock">
                       <span>Hết hàng</span>
                   </div>
               ) : isSale && discountBadge ? (
-                  <span className="slider-sale-badge">
+                  <span className="product-slider-sale-badge">
                       {discountBadge}
                   </span>
               ) : null}
 
-              {/* THẺ LINK ĐƯỢC BẢO VỆ */}
               <Link 
                 to={`/product/${product.id}${variantId ? `?variant=${variantId}` : ''}`} 
-                className="slider-link"
+                className="product-slider-link"
                 onClick={handleLinkClick}  
                 draggable="false"          
               >
-                <div className="slider-image">
+                <div className="product-slider-image">
                   <img 
                     src={image} 
-                    alt={product.nameVn || product.name} 
+                    alt={displayName} 
                     loading="lazy" 
                     draggable="false" 
                   />
                 </div>
                 
-                <div className="slider-info">
-                  {brandName && <span className="slider-brand">{brandName}</span>}
+                <div className="product-slider-info">
+                  {brandName && <span className="product-slider-brand">{brandName}</span>}
                   
-                  <h3 className="slider-name" title={product.nameVn || product.name}>
-                    {product.nameVn || product.name} {label && <small>({label})</small>}
+                  <h3 className="product-slider-name" title={displayName}>
+                    {displayName} {label && <small>({label})</small>}
                   </h3>
                   
-                  <div className="slider-price-container">
+                  <div className="product-slider-price-container">
                       {isSale ? (
                           <>
-                              <span className="slider-price-sale">
+                              <span className="product-slider-price-sale">
                                   {formatPrice(finalPrice)}
                               </span>
-                              <span className="slider-price-original">
+                              <span className="product-slider-price-original">
                                   {formatPrice(originalPrice)}
                               </span>
                           </>
                       ) : (
-                          <span className="slider-price-regular">
+                          <span className="product-slider-price-regular">
                               {formatPrice(finalPrice)}
                           </span>
                       )}

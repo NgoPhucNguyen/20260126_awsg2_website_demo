@@ -224,7 +224,7 @@ const Checkout = () => {
                 <button className="checkout-back-link" onClick={() => navigate('/cart')}>
                     <FontAwesomeIcon icon={faArrowLeft} /> Quay lại giỏ hàng
                 </button>
-                <h1>Thanh Toán An Toàn <FontAwesomeIcon icon={faShieldHalved} style={{color: '#22c55e', fontSize: '1.2rem'}}/></h1>
+                <h1>Thanh Toán</h1>
             </div>
 
             {errorMsg && <div className="checkout-error-banner">{errorMsg}</div>}

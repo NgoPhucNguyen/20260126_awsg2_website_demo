@@ -1,5 +1,5 @@
 /* --- NAVBAR DROPDOWN CONTAINER --- */
-.navbar-dropdown-wrapper { 
+.main-navbar-dropdown-wrapper { 
     position: relative; 
     display: flex;
     align-items: center;
@@ -8,11 +8,11 @@
 /* ========================================================= */
 /* NÚT TRIGGER (AVATAR TRÒN KHI ĐÃ ĐĂNG NHẬP)                */
 /* ========================================================= */
-.navbar-dropdown-trigger {
+.main-navbar-dropdown-trigger {
     /* Ép kích thước vuông vắn để tạo hình tròn */
     width: clamp(38px, 4.5vh, 44px); 
     height: clamp(38px, 4.5vh, 44px);
-    border-radius: 50% !important; /* Bo tròn hoàn hảo (Ghi đè border-radius của navbar-btn) */
+    border-radius: 50% !important; /* Bo tròn hoàn hảo (Ghi đè border-radius của main-navbar-btn) */
     
     background-color: #f3f4f6; /* Nền xám nhạt sang trọng */
     border: 1px solid #e5e7eb;
@@ -26,14 +26,14 @@
 }
 
 /* Chỉnh lại size icon bên trong vòng tròn cho cân đối */
-.navbar-dropdown-trigger svg {
+.main-navbar-dropdown-trigger svg {
     font-size: clamp(1.1rem, 2vw, 1.3rem);
     color: #4b5563; /* Màu icon tối xám */
 }
 
 /* Hiệu ứng khi Hover hoặc khi đang bấm mở Menu (Active) */
-.navbar-dropdown-trigger:hover,
-.navbar-dropdown-trigger.active {
+.main-navbar-dropdown-trigger:hover,
+.main-navbar-dropdown-trigger.active {
     background-color: #e5e7eb; /* Nền đậm lên một chút */
     color: #111827;
     /* Tạo viền sáng nhẹ bao quanh vòng tròn, trông rất cao cấp */
@@ -42,7 +42,7 @@
 }
 
 /* --- THE DROPDOWN PANEL --- */
-.navbar-dropdown-menu {
+.main-navbar-dropdown-menu {
     position: absolute;
     /* 🧮 Toán học an toàn: Cách nút 100% + một khoảng đệm co giãn từ 8px đến 16px */
     top: calc(100% + clamp(8px, 1vh, 16px)); 
@@ -64,21 +64,21 @@
     z-index: 200;
     
     /* Hiệu ứng xuất hiện mượt mà */
-    animation: navbarMenuFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: mainNavbarMenuFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes navbarMenuFadeIn {
+@keyframes mainNavbarMenuFadeIn {
     from { opacity: 0; transform: translateY(-8px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
 /* --- HEADER & USER INFO --- */
-.navbar-dropdown-user-info {
+.main-navbar-dropdown-user-info {
     padding-bottom: clamp(8px, 1vw, 12px);
     margin-bottom: clamp(4px, 0.5vw, 8px);
 }
 
-.navbar-dropdown-user-name { 
+.main-navbar-dropdown-user-name { 
     display: -webkit-box;
     font-weight: 700;
     font-size: clamp(0.95rem, 1.2vw, 1.05rem);
@@ -91,14 +91,14 @@
     word-break: break-word;
 }
 
-.navbar-dropdown-user-role { 
+.main-navbar-dropdown-user-role { 
     display: block; 
     font-size: clamp(0.75rem, 1vw, 0.85rem); 
     color: var(--text-secondary, #888); 
     margin-top: 2px;
 }
 
-.navbar-dropdown-divider {
+.main-navbar-dropdown-divider {
     border: none;
     height: 1px;
     background-color: var(--border-color, #eee);
@@ -106,7 +106,7 @@
 }
 
 /* --- LINKS & BUTTONS --- */
-.navbar-dropdown-link {
+.main-navbar-dropdown-link {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -124,29 +124,29 @@
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.navbar-dropdown-icon {
+.main-navbar-dropdown-icon {
     color: var(--text-secondary, #666);
     font-size: 1.1em;
     width: 16px; /* Cố định width cho icon để text luôn thẳng hàng */
     text-align: center;
 }
 
-.navbar-dropdown-link:hover {
+.main-navbar-dropdown-link:hover {
     background-color: #f8f8f8;
     color: var(--accent-yellow, #d4af37);
 }
 
-.navbar-dropdown-link:hover .navbar-dropdown-icon {
+.main-navbar-dropdown-link:hover .main-navbar-dropdown-icon {
     color: inherit;
 }
 
 /* Nút đăng xuất cảnh báo màu đỏ */
-.navbar-dropdown-logout-btn { 
+.main-navbar-dropdown-logout-btn { 
     color: #dc3545; 
     margin-top: 4px;
 }
 
-.navbar-dropdown-logout-btn:hover {
+.main-navbar-dropdown-logout-btn:hover {
     background-color: rgba(220, 53, 69, 0.05);
     color: #c82333;
 }

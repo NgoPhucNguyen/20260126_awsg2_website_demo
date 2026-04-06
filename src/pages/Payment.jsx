@@ -28,7 +28,7 @@ const PaymentResult = () => {
             <p>Amount: {Number(searchParams.get('amount')).toLocaleString()} VND</p>
             
             <button onClick={() => navigate('/')} style={{ marginTop: '20px', padding: '10px' }}>
-                Go Home
+                Quay lại trang chủ
             </button>
         </div>
     );

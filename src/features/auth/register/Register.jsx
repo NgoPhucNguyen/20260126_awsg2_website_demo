@@ -1,4 +1,3 @@
-// src/features/auth/register/Register.jsx
 import './Register.css';
 import { useRef, useState, useEffect } from "react";
 import axios from '@/api/axios';
@@ -51,20 +50,24 @@ const Register = ({ onClose, onSwitchToLogin }) => {
         let isValid = true;
 
         if (!accountName) {
-            setAccountNameErr("Account Name is required");
+            setAccountNameErr("Vui lòng nhập tên tài khoản");
             isValid = false;
         }
 
         if (!mail) {
-            setMailErr("Email is required");
+            setMailErr("Vui lòng nhập địa chỉ email");
+            isValid = false;
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) {
+            // Thêm check định dạng email cơ bản
+            setMailErr("Email không hợp lệ");
             isValid = false;
         }
 
         if (!pwd) {
-            setPwdErr("Password is required");
+            setPwdErr("Vui lòng nhập mật khẩu");
             isValid = false;
         } else if (pwd.length < 6) {
-            setPwdErr("Password must be at least 6 characters");
+            setPwdErr("Mật khẩu phải chứa ít nhất 6 ký tự");
             isValid = false;
         }
 
@@ -84,11 +87,11 @@ const Register = ({ onClose, onSwitchToLogin }) => {
             setPwd('');
         } catch (err) {
             if (!err?.response) {
-                setGeneralErr('No Server Response');
+                setGeneralErr('Mất kết nối tới máy chủ. Vui lòng thử lại sau.');
             } else if (err.response?.status === 409) {
-                setGeneralErr('Account Name or Email already taken');
+                setGeneralErr('Tên tài khoản hoặc Email đã được sử dụng.');
             } else {
-                setGeneralErr('Registration Failed');
+                setGeneralErr('Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.');
             }
             if(errRef.current) errRef.current.focus();
         }
@@ -132,21 +135,21 @@ const Register = ({ onClose, onSwitchToLogin }) => {
 
     return (
         <div className="register-modal-overlay" onClick={onClose} aria-modal="true" role="dialog">
-            <div className="register-container" onClick={(e) => e.stopPropagation()}>
+            <div className="register-modal-container" onClick={(e) => e.stopPropagation()}>
                 
-                <button className="register-close-btn" onClick={onClose} aria-label="Đóng form đăng ký">
+                <button className="register-modal-close-btn" onClick={onClose} aria-label="Đóng form đăng ký">
                     {/* 🎨 2. SỬ DỤNG FONT AWESOME */}
                     <FontAwesomeIcon icon={faXmark} />
                 </button>
 
                 {success ? (
-                    <section className="register-success-section">
-                        <h1 className="register-title">Chào mừng gia nhập!</h1>
-                        <p className="register-subtitle">
+                    <section className="register-modal-success-section">
+                        <h1 className="register-modal-title">Chào mừng gia nhập!</h1>
+                        <p className="register-modal-subtitle">
                             Tài khoản của bạn đã được tạo thành công.
                         </p>
                         <div style={{marginTop: 'clamp(1.5rem, 3vw, 2rem)'}}>
-                            <button className="register-submit-btn" onClick={onSwitchToLogin}>
+                            <button className="register-modal-submit-btn" onClick={onSwitchToLogin}>
                                 Đăng Nhập Ngay
                             </button>
                         </div>
@@ -155,17 +158,17 @@ const Register = ({ onClose, onSwitchToLogin }) => {
                     <>
                         <p 
                             ref={errRef} 
-                            className={generalErr ? "register-general-err" : "register-offscreen"} 
+                            className={generalErr ? "register-modal-general-err" : "register-modal-offscreen"} 
                             aria-live="assertive"
                             tabIndex="-1"
                         >
                             {generalErr}
                         </p>
                         
-                        <h1 className="register-title">Tạo Tài Khoản</h1>
-                        <p className="register-subtitle">Tham gia cùng chúng tôi</p>
+                        <h1 className="register-modal-title">Tạo Tài Khoản</h1>
+                        <p className="register-modal-subtitle">Tham gia cùng chúng tôi</p>
                         
-                        <form className="register-form" onSubmit={handleSubmit} noValidate>
+                        <form className="register-modal-form" onSubmit={handleSubmit} noValidate>
                             <label htmlFor="accountName">Tên Tài Khoản</label>
                             <input
                                 type="text"
@@ -174,9 +177,9 @@ const Register = ({ onClose, onSwitchToLogin }) => {
                                 autoComplete="username"
                                 onChange={(e) => setAccountName(e.target.value)}
                                 value={accountName}
-                                className={accountNameErr ? "register-input-error" : ""}
+                                className={accountNameErr ? "register-modal-input-error" : ""}
                             />
-                            {accountNameErr && <span className="register-field-error">{accountNameErr}</span>}
+                            {accountNameErr && <span className="register-modal-field-error">{accountNameErr}</span>}
 
                             <label htmlFor="email">Email</label>
                             <input
@@ -185,23 +188,23 @@ const Register = ({ onClose, onSwitchToLogin }) => {
                                 autoComplete="email"
                                 onChange={(e) => setMail(e.target.value)}
                                 value={mail}
-                                className={mailErr ? "register-input-error" : ""}
+                                className={mailErr ? "register-modal-input-error" : ""}
                             />
-                            {mailErr && <span className="register-field-error">{mailErr}</span>}
+                            {mailErr && <span className="register-modal-field-error">{mailErr}</span>}
 
                             <label htmlFor="password">Mật Khẩu</label>
-                            <div className="register-password-wrapper">
+                            <div className="register-modal-password-wrapper">
                                 <input
                                     type={showPwd ? "text" : "password"} 
                                     id="password"
                                     autoComplete="new-password"
                                     onChange={(e) => setPwd(e.target.value)}
                                     value={pwd}
-                                    className={pwdErr ? "register-input-error" : ""}
+                                    className={pwdErr ? "register-modal-input-error" : ""}
                                 />
                                 <button 
                                     type="button" 
-                                    className="register-toggle-icon"
+                                    className="register-modal-toggle-icon"
                                     onClick={() => setShowPwd(!showPwd)}
                                     tabIndex="-1"
                                     aria-label={showPwd ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
@@ -210,19 +213,19 @@ const Register = ({ onClose, onSwitchToLogin }) => {
                                     <FontAwesomeIcon icon={showPwd ? faEyeSlash : faEye} />
                                 </button>
                             </div>
-                            {pwdErr && <span className="register-field-error">{pwdErr}</span>}
+                            {pwdErr && <span className="register-modal-field-error">{pwdErr}</span>}
 
-                            <button className="register-submit-btn" type="submit">
+                            <button className="register-modal-submit-btn" type="submit">
                                 Đăng Ký
                             </button>
                         </form>
                         
                                 {/* 🆕 4. THÊM NÚT GOOGLE LOGIN Ở ĐÂY */}
-                        <div className="auth-divider" style={{ textAlign: 'center', margin: '15px 0', color: '#888' }}>
+                        <div className="register-modal-auth-divider" style={{ textAlign: 'center', margin: '15px 0', color: '#888' }}>
                             <span>HOẶC</span>
                         </div>
                         
-                        <div className="google-btn-wrapper" style={{ display: 'flex', justifyContent: 'center', marginBottom: '15px' }}>
+                        <div className="register-modal-google-btn-wrapper" style={{ display: 'flex', justifyContent: 'center', marginBottom: '15px' }}>
                             <GoogleLogin 
                                 onSuccess={handleGoogleSuccess} 
                                 onError={handleGoogleError}
@@ -233,9 +236,9 @@ const Register = ({ onClose, onSwitchToLogin }) => {
                             />
                         </div>
                         {/* -------------------------------------- */}
-                        <p className="register-footer-text">
+                        <p className="register-modal-footer-text">
                             Đã có tài khoản?
-                            <button onClick={onSwitchToLogin} className="register-switch-btn">
+                            <button onClick={onSwitchToLogin} className="register-modal-switch-btn">
                                 Đăng Nhập
                             </button>
                         </p>

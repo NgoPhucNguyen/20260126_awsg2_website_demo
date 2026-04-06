@@ -9,7 +9,7 @@ export const getProfile = async (req, res) => {
             where: { id: userId },
             select: {
                 id: true,
-                accountName: true, // 👈 Added this so the frontend knows the name
+                accountName: true,
                 firstName: true,
                 lastName: true,
                 mail: true,
@@ -23,12 +23,16 @@ export const getProfile = async (req, res) => {
             }
         });
 
-        if (!customer) return res.status(404).json({ message: 'User not found' });
+        if (!customer) {
+            return res.status(404).json({ message: 'Không tìm thấy thông tin người dùng.' });
+        }
+        
         res.json(customer);
 
     } catch (error) {
-        console.error("Error fetching profile:", error);
-        res.status(500).json({ message: 'Server Error' });
+        // Chỉ giữ lại console.error cho lỗi 500 để developer theo dõi qua CloudWatch/Logs
+        console.error("[GET_PROFILE_ERROR]:", error);
+        res.status(500).json({ message: 'Lỗi máy chủ. Không thể lấy thông tin hồ sơ.' });
     }
 };
 
@@ -37,7 +41,7 @@ export const updateProfile = async (req, res) => {
     try {
         const userId = req.user.id;
         
-        // 📥 Pull ALL fields from the request, including the new ones
+        // 📥 Pull ALL fields from the request
         const { 
             accountName, 
             firstName, 
@@ -60,7 +64,6 @@ export const updateProfile = async (req, res) => {
                 gender,
                 birthday: birthday ? new Date(birthday) : null,
                 skinProfile,
-                // Nested write for the Address table (Your original code was perfect here!)
                 ...(address && {
                     address: {
                         upsert: {
@@ -71,7 +74,6 @@ export const updateProfile = async (req, res) => {
                 })
             },
             select: {
-                // Ensure we return the newly updated data back to React
                 id: true,
                 accountName: true,
                 firstName: true,
@@ -85,10 +87,10 @@ export const updateProfile = async (req, res) => {
             } 
         });
 
-        res.json({ message: 'Profile updated successfully!', user: updatedCustomer });
+        res.json({ message: 'Cập nhật hồ sơ thành công!', user: updatedCustomer });
 
     } catch (error) {
-        console.error("Error updating profile:", error);
-        res.status(500).json({ message: 'Server Error updating profile' });
+        console.error("[UPDATE_PROFILE_ERROR]:", error);
+        res.status(500).json({ message: 'Lỗi máy chủ. Không thể cập nhật hồ sơ.' });
     }
 };

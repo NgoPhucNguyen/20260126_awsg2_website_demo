@@ -19,12 +19,3 @@ class EmbeddingClient {
 }
 
 export default EmbeddingClient;
-
-// const demo = async () => {
-//     const client = new EmbeddingClient();
-//     const sampleText = "This is a sample text to be embedded.";
-//     const embedding = await client.createEmbedding(sampleText);
-//     console.log("Embedding vector:", embedding);
-// }
-
-// demo();

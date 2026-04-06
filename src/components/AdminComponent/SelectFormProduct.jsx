@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faCheck } from '@fortawesome/free-solid-svg-icons';
-import './SelectFormProduct.css'; // 🚀 Import file CSS mới
+import './SelectFormProduct.css';
 
 const SelectFormProduct = ({ 
     products = [], 

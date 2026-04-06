@@ -6,7 +6,7 @@ export const config = {
   credentials: {
     accessKeyId: process.env.AWS_BEDROCK_ACCESS_KEY,
     secretAccessKey: process.env.AWS_BEDROCK_SECRET_ACCESS_KEY,
-    // sessionToken: process.env.AWS_SESSION_TOKEN
+    
   },
   temperature: process.env.AWS_BEDROCK_LLM_TEMP ? parseFloat(process.env.AWS_BEDROCK_LLM_TEMP) : 0,
   maxTokens: undefined,
