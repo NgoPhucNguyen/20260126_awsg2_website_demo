@@ -16,9 +16,7 @@ export const useRefreshToken = () => {
             const response = await axios.get('/api/auth/refresh', {
                 withCredentials: true
             });
-
-            console.log("🔄 Refresh Success! New Token:", response.data.accessToken);
-
+            
             setAuth(prev => ({
                 ...prev,
                 roles: response.data.roles,

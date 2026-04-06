@@ -1,17 +1,15 @@
-/* src/pages/ProductDetail.css */
-
 /* ========================================================= */
 /* BỐ CỤC CHÍNH (MAIN LAYOUT)                                */
 /* ========================================================= */
 
-.breadcrumb-wrapper {
+.product-detail-page-breadcrumb {
     max-width: 1200px;
     margin: 0 auto;
     /* 📏 Padding động: lùi sát mép trên Mobile, rộng rãi trên PC */
     padding: clamp(1rem, 2vw, 1.5rem) clamp(1rem, 4vw, 2rem) 0;
 }
 
-.product-detail-container {
+.product-detail-page-main-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
     /* 📏 Gap linh hoạt giữa ảnh và thông tin */
@@ -25,41 +23,23 @@
 /* TRÁI: PHẦN HÌNH ẢNH (LEFT IMAGE SECTION)                  */
 /* ========================================================= */
 
-.detail-image-section {
+.product-detail-page-image-section {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-}
-
-.main-image {
-    background: #fcfcfc;
-    border-radius: clamp(8px, 1.5vw, 12px);
-    padding: clamp(1.5rem, 3vw, 2rem);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--border-color, #f0f0f0);
-}
-
-.main-image img {
-    max-width: 100%;
-    /* 📏 Ép chiều cao tối đa của ảnh theo tỷ lệ màn hình (Viewport Height) */
-    max-height: clamp(350px, 50vh, 500px);
-    object-fit: contain;
-    mix-blend-mode: multiply; /* Hòa trộn nền trắng ảnh cực xịn */
 }
 
 /* ========================================================= */
 /* PHẢI: CHI TIẾT SẢN PHẨM (RIGHT INFO SECTION)              */
 /* ========================================================= */
 
-.detail-info-section {
+.product-detail-page-info-section {
     display: flex;
     flex-direction: column;
     justify-content: center; /* Đẩy nội dung ra giữa trục dọc */
 }
 
-.product-title {
+.product-detail-page-title {
     /* 📏 Co giãn từ 1.6rem (Mobile) đến 2.2rem (PC) */
     font-size: clamp(1.6rem, 3.5vw, 2.2rem);
     font-weight: 700;
@@ -68,7 +48,7 @@
     line-height: 1.2;
 }
 
-.product-brand {
+.product-detail-page-brand {
     font-size: clamp(0.85rem, 1.2vw, 0.95rem);
     color: #666;
     margin-bottom: clamp(1rem, 2vw, 1.5rem);
@@ -76,19 +56,19 @@
     letter-spacing: 1px;
 }
 
-.product-skintype {
+.product-detail-page-skintype {
     margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
     color: #555;
     font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
-.product-skintype span {
+.product-detail-page-skintype span {
     font-weight: 600;
     color: #cca858; /* Điểm nhấn Gold sang trọng */
 }
 
 /* --- KHU VỰC GIÁ (PRICE SECTION) --- */
-.product-price {
+.product-detail-page-price {
     display: flex;
     align-items: center;
     flex-wrap: wrap; /* Nếu giá và nhãn quá dài, tự rớt dòng an toàn */
@@ -96,19 +76,19 @@
     margin-bottom: clamp(1.5rem, 3vw, 2rem);
 }
 
-.current-price {
+.product-detail-page-current-price {
     font-size: clamp(1.6rem, 3vw, 2rem);
     font-weight: 800;
     color: #8A1C31; 
 }
 
-.original-price {
+.product-detail-page-original-price {
     text-decoration: line-through;
     font-size: clamp(1rem, 1.5vw, 1.2rem);
     color: #999;
 }
 
-.sale-badge {
+.product-detail-page-sale-badge {
     background-color: #8A1C31;
     color: white;
     padding: clamp(4px, 0.8vw, 6px) clamp(8px, 1.5vw, 12px);
@@ -119,13 +99,13 @@
 }
 
 /* Fallback giá không sale */
-.product-price > span:first-child:not(.current-price) {
+.product-detail-page-price > span:first-child:not(.product-detail-page-current-price) {
     font-size: clamp(1.6rem, 3vw, 2rem);
     font-weight: 800;
     color: #111;
 }
 
-.product-description {
+.product-detail-page-description {
     line-height: 1.6;
     color: #444;
     font-size: clamp(0.9rem, 1.2vw, 1rem);
@@ -138,11 +118,11 @@
 /* LỰA CHỌN BIẾN THỂ (VARIANT SELECTORS)                     */
 /* ========================================================= */
 
-.variant-selector {
+.product-detail-page-variant-selector {
     margin-bottom: clamp(1rem, 2vw, 1.5rem);
 }
 
-.variant-selector .label {
+.product-detail-page-variant-label {
     display: block;
     font-weight: 600;
     margin-bottom: 0.8rem;
@@ -150,13 +130,13 @@
     color: #1c1917;
 }
 
-.variant-options {
+.product-detail-page-variant-options {
     display: flex;
     gap: clamp(8px, 1.2vw, 12px);
     flex-wrap: wrap;
 }
 
-.variant-btn {
+.product-detail-page-variant-btn {
     padding: clamp(8px, 1.5vw, 12px) clamp(16px, 2vw, 24px);
     border: 1px solid #ddd;
     background: rgb(255, 254, 254);
@@ -168,12 +148,12 @@
     font-weight: 500;
 }
 
-.variant-btn:hover {
+.product-detail-page-variant-btn:hover {
     border-color: #1c1917;
     color: #1c1917;
 }
 
-.variant-btn.active {
+.product-detail-page-variant-btn.active {
     border-color: #cca858;
     background: #cca858;
     color: #000000; 
@@ -185,7 +165,7 @@
 /* TRẠNG THÁI KHO HÀNG (STOCK STATUS)                        */
 /* ========================================================= */
 
-.stock-status {
+.product-detail-page-stock-status {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -195,28 +175,28 @@
     margin-bottom: clamp(1.5rem, 3vw, 2rem);
 }
 
-.status-dot {
+.product-detail-page-status-dot {
     width: 10px;
     height: 10px;
     border-radius: 50%;
 }
 
-.stock-status.in-stock { color: #2e7d32; }
-.stock-status.in-stock .status-dot { background-color: #2e7d32; }
+.product-detail-page-stock-status.in-stock { color: #2e7d32; }
+.product-detail-page-stock-status.in-stock .product-detail-page-status-dot { background-color: #2e7d32; }
 
-.stock-status.out-of-stock { color: #d32f2f; }
-.stock-status.out-of-stock .status-dot { background-color: #d32f2f; }
+.product-detail-page-stock-status.out-of-stock { color: #d32f2f; }
+.product-detail-page-stock-status.out-of-stock .product-detail-page-status-dot { background-color: #d32f2f; }
 
 /* ========================================================= */
 /* NÚT THÊM VÀO GIỎ (ACTION BUTTONS)                         */
 /* ========================================================= */
 
-.action-buttons {
+.product-detail-page-action-buttons {
     display: flex;
     width: 100%;
 }
 
-.add-cart-btn {
+.product-detail-page-add-cart-btn {
     width: 100%;
     padding: clamp(14px, 2.5vw, 18px);
     background: #1c1917;
@@ -233,23 +213,23 @@
     justify-content: center;
 }
 
-.add-cart-btn:hover:not(:disabled) {
+.product-detail-page-add-cart-btn:hover:not(:disabled) {
     background: #cca858;
     color: #1c1917;
     box-shadow: 0 6px 16px rgba(204, 168, 88, 0.3);
     transform: translateY(-2px);
 }
 
-.add-cart-btn:active:not(:disabled) {
+.product-detail-page-add-cart-btn:active:not(:disabled) {
     transform: translateY(0);
 }
 
-.add-cart-btn.btn-loading {
+.product-detail-page-add-cart-btn.btn-loading {
     background-color: #57534e;
     cursor: not-allowed;
 }
 
-.add-cart-btn.btn-disabled {
+.product-detail-page-add-cart-btn.btn-disabled {
     background-color: #f5f5f5;
     color: #a8a29e;
     cursor: not-allowed;
@@ -262,13 +242,13 @@
 /* 🪄 NÚT PHÂN TÍCH DA (AI SKIN ANALYZER BUTTON)             */
 /* ========================================================= */
 
-.analyze-skin-btn-wrapper {
+.product-detail-page-analyze-btn-wrapper {
     width: 100%;
     margin-top: clamp(12px, 2vw, 16px); /* Tạo khoảng cách với nút Mua Hàng */
     display: flex;
 }
 
-.analyze-skin-btn {
+.product-detail-page-analyze-btn {
     width: 100%;
     display: flex;
     align-items: center;
@@ -290,7 +270,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
-.magic-icon {
+.product-detail-page-magic-icon {
     /* Màu Vàng Gold đặc trưng cho AI/Phân tích */
     color: #000000; 
     font-size: 1.1em;
@@ -298,7 +278,7 @@
 }
 
 /* Hiệu ứng Hover siêu mượt */
-.analyze-skin-btn:hover {
+.product-detail-page-analyze-btn:hover {
     background-color: #fcfcfc; /* Nền xám cực nhạt */
     color: #cca858;
     box-shadow: 0 4px 12px rgba(204, 168, 88, 0.15);
@@ -306,26 +286,26 @@
 }
 
 /* Biểu tượng cây đũa phép "vẩy" nhẹ khi hover */
-.analyze-skin-btn:hover .magic-icon {
+.product-detail-page-analyze-btn:hover .product-detail-page-magic-icon {
     transform: rotate(15deg) scale(1.1);
 }
 
-.analyze-skin-btn:active {
+.product-detail-page-analyze-btn:active {
     transform: translateY(0);
     box-shadow: none;
 }
 
 /* ========================================================= */
-/* PHẦN DƯỚI: ĐÁNH GIÁ & SẢN PHẨM KHÁC                       */
+/* PHẦN DƯỚI: SẢN PHẨM KHÁC                                  */
 /* ========================================================= */
 
-.product-bottom-section {
+.product-detail-page-bottom-section {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 clamp(1rem, 4vw, 2rem) clamp(3rem, 6vw, 5rem);
     display: flex;
     flex-direction: column;
-    /* 📏 Khoảng cách linh hoạt giữa Slider Lịch sử, Relate và Review */
+    /* 📏 Khoảng cách linh hoạt giữa Slider Lịch sử và Relate */
     gap: clamp(2.5rem, 5vw, 4rem); 
 }
 
@@ -334,7 +314,7 @@
 /* BỐ CỤC CHO ĐIỆN THOẠI (MACRO LAYOUT SHIFT)                */
 /* ========================================================= */
 @media (max-width: 850px) {
-    .product-detail-container {
+    .product-detail-page-main-container {
         /* Bẻ gãy cấu trúc 2 cột thành 1 cột xếp chồng (Ảnh trên, Chữ dưới) */
         grid-template-columns: 1fr;
         gap: 2rem;
@@ -346,32 +326,31 @@
 /* 🚀 STICKY BOTTOM ACTION BAR (HASAKI STYLE)                */
 /* ========================================================= */
 
-.sticky-cart-bar {
+.product-detail-page-sticky-bar {
     position: fixed;
-    /* 🛑 FIX 1: Gắn chặt vào đỉnh màn hình thay vì đáy */
+    /* 🛑 Gắn chặt vào đỉnh màn hình thay vì đáy */
     top: 0; 
     left: 0;
     width: 100%;
     background-color: #ffffff;
     
-    /* 🛑 FIX 2: Viền và bóng đổ lật ngược xuống dưới */
     border-bottom: 1px solid var(--border-color, #e5e5e5);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* Đổi -4px thành 4px */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); 
     
-    /* 🚀 Nâng z-index lên cao nhất để chắc chắn đè qua Navbar chính của bạn */
+    /* 🚀 Nâng z-index lên cao nhất để chắc chắn đè qua Navbar chính */
     z-index: 9999; 
     
-    /* 🛑 FIX 3: Giấu nó chìm lên TRÊN đỉnh màn hình (dùng số âm -100%) */
+    /* 🛑 Giấu nó chìm lên TRÊN đỉnh màn hình (dùng số âm -100%) */
     transform: translateY(-100%); 
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Khi class visible được thêm vào, nó sẽ trượt vút lên */
-.sticky-cart-bar.visible {
+.product-detail-page-sticky-bar.visible {
     transform: translateY(0);
 }
 
-.sticky-cart-container {
+.product-detail-page-sticky-container {
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
@@ -384,14 +363,14 @@
 }
 
 /* --- KHU VỰC THÔNG TIN (TRÁI) --- */
-.sticky-info {
+.product-detail-page-sticky-info {
     display: flex;
     align-items: center;
     gap: clamp(10px, 1.5vw, 15px);
     overflow: hidden; /* Ngăn text dài đẩy nút bấm văng ra ngoài */
 }
 
-.sticky-img {
+.product-detail-page-sticky-img {
     width: clamp(45px, 6vw, 60px);
     height: clamp(45px, 6vw, 60px);
     object-fit: contain;
@@ -402,14 +381,19 @@
     mix-blend-mode: multiply;
 }
 
-.sticky-text-group {
+.product-detail-page-sticky-img.grayscale-img {
+    filter: grayscale(100%);
+    opacity: 0.6;
+}
+
+.product-detail-page-sticky-text-group {
     display: flex;
     flex-direction: column;
     gap: 4px;
     overflow: hidden;
 }
 
-.sticky-name {
+.product-detail-page-sticky-name {
     font-size: clamp(0.85rem, 1.2vw, 1rem);
     font-weight: 600;
     color: #1c1917;
@@ -419,35 +403,35 @@
     text-overflow: ellipsis;
 }
 
-.sticky-price-row {
+.product-detail-page-sticky-price-row {
     display: flex;
     align-items: center;
     gap: clamp(6px, 1vw, 10px);
     font-size: clamp(0.75rem, 1vw, 0.85rem);
 }
 
-.sticky-price {
+.product-detail-page-sticky-price {
     font-weight: 700;
     color: #8A1C31; /* Đỏ đô */
     font-size: clamp(0.9rem, 1.2vw, 1.05rem);
 }
 
-.sticky-original {
+.product-detail-page-sticky-original {
     text-decoration: line-through;
     color: #999;
 }
 
-.sticky-divider {
+.product-detail-page-sticky-divider {
     color: #ccc;
 }
 
-.sticky-variant {
+.product-detail-page-sticky-variant {
     color: #cca858;
     font-weight: 600;
 }
 
 /* --- KHU VỰC NÚT BẤM (PHẢI) --- */
-.sticky-add-btn {
+.product-detail-page-sticky-add-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -467,16 +451,16 @@
     transition: all 0.2s;
 }
 
-.sticky-add-btn:hover:not(.btn-disabled) {
+.product-detail-page-sticky-add-btn:hover:not(.btn-disabled) {
     background-color: #cca858;
     color: #1c1917;
 }
 
-.sticky-add-btn:active:not(.btn-disabled) {
+.product-detail-page-sticky-add-btn:active:not(.btn-disabled) {
     transform: scale(0.97);
 }
 
-.sticky-add-btn.btn-disabled {
+.product-detail-page-sticky-add-btn.btn-disabled {
     background-color: #f5f5f5;
     color: #a8a29e;
     cursor: not-allowed;
@@ -485,19 +469,28 @@
 
 /* 📱 TINH CHỈNH RIÊNG CHO MOBILE SIÊU NHỎ */
 @media (max-width: 480px) {
-    .sticky-btn-text {
+    .product-detail-page-sticky-btn-text {
         display: none; /* Ẩn chữ "Thêm vào giỏ", chỉ giữ lại Icon túi xách để tiết kiệm diện tích */
     }
     
-    .sticky-add-btn {
+    .product-detail-page-sticky-add-btn {
         padding: 10px 16px;
         font-size: 1.2rem; /* Phóng to Icon lên bù cho chữ đã mất */
     }
     
-    .sticky-variant {
+    .product-detail-page-sticky-variant {
         display: none; /* Ẩn bớt dung tích để nhường chỗ cho giá tiền */
     }
-    .sticky-divider {
+    .product-detail-page-sticky-divider {
         display: none;
     }
+}
+
+/* THÔNG BÁO LỖI TRANG */
+.product-detail-page-error {
+    text-align: center;
+    padding: 4rem;
+    color: #d32f2f;
+    font-size: 1.2rem;
+    font-weight: 600;
 }

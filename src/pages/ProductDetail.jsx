@@ -1,18 +1,16 @@
-// src/pages/ProductDetail.jsx
 import { useEffect, useState, useMemo, useRef } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import axios from "@/api/axios";
 import { useCart } from "@/context/CartProvider";
 import { getImageUrl } from "@/utils/getImageUrl";
 
-// 🎨 ĐỒNG BỘ FONT AWESOME
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBagShopping, faSpinner, faWandMagicSparkles  } from '@fortawesome/free-solid-svg-icons';
 
 // Components
 import ProductImageGallery from "@/components/ProductComponents/ProductImageGallery";
 import ProductSlider from "@/components/ProductComponents/ProductSlider";
-import ProductReviews from "@/components/ProductComponents/ProductReviews";
+// Đã xóa import ProductReviews
 
 // Layout Components
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
@@ -119,8 +117,8 @@ const ProductDetail = () => {
                         return {
                             id: prod.id, 
                             variantId: variant.id, 
-                            name: `${prod.name} - ${variantLabel}`, 
-                            nameVn: prod.nameVn ? `${prod.nameVn} - ${variantLabel}` : `${prod.name} - ${variantLabel}`,
+                            name: prod.name, 
+                            nameVn: prod.nameVn || prod.name,
                             brand: prod.brand?.nameVn || prod.brand?.name,
                             description: prod.description,
                             skinType: prod.skinType,
@@ -137,7 +135,7 @@ const ProductDetail = () => {
 
                     setRelatedProducts(formattedRelated);
                 } catch (e) { 
-                    console.warn("Lỗi tải sản phẩm liên quan:", e); 
+                    // Nếu API related products lỗi, vẫn cho phép hiển thị trang sản phẩm chính
                 }
 
             } catch (err) {
@@ -149,8 +147,10 @@ const ProductDetail = () => {
         };
 
         loadPageData();
-        window.scrollTo(0, 0); 
-    }, [id, location.search]); 
+        if (!location.state?.preventScroll) {
+            window.scrollTo(0, 0); 
+        }
+    }, [id]); 
 
     // --- 2. CHUYỂN ĐỔI BIẾN THỂ NHANH ---
     useEffect(() => {
@@ -164,7 +164,7 @@ const ProductDetail = () => {
         }
     }, [location.search, product]);
 
-    // --- 3. TÍNH TOÁN DỮ LIỆU HIỂN THỊ (Phải đặt TRƯỚC phần lưu lịch sử) ---
+    // --- 3. TÍNH TOÁN DỮ LIỆU HIỂN THỊ ---
     const currentVariantLabel = useMemo(() => getVariantLabel(selectedVariant), [selectedVariant]);
     
     const displayImages = useMemo(() => {
@@ -178,8 +178,10 @@ const ProductDetail = () => {
         return selectedVariant ? getEffectivePrice(selectedVariant) : { price: 0, isSale: false };
     }, [selectedVariant]);
 
-    const currentStock = selectedVariant?.stock || 0;
-    const isOutOfStock = currentStock === 0;
+    const { currentStock, isOutOfStock } = useMemo(() => {
+    const stock = selectedVariant?.stock || 0;
+    return { currentStock: stock, isOutOfStock: stock === 0 };
+    }, [selectedVariant?.stock]);
 
     // --- 4. LƯU LỊCH SỬ XEM SẢN PHẨM ---
     useEffect(() => {
@@ -193,14 +195,14 @@ const ProductDetail = () => {
                 id: product.id,
                 variantId: selectedVariant.id, 
                 name: product.name,
-                nameVn: product.nameVn ? `${product.nameVn} - ${currentVariantLabel}` : `${product.name} - ${currentVariantLabel}`,
+                nameVn: product.nameVn || product.name,
                 brandName: product.brand?.nameVn || product.brand?.name || "Unknown",
                 price: effective.price,
                 originalPrice: effective.original,
                 isSale: effective.isSale,
                 discountValue: selectedVariant.promotions?.[0]?.promotion?.value,
                 discountType: selectedVariant.promotions?.[0]?.promotion?.type,
-                image: displayImages[0]?.imageUrl || "https://via.placeholder.com/300",
+                image: selectedVariant.images?.[0]?.imageUrl || "",
                 stock: selectedVariant.stock || 0
             });
 
@@ -216,7 +218,6 @@ const ProductDetail = () => {
     // --- 5. LOGIC THANH STICKY BAR TRÊN ĐỈNH ---
     useEffect(() => {
         const handleScroll = () => {
-            // Dùng thước đo infoRef để thả thanh Sticky xuống khi cuộn qua khối thông tin
             if (infoRef.current) {
                 const infoBottomEdge = infoRef.current.offsetTop + infoRef.current.offsetHeight;
                 if (window.scrollY > infoBottomEdge) {
@@ -247,28 +248,13 @@ const ProductDetail = () => {
         });
     };
 
-useEffect(() => {
-        const handleScroll = () => {
-            // Khi người dùng cuộn xuống quá 800px (vượt qua nút mua hàng chính), hiển thị thanh này
-            if (window.scrollY > 1200) {
-                setShowStickyBar(true);
-            } else {
-                setShowStickyBar(false);
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        // Cleanup function
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
     if (loading) return <ProductDetailSkeleton />;
-    if (error) return <div className="error-message">{error}</div>;
+    if (error) return <div className="product-detail-page-error">{error}</div>;
 
     return (
-        <div className="product-detail-page"> 
+        <div className="product-detail-page-root"> 
             
-            <div className="breadcrumb-wrapper">
+            <div className="product-detail-page-breadcrumb">
                 <Breadcrumb paths={[
                     { name: 'Trang chủ', url: '/' },
                     { 
@@ -279,35 +265,35 @@ useEffect(() => {
                 ]} />
             </div>
             
-            <div className={`sticky-cart-bar ${showStickyBar ? 'visible' : ''}`}>
-                <div className="sticky-cart-container">
+            <div className={`product-detail-page-sticky-bar ${showStickyBar ? 'visible' : ''}`}>
+                <div className="product-detail-page-sticky-container">
                     
                     {/* Thông tin sản phẩm thu gọn */}
-                    <div className="sticky-info">
+                    <div className="product-detail-page-sticky-info">
                         <img 
                             src={displayImages[0]?.imageUrl || "https://via.placeholder.com/70"} 
                             alt={product.nameVn || product.name} 
-                            className={`sticky-img ${isOutOfStock ? 'grayscale-img' : ''}`}
+                            className={`product-detail-page-sticky-img ${isOutOfStock ? 'grayscale-img' : ''}`}
                         />
-                        <div className="sticky-text-group">
-                            <p className="sticky-name" title={product.nameVn || product.name}>
+                        <div className="product-detail-page-sticky-text-group">
+                            <p className="product-detail-page-sticky-name" title={product.nameVn || product.name}>
                                 {product.nameVn || product.name}
                             </p>
-                            <div className="sticky-price-row">
-                                <span className="sticky-price">{formatPrice(effective.price)}</span>
+                            <div className="product-detail-page-sticky-price-row">
+                                <span className="product-detail-page-sticky-price">{formatPrice(effective.price)}</span>
                                 {effective.isSale && (
-                                    <span className="sticky-original">{formatPrice(effective.original)}</span>
+                                    <span className="product-detail-page-sticky-original">{formatPrice(effective.original)}</span>
                                 )}
-                                <span className="sticky-divider">|</span>
-                                <span className="sticky-variant">{currentVariantLabel}</span>
+                                <span className="product-detail-page-sticky-divider">|</span>
+                                <span className="product-detail-page-sticky-variant">{currentVariantLabel}</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Nút Mua Hàng */}
+                    {/* Nút Mua Hàng trên Sticky */}
                     <button 
                         type="button"
-                        className={`sticky-add-btn ${isAdding ? 'btn-loading' : ''} ${isOutOfStock ? 'btn-disabled' : ''}`} 
+                        className={`product-detail-page-sticky-add-btn ${isAdding ? 'btn-loading' : ''} ${isOutOfStock ? 'btn-disabled' : ''}`} 
                         onClick={handleAddToCart}
                         disabled={isAdding || isOutOfStock} 
                     >
@@ -318,7 +304,7 @@ useEffect(() => {
                         ) : (
                             <>
                                 <FontAwesomeIcon icon={faBagShopping} />
-                                <span className="sticky-btn-text">THÊM VÀO GIỎ</span>
+                                <span className="product-detail-page-sticky-btn-text">THÊM VÀO GIỎ</span>
                             </>
                         )}
                     </button>
@@ -326,30 +312,30 @@ useEffect(() => {
                 </div>
             </div>
 
-            <div className="product-detail-container">
+            <div className="product-detail-page-main-container">
                 
                 {/* TRÁI: Hình ảnh */}
-                <div className="detail-image-section">
+                <div className="product-detail-page-image-section">
                     <ProductImageGallery images={displayImages} />
                 </div>
 
                 {/* PHẢI: Thông tin */}
-                <div className="detail-info-section" ref={infoRef}>
-                    <h1 className="product-title">{product.nameVn || product.name}</h1>
-                    <div className="product-brand">Thương hiệu: <span>{product.brand?.nameVn || product.brand?.name || "Đang cập nhật"}</span></div>
+                <div className="product-detail-page-info-section" ref={infoRef}>
+                    <h1 className="product-detail-page-title">{product.nameVn || product.name}</h1>
+                    <div className="product-detail-page-brand">Thương hiệu: <span>{product.brand?.nameVn || product.brand?.name || "Đang cập nhật"}</span></div>
 
                     {product.skinType && (
-                        <div className="product-skintype">
+                        <div className="product-detail-page-skintype">
                             <span>Phù hợp cho:</span> {product.skinType}
                         </div>
                     )}
 
-                    <div className="product-price">
+                    <div className="product-detail-page-price">
                         {effective.isSale ? (
                             <>
-                                <span className="current-price">{formatPrice(effective.price)}</span>
-                                <span className="original-price">{formatPrice(effective.original)}</span>
-                                <span className="sale-badge">
+                                <span className="product-detail-page-current-price">{formatPrice(effective.price)}</span>
+                                <span className="product-detail-page-original-price">{formatPrice(effective.original)}</span>
+                                <span className="product-detail-page-sale-badge">
                                     -{selectedVariant?.promotions?.[0]?.promotion?.value}%
                                 </span>
                             </>
@@ -358,22 +344,25 @@ useEffect(() => {
                         )}
                     </div>
 
-                    <div className="product-description">
+                    <div className="product-detail-page-description">
                         <p>{product.description}</p>
                     </div>
                     
                     {product.variants?.length > 0 && (
-                        <div className="variant-selector">
-                            <span className="label">Lựa chọn:</span>
-                            <div className="variant-options">
+                        <div className="product-detail-page-variant-selector">
+                            <span className="product-detail-page-variant-label">Lựa chọn:</span>
+                            <div className="product-detail-page-variant-options">
                                 {product.variants.map((variant) => (
                                     <button
                                     type="button"
                                     key={variant.id}
-                                    className={`variant-btn ${selectedVariant?.id === variant.id ? 'active' : ''}`}
+                                    className={`product-detail-page-variant-btn ${selectedVariant?.id === variant.id ? 'active' : ''}`}
+                                    // Ở chỗ map ra các nút bấm Variant:
                                     onClick={() => {
-                                        setSelectedVariant(variant);
-                                        navigate(`?variant=${variant.id}`, { replace: true });
+                                        // 1. Cập nhật state NGAY LẬP TỨC cho UI phản hồi chớp nhoáng
+                                        setSelectedVariant(variant); 
+                                        // 2. Chặn việc cuộn trang lên đầu khi đổi URL bằng state
+                                        navigate(`?variant=${variant.id}`, { replace: true, state: { preventScroll: true } }); 
                                     }}
                                     >
                                         {getVariantLabel(variant)}
@@ -383,40 +372,38 @@ useEffect(() => {
                         </div>
                     )}
 
-                    <div className={`stock-status ${isOutOfStock ? 'out-of-stock' : 'in-stock'}`}>
-                        <span className="status-dot"></span> 
+                    <div className={`product-detail-page-stock-status ${isOutOfStock ? 'out-of-stock' : 'in-stock'}`}>
+                        <span className="product-detail-page-status-dot"></span> 
                         {isOutOfStock ? 'Đã hết hàng' : 'Còn hàng'}
                     </div>
 
-                    <div className="action-buttons">
+                    <div className="product-detail-page-action-buttons">
                         <button 
                             type="button"
-                            className={`add-cart-btn ${isAdding ? 'btn-loading' : ''} ${isOutOfStock ? 'btn-disabled' : ''}`} 
+                            className={`product-detail-page-add-cart-btn ${isAdding ? 'btn-loading' : ''} ${isOutOfStock ? 'btn-disabled' : ''}`} 
                             onClick={handleAddToCart}
                             disabled={isAdding || isOutOfStock} 
                         >
                             {isAdding ? (
                                 <>
-                                    {/* 🎨 ĐÃ THAY BẰNG FONT AWESOME SPINNER */}
                                     <FontAwesomeIcon icon={faSpinner} spin className="btn-spinner-icon" /> Đang thêm...
                                 </>
                             ) : isOutOfStock ? (
                                 "ĐÃ HẾT HÀNG"
                             ) : (
                                 <>
-                                    {/* 🎨 BỔ SUNG ICON GIỎ HÀNG CHO NÚT */}
                                     <FontAwesomeIcon icon={faBagShopping} style={{ marginRight: '8px' }} /> THÊM VÀO GIỎ
                                 </>
                             )}
                         </button>
                     </div>
-                <div className="analyze-skin-btn-wrapper">
+                <div className="product-detail-page-analyze-btn-wrapper">
                         <button 
                             type="button" 
-                            className="analyze-skin-btn" 
+                            className="product-detail-page-analyze-btn" 
                             onClick={() => navigate('/analyze-skin')}
                         >
-                            <FontAwesomeIcon icon={faWandMagicSparkles} className="magic-icon" />
+                            <FontAwesomeIcon icon={faWandMagicSparkles} className="product-detail-page-magic-icon" />
                             <span>Phân Tích Da</span>
                         </button> 
                     </div>
@@ -424,14 +411,12 @@ useEffect(() => {
 
             </div>
 
-            <div className="product-bottom-section">
+            <div className="product-detail-page-bottom-section">
                 <ProductSlider title="Bạn có thể sẽ thích" products={relatedProducts} />
                 
                 {recentProducts.length > 0 && (
                     <ProductSlider title="Các sản phẩm bạn đã xem" products={recentProducts} />
                 )}
-
-                <ProductReviews productId={id} />
             </div>
         </div>
     );

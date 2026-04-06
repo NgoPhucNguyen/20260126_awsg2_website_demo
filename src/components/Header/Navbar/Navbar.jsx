@@ -57,44 +57,44 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className="navbar" role="navigation">
+            <nav className="main-navbar" role="navigation">
                 {/* 🏠 LEFT SECTION: Brand Logo & Admin */}
-                <div className="navbar-left">
-                    <NavLink to="/" className="navbar-brand-link" aria-label="Trang chủ">
+                <div className="main-navbar-left">
+                    <NavLink to="/" className="main-navbar-brand-link" aria-label="Trang chủ">
                         <picture>
-                            <source media="(max-width: 768px)" srcSet="/src/assets/shell-icon.png" />
-                            <img src="/src/assets/bigbrandlogo.jpg" alt="Aphrodite Logo" className="navbar-brand-logo" />
+                            <source media="(max-width: 768px)" srcSet="/shell-icon.png" />
+                            <img src="/bigbrandlogo.jpg" alt="Aphrodite Logo" className="main-navbar-brand-logo" />
                         </picture>
                     </NavLink>
                     
                     {isAdmin && (
-                        <NavLink to="/admin" className="navbar-btn navbar-admin-btn">
-                            <FiSettings className="navbar-btn-icon admin-icon" />
+                        <NavLink to="/admin" className="main-navbar-btn main-navbar-admin-btn">
+                            <FiSettings className="main-navbar-btn-icon main-navbar-admin-icon" />
                         </NavLink>
                     )}
                 </div>
 
                 {/* 🔍 MIDDLE SECTION: Search Bar */}
-                <div className="navbar-center-search">
+                <div className="main-navbar-center-search">
                     <NavbarSearch/>
                 </div>
 
                 {/* 🛒 RIGHT SECTION: Actions (Contact, Cart, Account) */}
-                <div className={`navbar-right ${isMobileOpen ? 'mobile-active' : ''}`}>
+                <div className={`main-navbar-right ${isMobileOpen ? 'main-navbar-mobile-active' : ''}`}>
                     
                     {/* 1. Nút Liên hệ */}
-                    <button className="navbar-btn navbar-contact-btn" onClick={() => openModal('contact')}>
-                        <FiMessageCircle className="navbar-btn-icon contact-icon" /> 
-                        <span className="navbar-btn-text contact-text hide-on-mobile">Liên hệ</span>
+                    <button className="main-navbar-btn main-navbar-contact-btn" onClick={() => openModal('contact')}>
+                        <FiMessageCircle className="main-navbar-btn-icon main-navbar-contact-icon" /> 
+                        <span className="main-navbar-btn-text main-navbar-contact-text main-navbar-hide-on-mobile">Liên hệ</span>
                     </button>
 
                     {/* 2. Nút Giỏ hàng */}
-                    <NavLink to="/cart" className="navbar-btn navbar-cart-btn">
-                        <div className="navbar-cart-icon-wrapper">
-                            <FiShoppingCart className="navbar-btn-icon cart-icon" />
-                            {totalItems > 0 && <span className="navbar-cart-badge">{totalItems}</span>}
+                    <NavLink to="/cart" className="main-navbar-btn main-navbar-cart-btn">
+                        <div className="main-navbar-cart-icon-wrapper">
+                            <FiShoppingCart className="main-navbar-btn-icon main-navbar-cart-icon" />
+                            {totalItems > 0 && <span className="main-navbar-cart-badge">{totalItems}</span>}
                         </div>
-                        <span className="navbar-btn-text cart-text hide-on-mobile">Giỏ hàng</span>
+                        <span className="main-navbar-btn-text main-navbar-cart-text main-navbar-hide-on-mobile">Giỏ hàng</span>
                     </NavLink>
 
                     {/* 3. Nút Tài khoản / Đăng nhập */}
@@ -105,9 +105,9 @@ const Navbar = () => {
                             onLogout={handleLogout} 
                         />
                     ) : (
-                        <button className="navbar-btn navbar-login-btn" onClick={() => openModal('login')}>
-                            <FiUser className="navbar-btn-icon login-icon" />
-                            <span className="navbar-btn-text login-text">Đăng nhập</span>
+                        <button className="main-navbar-btn main-navbar-login-btn" onClick={() => openModal('login')}>
+                            <FiUser className="main-navbar-btn-icon main-navbar-login-icon" />
+                            <span className="main-navbar-btn-text main-navbar-login-text">Đăng nhập</span>
                         </button>
                     )}
                 </div>

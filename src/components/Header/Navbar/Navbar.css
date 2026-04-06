@@ -1,7 +1,7 @@
 /* ========================================================= */
 /* 1. NAVBAR CONTAINER - SMART FLEX-WRAP                       */
 /* ========================================================= */
-.navbar {
+.main-navbar {
     background-color: var(--bg-primary, #ffffff);
     display: flex;
     flex-wrap: wrap; 
@@ -16,21 +16,21 @@
 /* ========================================================= */
 /* 2. LAYOUT PHÂN VÙNG (LEFT, CENTER, RIGHT)                 */
 /* ========================================================= */
-.navbar-left {
+.main-navbar-left {
     order: 1; 
     display: flex;
     align-items: center;
     gap: clamp(0.5rem, 1vw, 1rem);
 }
 
-.navbar-center-search {
+.main-navbar-center-search {
     order: 2; 
     flex: 1; 
     max-width: 600px; 
     margin: 0 clamp(1.5rem, 4vw, 3rem);
 }
 
-.navbar-right {
+.main-navbar-right {
     order: 3; 
     display: flex;
     align-items: center;
@@ -40,7 +40,7 @@
 /* ========================================================= */
 /* 3. BRAND LOGO                                             */
 /* ========================================================= */
-.navbar-brand-logo {
+.main-navbar-brand-logo {
     height: clamp(32px, 5vh, 45px);
     width: auto;
     object-fit: contain;
@@ -48,9 +48,9 @@
 }
 
 /* ========================================================= */
-/* 4. CẤU TRÚC NÚT CHUNG (NAVBAR-BTN)                        */
+/* 4. CẤU TRÚC NÚT CHUNG (MAIN-NAVBAR-BTN)                   */
 /* ========================================================= */
-.navbar-btn {
+.main-navbar-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -60,15 +60,15 @@
     cursor: pointer;
     padding: 8px; 
     border-radius: 6px;
-    text-decoration: none; /* Dành cho NavLink */
+    text-decoration: none; 
     transition: background-color 0.2s ease;
 }     
 
-.navbar-btn:hover {
+.main-navbar-btn:hover {
     background-color: var(--bg-secondary, #f5f5f5);
 }
 
-.navbar-cart-btn:hover {
+.main-navbar-cart-btn:hover {
     background-color: transparent;
     opacity: 0.8;
 }
@@ -78,7 +78,7 @@
 /* ========================================================= */
 
 /* --- THIẾT LẬP TEXT --- */
-.navbar-btn-text {
+.main-navbar-btn-text {
     font-size: clamp(0.85rem, 1vw + 0.5rem, 0.95rem);
     color: var(--text-primary, #1a1a1a);
     font-weight: 500;
@@ -86,16 +86,8 @@
     transition: color 0.2s ease;
 }
 
-/* Nếu bạn muốn Text đổi màu khi hover, bạn có thể gọi đích danh: */
-/* .navbar-btn:hover .navbar-btn-text { color: #d4af37; } */
-
-/* Bạn có thể CSS riêng cho từng chữ nếu cần */
-.cart-text {}
-.contact-text {}
-.login-text {}
-
 /* --- THIẾT LẬP ICON --- */
-.navbar-btn-icon {
+.main-navbar-btn-icon {
     font-size: clamp(1.25rem, 2.5vw, 1.4rem);
     stroke-width: 2px;
     color: var(--text-primary, #1a1a1a);
@@ -103,20 +95,16 @@
 }
 
 /* Tùy chỉnh riêng lẻ cho từng Icon */
-.admin-icon { color: #4b5563; }
-.navbar-admin-btn:hover .admin-icon {
+.main-navbar-admin-icon { color: #4b5563; }
+.main-navbar-admin-btn:hover .main-navbar-admin-icon {
     transform: rotate(90deg); 
     color: #111827;
 }
 
-.cart-icon {}
-.contact-icon {}
-.login-icon {}
-
 /* ========================================================= */
 /* 6. CART BADGE (SỐ ĐỎ TRÊN GIỎ HÀNG)                       */
 /* ========================================================= */
-.navbar-cart-icon-wrapper {
+.main-navbar-cart-icon-wrapper {
     position: relative; 
     display: flex;
     align-items: center;
@@ -124,7 +112,7 @@
     line-height: 0; 
 }
 
-.navbar-cart-badge {
+.main-navbar-cart-badge {
     position: absolute;
     top: -6px; 
     right: -8px;
@@ -146,23 +134,23 @@
 /* ========================================================= */
 /* 7. ĐIỀU KHIỂN RESPONSIVE MOBILE                           */
 /* ========================================================= */
-.hide-on-desktop { display: none; }
-.hide-on-mobile { display: flex; }
+.main-navbar-hide-on-desktop { display: none; }
+.main-navbar-hide-on-mobile { display: flex; }
 
 @media screen and (max-width: 768px) {
-    .hide-on-mobile { display: none !important; }
-    .hide-on-desktop { display: flex !important; }
+    .main-navbar-hide-on-mobile { display: none !important; }
+    .main-navbar-hide-on-desktop { display: flex !important; }
 
-    .navbar { padding: 0.5rem 1rem; }
-    .navbar-left { order: 1; gap: 0.5rem; }
-    .navbar-right { order: 2; gap: 0.25rem; }
+    .main-navbar { padding: 0.5rem 1rem; }
+    .main-navbar-left { order: 1; gap: 0.5rem; }
+    .main-navbar-right { order: 2; gap: 0.25rem; }
     
-    .navbar-center-search {
+    .main-navbar-center-search {
         order: 3; 
         flex: 1 1 100%; 
         max-width: 100%;
         margin: 0.5rem 0 0 0; 
     }
     
-    .navbar-btn { padding: 6px; }
+    .main-navbar-btn { padding: 6px; }
 }

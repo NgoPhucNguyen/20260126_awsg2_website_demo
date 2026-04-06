@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { FiMessageCircle, FiSend, FiX } from "react-icons/fi";
+import { FiMessageCircle, FiSend, FiX, FiMaximize2, FiMinimize2 } from "react-icons/fi";
+import ReactMarkdown from "react-markdown"; // 🆕 Import Markdown
 import { useAxiosPrivate } from "@/hooks/useAxiosPrivate";
 import { useAuth } from "@/features/auth/AuthProvider";
 import "./ChatbotWidget.css";
@@ -14,10 +15,18 @@ const createMessage = (role, text) => ({
     createdAt: new Date().toISOString(),
 });
 
+const QUICK_REPLIES = [
+    "Tư vấn da dầu",
+    "Kem chống nắng",
+    "Tìm nước tẩy trang",
+    "Mã giảm giá hot"
+];
+
 const ChatbotWidget = () => {
     const { auth } = useAuth();
     const axiosPrivate = useAxiosPrivate();
     const [isOpen, setIsOpen] = useState(false);
+    const [isMaximized, setIsMaximized] = useState(false); // 🆕 Maximize state
     const [isTyping, setIsTyping] = useState(false);
     const [input, setInput] = useState("");
     const [messages, setMessages] = useState(() => {
@@ -51,14 +60,7 @@ const ChatbotWidget = () => {
         setMessages((prev) => [...prev.slice(-MAX_MESSAGES + 1), createMessage(role, text.trim())]);
     };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        const prompt = input.trim();
-        if (!prompt || isTyping) return;
-
-        setInput("");
-        pushMessage("user", prompt);
-
+    const sendMessageToBot = async (promptText) => {
         if (!auth?.accessToken) {
             pushMessage("bot", "Xin lỗi, bạn cần đăng nhập để sử dụng tính năng này.");
             return;
@@ -66,7 +68,7 @@ const ChatbotWidget = () => {
 
         setIsTyping(true);
         try {
-            const response = await axiosPrivate.post("/api/chatbot/ask", { prompt });
+            const response = await axiosPrivate.post("/api/chatbot/ask", { prompt: promptText });
             const botContent = response?.data?.content;
             if (typeof botContent === "string" && botContent.trim()) {
                 pushMessage("bot", botContent);
@@ -81,6 +83,22 @@ const ChatbotWidget = () => {
         }
     };
 
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const prompt = input.trim();
+        if (!prompt || isTyping) return;
+
+        setInput("");
+        pushMessage("user", prompt);
+        await sendMessageToBot(prompt);
+    };
+
+    const handleQuickReply = async (replyText) => {
+        if (isTyping) return;
+        pushMessage("user", replyText);
+        await sendMessageToBot(replyText);
+    };
+
     const clearHistory = () => {
         const welcome = createMessage("bot", "Lịch sử đã được xóa. Mình có thể hỗ trợ gì cho bạn?");
         setMessages([welcome]);
@@ -92,25 +110,32 @@ const ChatbotWidget = () => {
                 type="button"
                 className="chatbot-widget-fab"
                 onClick={() => setIsOpen((prev) => !prev)}
-                aria-label={isOpen ? "Dong chatbot" : "Mo chatbot"}
-                title={isOpen ? "Dong chatbot" : "Mo chatbot"}
             >
                 {isOpen ? <FiX size={24} /> : <FiMessageCircle size={24} />}
             </button>
 
             {isOpen && (
-                <section className="chatbot-widget-panel" role="dialog" aria-label="Ho tro chatbot">
+                <section 
+                    className={`chatbot-widget-panel ${isMaximized ? 'chatbot-widget-maximized' : ''}`} 
+                    role="dialog"
+                >
                     <header className="chatbot-widget-header">
                         <div className="chatbot-widget-header-left">
                             <span className="chatbot-widget-avatar">AI</span>
                             <div>
                                 <h3>Trợ lý chăm sóc da</h3>
-                                <p>Online</p>
+                                <p>Sẵn sàng hỗ trợ bạn ✨</p>
                             </div>
                         </div>
-                        <button type="button" className="chatbot-widget-clear-btn" onClick={clearHistory}>
-                            Xóa lịch sử
-                        </button>
+                        <div className="chatbot-widget-header-actions">
+                            {/* 🆕 Controls */}
+                            <button type="button" onClick={() => setIsMaximized(!isMaximized)} className="chatbot-widget-icon-btn">
+                                {isMaximized ? <FiMinimize2 size={16} /> : <FiMaximize2 size={16} />}
+                            </button>
+                            <button type="button" className="chatbot-widget-clear-btn" onClick={clearHistory}>
+                                Xóa
+                            </button>
+                        </div>
                     </header>
 
                     <div className="chatbot-widget-messages" ref={listRef}>
@@ -119,21 +144,32 @@ const ChatbotWidget = () => {
                                 key={message.id}
                                 className={`chatbot-widget-message ${message.role === "user" ? "chatbot-widget-message-user" : "chatbot-widget-message-bot"}`}
                             >
-                                {message.role === "bot" && <span className="chatbot-widget-inline-avatar">AI</span>}
-                                <p>{message.text}</p>
+                                {/* 🆕 Render Markdown instead of raw text */}
+                                <div className="chatbot-markdown-content">
+                                    {message.role === "bot" ? (
+                                        <ReactMarkdown>{message.text}</ReactMarkdown>
+                                    ) : (
+                                        <p>{message.text}</p>
+                                    )}
+                                </div>
                             </article>
                         ))}
 
                         {isTyping && (
                             <article className="chatbot-widget-message chatbot-widget-message-bot">
-                                <span className="chatbot-widget-inline-avatar">AI</span>
-                                <p className="chatbot-widget-typing" aria-label="Chatbot dang tra loi">
-                                    <span>.</span>
-                                    <span>.</span>
-                                    <span>.</span>
+                                <p className="chatbot-widget-typing">
+                                    <span></span><span></span><span></span>
                                 </p>
                             </article>
                         )}
+                    </div>
+
+                    <div className="chatbot-widget-quick-replies">
+                        {QUICK_REPLIES.map((reply, index) => (
+                            <button key={index} type="button" className="chatbot-widget-pill" onClick={() => handleQuickReply(reply)} disabled={isTyping}>
+                                {reply}
+                            </button>
+                        ))}
                     </div>
 
                     <form className="chatbot-widget-input-row" onSubmit={handleSubmit}>
@@ -141,10 +177,10 @@ const ChatbotWidget = () => {
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            placeholder="Nhập câu hỏi của bạn..."
-                            maxLength={1000}
+                            placeholder="Nhập câu hỏi..."
+                            maxLength={300} /* ⬇️ Reduced from 1000 to save tokens */
                         />
-                        <button type="submit" disabled={!canSend} aria-label="Gui tin nhan">
+                        <button type="submit" disabled={!canSend}>
                             <FiSend size={18} />
                         </button>
                     </form>

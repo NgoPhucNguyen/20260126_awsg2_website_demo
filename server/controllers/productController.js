@@ -13,10 +13,10 @@ const toVectorLiteral = (values = []) => {
 };
 
 const buildProductDocument = (product) => {
-  const name = product.name?.trim() || 'Khong co ten tieng Anh';
-  const nameVn = product.nameVn?.trim() || 'Khong co ten tieng Viet';
-  const description = product.description?.trim() || 'Khong co mo ta';
-  const ingredient = product.ingredient?.trim() || 'Khong co thanh phan';
+  const name = product.name?.trim() || 'Không có tên tiếng Anh';
+  const nameVn = product.nameVn?.trim() || 'Không có tên tiếng Việt';
+  const description = product.description?.trim() || 'Không có mô tả';
+  const ingredient = product.ingredient?.trim() || 'Không có thành phần';
 
   return [
     `Product ID: ${product.id}`,
@@ -29,7 +29,7 @@ const buildProductDocument = (product) => {
 
 const ensureVectorInfra = async (dimensions) => {
   if (!Number.isInteger(dimensions) || dimensions <= 0) {
-    throw new Error(`Invalid embedding dimensions: ${dimensions}`);
+    throw new Error(`Kích thước embedding không hợp lệ: ${dimensions}`);
   }
 
   if (vectorInfraReady) {
@@ -107,11 +107,9 @@ const shuffleArray = (array) => {
   return array;
 };
 
-// Get product from DB 
+// Lấy danh sách sản phẩm
 export const getProducts = async (req, res) => {
   try {
-    // 1. Destructure query params from the URL
-    // Example URL: /api/products?search=turmeric&brandId=abc-123&minPrice=50000&sort=price_asc
     const { 
       search, 
       brandId, 
@@ -123,76 +121,60 @@ export const getProducts = async (req, res) => {
       status
     } = req.query;
     
-    // 2. Build the dynamic 'where' object
-    // Cái này mình có thể điều chỉnh thay vì sử dụng DB không cần thiết.
-    // VD : xóa 1 sản phẩm
     const whereClause = {};
 
     if (status === 'archived') {
         whereClause.isActive = false; 
     } else {
-        whereClause.isActive = true; // Default behavior for the main store
+        whereClause.isActive = true; 
     }
 
-    // --- Search Logic (Name OR Vietnamese Name) ---
     if (search) {
       whereClause.OR = [
-        { name: { contains: search, mode: 'insensitive' } }, // Case insensitive
+        { name: { contains: search, mode: 'insensitive' } }, 
         { nameVn: { contains: search, mode: 'insensitive' } }
       ];
     }
 
-    // --- Filter: Brand & Category ---
-    // We split by comma to allow filtering multiple brands: ?brandId=id1,id2
     if (brandId) {
       whereClause.brandId = { in: brandId.split(',') };
     }
     if (categoryId) {
-      whereClause.categoryId = { in: categoryId.split(',').map(Number) }; // Convert to Int
+      whereClause.categoryId = { in: categoryId.split(',').map(Number) }; 
     }  
     if (skinType) {
-        // 1. Split the URL string into an array: ["da dầu", "da mụn"]
         const selectedSkins = skinType.split(','); 
-
-        // 2. We use 'AND' here so we don't accidentally overwrite your 'search' logic!
         whereClause.AND = whereClause.AND || [];
         whereClause.AND.push({
             OR: selectedSkins.map(skin => ({
                 skinType: {
                     contains: skin.trim(),
-                    mode: 'insensitive' // Still ignores uppercase/lowercase!
+                    mode: 'insensitive' 
                 }
             }))
         });
     } 
 
-    // --- Filter: Price Range (The Tricky Part) ---
-    // Find products where AT LEAST ONE variant fits the price range
     if (minPrice || maxPrice) {
       whereClause.variants = {
         some: {
           unitPrice: {
             gte: minPrice ? Number(minPrice) : 1000,  
-            lte: maxPrice ? Number(maxPrice) : 1000000, // 1 trieu em oi
+            lte: maxPrice ? Number(maxPrice) : 1000000, 
           },
         },
       };
     }
 
-    // 3. Sorting Logic
     let orderBy = {};
     if (sort === 'price_asc') {
-      // Sort by the price of the first variant (simplified)
-      orderBy = { variants: { _count: 'desc' } }; // This is complex in Prisma, often easier to sort in JS or aggregate
-      // Note: Sorting relations in Prisma is hard. For V1, let's sort by creation date
       orderBy = { id: 'desc' }; 
     } else if (sort === 'name_asc') {
       orderBy = { name: 'asc' };
     } else {
-      orderBy = { id: 'desc' }; // Default: Newest first
+      orderBy = { id: 'desc' }; 
     }
 
-    // 4. Execute Query
     const products = await prisma.product.findMany({
       where: whereClause,
       orderBy: orderBy,
@@ -201,7 +183,7 @@ export const getProducts = async (req, res) => {
         category: true,
         variants: {
           include: {
-            images: true, // Get images to show thumbnail
+            images: true, 
             inventories: true,
             promotions: {
                 include: {
@@ -215,7 +197,6 @@ export const getProducts = async (req, res) => {
 
     const formattedProducts = products.map(product => {
         const formattedVariants = product.variants.map(variant => {
-            // 🧮 THE MATH: Sum up all inventory for this specific variant
             const totalStock = variant.inventories?.reduce((sum, item) => sum + item.quantity, 0) || 0;
             return {
                 ...variant,
@@ -228,10 +209,10 @@ export const getProducts = async (req, res) => {
         };
     });
 
-    res.json(formattedProducts); // Send the calculated data!
+    res.json(formattedProducts); 
   } catch (error) {
-    console.error("Error fetching products:", error);
-    res.status(500).json({ error: 'Failed to fetch products' });
+    console.error("[GET_PRODUCTS_ERROR]:", error);
+    res.status(500).json({ error: 'Không thể lấy danh sách sản phẩm' });
   }
 };
 
@@ -247,8 +228,8 @@ export const getProductById = async (req, res) => {
         category: true,
         variants: {
           include: {
-            images: true, // Important: Get images for each variant
-            inventories: true, // Get inventory to check stock
+            images: true, 
+            inventories: true, 
             promotions: {
                 include: {
                     promotion: true
@@ -260,7 +241,7 @@ export const getProductById = async (req, res) => {
     });
 
     if (!product) {
-      return res.status(404).json({ error: "Product not found" });
+      return res.status(404).json({ error: "Không tìm thấy sản phẩm" });
     }
     const formattedVariants = product.variants.map(variant => {
         const totalStock = variant.inventories?.reduce((sum, item) => sum + item.quantity, 0) || 0;
@@ -269,20 +250,16 @@ export const getProductById = async (req, res) => {
 
     res.json({ ...product, variants: formattedVariants });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Server error" });
+      console.error("[GET_PRODUCT_BY_ID_ERROR]:", error);
+      res.status(500).json({ error: "Lỗi máy chủ nội bộ" });
     }
 };
 
-
-// Get all available brands, categories, and skin types to build the Sidebar
-// This func build for Filter
 export const getFilterAttributes = async (req, res) => {
   try {
-    const [brands, categories, skinTypes] = await Promise.all([
+    const [brands, categories] = await Promise.all([
       prisma.brand.findMany({ select: { id: true, name: true } }),
       prisma.category.findMany({ select: { id: true, name: true, nameVn: true } }),
-      // Group by skinType to get unique values
     ]);
     const targetSkinTypes = ["da thường", "da nhạy cảm", "da khô", "da dầu", "da mụn"];
 
@@ -292,29 +269,25 @@ export const getFilterAttributes = async (req, res) => {
       skinTypes: targetSkinTypes
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to fetch attributes' });
+    console.error("[GET_FILTER_ATTR_ERROR]:", error);
+    res.status(500).json({ error: 'Không thể lấy thuộc tính bộ lọc' });
   }
 };
 
-
-// GET /api/products/:id/related
 export const getRelatedProducts = async (req, res) => {
   try {
     const productId = parseInt(req.params.id, 10);
     if (isNaN(productId)) {
-        return res.json([]); // Return empty if invalid ID
+        return res.json([]); 
     }
 
-    // 1️⃣ Get current product's category AND skinType
     const currentProduct = await prisma.product.findUnique({
       where: { id: productId },
-      select: { categoryId: true, skinType: true } // 👈 Added skinType here!
+      select: { categoryId: true, skinType: true } 
     });
 
     if (!currentProduct) return res.json([]);
 
-    // 2️⃣ Define our target keywords and check for matches
     const targetKeywords = ["da thường", "da nhạy cảm", "da khô", "da dầu", "da mụn"];
     const currentSkinString = (currentProduct.skinType || "").toLowerCase();
     
@@ -322,26 +295,22 @@ export const getRelatedProducts = async (req, res) => {
       currentSkinString.includes(keyword)
     );
 
-    // 3️⃣ Build the dynamic database query (The "Where" Clause)
     let whereClause = {
-      NOT: { id: productId }, // Don't show the current product again
-      isActive: true   // Safety check: only show active products
+      NOT: { id: productId }, 
+      isActive: true  
     };
 
     if (matchedKeywords.length > 0) {
-      // ✅ If it has a specific skin type, find others with the SAME skin type
       whereClause.OR = matchedKeywords.map(keyword => ({
         skinType: {
           contains: keyword,
-          mode: 'insensitive' // Ignore uppercase/lowercase typos from admins!
+          mode: 'insensitive' 
         }
       }));
     } else {
-      // 🔄 Fallback: If no skin type matches, just use the category like you originally did!
       whereClause.categoryId = currentProduct.categoryId;
     }
 
-    // 4️⃣ Fetch the actual products
     const related = await prisma.product.findMany({
       where: whereClause,
       take: 20,
@@ -358,7 +327,7 @@ export const getRelatedProducts = async (req, res) => {
                 }
             }
           },
-          take: 1 // Perfect! Keep this.
+          take: 1 
         },
         brand: true
       }
@@ -374,72 +343,59 @@ export const getRelatedProducts = async (req, res) => {
     const randomizedProducts = shuffleArray(formattedRelated).slice(0, 8);
     res.json(randomizedProducts);
   } catch (error) {
-    console.error(error);
-    res.json([]); // Return empty array on error, don't crash
+    console.error("[GET_RELATED_ERROR]:", error);
+    res.json([]); 
   }
 };
 
-// NOT USING DB .Delete using the whereClause. 
 export const deleteProduct = async (req, res) => {
   try {
-    // 1️⃣ Get the ID from the URL (e.g., /api/products/5)
     const { id } = req.params;
 
-    // 2️⃣ Double-check the product actually exists
     const existingProduct = await prisma.product.findUnique({
       where: { id: Number(id) }
     });
 
     if (!existingProduct) {
-      return res.status(404).json({ error: "Product not found" });
+      return res.status(404).json({ error: "Không tìm thấy sản phẩm" });
     }
 
-    // 3️⃣ 🛡️ THE SOFT DELETE: Update isActive to false
     await prisma.product.update({
       where: { id: Number(id) },
-      data: { isActive: false } // 👈 The magic switch!
+      data: { isActive: false } 
     });
 
-    // 4️⃣ Send success message back to React
-    res.json({ message: "Product successfully hidden from the store!" });
+    res.json({ message: "Đã ẩn sản phẩm khỏi cửa hàng!" });
 
   } catch (error) {
-    console.error("Soft delete error:", error);
-    res.status(500).json({ error: "Failed to delete product" });
+    console.error("[SOFT_DELETE_ERROR]:", error);
+    res.status(500).json({ error: "Xóa sản phẩm thất bại" });
   }
 };
 
-
-// ♻️ RESTORE PRODUCT (UNDO)
 export const restoreProduct = async (req, res) => {
   try {
     const { id } = req.params;
 
     await prisma.product.update({
       where: { id: Number(id) },
-      data: { isActive: true } // 👈 Flips it back on!
+      data: { isActive: true } 
     });
 
-    res.json({ message: "Product restored to the store!" });
+    res.json({ message: "Đã khôi phục sản phẩm trên cửa hàng!" });
   } catch (error) {
-    console.error("Restore error:", error);
-    res.status(500).json({ error: "Failed to restore product" });
+    console.error("[RESTORE_PRODUCT_ERROR]:", error);
+    res.status(500).json({ error: "Khôi phục sản phẩm thất bại" });
   }
 };
 
-
-// server/controllers/productController.js
-
 export const createProduct = async (req, res) => {
     try {
-        // 1. Get all the simple data from the React form
         const { 
             name, nameVn, brandId, categoryId, description, 
             ingredient, skinType, sku, unitPrice, stock, imageUrls 
         } = req.body;
 
-        // 2. 🏢 THE WAREHOUSE TRICK
-        // Find the first warehouse. If the DB is empty, create a dummy one!
         let warehouse = await prisma.warehouse.findFirst();
         if (!warehouse) {
             warehouse = await prisma.warehouse.create({
@@ -457,8 +413,6 @@ export const createProduct = async (req, res) => {
             altText: `${name} image ${index + 1}`
         }));
 
-        // 3. 🛡️ THE MASSIVE SINGLE QUERY (Nested Writes)
-        // This safely creates the Product, Variant, Image, and Inventory all at once!
         const newProduct = await prisma.product.create({
             data: {
                 name,
@@ -470,7 +424,6 @@ export const createProduct = async (req, res) => {
                 skinType,
                 isActive: true, 
                 
-                // Nest the Variant creation
                 variants: {
                     create: [{
                         sku: sku || `SKU-${Date.now()}`, 
@@ -478,12 +431,10 @@ export const createProduct = async (req, res) => {
                         thumbnailUrl: safeImageUrls[0] || "",
                         specification: { packaging: "Standard" }, 
                         
-                        // Nest the High-Res Image creation
                         images: {
                             create: imageRecords
                         },
                         
-                        // Nest the Inventory creation
                         inventories: {
                             create: [{
                                 warehouseId: warehouse.id,
@@ -492,9 +443,8 @@ export const createProduct = async (req, res) => {
                         }
                     }]
                 }
-            }, // 👈 THE FIX: Close the 'data' object right here with a comma!
+            }, 
 
-            // 🌟 NOW include is a sibling to data
             include: {
                 category: true,
                 variants: {
@@ -508,11 +458,11 @@ export const createProduct = async (req, res) => {
 
         await syncProductVector(newProduct.id);
 
-        res.status(201).json({ message: "Product created successfully!", product: newProduct });
+        res.status(201).json({ message: "Tạo sản phẩm thành công!", product: newProduct });
         
     } catch (error) {
-        console.error("❌ Error creating product:", error);
-        res.status(500).json({ error: "Failed to create product in database." });
+        console.error("[CREATE_PRODUCT_ERROR]:", error);
+        res.status(500).json({ error: "Lưu sản phẩm vào cơ sở dữ liệu thất bại." });
     }
 };
 
@@ -522,7 +472,7 @@ export const updateProduct = async (req, res) => {
     const productId = Number(id);
 
     if (Number.isNaN(productId)) {
-      return res.status(400).json({ error: 'Invalid product id' });
+      return res.status(400).json({ error: 'Mã sản phẩm không hợp lệ' });
     }
 
     const {
@@ -538,7 +488,7 @@ export const updateProduct = async (req, res) => {
 
     const existingProduct = await prisma.product.findUnique({ where: { id: productId } });
     if (!existingProduct) {
-      return res.status(404).json({ error: 'Product not found' });
+      return res.status(404).json({ error: 'Không tìm thấy sản phẩm' });
     }
 
     const updatedProduct = await prisma.product.update({
@@ -561,9 +511,9 @@ export const updateProduct = async (req, res) => {
 
     await syncProductVector(updatedProduct.id);
 
-    return res.json({ message: 'Product updated successfully!', product: updatedProduct });
+    return res.json({ message: 'Cập nhật sản phẩm thành công!', product: updatedProduct });
   } catch (error) {
-    console.error('❌ Error updating product:', error);
-    return res.status(500).json({ error: 'Failed to update product.' });
+    console.error('[UPDATE_PRODUCT_ERROR]:', error);
+    return res.status(500).json({ error: 'Cập nhật sản phẩm thất bại.' });
   }
 };
