@@ -7,9 +7,9 @@
     "#server/*": "./server/*"
   },
   "scripts": {
-    "dev": "vite",
+    "client": "vite",
     "server": "nodemon -L ./server/server.js",
-    "website": "npm run dev & npm run server",
+    "website": "npm run client && npm run server",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
