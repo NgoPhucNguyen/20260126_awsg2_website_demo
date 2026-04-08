@@ -28,7 +28,7 @@ export const verifyJWT = (req, res, next) => {
             // and attach it to the request object so the controller can use it.
             req.user = {
                 id: decoded.id,
-                account_name: decoded.account_name, 
+                account_name: decoded.accountName, 
                 role: decoded.role
             };
             

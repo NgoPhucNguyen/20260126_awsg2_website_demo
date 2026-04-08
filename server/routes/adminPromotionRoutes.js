@@ -1,3 +1,4 @@
+// server/routes/adminPromotionRoutes.js
 import express from 'express';
 import {
   getPromotions,
@@ -6,23 +7,23 @@ import {
   updatePromotion,
   deletePromotion,
   addProductToPromotion,
-  removeProductFromPromotion,
-  getActivePromotions
+  removeProductFromPromotion
 } from '../controllers/promotionController.js';
+import { verifyJWT } from '#server/middleware/verifyJWT.js';
+import { verifyAdmin } from '#server/middleware/verifyAdmin.js';
 
 const router = express.Router();
 
-// PUBLIC ROUTE - Get active promotions
-router.get('/active', getActivePromotions);
+// 🔒 KHÓA TẤT CẢ ROUTE BÊN DƯỚI
+router.use(verifyJWT, verifyAdmin);
 
-// ADMIN ROUTES
 router.get('/', getPromotions);
 router.get('/:id', getPromotionById);
 router.post('/', createPromotion);
 router.put('/:id', updatePromotion);
 router.delete('/:id', deletePromotion);
 
-// PRODUCT IN PROMOTION ROUTES
+// Quản lý sản phẩm trong promotion
 router.post('/:promotionId/products', addProductToPromotion);
 router.delete('/:promotionId/products/:productPromotionId', removeProductFromPromotion);
 

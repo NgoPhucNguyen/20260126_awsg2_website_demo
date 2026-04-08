@@ -366,3 +366,27 @@
 .chatbot-markdown-content strong {
   color: #1c1917; /* Darker bold text for readability */
 }
+
+
+
+.chatbot-widget-carousel {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 8px 0;
+    margin-top: 10px;
+    /* Hiệu ứng cuộn mượt và ẩn scrollbar */
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; 
+}
+
+.chatbot-widget-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+/* Ép mỗi Card trong Carousel có độ rộng cố định */
+.chatbot-widget-carousel .ChatbotProductCard-container {
+    flex: 0 0 180px; /* Độ rộng vừa phải để hiện được 1.5 card, gợi ý người dùng vuốt tiếp */
+    scroll-snap-align: start;
+    margin: 0; /* Bỏ margin dọc cũ */
+}

@@ -1,6 +1,6 @@
-/* src/components/AdminComponent/PromotionFormModal.css */
+/* src/components/AdminComponent/Promotion/PromotionFormModal.css */
 
-.promotion-form-modal-overlay {
+.admin-promotions-form-overlay {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.5);
@@ -13,7 +13,7 @@
     font-family: var(--font-body, 'Inter', sans-serif);
 }
 
-.promotion-form-modal-content {
+.admin-promotions-form-content {
     background: #ffffff;
     border-radius: 12px;
     width: 100%;
@@ -22,15 +22,15 @@
     overflow-y: auto;
     padding: clamp(1.5rem, 3vw, 2.5rem);
     box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-    animation: formModalSlideUp 0.3s ease-out;
+    animation: adminPromotionsFormSlideUp 0.3s ease-out;
 }
 
-@keyframes formModalSlideUp {
+@keyframes adminPromotionsFormSlideUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-.promotion-form-modal-header {
+.admin-promotions-form-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -39,14 +39,14 @@
     border-bottom: 1px solid #e5e5e5;
 }
 
-.promotion-form-modal-header h3 {
+.admin-promotions-form-header h3 {
     margin: 0;
     font-size: 1.25rem;
     color: #1c1917;
     font-weight: 700;
 }
 
-.promotion-form-modal-close-icon {
+.admin-promotions-form-close-icon {
     background: none;
     border: none;
     font-size: 1.5rem;
@@ -56,9 +56,9 @@
     padding: 4px;
 }
 
-.promotion-form-modal-close-icon:hover { color: #1c1917; }
+.admin-promotions-form-close-icon:hover { color: #1c1917; }
 
-.promotion-form-modal-error-banner {
+.admin-promotions-form-error-banner {
     background: #fef2f2;
     border: 1px solid #fecaca;
     color: #dc2626;
@@ -69,12 +69,12 @@
     font-weight: 600;
 }
 
-.promotion-form-modal-grid {
+.admin-promotions-form-grid {
     display: flex;
     flex-direction: column;
 }
 
-.promotion-form-modal-section {
+.admin-promotions-form-section {
     margin-bottom: 24px;
     background: #f9fafb;
     padding: 20px;
@@ -82,7 +82,7 @@
     border: 1px solid #f3f4f6;
 }
 
-.promotion-form-modal-section-title {
+.admin-promotions-form-section-title {
     margin: 0 0 16px;
     font-size: 1rem;
     color: #cca858;
@@ -91,28 +91,28 @@
     font-weight: 700;
 }
 
-.promotion-form-modal-row-2 {
+.admin-promotions-form-row-2 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 16px;
     margin-bottom: 16px;
 }
 
-.promotion-form-modal-group {
+.admin-promotions-form-group {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.promotion-form-modal-label {
+.admin-promotions-form-label {
     font-size: 0.85rem;
     font-weight: 700;
     color: #374151;
 }
 
-.promotion-form-modal-required-star { color: #dc2626; }
+.admin-promotions-form-required-star { color: #dc2626; }
 
-.promotion-form-modal-input-field {
+.admin-promotions-form-input {
     padding: 10px 12px;
     border: 1px solid #d1d5db;
     border-radius: 6px;
@@ -124,29 +124,19 @@
     background-color: #ffffff;
 }
 
-.promotion-form-modal-input-field:focus {
+.admin-promotions-form-input:focus {
     border-color: #cca858;
     box-shadow: 0 0 0 3px rgba(204, 168, 88, 0.15);
 }
 
-.promotion-form-modal-input-field.input-error {
-    border-color: #dc2626;
-    background-color: #fef2f2;
-}
-
-.promotion-form-modal-input-field:disabled {
-    background-color: #f3f4f6;
-    cursor: not-allowed;
-}
-
-.promotion-form-modal-field-error {
+.admin-promotions-form-field-error {
     color: #dc2626;
     font-size: 0.8rem;
     margin-top: 2px;
     font-weight: 500;
 }
 
-.promotion-form-modal-checkbox-row {
+.admin-promotions-form-checkbox-row {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -156,34 +146,36 @@
     font-size: 0.95rem;
 }
 
-.promotion-form-modal-checkbox-row input[type="checkbox"] {
+.admin-promotions-form-checkbox-row input[type="checkbox"] {
     width: 18px;
     height: 18px;
     cursor: pointer;
     accent-color: #1c1917;
 }
 
-.promotion-form-modal-variant-selector {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 15px;
+.admin-promotions-form-btn-select {
+    padding: 10px 20px;
+    background-color: #e5e7eb;
+    color: #4b5563;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
-.promotion-form-modal-hint-text {
-    font-size: 0.85rem;
-    color: #6b7280;
-    font-style: italic;
+.admin-promotions-form-btn-select:hover {
+    background-color: #d1d5db;
 }
 
-.promotion-form-modal-selected-variants {
+.admin-promotions-form-selected-list {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+    margin-top: 15px;
 }
 
-.promotion-form-modal-variant-tag {
+.admin-promotions-form-tag {
     background: #fdfaf3;
     color: #856404;
     border: 1px solid #cca858;
@@ -196,19 +188,15 @@
     font-weight: 600;
 }
 
-.promotion-form-modal-variant-tag button {
-    border: none;
-    background: transparent;
-    color: #856404;
+.admin-promotions-form-tag span {
     cursor: pointer;
-    padding: 0;
-    font-size: 1rem;
-    transition: transform 0.1s;
+    font-weight: bold;
+    color: #856404;
 }
 
-.promotion-form-modal-variant-tag button:hover { transform: scale(1.2); }
+.admin-promotions-form-tag span:hover { transform: scale(1.2); }
 
-.promotion-form-modal-footer {
+.admin-promotions-form-footer {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
@@ -217,46 +205,38 @@
     border-top: 1px solid #e5e5e5;
 }
 
-.promotion-form-modal-btn {
-    padding: clamp(10px, 1.5vw, 12px) clamp(16px, 2vw, 24px);
+.admin-promotions-form-btn-submit, 
+.admin-promotions-form-btn-cancel {
+    padding: 12px 24px;
     border-radius: 8px;
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    transition: all 0.2s;
     border: none;
 }
 
-.promotion-form-modal-btn-primary {
+.admin-promotions-form-btn-submit {
     background-color: #1c1917;
     color: #cca858;
 }
 
-.promotion-form-modal-btn-primary:hover:not(:disabled) {
+.admin-promotions-form-btn-submit:hover:not(:disabled) {
     background-color: #333333;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-.promotion-form-modal-btn-secondary {
+.admin-promotions-form-btn-cancel {
     background-color: #e5e7eb;
     color: #4b5563;
 }
 
-.promotion-form-modal-btn-secondary:hover:not(:disabled) {
+.admin-promotions-form-btn-cancel:hover {
     background-color: #d1d5db;
 }
 
-.promotion-form-modal-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
 @media screen and (max-width: 640px) {
-    .promotion-form-modal-footer { flex-direction: column; }
-    .promotion-form-modal-btn { width: 100%; }
-    .promotion-form-modal-variant-selector { flex-direction: column; align-items: flex-start; }
+    .admin-promotions-form-footer { flex-direction: column; }
+    .admin-promotions-form-btn-submit, 
+    .admin-promotions-form-btn-cancel { width: 100%; }
 }

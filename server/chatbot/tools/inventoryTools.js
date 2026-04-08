@@ -1,3 +1,4 @@
+// server/chatbot/tools/inventoryTools.js
 import { tool } from "@langchain/core/tools";
 import { z } from "zod";
 import prisma from "../../prismaClient.js";

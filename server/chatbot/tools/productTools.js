@@ -1,40 +1,58 @@
+// server/chatbot/tools/productTools.js
 import { tool } from "@langchain/core/tools";
 import { z } from "zod";
 import prisma from "../../prismaClient.js";
 
 // Search products by name or keyword
 export const searchProductsTool = tool(
-    async ({ keyword, limit = 10 }) => {
+    async ({ keyword, limit = 5 }) => {
         try {
-            const products = await prisma.product.findMany({
-                where: {
-                    OR: [
-                        { name: { contains: keyword, mode: "insensitive" } },
-                        { nameVn: { contains: keyword, mode: "insensitive" } },
-                        { description: { contains: keyword, mode: "insensitive" } },
-                    ],
-                },
+        const products = await prisma.product.findMany({
+            where: {
+            isActive: true,
+            OR: [
+                { nameVn: { contains: keyword, mode: "insensitive" } },
+                { description: { contains: keyword, mode: "insensitive" } },
+            ],
+            },
+            select: {
+            id: true,
+            nameVn: true,
+            description: true,
+            brand: { select: { name: true } },
+            // Lấy Variant đầu tiên để có giá và ảnh hiển thị lên Card
+            variants: {
+                take: 1,
                 select: {
-                    id: true,
-                    name: true,
-                    nameVn: true,
-                    brand: { select: { name: true } },
-                    category: { select: { name: true, nameVn: true } },
-                    description: true,
-                },
-                take: limit,
-            });
-            return JSON.stringify(products);
+                unitPrice: true,
+                thumbnailUrl: true,
+                }
+            }
+            },
+            take: limit,
+        });
+
+        // Format lại dữ liệu gọn gàng để trả về cho LLM
+        const formattedProducts = products.map(p => ({
+            id: p.id,
+            name: p.nameVn,
+            brand: p.brand?.name,
+            price: p.variants[0]?.unitPrice || "Liên hệ",
+            imageUrl: p.variants[0]?.thumbnailUrl || "",
+            description: p.description?.substring(0, 100) + "..." // Cắt ngắn mô tả cho gọn
+        }));
+
+        return JSON.stringify(formattedProducts);
         } catch (error) {
-            return JSON.stringify({ error: error.message });
+        return JSON.stringify({ error: error.message });
         }
     },
     {
         name: "searchProducts",
-        description: "Tìm kiếm sản phẩm dựa theo từ khóa (tên tiếng Anh, tiếng Việt hoặc mô tả)",
+        description: "Tìm kiếm sản phẩm mỹ phẩm kèm giá và ảnh để tư vấn cho khách hàng.",
         schema: z.object({
-            keyword: z.string().describe("Từ khóa tìm kiếm"),
-            limit: z.number().int().positive().default(10).describe("Số lượng kết quả trả về"),
+        keyword: z.string().describe("Từ khóa hoặc tên sản phẩm"),
+        limit: z.number().int().positive().default(5).describe("Số lượng kết quả"),
         }),
     }
 );

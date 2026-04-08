@@ -25,7 +25,7 @@ class AgentClient {
             "Chỉ trả lời ngắn gọn, rõ ràng, hữu ích. Nếu không có dữ liệu phù hợp, nói rõ và gợi ý bước tiếp theo."
 		].join(" ");
 
-		this.systemMessage = null;
+		this.systemMessagesCache = new Map();
 		this.ragMessage = null;
 		this.toolEnabledModels = new Map();
 	}
@@ -48,33 +48,35 @@ class AgentClient {
 	}
 
 	async loadSystemMessageByRole(role) {
-		if (Number(role) === Number(process.env.ADMIN_ROLE)) {
-			try {
-				const content = await readFile(SYSTEM_MESSAGE_ADMIN_PATH, "utf-8");
-				const text = content.trim();
-				this.systemMessage = text || this.systemPrompt;
-			} catch (error) {
-				console.warn("[CHATBOT] Failed to read admin system message file, using fallback prompt.", error);
-				this.systemMessage = this.systemPrompt;
-			}
-			return this.systemMessage;
-		}
+    const roleKey = Number(role);
 
-		if (Number(role) === Number(process.env.CUSTOMER_ROLE)) {
-			try {
-				const content = await readFile(SYSTEM_MESSAGE_CUSTOMER_PATH, "utf-8");
-				const text = content.trim();
-				this.systemMessage = text || this.systemPrompt;
-			} catch (error) {
-				console.warn("[CHATBOT] Failed to read customer system message file, using fallback prompt.", error);
-				this.systemMessage = this.systemPrompt;
-			}
-			return this.systemMessage;
-		}
+    // 1. Kiểm tra Cache (Cực nhanh & An toàn)
+    if (this.systemMessagesCache.has(roleKey)) {
+      return this.systemMessagesCache.get(roleKey);
+    }
 
-		this.systemMessage = this.systemPrompt;
-		return this.systemMessage;
-	}
+    let finalMessage = this.systemPrompt; // Mặc định nếu không khớp role
+
+    if (roleKey === Number(process.env.ADMIN_ROLE)) {
+      try {
+        const content = await readFile(SYSTEM_MESSAGE_ADMIN_PATH, "utf-8");
+        finalMessage = content.trim() || this.systemPrompt;
+      } catch (error) {
+        console.warn("[CHATBOT] Error reading admin system message.", error);
+      }
+    } else if (roleKey === Number(process.env.CUSTOMER_ROLE)) {
+      try {
+        const content = await readFile(SYSTEM_MESSAGE_CUSTOMER_PATH, "utf-8");
+        finalMessage = content.trim() || this.systemPrompt;
+      } catch (error) {
+        console.warn("[CHATBOT] Error reading customer system message.", error);
+      }
+    }
+
+    // 2. Lưu vào Cache và TRẢ VỀ trực tiếp (Không gán vào this.systemMessage)
+    this.systemMessagesCache.set(roleKey, finalMessage);
+    return finalMessage;
+  }
 
 	getToolContext(role) {
 		console.log(`[CHATBOT] getToolContext for role: ${role}`);

@@ -1,81 +1,120 @@
 // src/pages/admin/Promotions.jsx
-import { useState, useEffect } from 'react';
-import axios from '@/api/axios';
-import './Promotions.css';
-
-// Nhúng Component Form đã tách
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useAxiosPrivate } from '@/hooks/useAxiosPrivate'; 
+import { useDebounce } from '@/hooks/useDebounce';
 import PromotionFormModal from '@/components/AdminComponent/Promotion/PromotionFormModal';
 import { formatDateTimeVn } from '@/utils/dateUtils';
-// FontAwesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useToast } from '@/context/ToastProvider';
+import './Promotions.css';
 
-const API_PROMOTIONS = '/api/promotions';
-const API_PRODUCTS = '/api/products';
-const API_CATEGORIES = '/api/categories';
+const API_PROMOTIONS = '/api/admin/promotions';
+const API_PRODUCTS = '/api/admin/products';
+const API_CATEGORIES = '/api/admin/categories';
 
 const Promotions = () => {
-    // DATA STATE
+    const axiosPrivate = useAxiosPrivate();
+    const { showToast } = useToast();
+    const isMounted = useRef(true); // 🛡️ Chỉ dùng một mình Ref này thôi
+
     const [promotions, setPromotions] = useState([]);
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
     const [generalError, setGeneralError] = useState('');
 
-    // MODAL STATE
+    const [searchTerm, setSearchTerm] = useState("");
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const limit = 10;
+    
     const [showFormModal, setShowFormModal] = useState(false);
     const [editingPromo, setEditingPromo] = useState(null);
 
-    useEffect(() => {
-        fetchPromotions();
-        fetchProducts();
-        fetchCategories();
-    }, []);
+    const debouncedSearch = useDebounce(searchTerm, 500);
 
-    const fetchPromotions = async () => {
+    // 🔄 fetchData nhận signal để cancel khi unmount
+    const fetchData = useCallback(async (signal = null) => {
         try {
             setLoading(true);
-            const response = await axios.get(API_PROMOTIONS);
-            setPromotions(response.data);
+            const response = await axiosPrivate.get(
+                `${API_PROMOTIONS}?page=${page}&limit=${limit}&search=${debouncedSearch}`,
+                { signal } 
+            );
+            
+            if (isMounted.current) {
+                const resData = response.data;
+                setPromotions(resData.data || resData);
+                setTotalPages(resData.meta?.totalPages || 1);
+            }
         } catch (error) {
-            setGeneralError('Lỗi tải khuyến mãi: ' + error.message);
+            if (error.name !== 'CanceledError' && isMounted.current) {
+                setGeneralError('Lỗi tải khuyến mãi: ' + error.message);
+            }
         } finally {
-            setLoading(false);
+            if (isMounted.current) setLoading(false);
         }
-    };
+    }, [page, debouncedSearch, axiosPrivate]);
 
+    // 🕒 Quản lý vòng đời load dữ liệu
+    useEffect(() => {
+        isMounted.current = true;
+        const controller = new AbortController();
+
+        fetchData(controller.signal); // 🚀 Truyền signal vào đây
+        fetchProducts();
+        fetchCategories();
+
+        return () => {
+            isMounted.current = false; // 🛡️ Không còn lỗi property current
+            controller.abort();
+        };
+    }, [fetchData]); // Dependency là fetchData vì nó đã được bọc useCallback
+
+    // Reset trang khi search
+    useEffect(() => {
+        setPage(1);
+    }, [debouncedSearch]);
+
+    // Tìm đoạn này trong Promotions.jsx
     const fetchProducts = async () => {
         try {
-            const response = await axios.get(API_PRODUCTS);
-            setProducts(response.data);
-        } catch (error) {
-            console.error('Lỗi tải sản phẩm', error);
+            // Thêm tham số ?all=true để Backend trả về toàn bộ danh sách cho việc chọn lựa
+            const response = await axiosPrivate.get(`${API_PRODUCTS}?all=true`);
+            
+            // Backend trả về { data: [...] } nên ta bóc tách lấy .data
+            const items = response.data.data || response.data; 
+            
+            if (isMounted.current) {
+                setProducts(Array.isArray(items) ? items : []);
+            }
+        } catch (error) { 
+            console.error('Lỗi tải danh sách sản phẩm phục vụ chọn lựa:', error); 
         }
     };
 
     const fetchCategories = async () => {
         try {
-            const response = await axios.get(API_CATEGORIES);
+            const response = await axiosPrivate.get(API_CATEGORIES);
             setCategories(response.data);
-        } catch (error) {
-            console.error('Lỗi tải danh mục', error);
-        }
+        } catch (error) { console.error('Lỗi tải danh mục', error); }
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm('Bạn chắc chắn muốn xóa khuyến mãi này?')) {
-            try {
-                await axios.delete(`${API_PROMOTIONS}/${id}`);
-                fetchPromotions();
-            } catch (error) {
-                alert('Lỗi khi xóa: ' + error.message);
-            }
+        if (!window.confirm('Bạn chắc chắn muốn xóa?')) return;
+        try {
+            await axiosPrivate.delete(`${API_PROMOTIONS}/${id}`);
+            showToast("Đã xóa chương trình khuyến mãi!");
+            fetchData(); 
+        } catch (error) {
+            showToast("Xóa thất bại!", "error");
         }
     };
 
-    const handleCreateNew = () => {
-        setEditingPromo(null);
-        setShowFormModal(true);
+    const handleRefreshData = () => {
+        if (page !== 1) setPage(1);
+        else fetchData(); 
     };
 
     const handleEdit = (promo) => {
@@ -90,27 +129,37 @@ const Promotions = () => {
     };
     
     return (
-        <div className="promotion-wrapper fade-in">
-            <header className="promotion-header-section">
+        <div className="admin-promotions-page-container fade-in">
+            <header className="admin-promotions-page-header">
                 <div>
-                    <h2 className="promotion-heading-main">Quản Lý Khuyến Mãi</h2>
-                    <p className="promotion-heading-sub">Thiết lập các chương trình giảm giá tự động</p>
+                    <h2 className="admin-promotions-page-title">Quản Lý Khuyến Mãi</h2>
+                    <p className="admin-promotions-page-subtitle">Thiết lập các chương trình giảm giá tự động</p>
                 </div>
-                <button className="promotion-btn promotion-btn-primary" onClick={handleCreateNew}>
+                <button className="admin-promotions-page-btn-add" onClick={() => { setEditingPromo(null); setShowFormModal(true); }}>
                     <FontAwesomeIcon icon={faPlus} /> Tạo Khuyến Mãi Mới
                 </button>
             </header>
 
-            {generalError && <div className="promotion-error-banner">{generalError}</div>}
+            {generalError && <div className="admin-promotions-page-error">{generalError}</div>}
+
+            <div className="admin-promotions-page-search-wrap">
+                <input 
+                    type="text" 
+                    placeholder="Tìm theo tên hoặc mô tả..." 
+                    className="admin-promotions-page-search-input"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+            </div>
 
             {loading ? (
-                <div className="promotion-loading-area">
-                    <div className="promotion-spinner"></div>
-                    <p>Đang tải dữ liệu khuyến mãi...</p>
+                <div className="admin-promotions-page-loading">
+                    <div className="admin-promotions-page-spinner"></div>
+                    <p>Đang tải dữ liệu...</p>
                 </div>
             ) : (
-                <div className="promotion-table-container">
-                    <table className="promotion-data-table">
+                <div className="admin-promotions-page-table-wrapper">
+                    <table className="admin-promotions-page-table">
                         <thead>
                             <tr>
                                 <th>Loại</th>
@@ -126,39 +175,31 @@ const Promotions = () => {
                         <tbody>
                             {promotions.length === 0 ? (
                                 <tr>
-                                    <td colSpan="8" style={{textAlign: 'center', padding: '2rem', color: '#6b7280', fontStyle: 'italic'}}>
-                                        Chưa có chương trình khuyến mãi nào
-                                    </td>
+                                    <td colSpan="8" className="admin-promotions-page-empty">Chưa có chương trình khuyến mãi nào</td>
                                 </tr>
                             ) : (
                                 promotions.map((promo) => (
                                     <tr key={promo.id}>
                                         <td>
-                                            <span className={`promotion-badge ${promo.type === 'PERCENTAGE' ? 'badge-percentage' : 'badge-fixed'}`}>
+                                            <span className={`admin-promotions-page-badge ${promo.type === 'PERCENTAGE' ? 'percentage' : 'fixed'}`}>
                                                 {promo.type === 'PERCENTAGE' ? 'Phần Trăm' : 'Số Tiền'}
                                             </span>
                                         </td>
-                                        <td className="promotion-value-highlight">{formatValue(promo)}</td>
-                                        <td className="desc-cell">{promo.description || '-'}</td>
+                                        <td className="admin-promotions-page-td-value">{formatValue(promo)}</td>
+                                        <td className="admin-promotions-page-td-desc">{promo.description || '-'}</td>
                                         <td>{formatDateTimeVn(promo.startTime)}</td>
                                         <td>{formatDateTimeVn(promo.endTime)}</td>
+                                        <td><strong>{promo.applicableVariantIds?.length || 0}</strong> mã</td>
                                         <td>
-                                            <strong>{promo.applicableVariantIds?.length || 0}</strong> mã
+                                            {promo.rule?.minOrderValue > 0 && <div>Min: {promo.rule.minOrderValue.toLocaleString()}đ</div>}
+                                            {promo.rule?.isFirstOrder && <span className="admin-promotions-page-badge-info">Đơn đầu</span>}
                                         </td>
                                         <td>
-                                            {promo.rule?.minOrderValue > 0 && (
-                                                <div style={{fontSize: '0.85rem'}}>Min: {promo.rule.minOrderValue.toLocaleString()}đ</div>
-                                            )}
-                                            {promo.rule?.isFirstOrder && (
-                                                <div className="promotion-badge badge-first-order" style={{marginTop: '4px'}}>Đơn đầu</div>
-                                            )}
-                                        </td>
-                                        <td>
-                                            <div className="promotion-action-cell">
-                                                <button className="promotion-icon-btn btn-edit" onClick={() => handleEdit(promo)} title="Sửa">
+                                            <div className="admin-promotions-page-actions">
+                                                <button className="admin-promotions-page-btn-icon edit" onClick={() => handleEdit(promo)}>
                                                     <FontAwesomeIcon icon={faPenToSquare} />
                                                 </button>
-                                                <button className="promotion-icon-btn btn-delete" onClick={() => handleDelete(promo.id)} title="Xóa">
+                                                <button className="admin-promotions-page-btn-icon delete" onClick={() => handleDelete(promo.id)}>
                                                     <FontAwesomeIcon icon={faTrash} />
                                                 </button>
                                             </div>
@@ -168,17 +209,24 @@ const Promotions = () => {
                             )}
                         </tbody>
                     </table>
+
+                    {totalPages > 1 && (
+                        <div className="admin-promotions-page-pagination">
+                            <button onClick={() => setPage(p => p - 1)} disabled={page === 1} className="admin-promotions-page-page-btn">Trước</button>
+                            <span>Trang {page} / {totalPages}</span>
+                            <button onClick={() => setPage(p => p + 1)} disabled={page === totalPages} className="admin-promotions-page-page-btn">Sau</button>
+                        </div>
+                    )}
                 </div>
             )}
 
-            {/* NHÚNG MODAL TẠO/SỬA Ở ĐÂY */}
             {showFormModal && (
                 <PromotionFormModal 
                     promo={editingPromo}
                     products={products}
                     categories={categories}
                     onClose={() => setShowFormModal(false)}
-                    onSuccess={fetchPromotions} // Lưu xong thì reload bảng
+                    onSuccess={handleRefreshData}
                 />
             )}
         </div>

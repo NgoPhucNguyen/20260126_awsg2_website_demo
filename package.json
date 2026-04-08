@@ -7,9 +7,9 @@
     "#server/*": "./server/*"
   },
   "scripts": {
-    "client": "vite",
+    "dev": "vite",
     "server": "nodemon -L ./server/server.js",
-    "website": "npm run client && npm run server",
+    "website": "npm run dev && npm run server",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -34,6 +34,7 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "crypto": "^1.0.1",
+    "debounce": "^3.0.0",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "google-auth-library": "^10.6.2",

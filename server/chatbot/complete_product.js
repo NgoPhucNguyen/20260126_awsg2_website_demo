@@ -1,3 +1,4 @@
+// server/chatbot/complete_product.js
 import "dotenv/config";
 import { ChatBedrockConverse } from "@langchain/aws";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
@@ -19,7 +20,7 @@ const config = {
 
 const agent = new ChatBedrockConverse(config);
 
-const FALLBACK_TEXT = "Khong tim thay thong tin";
+const FALLBACK_TEXT = "Không tìm thấy thông tin";
 
 const ProductInfoSchema = z.array(
   z.object({
@@ -107,26 +108,30 @@ function parseProductInfo(raw) {
 }
 
 async function askModelForProductInfo(product, maxRetries = 2) {
-  const prompt = `Toi co ten san pham duong da bang tieng Viet: "${product.nameVn}".
-Tra ve DUY NHAT mot JSON array dung dinh dang, khong markdown, khong giai thich:
-[
-  {
-    "name": "...",
-    "description": "...",
-    "ingredients": "..."
-  }
-]
+  const prompt = `Tôi có tên sản phẩm dưỡng da bằng tiếng Việt: "${product.nameVn}".
 
-Yeu cau:
-- name: Ten tieng Anh chinh xac de tra cuu quoc te.
-- description: Mo ta ngan gon bang tieng Viet, neu cong dung va loai da phu hop.
-- ingredients: Danh sach hoat chat chinh.
-- Neu khong tim thay thong tin, dien gia tri "${FALLBACK_TEXT}".`;
+  Hãy trả về DUY NHẤT một JSON array đúng định dạng, không markdown, không giải thích:
+  [
+    {
+      "name": "...",
+      "description": "...",
+      "ingredients": "..."
+    }
+  ]
+
+  Yêu cầu:
+  - name: Tên tiếng Anh chính xác để tra cứu quốc tế.
+  - description: Mô tả ngắn gọn bằng tiếng Việt CÓ DẤU, nêu công dụng và loại da phù hợp.
+  - ingredients: Danh sách hoạt chất chính (có thể giữ nguyên tiếng Anh).
+  - TẤT CẢ nội dung tiếng Việt PHẢI có dấu đầy đủ, tự nhiên.
+  - Nếu không tìm thấy thông tin, điền giá trị "${FALLBACK_TEXT}".`;
 
   const messages = [
-    new SystemMessage("Ban la chuyen gia my pham. Chi tra ve JSON array hop le, khong markdown."),
-    new HumanMessage(prompt),
-  ];
+  new SystemMessage(
+    "Bạn là chuyên gia mỹ phẩm. Luôn trả về JSON array hợp lệ. Toàn bộ tiếng Việt phải có dấu đầy đủ, tự nhiên. Không dùng tiếng Việt không dấu. Không markdown."
+  ),
+  new HumanMessage(prompt),
+];
 
   let lastError;
 

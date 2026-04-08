@@ -1,6 +1,6 @@
 /* src/pages/admin/Coupons.css */
 
-.coupon-wrapper {
+.admin-coupons-page-container {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -13,7 +13,7 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-.coupon-header-section {
+.admin-coupons-page-header {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -22,20 +22,20 @@
     margin-bottom: clamp(1.5rem, 4vw, 2rem);
 }
 
-.coupon-heading-main {
+.admin-coupons-page-title {
     font-size: clamp(1.5rem, 3vw, 2rem);
     color: #1c1917;
     margin-bottom: 4px;
     font-weight: 800;
 }
 
-.coupon-heading-sub {
+.admin-coupons-page-subtitle {
     color: #6b7280;
     font-size: clamp(0.85rem, 1.5vw, 0.95rem);
     margin: 0;
 }
 
-.coupon-btn {
+.admin-coupons-page-btn-add {
     padding: clamp(10px, 1.5vw, 12px) clamp(16px, 2vw, 20px);
     border-radius: 8px;
     font-size: clamp(0.85rem, 1.2vw, 0.95rem);
@@ -47,20 +47,17 @@
     justify-content: center;
     gap: 8px;
     border: none;
-}
-
-.coupon-btn-primary {
     background-color: #1c1917;
     color: #cca858;
 }
 
-.coupon-btn-primary:hover:not(:disabled) {
+.admin-coupons-page-btn-add:hover:not(:disabled) {
     background-color: #333333;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-.coupon-error-banner {
+.admin-coupons-page-error {
     background: #fef2f2;
     border: 1px solid #fecaca;
     color: #dc2626;
@@ -72,9 +69,35 @@
 }
 
 /* ========================================================= */
+/* THANH TÌM KIẾM (SEARCH BAR)                               */
+/* ========================================================= */
+.admin-coupons-page-search-wrap {
+    margin-bottom: clamp(1.25rem, 3vw, 1.75rem);
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+}
+
+.admin-coupons-page-search-input {
+    width: 100%;
+    padding: clamp(10px, 1.5vw, 12px) 16px clamp(10px, 1.5vw, 12px) 40px;
+    border: 1px solid var(--border-color, #e5e5e5);
+    border-radius: 8px;
+    outline: none;
+    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    transition: all 0.3s ease;
+    background-color: #ffffff;
+}
+
+.admin-coupons-page-search-input:focus {
+    border-color: #cca858;
+    box-shadow: 0 0 0 3px rgba(204, 168, 88, 0.15);
+}
+
+/* ========================================================= */
 /* BẢNG DỮ LIỆU (DATA TABLE)                                 */
 /* ========================================================= */
-.coupon-table-container {
+.admin-coupons-page-table-wrapper {
     width: 100%;
     overflow-x: auto;
     background: #ffffff;
@@ -82,21 +105,21 @@
     box-shadow: 0 2px 12px rgba(0,0,0,0.03);
 }
 
-.coupon-data-table {
+.admin-coupons-page-table {
     width: 100%;
     border-collapse: collapse;
     min-width: 800px; 
 }
 
-.coupon-data-table th, 
-.coupon-data-table td {
+.admin-coupons-page-table th, 
+.admin-coupons-page-table td {
     text-align: left;
     padding: clamp(12px, 1.5vw, 16px);
     border-bottom: 1px solid var(--border-color, #f3f4f6);
     font-size: clamp(0.85rem, 1.2vw, 0.95rem);
 }
 
-.coupon-data-table th {
+.admin-coupons-page-table th {
     background-color: #f9fafb;
     font-weight: 700;
     color: #4b5563;
@@ -105,12 +128,14 @@
     letter-spacing: 0.5px;
 }
 
-.coupon-empty-row {
+.admin-coupons-page-empty {
     color: #6b7280;
     font-style: italic;
+    text-align: center;
+    padding: 2rem;
 }
 
-.coupon-code-highlight {
+.admin-coupons-page-td-code {
     font-weight: 800;
     color: #1c1917;
     font-family: monospace;
@@ -118,26 +143,31 @@
     letter-spacing: 1px;
 }
 
-.coupon-value-highlight {
+.admin-coupons-page-td-value {
     font-weight: 700;
     color: #16a34a;
 }
 
-.coupon-badge {
+.admin-coupons-page-text-danger {
+    color: #dc2626;
+    font-weight: bold;
+}
+
+.admin-coupons-page-badge {
     padding: 4px 10px;
     border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 700;
 }
-.badge-order { background-color: #e0e7ff; color: #3730a3; }
-.badge-shipping { background-color: #dcfce3; color: #166534; }
+.admin-coupons-page-badge.order { background-color: #e0e7ff; color: #3730a3; }
+.admin-coupons-page-badge.shipping { background-color: #dcfce3; color: #166534; }
 
-.coupon-action-cell {
+.admin-coupons-page-actions {
     display: flex;
     gap: 12px;
 }
 
-.coupon-icon-btn {
+.admin-coupons-page-btn-icon {
     background: none;
     border: none;
     font-size: 1.1rem;
@@ -146,14 +176,17 @@
     padding: 4px;
 }
 
-.coupon-icon-btn.btn-assign:hover { transform: scale(1.15); }
-.coupon-icon-btn.btn-edit { color: #4b5563; }
-.coupon-icon-btn.btn-edit:hover { color: #cca858; }
-.coupon-icon-btn.btn-delete { color: #dc2626; }
-.coupon-icon-btn.btn-delete:hover { color: #991b1b; }
+.admin-coupons-page-btn-icon.assign { color: #16a34a; }
+.admin-coupons-page-btn-icon.assign:hover { transform: scale(1.15); }
+.admin-coupons-page-btn-icon.edit { color: #4b5563; }
+.admin-coupons-page-btn-icon.edit:hover { color: #cca858; }
+.admin-coupons-page-btn-icon.delete { color: #dc2626; }
+.admin-coupons-page-btn-icon.delete:hover { color: #991b1b; }
 
-/* SPINNER LOADING */
-.coupon-loading-area {
+/* ========================================================= */
+/* SPINNER LOADING & PAGINATION                              */
+/* ========================================================= */
+.admin-coupons-page-loading {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -164,7 +197,7 @@
     border-radius: 12px;
 }
 
-.coupon-spinner {
+.admin-coupons-page-spinner {
     border: 4px solid #e5e7eb;
     border-top: 4px solid #cca858;
     border-radius: 50%;
@@ -175,3 +208,27 @@
 }
 
 @keyframes spin { 100% { transform: rotate(360deg); } }
+
+.admin-coupons-page-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    gap: 15px;
+    border-top: 1px solid #f1f1f1;
+    background: #fafafa;
+}
+
+.admin-coupons-page-page-btn {
+    padding: 6px 14px;
+    border: 1px solid #e5e5e5;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #374151;
+    transition: 0.2s;
+}
+
+.admin-coupons-page-page-btn:hover:not(:disabled) { background: #f3f4f6; }
+.admin-coupons-page-page-btn:disabled { opacity: 0.5; cursor: not-allowed; }

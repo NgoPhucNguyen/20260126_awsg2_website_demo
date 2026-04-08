@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 export const getAllOrdersAdmin = async (req, res) => {
     try {
         const orders = await prisma.cart.findMany({
-            where: { status: { notIn: ['DRAFT', 'CART'] } }, 
+            where: { status: { notIn: ['DRAFT', 'EXPIRED'] } }, 
             include: {
                 customer: { select: { firstName: true, lastName: true, mail: true, phoneNumber: true, accountName: true } },
                 orderDetails: {

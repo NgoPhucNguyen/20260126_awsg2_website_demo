@@ -1,3 +1,4 @@
+// server/controllers/chatbotController.js
 // import express from "express";
 import AgentClient from "../chatbot/agents.js";
 // import { verifyJWT } from "../middleware/verifyJWT.js";
@@ -19,12 +20,15 @@ const askHandler = async (req, res) => {
 		}
 
 		const content = await agent.run(prompt, {
-			history,
-			auth: {
-				authId: req.user.id,
-				role: req.user.role,
-			},
-		});
+      history,
+      auth: {
+        // 🛡️ Safely grab the ID, fallback to 'guest' if something goes wrong
+        authId: req.user?.id || "guest", 
+        
+        // 🛡️ Safely grab the role, fallback to CUSTOMER_ROLE if the token is old
+        role: req.user?.role || process.env.CUSTOMER_ROLE, 
+      },
+    });
 
 		return res.status(200).json({ content });
 	} catch (error) {

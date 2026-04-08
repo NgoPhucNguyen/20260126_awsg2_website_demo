@@ -1,280 +1,246 @@
 // src/pages/admin/Inventory.jsx
-import { useState, useEffect } from "react";
-import { FaBoxOpen, FaPlus, FaTrash, FaPenToSquare, FaRotateLeft } from "react-icons/fa6";
-import axios from "@/api/axios";
-import AddProductModal from "@/components/AdminComponent/AddProductModal";
+import { useState, useEffect, useRef, useCallback } from "react"; // 🚀 Đã thêm đủ: useRef, useCallback
+import { FaBoxOpen, FaPenToSquare, FaWarehouse, FaTriangleExclamation, FaCircleCheck } from "react-icons/fa6";
+import { useAxiosPrivate } from "@/hooks/useAxiosPrivate"; 
+import { useDebounce } from "@/hooks/useDebounce";
+import { useToast } from "@/context/ToastProvider";
 import { getImageUrl } from "@/utils/getImageUrl";
 import "./Inventory.css"; 
 
 const Inventory = () => {
+    const axiosPrivate = useAxiosPrivate();
+    const { showToast } = useToast();
+    const isMounted = useRef(true); 
+
+    // --- STATES ---
     const [products, setProducts] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
+    const [isViewingArchived, setIsViewingArchived] = useState(false);
+    
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const limit = 10; 
 
-    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    const [filterOptions, setFilterOptions] = useState({ brands: [], categories: [], skinTypes: [] });
+    const [stats, setStats] = useState({ total: 0, outOfStock: 0, lowStock: 0 });
 
-    const [isViewingArchived, setIsViewingArchived] = useState(false)
-    // 🚀 1. Fetch Real Data on Mount
-    useEffect(() => {
-        const fetchInventory = async () => {
-            setIsLoading(true);
-            try {
-                const queryParam = isViewingArchived ? '?status=archived' : '';
-                // Fetch from the exact same endpoint as your Product.jsx                
-                const response = await axios.get(`/api/products${queryParam}`);
+    const debouncedSearch = useDebounce(searchTerm, 500);
 
-                // 🔄 MAP THE DATA FOR ADMIN TABLE
-                const formattedData = response.data.map(product => {
-                    // Grab the first variant to show a baseline price
-                    const mainVariant = product.variants?.[0] || { unitPrice: 0 };
-                    
-                    // 🧮 THE MATH: Sum up the quantity from all warehouses for this variant
-                    const variantStock = mainVariant.inventories?.reduce((total, inventoryItem) => {
-                        return total + inventoryItem.quantity;
-                    }, 0) || 0;
-                    
-                    const rawImageUrl = mainVariant.images?.[0]?.imageUrl || mainVariant.thumbnailUrl;
-                    const finalImage = rawImageUrl ? getImageUrl(rawImageUrl) : "https://via.placeholder.com/40?text=No+Img";
-
-                    return {
-                        id: product.id,
-                        name: product.name,
-                        nameVn: product.nameVn || product.name,
-                        category: product.category?.name || "Uncategorized",
-                        price: mainVariant.unitPrice,
-                        stock: variantStock, 
-                        image: finalImage,
-                    };
-                });
-
-                setProducts(formattedData);
-            } catch (error) {
-                console.error("Failed to load inventory:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchInventory();
-    }, [isViewingArchived]);
-
-
-    // 🚀 Fetch Brands and Categories for the Modal Dropdowns
-    useEffect(() => {
-        const fetchAttributes = async () => {
-            try {
-                // This matches the router.get('/products/attributes') in your api.js
-                const res = await axios.get('/api/products/attributes');
-                setFilterOptions(res.data);
-            } catch (err) {
-                console.error("Failed to fetch attributes:", err);
-            }
-        };
-        fetchAttributes();
-    }, []);
-
-    // ✨ Instantly update the table when the modal finishes saving
-    const handleProductAdded = (newProduct) => {
-        // 1. Find the text name of the category from our filterOptions
-        const categoryName = filterOptions.categories.find(c => c.id === newProduct.categoryId)?.name || "Uncategorized";
-
-        // 2. Extract the variant and stock we just created
-        const mainVariant = newProduct.variants?.[0] || {};
-        const stock = mainVariant.inventories?.[0]?.quantity || 0;
-
-        // 3. Map it to match the table's format
-        const mappedProduct = {
-            id: newProduct.id,
-            name: newProduct.name,
-            nameVn: newProduct.nameVn || newProduct.name,
-            category: categoryName,
-            price: mainVariant.unitPrice || 0,
-            stock: stock,
-            image: mainVariant.images?.[0]?.imageUrl ? getImageUrl(mainVariant.images[0].imageUrl) : "https://via.placeholder.com/40?text=No+Img",
-        };
-
-        // 4. Push it to the very top of the table!
-        setProducts(prevProducts => [mappedProduct, ...prevProducts]);
-    };
-
-    // 🗑️ 2. The Delete Function (Triggered by Trash Button)
-    const handleDelete = async (id) => {
-        const isConfirmed = window.confirm("Are you sure you want to remove this product from the store?");
-        if (!isConfirmed) return;
-
+    // 🚀 API 1: Lấy Thống Kê
+    const fetchStats = useCallback(async () => {
         try {
-            // ⚠️ Assuming your router is set up as router.delete('/:id', deleteProduct)
-            // If you mounted the routes under '/api/products', it should be `/api/products/${id}`. 
-            // I'm using `/api/${id}` here based on your previous message.
-            await axios.delete(`/api/${id}`); 
+            const res = await axiosPrivate.get('/api/admin/inventory/stats');
+            if (isMounted.current) setStats(res.data);
+        } catch (error) {
+            console.error("Lỗi lấy thống kê:", error);
+        }
+    }, [axiosPrivate]);
 
-            // Instantly remove it from the table UI
-            setProducts(prevProducts => prevProducts.filter(product => product.id !== id));
+    // 🚀 API 2: Lấy Danh Sách Sản Phẩm
+    const fetchInventory = useCallback(async (signal = null) => {
+        setIsLoading(true);
+        try {
+            const statusQuery = isViewingArchived ? 'archived' : 'active';
+            const response = await axiosPrivate.get(
+                `/api/admin/inventory?page=${page}&limit=${limit}&search=${debouncedSearch}&status=${statusQuery}`, 
+                { signal }
+            );
+
+            const { data, meta } = response.data;
             
-            alert("Product successfully deleted!");
+            const formattedData = data.map(product => {
+                const mainVariant = product.variants?.[0] || { unitPrice: 0 };
+                const variantStock = mainVariant.inventories?.reduce((total, item) => total + item.quantity, 0) || 0;
+                const rawImageUrl = mainVariant.images?.[0]?.imageUrl || mainVariant.thumbnailUrl;
+
+                return {
+                    id: product.id,
+                    nameVn: product.nameVn || product.name,
+                    category: product.category?.nameVn || product.category?.name || "Chưa phân loại",
+                    price: mainVariant.unitPrice,
+                    stock: variantStock, 
+                    image: rawImageUrl ? getImageUrl(rawImageUrl) : "https://via.placeholder.com/40?text=No+Img",
+                    isActive: product.isActive 
+                };
+            });
+            
+            if (isMounted.current) {
+                setProducts(formattedData);
+                setTotalPages(meta.totalPages || 1);
+            }
         } catch (error) {
-            console.error("Error deleting product:", error);
-            alert("Failed to delete product from database.");
+            if (error.name !== 'CanceledError' && isMounted.current) {
+                showToast("Lỗi tải danh sách kho hàng", "error");
+            }
+        } finally {
+            if (isMounted.current) setIsLoading(false);
         }
-    };
-    const handleRestore = async (id) => {
+    }, [isViewingArchived, page, debouncedSearch, axiosPrivate, showToast]);
+
+    useEffect(() => {
+        isMounted.current = true;
+        const controller = new AbortController();
+
+        fetchStats();
+        fetchInventory(controller.signal);
+
+        return () => {
+            isMounted.current = false;
+            controller.abort();
+        };
+    }, [fetchInventory, fetchStats]);
+
+    useEffect(() => {
+        setPage(1);
+    }, [debouncedSearch]);
+
+    const handleToggleActive = async (product) => {
+        const newStatus = !product.isActive;
+        const actionText = newStatus ? "Khôi phục" : "Ngừng bán";
+        
+        if (!window.confirm(`${actionText} sản phẩm "${product.nameVn}"?`)) return;
+
         try {
-            // Call the new PATCH route
-            await axios.patch(`/api/${id}/restore`); // Adjust URL if needed
-            // Instantly remove it from the "Archived" table view
-            setProducts(prev => prev.filter(p => p.id !== id));
-            alert("✨ Product restored! It is back on the main page.");
+            await axiosPrivate.put(`/api/admin/products/${product.id}`, { isActive: newStatus });
+            showToast(`${actionText} thành công!`);
+            setProducts(prev => prev.filter(p => p.id !== product.id));
+            fetchStats(); 
         } catch (error) {
-            console.error("Error restoring:", error);
+            showToast("Lỗi cập nhật trạng thái.", "error");
         }
     };
 
-    // 🔎 Search Filter
-    const filteredProducts = products.filter(product => {
-        // Fallback to empty string if nameVn happens to be missing to prevent crashes
-        const searchTarget = product.nameVn || product.name || ""; 
-        return searchTarget.toLowerCase().includes(searchTerm.toLowerCase());
-    });
-
-    // 💰 Price Formatter
-    const formatPrice = (price) => {
-        return new Intl.NumberFormat('vi-VN', { 
-            style: 'currency', 
-            currency: 'VND' 
-        }).format(price);
-    };
-
-    // 📦 Stock Helpers
-    const getStockClass = (stock) => {
-        if (stock === 0) return "stock-out";
-        if (stock < 10) return "stock-low";
-        return "stock-ok";
-    };
-
-    const getStockLabel = (stock) => {
-        if (stock === 0) return "Out of Stock";
-        if (stock < 10) return `Low (${stock})`;
-        return "In Stock";
-    };
+    const formatPrice = (p) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(p);
 
     return (
-        <div className="fade-in">
-            {/* Header */}
-            <header className="inventory-header">
-                <div>
-                    <h2>Kho Sản Phẩm</h2>
-                    <p className="admin-subtitle">Quản lý danh mục mỹ phẩm</p>
+        <div className="admin-inventory-root fade-in">
+            <div className="admin-inventory-stats-container">
+                <div className="admin-inventory-stat-card">
+                    <div className="admin-inventory-stat-icon total"><FaWarehouse /></div>
+                    <div className="admin-inventory-stat-info">
+                        <span className="admin-inventory-stat-label">Đang bán</span>
+                        <span className="admin-inventory-stat-value">{stats.total}</span>
+                    </div>
                 </div>
-                <div className="header-actions">
-                    <button
-                        className={`btn-toggle ${isViewingArchived ? 'btn-toggle-archived' : 'btn-toggle-active'}`}
-                        onClick={() => setIsViewingArchived(!isViewingArchived)}
-                    >
-                        {isViewingArchived ? "Quay lại sản phẩm đang bán" : "Xem sản phẩm đã lưu trữ"}
-                    </button>
+                <div className="admin-inventory-stat-card">
+                    <div className="admin-inventory-stat-icon out"><FaTriangleExclamation /></div>
+                    <div className="admin-inventory-stat-info">
+                        <span className="admin-inventory-stat-label">Hết hàng</span>
+                        <span className="admin-inventory-stat-value">{stats.outOfStock}</span>
+                    </div>
+                </div>
+                <div className="admin-inventory-stat-card">
+                    <div className="admin-inventory-stat-icon low"><FaCircleCheck /></div>
+                    <div className="admin-inventory-stat-info">
+                        <span className="admin-inventory-stat-label">Sắp hết hàng</span>
+                        <span className="admin-inventory-stat-value">{stats.lowStock}</span>
+                    </div>
+                </div>
+            </div>
 
-                    <button className="btn-add" onClick={() => setIsAddModalOpen(true)}>
-                        <FaPlus /> Thêm sản phẩm mới
+            <header className="admin-inventory-header">
+                <div>
+                    <h2 className="admin-inventory-title">Kho Sản Phẩm</h2>
+                    <p className="admin-inventory-subtitle">Quản lý trạng thái và số lượng tồn kho thực tế</p>
+                </div>
+                <div className="admin-inventory-header-actions">
+                    <button 
+                        className={`admin-inventory-btn-view ${isViewingArchived ? 'archived' : 'active'}`}
+                        onClick={() => {
+                            setIsViewingArchived(!isViewingArchived);
+                            setPage(1);
+                        }}
+                    >
+                        {isViewingArchived ? "Xem hàng đang bán" : "Xem hàng đã ẩn"}
                     </button>
                 </div>
             </header>
 
-            {/* Search Bar */}
-            <div className="search-container">
+            <div className="admin-inventory-search-box">
                 <input 
                     type="text" 
-                    placeholder="Tìm kiếm sản phẩm..." 
+                    placeholder="Tìm theo tên sản phẩm hoặc mã ID..." 
+                    className="admin-inventory-search-input"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="search-input"
                 />
             </div>
-            
-            <AddProductModal 
-                isOpen={isAddModalOpen} 
-                onClose={() => setIsAddModalOpen(false)} 
-                filterOptions={filterOptions}
-                onSuccess={handleProductAdded}
-            />
-            {/* Table */}
+
             {isLoading ? (
-                <div className="loading-container"><div className="spinner"></div><p>Đang tải kho ...</p></div>
+                <div className="admin-inventory-loading"><div className="admin-inventory-spinner"></div></div>
             ) : (
-                <div className="table-responsive">
-                    <table className="users-table">
+                <div className="admin-inventory-table-container">
+                    <table className="admin-inventory-table">
                         <thead>
-                             <tr>
+                            <tr>
                                 <th>ID</th>
                                 <th>Sản Phẩm</th>
                                 <th>Loại</th>
-                                <th>Giá</th>
+                                <th>Giá Niêm Yết</th>
                                 <th>Tồn Kho</th>
-                                <th>Hành động</th>
+                                <th>Trạng thái</th>
+                                <th>Sửa</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredProducts.length > 0 ? (
-                                filteredProducts.map((product) => (
-                                    <tr key={product.id}>
-                                        <td className="col-id">#{product.id}</td>
-                                            <td className="product-info-cell">
-                                                <img className="inventory-product-img"
-                                                    src={product.image} 
-                                                    alt={product.nameVn} 
-                                                    // Dự phòng nếu ảnh bị lỗi (404)
-                                                    onError={(e) => { e.target.src = 'https://via.placeholder.com/45?text=Lỗi' }}
-                                                />
-                                                <span className="product-name" title={product.nameVn}>
-                                                    {product.nameVn}
-                                                </span>
-                                            </td>
-                                        <td><span className="badge tier-1">{product.category}</span></td>
-                                        
-                                        {/* 🎯 Applied the formatPrice function here! */}
-                                        <td className="price-text">{formatPrice(product.price)}</td>
-                                        
-                                        <td>
-                                            <span className={`badge badge-stock ${getStockClass(product.stock)}`}>
-                                                {getStockLabel(product.stock)}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div className="actions-cell">
-                                                <button title="Edit" className="btn-icon btn-edit"><FaPenToSquare /></button>
-                                                
-                                                {/* 🔀 DYNAMIC BUTTON: Show Restore if archived, Trash if active */}
-                                                {isViewingArchived ? (
-                                                    <button 
-                                                        title="Restore Product" 
-                                                        className="btn-icon btn-restore" 
-                                                        onClick={() => handleRestore(product.id)}
-                                                    >
-                                                        <FaRotateLeft />
-                                                    </button>
-                                                ) : (
-                                                    <button 
-                                                        title="Delete" 
-                                                        className="btn-icon btn-delete"
-                                                        onClick={() => handleDelete(product.id)}
-                                                    >
-                                                        <FaTrash />
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
+                            {products.length > 0 ? products.map((product) => (
+                                <tr key={product.id}>
+                                    <td>#{product.id}</td>
+                                    <td className="admin-inventory-product-cell">
+                                        <img src={product.image} alt="" onError={(e) => e.target.src = 'https://via.placeholder.com/45'} />
+                                        <span title={product.nameVn}>{product.nameVn}</span>
+                                    </td>
+                                    <td><span className="admin-inventory-cat-badge">{product.category}</span></td>
+                                    <td className="admin-inventory-price">{formatPrice(product.price)}</td>
+                                    <td>
+                                        <span className={`admin-inventory-stock-badge ${product.stock === 0 ? 'out' : product.stock < 10 ? 'low' : 'ok'}`}>
+                                            {product.stock === 0 ? "Hết hàng" : `Kho: ${product.stock}`}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div 
+                                            className={`admin-inventory-toggle ${product.isActive ? 'active' : 'inactive'}`}
+                                            onClick={() => handleToggleActive(product)}
+                                        >
+                                            <div className="admin-inventory-toggle-thumb"></div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button className="admin-inventory-btn-icon" title="Chỉnh sửa">
+                                            <FaPenToSquare />
+                                        </button>
+                                    </td>
+                                </tr>
+                            )) : (
                                 <tr>
-                                    <td colSpan="6" className="empty-state">
-                                        <FaBoxOpen size={30} />
-                                        <p>No products found matching "{searchTerm}"</p>
+                                    <td colSpan="7" className="admin-inventory-empty-cell">
+                                        <FaBoxOpen size={30} color="#ccc" />
+                                        <p>Không có sản phẩm nào.</p>
                                     </td>
                                 </tr>
                             )}
                         </tbody>
                     </table>
+
+                    {totalPages > 1 && (
+                        <div className="admin-inventory-pagination">
+                            <button 
+                                onClick={() => setPage(p => p - 1)} 
+                                disabled={page === 1} 
+                                className="admin-inventory-pagination-btn"
+                            >
+                                Trước
+                            </button>
+                            <span className="admin-inventory-pagination-info">Trang {page} / {totalPages}</span>
+                            <button 
+                                onClick={() => setPage(p => p + 1)} 
+                                disabled={page === totalPages} 
+                                className="admin-inventory-pagination-btn"
+                            >
+                                Sau
+                            </button>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

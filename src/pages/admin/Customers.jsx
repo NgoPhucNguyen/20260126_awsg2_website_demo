@@ -24,7 +24,7 @@ const Customers = () => {
             try {
                 setError("");
                 setIsLoading(true);
-                const response = await axiosPrivate.get('/api/customers', { signal: controller.signal });
+                const response = await axiosPrivate.get('/api/admin/customers', { signal: controller.signal });
                 setCustomers(response.data);
             } catch (err) {
                 if (err.name !== 'CanceledError') {

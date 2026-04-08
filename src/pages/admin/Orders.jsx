@@ -1,5 +1,4 @@
-// src/pages/admin/Orders.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react"; // Added useMemo
 import { useAxiosPrivate } from "@/hooks/useAxiosPrivate"; 
 import './Orders.css';
 
@@ -8,23 +7,17 @@ const Orders = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
-
     const axiosPrivate = useAxiosPrivate();
 
-    // 1. FETCH DANH SÁCH ĐƠN HÀNG
     useEffect(() => {
         const controller = new AbortController();
         const fetchOrders = async () => {
             try {
                 setIsLoading(true);
-                // Gọi API lấy tất cả đơn hàng (Hàm getAllOrdersAdmin của bạn)
                 const response = await axiosPrivate.get('/api/orders/admin/all', { signal: controller.signal });
                 setOrders(response.data);
             } catch (err) {
-                if (err.name !== 'CanceledError') {
-                    console.error("Fetch Orders Error:", err);
-                    setError("Không thể tải danh sách đơn hàng.");
-                }
+                if (err.name !== 'CanceledError') setError("Không thể tải danh sách đơn hàng.");
             } finally {
                 if (!controller.signal.aborted) setIsLoading(false);
             }
@@ -33,46 +26,46 @@ const Orders = () => {
         return () => controller.abort();
     }, [axiosPrivate]);
 
-    // 2. HÀM CẬP NHẬT TRẠNG THÁI ĐƠN HÀNG
     const handleStatusChange = async (orderId, newStatus) => {
+        // ✨ Improvement: Confirmation Guard
+        const confirmMsg = `Bạn có chắc chắn muốn chuyển đơn hàng #${orderId.substring(0,8)} sang ${newStatus}?`;
+        if (!window.confirm(confirmMsg)) return;
+
         try {
-            // Gọi API updateOrderStatus của bạn
             await axiosPrivate.put(`/api/orders/${orderId}/status`, { status: newStatus });
             
-            // Cập nhật lại UI không cần reload
             setOrders(prevOrders => 
                 prevOrders.map(order => 
                     order.id === orderId 
                         ? { 
                             ...order, 
                             status: newStatus, 
-                            // Nếu giao thành công COD thì tự động đổi chữ PAID (giống logic backend của bạn)
                             paymentStatus: (newStatus === 'DELIVERED' && order.paymentMethod === 'COD') ? 'PAID' : order.paymentStatus
                           } 
                         : order
                 )
             );
-            alert(`Cập nhật trạng thái thành ${newStatus} thành công!`);
         } catch (err) {
             alert(err.response?.data?.message || "Lỗi khi cập nhật trạng thái");
         }
     };
 
-    const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
-    };
+    // ✨ Improvement: Memoized filtering for performance
+    const filteredOrders = useMemo(() => {
+        const term = searchTerm.toLowerCase().trim();
+        if (!term) return orders;
 
-    const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleString('vi-VN', { 
-            hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' 
+        return orders.filter(order => {
+            const customerName = `${order.customer?.lastName || ''} ${order.customer?.firstName || ''}`.toLowerCase();
+            const orderId = order.id.toLowerCase();
+            return orderId.includes(term) || customerName.includes(term);
         });
-    };
+    }, [searchTerm, orders]);
 
-    // Lọc đơn hàng theo ID hoặc Tên khách
-    const filteredOrders = orders.filter(order => {
-        const term = searchTerm.toLowerCase();
-        const customerName = `${order.customer?.firstName || ''} ${order.customer?.lastName || ''}`.toLowerCase();
-        return order.id.toLowerCase().includes(term) || customerName.includes(term);
+    const formatCurrency = (amount) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+
+    const formatDate = (dateString) => new Date(dateString).toLocaleString('vi-VN', { 
+        hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' 
     });
 
     return (
@@ -80,11 +73,9 @@ const Orders = () => {
             <header className="admin-orders-page-header">
                 <div>
                     <h2 className="admin-orders-page-title">Quản lý Đơn Hàng</h2>
-                    <p className="admin-orders-page-subtitle">Theo dõi và cập nhật trạng thái giao hàng</p>
+                    <p className="admin-orders-page-subtitle">Tổng số: <strong>{filteredOrders.length}</strong> đơn hàng</p>
                 </div>
             </header>
-
-            {error && <div className="admin-orders-page-error">⚠️ {error}</div>}
 
             <div className="admin-orders-page-controls">
                 <input 
@@ -117,14 +108,11 @@ const Orders = () => {
                         <tbody>
                             {filteredOrders.length > 0 ? (
                                 filteredOrders.map((order) => (
-                                    <tr key={order.id}>
-                                        <td className="admin-orders-page-col-id">
-                                            {/* Chỉ hiện 8 ký tự đầu của ID cho gọn */}
-                                            #{order.id.substring(0, 8)}
-                                        </td>
+                                    <tr key={order.id} className={`row-status-${order.status.toLowerCase()}`}>
+                                        <td className="admin-orders-page-col-id">#{order.id.substring(0, 8)}</td>
                                         <td className="admin-orders-page-col-customer">
                                             <strong>{order.customer?.lastName} {order.customer?.firstName}</strong>
-                                            <br/><span className="admin-orders-page-text-sm">{order.customer?.mail}</span>
+                                            <div className="admin-orders-page-text-sm">{order.customer?.mail}</div>
                                         </td>
                                         <td>{formatDate(order.createdAt)}</td>
                                         <td>
@@ -132,33 +120,28 @@ const Orders = () => {
                                                 {order.paymentMethod} - {order.paymentStatus}
                                             </span>
                                         </td>
-                                        <td className="admin-orders-page-col-price">
-                                            {formatCurrency(order.finalPrice)}
-                                        </td>
+                                        <td className="admin-orders-page-col-price">{formatCurrency(order.finalPrice)}</td>
                                         <td>
                                             {order.status === 'CANCELLED' ? (
-                                                <span className="admin-orders-page-badge status-cancelled">CANCELLED</span>
+                                                <span className="admin-orders-page-badge status-cancelled">ĐÃ HỦY</span>
                                             ) : (
                                                 <select 
                                                     className={`admin-orders-page-status-select status-${order.status?.toLowerCase()}`}
                                                     value={order.status}
+                                                    disabled={order.status === 'DELIVERED'} // Lock if already delivered
                                                     onChange={(e) => handleStatusChange(order.id, e.target.value)}
                                                 >
-                                                    <option value="PENDING">PENDING (Chờ xử lý)</option>
-                                                    <option value="PROCESSING">PROCESSING (Đang đóng gói)</option>
-                                                    <option value="SHIPPED">SHIPPED (Đang giao)</option>
-                                                    <option value="DELIVERED">DELIVERED (Đã giao)</option>
+                                                    <option value="PENDING">PENDING</option>
+                                                    <option value="PROCESSING">PROCESSING</option>
+                                                    <option value="SHIPPED">SHIPPED</option>
+                                                    <option value="DELIVERED">DELIVERED</option>
                                                 </select>
                                             )}
                                         </td>
                                     </tr>
                                 ))
                             ) : (
-                                <tr>
-                                    <td colSpan="6" className="admin-orders-page-empty">
-                                        Không tìm thấy đơn hàng nào.
-                                    </td>
-                                </tr>
+                                <tr><td colSpan="6" className="admin-orders-page-empty">Không tìm thấy đơn hàng nào.</td></tr>
                             )}
                         </tbody>
                     </table>

@@ -3,13 +3,13 @@ version: '3.8'
 services:
   # 🐘 Service Database
   postgres:
-    image: pgvector/pgvector:pg15
+    image: pgvector/pgvector:pg17
     container_name: dine_ease_db
     restart: always
     environment:
-      POSTGRES_USER: myuser
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: dine_ease_local
+      POSTGRES_DB: postgres
     ports:
       - '5432:5432'
     volumes:
@@ -25,6 +25,9 @@ services:
       - postgres
     env_file:
       - .env
+    environment:
+      # Ghi đè URL để container dùng tên service 'postgres'
+      DATABASE_URL: "postgresql://postgres:mypassword@postgres:5432/postgres?schema=public"
     volumes:
       - ./server:/app/server
 
@@ -38,6 +41,8 @@ services:
       - '5555:5555'
     env_file:
       - .env
+    environment:
+      DATABASE_URL: "postgresql://postgres:mypassword@postgres:5432/postgres?schema=public"
     depends_on:
       - postgres
 

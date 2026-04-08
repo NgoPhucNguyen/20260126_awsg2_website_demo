@@ -13,7 +13,7 @@ export const getMyOrders = async (req, res) => {
         const orders = await prisma.cart.findMany({
             where: {
                 customerId: customerId,
-                status: { notIn: ['CART', 'DRAFT'] } 
+                status: { notIn: ['DRAFT', 'EXPIRED'] } 
             },
             include: {
                 mainCoupon: true,

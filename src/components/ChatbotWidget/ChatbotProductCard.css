@@ -1,0 +1,97 @@
+/* src/components/ChatbotProductCard.css */
+
+.ChatbotProductCard-container {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid rgba(198, 168, 124, 0.3); /* Nhấn nhẹ màu Gold thương hiệu */
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 10px 0;
+  width: 100%;
+  max-width: 220px; /* Giới hạn độ rộng để không chiếm hết khung chat */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: cardFadeIn 0.3s ease-out;
+}
+
+.ChatbotProductCard-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(198, 168, 124, 0.15);
+  border-color: #c6a87c;
+}
+
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.ChatbotProductCard-image {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  background: #fdfcfb;
+  border-bottom: 1px solid #f5f5f4;
+}
+
+.ChatbotProductCard-info {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ChatbotProductCard-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1c1917;
+  margin: 0;
+  /* Giới hạn 2 dòng tên để không làm card quá dài */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.3;
+}
+
+.ChatbotProductCard-price {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #c6a87c; /* Màu Gold làm nổi bật giá tiền */
+  margin: 0;
+}
+
+.ChatbotProductCard-button {
+  display: block;
+  text-align: center;
+  background: #1c1917;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 8px 0;
+  border-radius: 8px;
+  margin-top: 4px;
+  transition: background 0.2s ease;
+}
+
+.ChatbotProductCard-button:hover {
+  background: #c6a87c;
+}
+
+.ChatbotProductCard-loading {
+  font-size: 0.75rem;
+  color: #78716c;
+  padding: 10px;
+  font-style: italic;
+}
+
+/* Tối ưu cho Mobile (Widget hẹp hơn) */
+@media (max-width: 640px) {
+  .ChatbotProductCard-container {
+    max-width: 180px;
+  }
+  .ChatbotProductCard-image {
+    height: 110px;
+  }
+}

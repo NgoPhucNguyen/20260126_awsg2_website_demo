@@ -3,6 +3,7 @@ import { FiMessageCircle, FiSend, FiX, FiMaximize2, FiMinimize2 } from "react-ic
 import ReactMarkdown from "react-markdown"; // 🆕 Import Markdown
 import { useAxiosPrivate } from "@/hooks/useAxiosPrivate";
 import { useAuth } from "@/features/auth/AuthProvider";
+import ChatbotProductCard from "./ChatbotProductCard";
 import "./ChatbotWidget.css";
 
 const STORAGE_KEY = "chatbot_widget_history_v1";
@@ -16,11 +17,36 @@ const createMessage = (role, text) => ({
 });
 
 const QUICK_REPLIES = [
-    "Tư vấn da dầu",
+    "Tôi có mã giảm giá nào? ",
     "Kem chống nắng",
-    "Tìm nước tẩy trang",
-    "Mã giảm giá hot"
+    "Hãng Cocoon",
 ];
+
+const renderBotMessage = (text) => {
+    const regex = /\[ID:\s*(\d+)\]/g;
+    const parts = text.split(regex);
+    
+    // Tìm tất cả các ID có trong tin nhắn này
+    const allIds = [...text.matchAll(regex)].map(match => match[1]);
+
+    return (
+        <div className="chatbot-markdown-content">
+            {/* Render phần chữ của AI trước */}
+            <ReactMarkdown>
+                {text.replace(regex, "").trim()} 
+            </ReactMarkdown>
+
+            {/* Nếu có ID sản phẩm, render chúng vào một Carousel trượt ngang */}
+            {allIds.length > 0 && (
+                <div className="chatbot-widget-carousel">
+                    {allIds.map((id, index) => (
+                        <ChatbotProductCard key={index} productId={id} />
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
 
 const ChatbotWidget = () => {
     const { auth } = useAuth();
@@ -68,7 +94,23 @@ const ChatbotWidget = () => {
 
         setIsTyping(true);
         try {
-            const response = await axiosPrivate.post("/api/chatbot/ask", { prompt: promptText });
+            // 🧠 CHIẾN THUẬT SLIDING WINDOW:
+            // Lấy tối đa 6 tin nhắn gần nhất từ mảng messages để tạo lịch sử chat
+            // Chúng ta dùng .slice(-6) để đảm bảo context vừa đủ (3 cặp User-Bot)
+            const chatHistory = messages.slice(-6).map(msg => ({
+                role: msg.role === "user" ? "user" : "assistant",
+                content: msg.text
+            }));
+            // Loại bỏ các tin nhắn đầu tiên nếu chúng là của bot để tránh gửi quá nhiều context không cần thiết
+            while (chatHistory.length > 0 && chatHistory[0].role === "assistant") {
+                chatHistory.shift();
+            }
+
+            const response = await axiosPrivate.post("/api/chatbot/ask", { 
+                prompt: promptText,
+                history: chatHistory // 👈 Gửi lịch sử chat kèm theo request
+            });
+
             const botContent = response?.data?.content;
             if (typeof botContent === "string" && botContent.trim()) {
                 pushMessage("bot", botContent);
@@ -77,7 +119,7 @@ const ChatbotWidget = () => {
             }
         } catch (error) {
             console.error("[CHATBOT UI] Ask failed", error);
-            pushMessage("bot", "Xin lỗi, mình không thể trả lời câu hỏi của bạn vào lúc này. Vui lòng thử lại sau ít phút.");
+            pushMessage("bot", "Xin lỗi, mình không thể trả lời câu hỏi của bạn vào lúc này.");
         } finally {
             setIsTyping(false);
         }
@@ -144,14 +186,11 @@ const ChatbotWidget = () => {
                                 key={message.id}
                                 className={`chatbot-widget-message ${message.role === "user" ? "chatbot-widget-message-user" : "chatbot-widget-message-bot"}`}
                             >
-                                {/* 🆕 Render Markdown instead of raw text */}
-                                <div className="chatbot-markdown-content">
-                                    {message.role === "bot" ? (
-                                        <ReactMarkdown>{message.text}</ReactMarkdown>
-                                    ) : (
-                                        <p>{message.text}</p>
-                                    )}
-                                </div>
+                                {message.role === "bot" ? (
+                                    renderBotMessage(message.text) // Gọi hàm xử lý Card
+                                ) : (
+                                    <p>{message.text}</p>
+                                )}
                             </article>
                         ))}
 
