@@ -307,7 +307,7 @@ const CustomerHistory = () => {
                                             </button>
                                             <CountdownTimer 
                                                 createdAt={order.createdAt} 
-                                                onExpire={() => setOrders([...orders])} 
+                                                onExpire={() => setOrders(prev => [...prev])} // ✅ Chuẩn xác 100%
                                             />
                                         </div>
                                     )}

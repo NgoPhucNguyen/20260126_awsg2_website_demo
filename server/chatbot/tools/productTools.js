@@ -2,57 +2,100 @@
 import { tool } from "@langchain/core/tools";
 import { z } from "zod";
 import prisma from "../../prismaClient.js";
+import EmbeddingClient from '../core/embedding_model.js'; 
 
-// Search products by name or keyword
+const embeddingClient = new EmbeddingClient();
+
+// 🚀 TÌM KIẾM LAI (HYBRID SEARCH: Bổ sung quét Category + Cấm Ảo Giác)
 export const searchProductsTool = tool(
     async ({ keyword, limit = 5 }) => {
         try {
-        const products = await prisma.product.findMany({
-            where: {
-            isActive: true,
-            OR: [
-                { nameVn: { contains: keyword, mode: "insensitive" } },
-                { description: { contains: keyword, mode: "insensitive" } },
-            ],
-            },
-            select: {
-            id: true,
-            nameVn: true,
-            description: true,
-            brand: { select: { name: true } },
-            // Lấy Variant đầu tiên để có giá và ảnh hiển thị lên Card
-            variants: {
-                take: 1,
-                select: {
-                unitPrice: true,
-                thumbnailUrl: true,
-                }
+            // 1. Chuyển từ khóa thành Vector
+            const queryEmbedding = await embeddingClient.createEmbedding(keyword);
+            const vectorLiteral = `[${queryEmbedding.join(',')}]`;
+            
+            // 2. Tạo chuỗi cho tìm kiếm từ khóa ILIKE (tương đối)
+            const searchKeyword = `%${keyword}%`;
+
+            // 3. Chạy lệnh SQL trực tiếp (Raw Query)
+            // 🚀 ĐÃ THÊM BẢNG CATEGORY (c) ĐỂ TÌM "KEM DƯỠNG", "TẨY TRANG"...
+            const searchResults = await prisma.$queryRawUnsafe(`
+                SELECT 
+                    p.id, 
+                    p.name_vn as "nameVn", 
+                    p.description,
+                    p.ingredient,
+                    p.skin_type as "skinType",
+                    b.name as brand_name,
+                    c.name_vn as category_name,
+                    1 - (pv.embedding <=> $1::vector) as similarity
+                FROM product_vectors pv
+                JOIN product p ON pv.product_id = p.id
+                LEFT JOIN brand b ON p.brand_id = b.id
+                LEFT JOIN category c ON p.category_id = c.id
+                WHERE p.is_active = true 
+                  AND (
+                      b.name ILIKE $2 
+                      OR p.name_vn ILIKE $2 
+                      OR c.name_vn ILIKE $2 
+                      OR 1 - (pv.embedding <=> $1::vector) > 0.4
+                  )
+                ORDER BY 
+                    CASE WHEN c.name_vn ILIKE $2 THEN 1 ELSE 0 END DESC,
+                    CASE WHEN b.name ILIKE $2 THEN 1 ELSE 0 END DESC,
+                    CASE WHEN p.name_vn ILIKE $2 THEN 1 ELSE 0 END DESC,
+                    similarity DESC
+                LIMIT $3;
+            `, vectorLiteral, searchKeyword, limit);
+
+            // 4. Nếu không có kết quả nào thỏa mãn
+            if (!searchResults || searchResults.length === 0) {
+                return JSON.stringify({ 
+                    error: "SYSTEM_NO_DATA", 
+                    message: `Hệ thống KHÔNG BÁN sản phẩm hoặc thương hiệu: '${keyword}'. Vui lòng xin lỗi và gợi ý khách hàng sản phẩm khác.` 
+                });
             }
-            },
-            take: limit,
-        });
 
-        // Format lại dữ liệu gọn gàng để trả về cho LLM
-        const formattedProducts = products.map(p => ({
-            id: p.id,
-            name: p.nameVn,
-            brand: p.brand?.name,
-            price: p.variants[0]?.unitPrice || "Liên hệ",
-            imageUrl: p.variants[0]?.thumbnailUrl || "",
-            description: p.description?.substring(0, 100) + "..." // Cắt ngắn mô tả cho gọn
-        }));
+            // 5. Lấy thêm thông tin Giá và Ảnh từ Variant
+            const productIds = searchResults.map(r => r.id);
+            const variants = await prisma.productVariant.findMany({
+                where: { productId: { in: productIds } },
+                select: { id: true, productId: true, unitPrice: true, thumbnailUrl: true }
+            });
 
-        return JSON.stringify(formattedProducts);
+            // 6. Format dữ liệu trả về cho LLM đọc
+            const formattedProducts = searchResults.map(p => {
+                const pVariants = variants.filter(v => v.productId === p.id);
+                const defaultVariant = pVariants.length > 0 ? pVariants[0] : null;
+                const minPrice = pVariants.length > 0 ? Math.min(...pVariants.map(v => v.unitPrice)) : null;
+                
+                if (!defaultVariant) return null; // Bỏ qua sản phẩm nếu không có biến thể nào
+
+                // 🚀 ĐÚC SẴN ĐỊNH DẠNG TEXT CHO AI LUÔN, KHÔNG DÙNG OBJECT NỮA
+                const priceText = minPrice ? `${minPrice.toLocaleString('vi-VN')} VND` : "Liên hệ";
+                const skin = p.skinType || "Mọi loại da";
+                const desc = p.description?.substring(0, 100) || "Không có mô tả";
+
+                // ÉP CÚ PHÁP: Tên Sản Phẩm [ID: X] - Thông tin...
+                return `- ${p.nameVn} [ID: ${p.id}] - Giá: ${priceText}. (Phù hợp: ${skin}. Công dụng: ${desc}...)`;
+            }).filter(Boolean);
+
+            // Ghép danh sách thành một đoạn văn bản duy nhất
+            const resultText = formattedProducts.join("\n\n");
+            // 🚀 BƯỚC NGOẶT: Trả về một chuỗi Text mệnh lệnh thép thay vì JSON
+            return `ĐÂY LÀ KẾT QUẢ TỪ DATABASE CỦA CỬA HÀNG. BẠN BẮT BUỘC PHẢI DÙNG DANH SÁCH NÀY ĐỂ TRẢ LỜI. GIỮ NGUYÊN ĐỊNH DẠNG [ID: x] BÊN CẠNH TÊN SẢN PHẨM. TUYỆT ĐỐI KHÔNG ĐƯỢC TỰ BỊA RA SẢN PHẨM HAY SỐ ID KHÁC:\n\n${resultText}`;
+
         } catch (error) {
-        return JSON.stringify({ error: error.message });
+            console.error("Hybrid Search Error:", error);
+            return "Lỗi tìm kiếm trong cơ sở dữ liệu. Báo khách hàng chờ ít phút.";
         }
     },
     {
         name: "searchProducts",
-        description: "Tìm kiếm sản phẩm mỹ phẩm kèm giá và ảnh để tư vấn cho khách hàng.",
+        description: "BẮT BUỘC sử dụng công cụ này để tìm kiếm thông tin mỹ phẩm, giá cả và hình ảnh khi khách hàng hỏi về một sản phẩm, thương hiệu hoặc nhu cầu làm đẹp.",
         schema: z.object({
-        keyword: z.string().describe("Từ khóa hoặc tên sản phẩm"),
-        limit: z.number().int().positive().default(5).describe("Số lượng kết quả"),
+            keyword: z.string().describe("Từ khóa, tên sản phẩm, thương hiệu hoặc nhu cầu của khách (VD: Cocoon, kem dưỡng, trị mụn)"),
+            limit: z.number().int().positive().default(5).describe("Số lượng kết quả"),
         }),
     }
 );

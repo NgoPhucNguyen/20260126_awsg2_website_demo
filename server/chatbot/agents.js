@@ -1,3 +1,4 @@
+// server/chatbot/agents.js
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -143,6 +144,9 @@ class AgentClient {
 		const lines = items.map((item, index) => {
 			const score = Number(item?.score ?? 0).toFixed(3);
 			const content = typeof item?.content === "string" ? item.content.trim() : "";
+			// 🚀 THÊM DÒNG NÀY: Xóa sạch Product ID khỏi RAG để AI không lấy râu ông nọ cắm cằm bà kia
+      content = content.replace(/Product ID:\s*\d+\n?/g, '');
+
 			return `[RAG-${index + 1}] (score=${score})\n${content}`;
 		});
 
@@ -155,7 +159,7 @@ class AgentClient {
 
 	async retrieveRagContext(prompt, options = {}) {
 		const ragTopK = Number(options.ragTopK ?? 4);
-		const ragMinScore = Number(options.ragMinScore ?? 0.2);
+		const ragMinScore = Number(options.ragMinScore ?? 0.4);
 
 		if (!prompt || ragTopK <= 0) {
 			return "";
