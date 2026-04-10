@@ -14,7 +14,7 @@ const Orders = () => {
         const fetchOrders = async () => {
             try {
                 setIsLoading(true);
-                const response = await axiosPrivate.get('/api/orders/admin/all', { signal: controller.signal });
+                const response = await axiosPrivate.get('/api/admin/orders/all', { signal: controller.signal });
                 setOrders(response.data);
             } catch (err) {
                 if (err.name !== 'CanceledError') setError("Không thể tải danh sách đơn hàng.");
@@ -32,7 +32,7 @@ const Orders = () => {
         if (!window.confirm(confirmMsg)) return;
 
         try {
-            await axiosPrivate.put(`/api/orders/${orderId}/status`, { status: newStatus });
+            await axiosPrivate.put(`/api/admin/orders/${orderId}/status`, { status: newStatus });
             
             setOrders(prevOrders => 
                 prevOrders.map(order => 

@@ -14,7 +14,7 @@ const CameraStep = ({ onCapture, onCancel }) => {
   const [isAiLoaded, setIsAiLoaded] = useState(false);
   const [lightStatus, setLightStatus] = useState('Đang đo...'); 
   const [faceStatus, setFaceStatus] = useState('Đang quét...'); 
-
+  const [videoKey, setVideoKey] = useState(Date.now());
   useEffect(() => {
     const loadAI = async () => {
       try {
@@ -38,15 +38,28 @@ const CameraStep = ({ onCapture, onCancel }) => {
     const startCamera = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ 
-          video: { facingMode: "user", width: { ideal: 1080 }, height: { ideal: 1920 } } 
+          video: { 
+            facingMode: "user", 
+            // 🚀 CHỐT HẠ: Luôn xin tỷ lệ ngang (1280x720 hoặc 1920x1080)
+            // Để iOS nhả ra toàn bộ góc rộng của cảm biến, KHÔNG ĐƯỢC đảo ngược.
+            // width: { ideal: 1280 }, 
+            // height: { ideal: 720 } 
+          } 
         });
+        
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
         }
         streamRef.current = stream;
 
-        videoRef.current.onloadedmetadata = () => {
-          analyzeFrame();
+        videoRef.current.onloadedmetadata = async () => {
+          try {
+            // 🚀 BẮT BUỘC TRÊN IOS: Phải gọi play() rõ ràng và đợi nó chạy
+            await videoRef.current.play(); 
+            analyzeFrame();
+          } catch (e) {
+            console.error("Lỗi tự động bật video iOS:", e);
+          }
         };
       } catch (err) {
         alert("Không thể mở camera. Vui lòng cấp quyền trình duyệt.");
@@ -58,8 +71,24 @@ const CameraStep = ({ onCapture, onCancel }) => {
     startCamera();
 
     return () => {
-      if (streamRef.current) streamRef.current.getTracks().forEach(track => track.stop());
-      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+      // 1. Tắt phần cứng Camera
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => {
+          track.stop();
+        });
+      }
+      
+      // 2. Xóa sạch bộ nhớ đệm của thẻ Video (CHÌA KHÓA FIX BUG ZOOM)
+      if (videoRef.current) {
+        videoRef.current.pause();
+        videoRef.current.srcObject = null; 
+        videoRef.current.load(); // Ép trình duyệt "quên" luôn luồng video cũ
+      }
+      
+      // 3. Dừng vòng lặp quét AI
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
     };
   }, [onCancel]);
 
@@ -121,21 +150,58 @@ const CameraStep = ({ onCapture, onCancel }) => {
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext('2d');
     
+    // Lật ảnh nếu cần (thường camera trước sẽ bị ngược)
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     
     canvas.toBlob((blob) => {
       const file = new File([blob], "skin_capture.jpg", { type: "image/jpeg" });
       const url = URL.createObjectURL(file);
-      onCapture(file, url);
+      
+      // QUAN TRỌNG: Truyền thêm flag true để báo đây là ảnh từ Camera
+      onCapture(file, url, true); 
     }, 'image/jpeg', 0.95);
   };
 
   const isReadyToCapture = lightStatus === 'Tốt' && faceStatus === 'Tốt';
 
   return (
-    <div className="analyzeskin-camerastep-container">
+    // THÊM CLASS NÀY ĐỂ TRÙM KÍN MÀN HÌNH (CHE NAVBAR)
+    <div className="analyzeskin-camerastep-fullscreen">
+      
+      {/* 1. KHUNG VIDEO DỌC SẼ NẰM DƯỚI CÙNG (Z-INDEX THẤP NHẤT) */}
+      <video
+        key={videoKey}
+        ref={videoRef} 
+        autoPlay 
+        playsInline
+        muted
+        className="analyzeskin-camerastep-video" />
 
-      {/* CÂU NHẮC NHỞ */}
+      {/* 2. THANH TRẠNG THÁI AI (NẰM TRÊN CÙNG) */}
+      <div className="analyzeskin-camerastep-status-bar">
+        <div className={`analyzeskin-camerastep-status-badge ${lightStatus === 'Tốt' ? 'ready' : 'waiting'}`}>
+          <span className="badge-icon">
+            {lightStatus === 'Tốt' ? '✔' : lightStatus === 'Quá chói' ? '☀' : lightStatus === 'Quá tối' ? '☾' : '●'}
+          </span>
+          Ánh sáng: {lightStatus}
+        </div>
+        
+        {!isAiLoaded ? (
+           <div className="analyzeskin-camerastep-status-badge waiting">
+             <span className="badge-icon">↺</span>
+             Đang tải AI...
+           </div>
+        ) : (
+          <div className={`analyzeskin-camerastep-status-badge ${faceStatus === 'Tốt' ? 'ready' : 'waiting'}`}>
+            <span className="badge-icon">
+              {faceStatus === 'Tốt' ? '✔' : faceStatus === 'Quá xa' ? '↔' : faceStatus === 'Quá gần' ? '→←' : '？'}
+            </span>
+            Khuôn mặt: {faceStatus}
+          </div>
+        )}
+      </div>
+
+      {/* 3. CÂU NHẮC NHỞ (NẰM GIỮA MÀN HÌNH, PHÍA TRÊN OVAL) */}
       <div className="analyzeskin-camerastep-guide-wrapper">
         <p className="analyzeskin-camerastep-guide-text">
           {faceStatus === 'Không thấy mặt' ? 'Vui lòng đưa mặt vào khung hình' :
@@ -147,37 +213,15 @@ const CameraStep = ({ onCapture, onCancel }) => {
         </p>
       </div>
       
-      {/* THANH TRẠNG THÁI AI */}
-      <div className="analyzeskin-camerastep-status-bar">
-        <div className={`analyzeskin-camerastep-status-badge ${lightStatus === 'Tốt' ? 'ready' : 'waiting'}`}>
-          Ánh sáng: {lightStatus}
-        </div>
-        
-        {!isAiLoaded ? (
-           <div className="analyzeskin-camerastep-status-badge waiting">
-             Đang tải AI...
-           </div>
-        ) : (
-          <div className={`analyzeskin-camerastep-status-badge ${faceStatus === 'Tốt' ? 'ready' : 'waiting'}`}>
-            Khuôn mặt: {faceStatus}
-          </div>
-        )}
+      {/* 4. LỚP PHỦ KHUNG OVAL NÉT ĐỨT (GIỮ NGUYÊN BẢN SẮC CỦA BẠN) */}
+      <div className="analyzeskin-camerastep-overlay">
+        <div 
+          className="analyzeskin-camerastep-oval" 
+          style={{ borderColor: isReadyToCapture ? 'var(--accent-yellow)' : 'var(--border-color)' }}
+        ></div>
       </div>
 
-      {/* KHUNG VIDEO DỌC */}
-      <div className="analyzeskin-camerastep-video-wrapper">
-        <video ref={videoRef} autoPlay playsInline className="analyzeskin-camerastep-video" />
-        
-        {/* LỚP PHỦ KHUNG OVAL NÉT ĐỨT */}
-        <div className="analyzeskin-camerastep-overlay">
-          <div 
-            className="analyzeskin-camerastep-oval" 
-            style={{ borderColor: isReadyToCapture ? 'var(--accent-yellow)' : 'var(--border-color)' }}
-          ></div>
-        </div>
-      </div>
-
-      {/* KHU VỰC ĐIỀU KHIỂN */}
+      {/* 5. KHU VỰC ĐIỀU KHIỂN NẰM DƯỚI CÙNG */}
       <div className="analyzeskin-camerastep-controls">
         <button className="analyzeskin-camerastep-btn-cancel" onClick={onCancel}>Hủy</button>
         
@@ -186,13 +230,13 @@ const CameraStep = ({ onCapture, onCancel }) => {
           onClick={handleShutter}
           disabled={!isReadyToCapture}
           style={{ 
-            borderColor: isReadyToCapture ? 'var(--accent-yellow)' : 'var(--border-color)',
+            borderColor: isReadyToCapture ? 'var(--accent-yellow)' : 'white',
             opacity: isReadyToCapture ? 1 : 0.6 
           }}
         >
           <div 
             className="analyzeskin-camerastep-shutter-inner"
-            style={{ backgroundColor: isReadyToCapture ? 'var(--accent-yellow)' : 'var(--border-color)' }}
+            style={{ backgroundColor: isReadyToCapture ? 'var(--accent-yellow)' : 'white' }}
           ></div>
         </button>
         <div className="analyzeskin-camerastep-spacer"></div>

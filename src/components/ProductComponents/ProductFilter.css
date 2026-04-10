@@ -40,7 +40,7 @@
     inset: 0;
     background: rgba(0, 0, 0, 0.55);
     backdrop-filter: blur(2px);
-    z-index: 1000; /* Nằm dưới Sidebar nhưng trên toàn bộ trang web */
+    z-index: 19999; /* Nằm dưới Sidebar nhưng trên toàn bộ trang web */
     animation: filterFadeIn 0.3s ease-out;
 }
 
@@ -61,7 +61,7 @@
     width: clamp(280px, 85vw, 360px); 
     height: 100vh;
     background: #fff;
-    z-index: 1001; /* Nổi lên trên Overlay */
+    z-index: 20000; /* Nổi lên trên Overlay */
     
     display: flex;
     flex-direction: column; /* Quan trọng để tách Header và Nội dung cuộn */
@@ -80,10 +80,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: clamp(1rem, 3vw, 1.5rem);
+    padding: 1.5rem;
     border-bottom: 1px solid var(--border-color, #e5e5e5);
     background-color: #fff;
-    /* Giữ header luôn ở trên cùng, không bị cuộn theo nội dung */
+    /* 🚀 QUAN TRỌNG: Giữ header cố định khi cuộn danh sách thương hiệu dài */
+    position: sticky;
+    top: 0;
+    z-index: 10;
     flex-shrink: 0; 
 }
 
@@ -94,23 +97,25 @@
     font-weight: 700;
 }
 
+/* 🚀 NÚT X ĐÃ ĐƯỢC LÀM RÕ RÀNG HƠN */
 .close-filter-btn {
-    background: transparent;
+    background: #f5f5f5; /* Nền xám nhạt để tạo vùng bấm rõ ràng */
     border: none;
-    font-size: 1.5rem;
-    color: #999;
-    cursor: pointer;
+    color: #1c1917;
+    width: 44px; /* To hơn để dễ bấm bằng ngón tay */
+    height: 44px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
     transition: all 0.2s ease;
+    flex-shrink: 0;
 }
 
 .close-filter-btn:hover {
-    color: #1c1917;
+    background: #e5e5e5;
 }
 
 /* --- PHẦN NỘI DUNG CUỘN (SCROLLABLE CONTENT) --- */

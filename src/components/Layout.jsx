@@ -1,3 +1,4 @@
+// Layout.jsx: Bộ khung tối ưu cho Fluid Design với cấu trúc semantic giúp hỗ trợ SEO và Accessibility tốt hơn.
 import { Outlet } from "react-router-dom";
 import Navbar from "@/components/Header/Navbar/Navbar";
 import "./Layout.css";

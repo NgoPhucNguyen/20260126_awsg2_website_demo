@@ -1,3 +1,4 @@
+// vite.config.js
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
@@ -11,4 +12,7 @@ export default defineConfig({
       '#server': path.resolve(__dirname, './server'), // Changed $ to #
     },
   },
+  server: {
+    allowedHosts: true, // Cho phép tất cả các host kết nối đến dev server
+  }
 })

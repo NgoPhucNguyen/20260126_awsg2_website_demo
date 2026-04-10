@@ -73,6 +73,11 @@ const ProductFilter = ({ filterOptions }) => {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
     };
 
+    const handleClose = () => {
+        handlePriceApply(); // Gọi hàm này để cập nhật URL params trước khi đóng
+        setIsOpen(false);
+    };
+
     return (
         <>
             <div className="filter-toggle-wrapper">
@@ -86,7 +91,7 @@ const ProductFilter = ({ filterOptions }) => {
                 
                 <div className="filter-header">
                     <h2>Bộ Lọc Sản Phẩm</h2>
-                    <button className="close-filter-btn" onClick={() => setIsOpen(false)} aria-label="Đóng bộ lọc">
+                    <button className="close-filter-btn" onClick={handleClose} aria-label="Đóng bộ lọc">
                         <FiX />
                     </button>
                 </div>
@@ -187,7 +192,7 @@ const ProductFilter = ({ filterOptions }) => {
             </aside>
 
             {/* Lớp phủ màn hình: Click vào đây cũng đóng Filter */}
-            {isOpen && <div className="filter-overlay" onClick={() => setIsOpen(false)}></div>}
+            {isOpen && <div className="filter-overlay" onClick={handleClose}></div>}
         </>
     );
 };

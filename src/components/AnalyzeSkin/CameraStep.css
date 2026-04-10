@@ -1,39 +1,53 @@
 /* ==========================================================================
-   CAMERA STEP COMPONENT STYLES - PREMIUM LIGHT THEME
+   CAMERA STEP COMPONENT STYLES - PREMIUM FULLSCREEN THEME
    ========================================================================== */
 
 :root {
   --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc; /* Xám xanh cực nhạt, rất sạch và hiện đại */
-  --text-primary: #0f172a; /* Đen tuyền ánh xanh (Slate 900) */
-  --text-secondary: #64748b; /* Xám thanh lịch (Slate 500) */
-  --accent-active: #10b981; /* Xanh ngọc Emerald: Báo hiệu "Sẵn sàng chụp" */
-  --border-color: #e2e8f0;
+  --text-primary: #0f172a; 
+  --text-secondary: #64748b; 
+  --border-color: rgba(226, 232, 240, 0.6);
+  --accent-yellow: #f59e0b; /* Màu viền lúc sẵn sàng chụp */
+  
+  /* 🚀 THÊM MÀU TRẠNG THÁI (ĐÈN GIAO THÔNG) */
+  --status-success: #10b981; /* Xanh ngọc */
+  --status-error: #ef4444;   /* Đỏ san hô */
 }
 
-.analyzeskin-camerastep-container {
-  position: relative;
-  width: 100%;
-  max-width: 450px;
-  margin: 0 auto;
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
-  overflow: hidden;
+/* 1. KHUNG CHỨA TOÀN MÀN HÌNH (CHE NAVBAR) */
+.analyzeskin-camerastep-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100dvh; 
+  background-color: #000; 
+  z-index: 99999; 
   display: flex;
   flex-direction: column;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05); /* Bóng đổ cực êm */
+  overflow: hidden;
 }
 
-/* --- THANH TRẠNG THÁI --- */
-.analyzeskin-camerastep-status-bar {
+/* 2. VIDEO TRÀN VIỀN */
+.analyzeskin-camerastep-video {
   position: absolute;
-  top: 16px;
+  top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1); 
+  z-index: 1;
+}
+
+/* 3. THANH TRẠNG THÁI AI (CẬP NHẬT MÀU SẮC) */
+.analyzeskin-camerastep-status-bar {
+  position: relative; 
   width: 100%;
   display: flex;
   justify-content: center;
   gap: 12px;
+  padding: 24px 16px 12px; 
   z-index: 10;
 }
 
@@ -43,106 +57,129 @@
   font-size: 13px;
   font-weight: 600;
   border: 1px solid var(--border-color);
-  background-color: rgba(255, 255, 255, 0.9); /* Trắng bán trong suốt */
+  background-color: rgba(255, 255, 255, 0.9); 
   color: var(--text-secondary);
-  backdrop-filter: blur(4px); /* Hiệu ứng kính mờ chuẩn iOS */
+  backdrop-filter: blur(8px);
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
-/* Trạng thái AI "Tốt" -> Chuyển xanh ngọc */
-.analyzeskin-camerastep-status-badge.ready { 
-  background-color: var(--accent-active); 
-  color: #ffffff;
-  border-color: var(--accent-active);
+.analyzeskin-camerastep-status-badge .badge-icon {
+  font-size: 14px;
+  font-weight: 700; /* Làm icon đậm hơn để rõ ràng */
 }
 
+/* 🚀 TRẠNG THÁI "CHỜ / LỖI" - MÀU ĐỎ */
 .analyzeskin-camerastep-status-badge.waiting {
-  background-color: rgba(248, 250, 252, 0.9);
+  background-color: #fef2f2; /* Nền đỏ nhạt */
+  color: var(--status-error);
+  border-color: #fca5a5;
 }
 
-/* --- KHUNG VIDEO DỌC --- */
-.analyzeskin-camerastep-video-wrapper {
+/* 🚀 TRẠNG THÁI "SẴN SÀNG" - MÀU XANH LÁ */
+.analyzeskin-camerastep-status-badge.ready { 
+  background-color: #ecfdf5; /* Nền xanh nhạt */
+  color: var(--status-success);
+  border-color: #6ee7b7;
+  /* Thêm hiệu ứng nháy sáng nhẹ khi chuyển xanh */
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+/* 4. CÂU NHẮC NHỞ */
+.analyzeskin-camerastep-guide-wrapper {
   position: relative;
-  width: 100%;
-  aspect-ratio: 3 / 4;
-  overflow: hidden;
-  background-color: #f1f5f9;
+  background-color: transparent; 
+  padding: 10px 20px;
+  text-align: center;
+  z-index: 10;
+  margin-top: 10px;
 }
 
-.analyzeskin-camerastep-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: scaleX(-1);
-  display: block;
+.analyzeskin-camerastep-guide-text {
+  color: #ffffff; 
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8); 
+  /* 🚀 Thêm transition để chuyển đổi trạng thái chữ mượt hơn */
+  transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
-/* --- LỚP PHỦ OVAL --- */
+/* 5. LỚP PHỦ KHUNG OVAL */
+:root {
+  --oval-width-desktop: 520px;  
+  --oval-height-ratio: 1.35;    
+  --oval-offset-y: -20px;       
+  --oval-width-mobile: 65%;     
+  --oval-border-thickness: 3px;     
+  --oval-dash-array: 10, 10;        
+}
+
 .analyzeskin-camerastep-overlay {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   pointer-events: none;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: center;      
+  justify-content: center;   
+  z-index: 5;
 }
 
 .analyzeskin-camerastep-oval {
-  width: 62%;
-  height: 72%; 
-  border: 2px dashed;
+  width: var(--oval-width-mobile);
+  aspect-ratio: 1 / var(--oval-height-ratio);
+  
+  border: var(--oval-border-thickness) dashed;
+  border-dasharray: var(--oval-dash-array);
   border-radius: 50% / 50%;
-  /* Phủ nền trắng sữa 60% xung quanh để làm bật khuôn mặt ở giữa */
-  box-shadow: 0 0 0 4000px rgba(255, 255, 255, 0.6); 
-  transition: border-color 0.3s ease;
+  
+  transform: translateY(var(--oval-offset-y));
+  
+  box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.5); 
+  filter: drop-shadow(0 0 10px rgba(0,0,0,0.3)); 
+  
+  transition: border-color 0.3s ease, width 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* --- NHẮC NHỞ & ĐIỀU KHIỂN --- */
-.analyzeskin-camerastep-guide-wrapper {
-  background-color: var(--bg-secondary);
-  padding: 16px 20px;
-  text-align: center;
-  border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
+@media (min-width: 1024px) {
+  .analyzeskin-camerastep-oval {
+    width: var(--oval-width-desktop);
+  }
 }
 
-.analyzeskin-camerastep-guide-text {
-  color: var(--text-primary);
-  font-size: 15px;
-  margin: 0;
-  font-weight: 500;
-  min-height: 22px;
-}
-
+/* 6. KHU VỰC ĐIỀU KHIỂN (Nút chụp) */
 .analyzeskin-camerastep-controls {
-  background-color: var(--bg-primary);
-  padding: 20px 20px 24px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
+  padding: 40px 20px 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 10;
 }
 
 .analyzeskin-camerastep-btn-cancel {
   background: none;
   border: none;
-  color: var(--text-secondary);
-  font-size: 15px;
+  color: #ffffff;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   padding: 10px;
   width: 60px;
   text-align: left;
-  transition: color 0.2s ease;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
-.analyzeskin-camerastep-btn-cancel:hover {
-  color: var(--text-primary);
-}
-
-/* Vòng tròn viền ngoài của nút chụp */
 .analyzeskin-camerastep-btn-shutter {
-  width: 68px;
-  height: 68px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
   border: 3px solid;
   background-color: transparent;
@@ -158,10 +195,9 @@
   cursor: pointer;
 }
 
-/* Nút bấm tròn bên trong */
 .analyzeskin-camerastep-shutter-inner {
-  width: 54px;
-  height: 54px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
   transition: background-color 0.3s ease;
 }

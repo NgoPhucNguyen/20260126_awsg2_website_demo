@@ -53,7 +53,8 @@ export const cancelOrder = async (req, res) => {
 
         const isAdmin = userRole === 5150 || userRole === 'Admin' || userRole === 'ADMIN';
 
-        if (!isAdmin && order.customerId !== currentUserId) {
+        // 🚀 FIX LỖI TẠI ĐÂY: Ép kiểu cả 2 về Number để so sánh an toàn tuyệt đối
+        if (!isAdmin && Number(order.customerId) !== Number(currentUserId)) {
             return res.status(403).json({ message: "Bạn không có quyền hủy đơn hàng này." });
         }
 
@@ -120,9 +121,9 @@ export const cancelOrder = async (req, res) => {
         });
 
         if (order.paymentStatus === 'PAID' && order.paymentMethod === 'VNPAY') {
-            res.json({ message: "Hủy đơn thành công. Yêu cầu hoàn tiền đang được xử lý (3-7 ngày)." });
+            res.json({ message: "Hủy đơn thành công. Yêu cầu hoàn tiền đang được xử lý (3-7 ngày).", paymentStatus: "REFUNDING" });
         } else {
-            res.json({ message: "Hủy đơn hàng thành công. Tồn kho và Voucher đã được hoàn trả." });
+            res.json({ message: "Hủy đơn hàng thành công. Tồn kho và Voucher đã được hoàn trả.", paymentStatus: "FAILED" });
         }
 
     } catch (error) {

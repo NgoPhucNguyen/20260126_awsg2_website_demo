@@ -249,3 +249,45 @@ export const getRelatedProducts = async (req, res) => {
     res.json([]); 
   }
 };
+
+
+// server/controllers/productController.js
+
+export const getQuickSearchResults = async (req, res) => {
+  try {
+    const { search } = req.query;
+
+    if (!search || search.trim().length < 2) {
+      return res.json([]);
+    }
+
+    const products = await prisma.product.findMany({
+      where: {
+        isActive: true,
+        OR: [
+          { name: { contains: search, mode: 'insensitive' } },
+          { nameVn: { contains: search, mode: 'insensitive' } }
+        ],
+      },
+      take: 5, // 🚀 Giới hạn đúng 5 sản phẩm như bạn muốn
+      select: {
+        id: true,
+        name: true,
+        nameVn: true,
+        // 🚀 Chỉ lấy biến thể đầu tiên để lấy giá và ảnh thumbnail, không lấy inventories
+        variants: {
+          take: 1,
+          select: {
+            unitPrice: true,
+            thumbnailUrl: true,
+          }
+        }
+      }
+    });
+
+    res.json(products);
+  } catch (error) {
+    console.error("[QUICK_SEARCH_ERROR]:", error);
+    res.status(500).json({ error: 'Lỗi tìm kiếm nhanh' });
+  }
+};

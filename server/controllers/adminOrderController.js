@@ -41,6 +41,12 @@ export const updateOrderStatus = async (req, res) => {
         const order = await prisma.cart.findUnique({ where: { id } });
         
         if (!order) return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
+
+        // 🚀 BỔ SUNG CHẶN DELIVERED
+        if (order.status === 'DELIVERED') {
+            return res.status(400).json({ message: "Đơn hàng đã giao thành công, không thể thay đổi trạng thái." });
+        }
+        
         if (order.status === 'CANCELLED') return res.status(400).json({ message: "Đơn hàng đã bị hủy, không thể cập nhật." });
 
         let updateData = { status };

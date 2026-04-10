@@ -135,27 +135,33 @@ class AgentClient {
 	}
 
 	async buildRagSystemMessage(items) {
-		if (!Array.isArray(items) || items.length === 0) {
-			return "";
-		}
+    if (!Array.isArray(items) || items.length === 0) {
+      return "";
+    }
 
-		const ragInstruction = await this.loadRagMessage();
+    const ragInstruction = await this.loadRagMessage();
 
-		const lines = items.map((item, index) => {
-			const score = Number(item?.score ?? 0).toFixed(3);
-			const content = typeof item?.content === "string" ? item.content.trim() : "";
-			// 🚀 THÊM DÒNG NÀY: Xóa sạch Product ID khỏi RAG để AI không lấy râu ông nọ cắm cằm bà kia
-      content = content.replace(/Product ID:\s*\d+\n?/g, '');
+    const lines = items.map((item, index) => {
+      const score = Number(item?.score ?? 0).toFixed(3);
+      let content = typeof item?.content === "string" ? item.content.trim() : "";
+      
+      // 🚀 SỬA LỖI 1: XÓA BỎ DÒNG REPLACE ID. CHÚNG TA CẦN GIỮ LẠI ID ĐỂ GỌI CARD!
+      // (Xóa hoặc comment lại dòng: content = content.replace(...))
 
-			return `[RAG-${index + 1}] (score=${score})\n${content}`;
-		});
+      return `[RAG-${index + 1}] (score=${score})\n${content}`;
+    });
 
-		return [
-			ragInstruction,
-			"Dưới đây là thông tin tham khảo liên quan đến yêu cầu của bạn, được đánh giá và sắp xếp theo mức độ liên quan:",
-			lines.join("\n\n"),
-		].join("\n\n");
-	}
+    // 🚀 SỬA LỖI 2: THÊM LỆNH "THIẾT QUÂN LUẬT" VÀO CUỐI RAG (Nơi AI chú ý nhất)
+    return [
+      ragInstruction,
+      "CẢNH BÁO TỐI CAO TỪ HỆ THỐNG:",
+      "1. HÃY BỎ QUA các sản phẩm đã nhắc đến trong Lịch sử Chat nếu chúng KHÔNG XUẤT HIỆN trong danh sách RAG dưới đây. Lịch sử có thể bị sai lệch.",
+      "2. BẠN CHỈ ĐƯỢC PHÉP tư vấn những sản phẩm có mặt trong danh sách RAG MỚI NHẤT này.",
+      "3. KHI GIỚI THIỆU SẢN PHẨM, BẮT BUỘC PHẢI THÊM CÚ PHÁP [ID: <mã_sản_phẩm>] VÀO SAU TÊN SẢN PHẨM để hệ thống hiển thị hình ảnh (Ví dụ: Nước tẩy trang Cocoon [ID: 12]). Nếu không có mã ID trong RAG, tuyệt đối không được tự bịa số.",
+      "--- DANH SÁCH SẢN PHẨM TRONG KHO (RAG) ---",
+      lines.join("\n\n"),
+    ].join("\n\n");
+  }
 
 	async retrieveRagContext(prompt, options = {}) {
 		const ragTopK = Number(options.ragTopK ?? 4);

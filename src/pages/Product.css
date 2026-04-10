@@ -28,6 +28,8 @@
     width: 100%;
 }
 
+
+
 .product-page-header-titles {
     text-align: left;
 }
@@ -257,4 +259,67 @@
     font-size: clamp(1rem, 1.5vw, 1.2rem);
     letter-spacing: 1px;
     flex-shrink: 0;
+}
+
+
+/* 🚀 NHÓM TIÊU ĐỀ VÀ NÚT PHÂN TÍCH */
+.product-page-title-group {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 2vw, 20px);
+    flex-wrap: wrap; /* Nếu màn hình quá nhỏ thì nút sẽ tự rớt xuống dưới H1 */
+}
+
+.product-page-title-group h1 {
+    margin: 0; /* Xóa margin mặc định của h1 để bằng hàng với nút */
+}
+
+/* 🚀 NÚT PHÂN TÍCH DA (PHONG CÁCH GỌN GÀNG CHO TRANG DANH SÁCH) */
+.product-page-analyze-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #eac470; /* Vàng Gold đặc trưng AI */
+    color: #1c1917;
+    border: none;
+    
+    /* 📐 Kích thước linh hoạt: nhỏ hơn bên ProductDetail một chút để hài hòa */
+    padding: clamp(6px, 1vw, 10px) clamp(12px, 1.5vw, 20px);
+    border-radius: 50px; /* Bo tròn dạng viên thuốc nhìn sẽ hiện đại hơn */
+    
+    font-size: clamp(0.75rem, 1vw, 0.9rem);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 12px rgba(234, 196, 112, 0.2);
+}
+
+.product-page-magic-icon {
+    font-size: 1.1em;
+}
+
+/* Hiệu ứng khi lướt chuột qua */
+.product-page-analyze-btn:hover {
+    background-color: #1c1917;
+    color: #cca858;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.product-page-analyze-btn:hover .product-page-magic-icon {
+    transform: rotate(20deg) scale(1.1);
+}
+
+.product-page-analyze-btn:active {
+    transform: scale(0.95);
+}
+
+/* 📱 Mobile: Ẩn bớt chữ nếu màn hình quá hẹp (vd: dưới 400px) */
+@media (max-width: 400px) {
+    .product-page-analyze-btn span {
+        display: none; /* Chỉ hiện mỗi cái Icon đũa phép cho gọn */
+    }
+    .product-page-analyze-btn {
+        padding: 8px;
+    }
 }

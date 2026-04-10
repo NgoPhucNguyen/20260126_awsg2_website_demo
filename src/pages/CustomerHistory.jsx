@@ -103,11 +103,14 @@ const CustomerHistory = () => {
                 headers: { Authorization: `Bearer ${auth.accessToken}` }
             });
 
+            // 🚀 Nhận paymentStatus trả về từ Backend để gán chính xác (FAILED hoặc REFUNDING)
+            const updatedPaymentStatus = response.data.paymentStatus || 'FAILED';
+            
             // Cập nhật lại list ở Frontend mà không cần gọi lại API GET
             setOrders(prevOrders => 
                 prevOrders.map(order => 
                     order.id === orderId 
-                    ? { ...order, status: 'CANCELLED', paymentStatus: 'FAILED' } // Đổi status ảo
+                    ? { ...order, status: 'CANCELLED', paymentStatus: updatedPaymentStatus } // Đổi status ảo
                     : order
                 )
             );

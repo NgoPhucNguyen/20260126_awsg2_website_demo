@@ -1,127 +1,114 @@
-// controllers/recommendationController.js
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 export const getRecommendedProducts = async (req, res) => {
   try {
-    const { skinType, conditionKeyword, stepKeywords } = req.body; 
+    // 🚀 Nhận thêm tham số sortPrice ('asc' - Tăng dần, 'desc' - Giảm dần) từ Client
+    const { skinType, conditionKeyword, stepKeywords, sortPrice } = req.body; 
 
     if (!stepKeywords || stepKeywords.length === 0) {
       return res.status(200).json({});
     }
 
-    // 1. LỌC THEO LOẠI DA 
-    let whereClause = { isActive: true };
-    if (skinType) {
-      whereClause.skinType = { contains: skinType, mode: 'insensitive' };
-    }
+    const categorizedProducts = {};
+    const MAX_ITEMS = 4; // Lấy tối đa 4 sản phẩm, tối thiểu sẽ cố gắng đạt >= 2
 
-    // 2. GOM SẢN PHẨM DỰA VÀO BẢNG CATEGORY (Cực kỳ tối ưu)
-    // Tìm keyword trong Tên Danh Mục (category.nameVn) HOẶC dự phòng tìm trong Tên SP (nameVn)
-    const orConditions = stepKeywords.flatMap(kw => [
-      { category: { nameVn: { contains: kw, mode: 'insensitive' } } },
-      { nameVn: { contains: kw, mode: 'insensitive' } } // Giữ lại dự phòng lỡ Admin quên set category
-    ]);
-    
-    if (orConditions.length > 0) {
-        whereClause.OR = orConditions;
-    }
+    await Promise.all(stepKeywords.map(async (categoryNameEng) => {
+      let matchedProducts = [];
 
-    // 3. KÉO TẤT CẢ RA (NHỚ INCLUDE CATEGORY ĐỂ LỌC Ở BƯỚC DƯỚI)
-    const rawProducts = await prisma.product.findMany({
-      where: whereClause,
-      include: {
-        brand: true,
-        category: true, // <--- BẮT BUỘC PHẢI INCLUDE CATEGORY
-        variants: {
+      // Hàm query chung để tái sử dụng
+      const fetchProducts = async (whereConditions, takeCount) => {
+        return await prisma.product.findMany({
+          where: { isActive: true, ...whereConditions },
           include: {
-            images: true,
-            inventories: true,
-            promotions: { include: { promotion: true } }
-          }
-        }
-      },
-      take: 50 
-    });
+            brand: true, category: true,
+            variants: { include: { images: true, inventories: true, promotions: { include: { promotion: true } } } }
+          },
+          take: takeCount
+        });
+      };
 
-    // 4. FORMAT LẠI DATA 
-    const formattedProducts = rawProducts.map(product => {
-      const formattedVariants = product.variants.map(variant => {
-        const totalStock = variant.inventories?.reduce((sum, item) => sum + item.quantity, 0) || 0;
-        
-        // Tính toán Sale
-        let finalPrice = variant.unitPrice;
-        let isSale = false;
-        let discountType = null;
-        let discountValue = null;
+      // 🌊 TẦNG 1: Khắt khe nhất (Category + SkinType + ConditionKeyword)
+      if (conditionKeyword && skinType) {
+        const tier1 = await fetchProducts({
+          category: { name: { equals: categoryNameEng, mode: 'insensitive' } },
+          skinType: { contains: skinType, mode: 'insensitive' },
+          nameVn: { contains: conditionKeyword, mode: 'insensitive' } // Tìm tính năng (VD: "Ngừa mụn") trong tên SP
+        }, MAX_ITEMS);
+        matchedProducts.push(...tier1);
+      }
 
-        const activePromo = variant.promotions?.find(p => {
+      // 🌊 TẦNG 2: Nới lỏng 1 (Category + SkinType)
+      if (matchedProducts.length < MAX_ITEMS && skinType) {
+        const existingIds = matchedProducts.map(p => p.id);
+        const tier2 = await fetchProducts({
+          id: { notIn: existingIds },
+          category: { name: { equals: categoryNameEng, mode: 'insensitive' } },
+          skinType: { contains: skinType, mode: 'insensitive' }
+        }, MAX_ITEMS - matchedProducts.length);
+        matchedProducts.push(...tier2);
+      }
+
+      // 🌊 TẦNG 3: Chữa cháy (Chỉ cần đúng Category)
+      if (matchedProducts.length < MAX_ITEMS) {
+        const existingIds = matchedProducts.map(p => p.id);
+        const tier3 = await fetchProducts({
+          id: { notIn: existingIds },
+          category: { name: { equals: categoryNameEng, mode: 'insensitive' } }
+        }, MAX_ITEMS - matchedProducts.length);
+        matchedProducts.push(...tier3);
+      }
+
+      // BƯỚC FORMAT DATA (Tính giá Sale & Tồn kho)
+      let formattedProducts = matchedProducts.map(product => {
+        const formattedVariants = product.variants.map(variant => {
+          const totalStock = variant.inventories?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+          let finalPrice = variant.unitPrice;
+          let isSale = false;
+          let discountType = null;
+          let discountValue = null;
+
+          const activePromo = variant.promotions?.find(p => {
             const now = new Date();
             const promo = p.promotion;
             return promo.isActive && promo.startDate <= now && promo.endDate >= now;
-        });
+          });
 
-        if (activePromo) {
+          if (activePromo) {
             isSale = true;
             discountType = activePromo.promotion.discountType;
             discountValue = activePromo.promotion.discountValue;
             if (discountType === 'PERCENTAGE') {
-                finalPrice = variant.unitPrice * (1 - discountValue / 100);
+              finalPrice = variant.unitPrice * (1 - discountValue / 100);
             } else if (discountType === 'FIXED_AMOUNT') {
-                finalPrice = Math.max(0, variant.unitPrice - discountValue);
+              finalPrice = Math.max(0, variant.unitPrice - discountValue);
             }
-        }
+          }
+
+          return {
+            ...variant, stock: totalStock, image: variant.images?.[0]?.imageUrl || variant.thumbnailUrl,
+            price: finalPrice, originalPrice: variant.unitPrice, isSale, discountType, discountValue
+          };
+        });
 
         return {
-          ...variant,
-          stock: totalStock,
-          image: variant.images?.[0]?.imageUrl || variant.thumbnailUrl,
-          price: finalPrice,
-          originalPrice: variant.unitPrice,
-          isSale, discountType, discountValue
+          ...product, variants: formattedVariants, brandName: product.brand?.name || "", categoryName: product.category?.nameVn || "", 
+          price: formattedVariants[0]?.price, originalPrice: formattedVariants[0]?.originalPrice, isSale: formattedVariants[0]?.isSale,
+          discountType: formattedVariants[0]?.discountType, discountValue: formattedVariants[0]?.discountValue,
+          stock: formattedVariants[0]?.stock, image: formattedVariants[0]?.image, variantId: formattedVariants[0]?.id
         };
       });
 
-      return {
-        ...product,
-        variants: formattedVariants,
-        brandName: product.brand?.name || "",
-        // Lấy tên category ra ngoài cho dễ dùng
-        categoryName: product.category?.nameVn || "", 
-        price: formattedVariants[0]?.price,
-        originalPrice: formattedVariants[0]?.originalPrice,
-        isSale: formattedVariants[0]?.isSale,
-        discountType: formattedVariants[0]?.discountType,
-        discountValue: formattedVariants[0]?.discountValue,
-        stock: formattedVariants[0]?.stock,
-        image: formattedVariants[0]?.image,
-        variantId: formattedVariants[0]?.id
-      };
-    });
+      // 🚀 TÍNH NĂNG MỚI: SẮP XẾP THEO GIÁ (Dành cho Customer)
+      if (sortPrice === 'asc') {
+        formattedProducts.sort((a, b) => a.price - b.price); // Rẻ nhất lên đầu
+      } else if (sortPrice === 'desc') {
+        formattedProducts.sort((a, b) => b.price - a.price); // Đắt nhất lên đầu
+      }
 
-    // 5. PHÂN LOẠI VÀO RỔ (Ưu tiên check Category Name trước)
-    const categorizedProducts = {};
-    
-    stepKeywords.forEach(keyword => {
-       // Lọc: Ưu tiên khớp tên Danh mục, nếu không khớp thì xét tên Sản phẩm
-       let matched = formattedProducts.filter(p => {
-          const matchCategory = p.categoryName.toLowerCase().includes(keyword.toLowerCase());
-          const matchProductName = p.nameVn?.toLowerCase().includes(keyword.toLowerCase());
-          return matchCategory || matchProductName;
-       });
-       
-       // Sắp xếp: Ai CÓ conditionKeyword (VD: "Kiềm dầu") trong tên thì được đẩy lên đầu
-       if (conditionKeyword) {
-          matched.sort((a, b) => {
-              const aHasSpecial = a.nameVn?.toLowerCase().includes(conditionKeyword.toLowerCase());
-              const bHasSpecial = b.nameVn?.toLowerCase().includes(conditionKeyword.toLowerCase());
-              return (aHasSpecial === bHasSpecial) ? 0 : aHasSpecial ? -1 : 1;
-          });
-       }
-
-       categorizedProducts[keyword] = matched.slice(0, 4); 
-    });
+      categorizedProducts[categoryNameEng] = formattedProducts;
+    }));
 
     return res.status(200).json(categorizedProducts);
 

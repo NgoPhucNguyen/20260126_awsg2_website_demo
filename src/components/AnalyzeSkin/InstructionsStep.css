@@ -1,9 +1,10 @@
 /* ==========================================================================
-   INSTRUCTION STEP COMPONENT STYLES
+   INSTRUCTION STEP COMPONENT STYLES - SKIN TYPE CARDS THEME
    ========================================================================== */
 
 .analyzeskin-instructionstep-container {
-  max-width: 600px;
+  /* 🚀 Mở rộng max-width để chứa đủ 4 thẻ Card nằm ngang trên Desktop */
+  max-width: 1000px; 
   margin: 0 auto;
   padding: 40px 20px;
   text-align: center;
@@ -21,18 +22,132 @@
 .analyzeskin-instructionstep-subtitle {
   font-size: 16px;
   color: #64748b;
-  margin-bottom: 32px;
+  margin-bottom: 40px;
   line-height: 1.5;
 }
+
+/* ==========================================================================
+   🚀 SKIN TYPE CARDS (THẺ CHỌN LOẠI DA)
+   ========================================================================== */
+.analyzeskin-skintype-cards-container {
+  display: grid;
+  /* Desktop: Chia đều 4 cột */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.analyzeskin-skintype-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px 16px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hiệu ứng Hover - Nổi thẻ lên nhẹ nhàng */
+.analyzeskin-skintype-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+  border-color: #cbd5e1;
+}
+
+/* 🚀 TRẠNG THÁI ACTIVE (Khi thẻ được chọn) */
+.analyzeskin-skintype-card.active {
+  border: 2px solid #7B3F00; /* Màu vàng chuẩn mẫu */
+  box-shadow: 0 10px 25px -5px rgba(230, 194, 122, 0.25);
+  transform: translateY(-4px);
+}
+
+/* HÌNH ẢNH MINH HỌA */
+.skintype-card-image-wrapper {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.skintype-card-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* NỘI DUNG CHỮ TRONG THẺ */
+.skintype-card-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.skintype-card-label {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 0;
+  margin-bottom: 8px;
+  transition: color 0.3s ease;
+}
+
+/* Đổi màu chữ Label sang đỏ khi được chọn (giống mẫu) */
+.analyzeskin-skintype-card.active .skintype-card-label {
+  color: #7B3F00; 
+}
+
+.skintype-card-description {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* NÚT "CHỌN" BÊN TRONG THẺ */
+.skintype-card-select-btn {
+  width: 100%;
+  padding: 10px 0;
+  background-color: transparent;
+  color: #7B3F00; /* Chữ vàng */
+  border: 1px solid #7B3F00; /* Viền vàng */
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Trạng thái nút khi thẻ được chọn */
+.analyzeskin-skintype-card.active .skintype-card-select-btn {
+  background-color: #7B3F00; /* Đổ nền vàng */
+  color: #ffffff; /* Chữ trắng */
+}
+
+
+/* ==========================================================================
+   HƯỚNG DẪN & NÚT BẤM (CŨ GIỮ NGUYÊN)
+   ========================================================================== */
 
 /* Danh sách hướng dẫn */
 .analyzeskin-instructionstep-list {
   text-align: left;
   background-color: #f8fafc;
-  padding: 24px 24px 24px 40px; /* Thêm padding trái để chứa dấu chấm */
+  padding: 24px 24px 24px 40px; 
   border-radius: 12px;
   border: 1px solid #e2e8f0;
   margin-bottom: 32px;
+  max-width: 600px; /* Khóa width cho danh sách gọn gàng */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .analyzeskin-instructionstep-list-item {
@@ -51,24 +166,6 @@
   font-weight: 600;
 }
 
-/* Hộp bảo mật (Privacy) */
-.analyzeskin-instructionstep-privacy {
-  margin-bottom: 40px;
-}
-
-.analyzeskin-instructionstep-privacy-text {
-  font-size: 14px;
-  color: #64748b;
-  margin-bottom: 4px;
-}
-
-.analyzeskin-instructionstep-privacy-highlight {
-  font-size: 14px;
-  color: #10b981; /* Xanh lá tạo sự an tâm */
-  font-weight: 600;
-  margin: 0;
-}
-
 /* Khu vực nút bấm */
 .analyzeskin-instructionstep-actions {
   display: flex;
@@ -80,7 +177,7 @@
 .analyzeskin-instructionstep-btn-primary {
   width: 100%;
   max-width: 320px;
-  background-color: #0f172a; /* Nút chính màu đen/xanh đen sang trọng */
+  background-color: #0f172a; 
   color: white;
   border: none;
   padding: 16px 24px;
@@ -118,12 +215,89 @@
   color: #0f172a;
 }
 
-/* Responsive cho điện thoại nhỏ */
-@media (max-width: 480px) {
+/* ==========================================================================
+   🚀 RESPONSIVE CHO ĐIỆN THOẠI NHỎ (Scroll Ngang)
+   ========================================================================== */
+@media (max-width: 768px) {
   .analyzeskin-instructionstep-title {
     font-size: 24px;
   }
+  
+  /* Biến Container thành thanh trượt ngang trên Mobile */
+  .analyzeskin-skintype-cards-container {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 16px; /* Để chừa chỗ cho thanh cuộn */
+    
+    /* Ẩn thanh cuộn tàng hình nhưng vẫn vuốt được */
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+  }
+  
+  .analyzeskin-skintype-cards-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .analyzeskin-skintype-card {
+    /* Ép kích thước cố định cho mỗi thẻ trên Mobile */
+    flex: 0 0 240px; 
+    scroll-snap-align: center; /* Hít thẻ vào giữa màn hình khi cuộn */
+  }
+
   .analyzeskin-instructionstep-list {
     padding: 20px 20px 20px 32px;
   }
+}
+
+
+/* ==========================================================================
+   ERROR MESSAGE BOX (THÔNG BÁO LỖI)
+   ========================================================================== */
+.analyze-skin-page-error-box {
+  background-color: #fef2f2;
+  border: 1px solid #f87171;
+  color: #b91c1c;
+  padding: 12px 16px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14.5px;
+  font-weight: 500;
+  width: 100%;
+  margin-bottom: 16px; /* Cách nút bấm một khoảng vừa phải */
+  box-sizing: border-box;
+  animation: shakeError 0.4s ease-in-out;
+  box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.1);
+}
+
+.analyze-skin-page-error-box span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.analyze-skin-page-error-box button {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0 4px;
+  transition: opacity 0.2s ease;
+  outline: none;
+}
+
+.analyze-skin-page-error-box button:hover {
+  opacity: 0.6;
+}
+
+/* Hiệu ứng rung nhẹ khi báo lỗi để thu hút ánh nhìn */
+@keyframes shakeError {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
 }

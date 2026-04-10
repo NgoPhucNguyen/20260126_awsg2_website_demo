@@ -166,7 +166,7 @@ const ChatbotWidget = () => {
                             <span className="chatbot-widget-avatar">AI</span>
                             <div>
                                 <h3>Trợ lý chăm sóc da</h3>
-                                <p>Sẵn sàng hỗ trợ bạn ✨</p>
+                                <p>Sẵn sàng hỗ trợ bạn</p>
                             </div>
                         </div>
                         <div className="chatbot-widget-header-actions">
@@ -223,6 +223,9 @@ const ChatbotWidget = () => {
                             <FiSend size={18} />
                         </button>
                     </form>
+                    <div className="chatbot-widget-disclaimer">
+                        Trợ lý AI có thể mắc lỗi. Các thông tin tư vấn chỉ mang tính chất tham khảo.
+                    </div>
                 </section>
             )}
         </div>
