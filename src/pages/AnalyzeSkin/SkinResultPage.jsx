@@ -215,7 +215,7 @@ const SkinResultPage = () => {
                   <div className="skinresultpage-flashcard-layout">
                     {/* Hình ảnh bên trái */}
                     <div className="skinresultpage-flashcard-sidebar">
-                      <img src="/day.jpg" alt="Morning Routine" className="skinresultpage-flashcard-img" />
+                      <img src="/day.png" alt="Morning Routine" className="skinresultpage-flashcard-img" />
                     </div>
 
                     {/* Flashcard bên phải */}
@@ -273,7 +273,7 @@ const SkinResultPage = () => {
                   <div className="skinresultpage-flashcard-layout">
                     {/* Hình ảnh bên trái */}
                     <div className="skinresultpage-flashcard-sidebar">
-                      <img src="/night.jpg" alt="Night Routine" className="skinresultpage-flashcard-img" />
+                      <img src="/night.png" alt="Night Routine" className="skinresultpage-flashcard-img" />
                     </div>
 
                     {/* Flashcard bên phải */}

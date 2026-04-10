@@ -53,8 +53,8 @@ export const cancelOrder = async (req, res) => {
 
         const isAdmin = userRole === 5150 || userRole === 'Admin' || userRole === 'ADMIN';
 
-        // 🚀 FIX LỖI TẠI ĐÂY: Ép kiểu cả 2 về Number để so sánh an toàn tuyệt đối
-        if (!isAdmin && Number(order.customerId) !== Number(currentUserId)) {
+        // 🚀 FIX LỖI 403: So sánh chuỗi UUID trực tiếp
+        if (!isAdmin && String(order.customerId).trim() !== String(currentUserId).trim()) {
             return res.status(403).json({ message: "Bạn không có quyền hủy đơn hàng này." });
         }
 
