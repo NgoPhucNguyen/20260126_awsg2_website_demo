@@ -17,7 +17,6 @@ const getToolsForRole = (role) => {
 
 const getToolsMapForRole = (role) => {
     if (Number(role) === Number(process.env.ADMIN_ROLE)) {
-        // console.log("[TOOLS] Returning admin tools", adminToolsMap);
         return adminToolsMap;
     } if (Number(role) === Number(process.env.CUSTOMER_ROLE)) {
         return customerToolsMap;

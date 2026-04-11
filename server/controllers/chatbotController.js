@@ -6,11 +6,6 @@ import AgentClient from "../chatbot/agents.js";
 const agent = new AgentClient();
 
 const askHandler = async (req, res) => {
-    // req
-    //  - body: { prompt: string, history?: array }
-    //  - user: { id: string, ... } (added by verifyJWT middleware)
-    // console.log("[CHATBOT REQUEST] Prompt:", req.body?.prompt);
-    // console.log("[CHATBOT REQUEST] User:", req.user);
 	try {
 		const prompt = typeof req.body?.prompt === "string" ? req.body.prompt.trim() : "";
 		const history = Array.isArray(req.body?.history) ? req.body.history : [];

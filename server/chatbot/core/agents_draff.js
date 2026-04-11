@@ -161,10 +161,8 @@ class AgentClient {
             auth = {},
         } = options;
 
-        console.log("[CHATBOT] auth :", auth);
 
         const { roleKey, toolsMap, toolEnabledModel } = this.getToolContext(auth.role);
-        console.log(`[CHATBOT] Active toolset role: ${roleKey}`);
 
         const activeSystemMessage = systemPrompt ?? await this.loadSystemMessage();
         const messages = [
@@ -181,7 +179,6 @@ class AgentClient {
             if (toolCalls.length === 0) {
                 const normalizedContent = this.normalizeModelContent(response.content);
                 const finalContent = this.sanitizeUserFacingContent(normalizedContent);
-                console.log("[CHATBOT] Final content:", finalContent);
                 return finalContent;
             }
 

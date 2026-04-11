@@ -131,7 +131,6 @@ async function main() {
 	const products = await loadProducts();
 
 	if (products.length === 0) {
-		console.log("[INFO] No products found. Nothing to index.");
 		return;
 	}
 
@@ -151,13 +150,10 @@ async function main() {
 			const embedding = await embeddingClient.createEmbedding(content);
 			const vectorLiteral = toVectorLiteral(embedding);
 			await upsertProductVector(product, content, vectorLiteral);
-			console.log(`[INDEXED] ${product.id} - ${product.nameVn ?? product.name ?? "Unknown"}`);
 		}
 
-		console.log(`[BATCH] Indexed ${Math.min(i + BATCH_SIZE, products.length)}/${products.length}`);
 	}
 
-	console.log(`[DONE] Indexed ${products.length} products into product_vectors.`);
 }
 
 try {

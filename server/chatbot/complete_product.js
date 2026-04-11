@@ -162,15 +162,12 @@ async function askModelForProductInfo(product, maxRetries = 2) {
 const products = await getProducts();
 const pendingProducts = products.filter(isMissingProductInfo);
 
-console.log(`[INFO] Total products: ${products.length}. Pending to enrich: ${pendingProducts.length}`);
 
 for (const product of pendingProducts) {
     try {
         const info = await askModelForProductInfo(product, 2);
         await updateProductInfo(product.id, info.name, info.description, info.ingredients);
-        console.log(`[DONE] ${product.id} - ${product.nameVn}`);
     } catch (error) {
-        console.error(`[ERROR] Failed product ${product.id} - ${product.nameVn}:`, error?.message ?? error);
     }
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(1000);

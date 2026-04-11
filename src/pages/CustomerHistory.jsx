@@ -73,8 +73,8 @@ const CustomerHistory = () => {
                     console.error("Lỗi fetch lịch sử:", err);
                 }
                 if (err.response?.status === 403) {
-                        console.log("Token bị từ chối. Hãy thử F5 hoặc Đăng xuất/Đăng nhập lại nhé!");
-                    }
+                    setError("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+                }
             } finally {
                 if (isMounted) setLoading(false);
             }

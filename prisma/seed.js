@@ -6,10 +6,8 @@ import { categories } from './data/category_data.js';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Starting database seeding...');
 
   // 🧹 1. Clearing old data from the bottom up...
-  console.log('🧹 Clearing old data...');
   await prisma.productPromotion.deleteMany({});
   await prisma.inventory.deleteMany({});
   await prisma.importationDetail.deleteMany({});
@@ -21,10 +19,8 @@ async function main() {
   await prisma.category.deleteMany({});
   await prisma.brand.deleteMany({});
   await prisma.warehouse.deleteMany({}); // 🌟 NEW: Clear warehouses too!
-  console.log('✅ Old products and all related data safely cleared.');
 
   // 2. SEED BRANDS (The Loop)
-  console.log('🏗️ Seeding Brands...');
   for (const brand of brands) {
     await prisma.brand.upsert({
       where: { id: brand.id },
@@ -32,10 +28,8 @@ async function main() {
       create: brand 
     });
   }
-  console.log(`✅ ${brands.length} Brands created.`);
 
   // 3. SEED CATEGORIES (The Loop)
-  console.log('🏗️ Seeding Categories...');
   for (const cat of categories) {
     await prisma.category.upsert({
       where: { id: cat.id },
@@ -43,11 +37,8 @@ async function main() {
       create: cat 
     });
   }
-  console.log(`✅ ${categories.length} Categories created.`);
-
   // 🏭 4. CREATE A DEFAULT WAREHOUSE
   // (We must have a warehouse to hold our 10,000 inventory items!)
-  console.log('🏭 Creating Default Warehouse...');
   const defaultWarehouse = await prisma.warehouse.create({
     data: {
       name: "Main Warehouse (Default)",
@@ -58,10 +49,8 @@ async function main() {
       streetAddress: "123 Default Street"
     }
   });
-  console.log(`✅ Warehouse created with ID: ${defaultWarehouse.id}`);
 
   // 🚀 5. Loop through the data file and create the products
-  console.log('📦 Seeding Products and Inventory...');
   for (const prod of products) {
     const formattedVariants = prod.variants.map((variant) => ({
       sku: variant.sku,
@@ -99,10 +88,8 @@ async function main() {
       }
     });
 
-    console.log(`✅ Successfully seeded: ${prod.name}`);
   }
 
-  console.log('🏁 Seeding completely finished!');
 }
 
 main()

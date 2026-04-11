@@ -29,9 +29,8 @@ export const useRefreshToken = () => {
             // It is NORMAL for this to fail if you are a Guest (no cookie).
             // We just catch it so the app doesn't crash.
             if (error.response?.status === 401) {
-                console.log("ℹ️ User is a Guest (No valid session found).");
             } else {
-                console.error("❌ Refresh Failed:", error);
+                console.error("Refresh Failed:", error);
             }
             throw error; 
         }

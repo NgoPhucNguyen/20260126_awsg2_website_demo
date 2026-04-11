@@ -80,7 +80,6 @@ class AgentClient {
   }
 
 	getToolContext(role) {
-		console.log(`[CHATBOT] getToolContext for role: ${role}`);
 		const tools = getToolsForRole(role) ?? [];
 		const toolsMap = getToolsMapForRole(role) ?? {};
 		const modelKey = role ?? "__no_role__";
@@ -111,7 +110,6 @@ class AgentClient {
 					};
 
 					toolResult = await tool.invoke(mergedArgs);
-					console.log(`[CHATBOT] Tool '${call.name}' invoked with args:`, mergedArgs, "Result:", toolResult);
 				} catch (error) {
 					toolResult = `Tool '${call.name}' failed: ${error?.message ?? String(error)}`;
 				}
@@ -215,7 +213,6 @@ class AgentClient {
 		const activeSystemMessage = systemPrompt ?? await this.loadSystemMessageByRole(auth.role);
 		const ragContext = enableRag ? await this.retrieveRagContext(prompt, options) : "";
 
-        console.log("[CHATBOT] RAG context:", ragContext);
 
 		const messages = [
 			new SystemMessage(activeSystemMessage),

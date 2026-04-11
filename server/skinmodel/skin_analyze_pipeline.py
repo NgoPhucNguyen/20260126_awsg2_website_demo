@@ -1,9 +1,18 @@
 import sys
+import os
+import warnings
+
+# 🚀 QUAN TRỌNG: PHẢI CHẶN LOG TRƯỚC KHI IMPORT TENSORFLOW & MEDIAPIPE
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # 0=INFO, 1=WARNING, 2=ERROR, 3=FATAL
+os.environ['GLOG_minloglevel'] = '2'      # Chặn log của MediaPipe C++
+os.environ['OPENCV_LOG_LEVEL'] = 'SILENT' # Tắt log OpenCV
+warnings.filterwarnings('ignore')         # Tắt cảnh báo Python
+
+# BÂY GIỜ MỚI IMPORT CÁC THƯ VIỆN NẶNG KÝ
 import cv2
 import numpy as np
 import mediapipe as mp
 import tensorflow as tf
-import os
 import json
 import tempfile
 
@@ -285,16 +294,6 @@ def run_skin_pipeline(image_path, debug_mode=False):
 # 6. ENTRY POINT – CHẠY TỪ NODEJS
 # ==============================================================================
 if __name__ == "__main__":
-    import json
-    import os
-    import sys
-    import warnings
-
-    # --- ÉP PYTHON & CÁC THƯ VIỆN IM LẶNG ---
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Tắt log TensorFlow
-    os.environ['OPENCV_LOG_LEVEL'] = 'SILENT' # Tắt log OpenCV
-    warnings.filterwarnings('ignore')         # Tắt cảnh báo Python
-
     # Chuyển hướng stdout chuẩn sang "hố đen" để chặn các thư viện tự ý print
     old_stdout = sys.stdout
     sys.stdout = open(os.devnull, 'w')

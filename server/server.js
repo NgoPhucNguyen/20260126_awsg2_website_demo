@@ -42,12 +42,9 @@ app.use('/api', apiRoutes);
 
 // 4. GLOBAL ERROR HANDLER (Safety Net)
 app.use((err, req, res, next) => {
-    console.error("[🔥 Global Error] ", err.stack);
     res.status(500).json({ message: err.message });
 });
 
 // 5. START
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📡 Connected to AWS Region: ${process.env.AWS_S3_REGION}`);
 });

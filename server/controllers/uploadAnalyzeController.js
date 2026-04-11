@@ -40,14 +40,8 @@ export const analyzeSkinImage = async (req, res) => {
 
       // Xử lý LỖI SẬP PYTHON (Lỗi cú pháp Python, thiếu thư viện...)
       if (error) {
-        console.error("❌ Python bị sập! Chi tiết lỗi:", stderr);
+        console.error("Python bị sập! Chi tiết lỗi:", stderr);
         return res.status(500).json({ error: 'Lỗi hệ thống khi phân tích ảnh' });
-      }
-
-      // 4. IN RA CÁC DÒNG LOG DEBUG CỦA BẠN TRÊN TERMINAL NODEJS
-      if (stderr) {
-        console.log("🛠️ Log từ Python (Stderr):");
-        console.log(stderr);
       }
 
       try {
@@ -57,7 +51,7 @@ export const analyzeSkinImage = async (req, res) => {
         
         return res.json(aiResult);
       } catch (parseError) {
-        console.error("❌ Lỗi parse JSON. Cục stdout nhận được là:", stdout);
+        console.error("Lỗi parse JSON. Cục stdout nhận được là:", stdout);
         return res.status(500).json({ error: 'Kết quả phân tích bị lỗi định dạng' });
       }
     });

@@ -23,7 +23,6 @@ const ContactModal = ({ isOpen, onClose }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Contact message:', message);
         setMessage('');
         onClose();
     };
