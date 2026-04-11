@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+// 🚀 Sử dụng instance axios đã cấu hình sẵn của bạn
+import axios from "@/api/axios"; 
 import { FiEye, FiEyeOff } from "react-icons/fi"; 
 import "./ResetPassword.css";
 
@@ -18,37 +19,38 @@ const ResetPassword = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [showPwd, setShowPwd] = useState(false);
 
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3500';
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (newPwd !== confirmPwd) return setError("Passwords do not match!");
-        if (newPwd.length < 6) return setError("Password must be at least 6 characters.");
+        if (newPwd !== confirmPwd) return setError("Mật khẩu xác nhận không khớp!");
+        if (newPwd.length < 6) return setError("Mật khẩu phải có ít nhất 6 ký tự.");
 
         setIsLoading(true);
         setError("");
 
         try {
-            const response = await axios.post(`${API_URL}/api/auth/reset-password`, {
+            // Sử dụng đường dẫn tương đối, axios instance tự ghép với baseURL
+            const response = await axios.post('/api/auth/reset-password', {
                 token, id, newPwd
             });
             setMessage(response.data.message);
+            // Chuyển hướng sau 3 giây
             setTimeout(() => { navigate("/?login=true"); }, 3000);
         } catch (err) {
-            setError(err.response?.data?.message || "Link expired or invalid.");
+            setError(err.response?.data?.message || "Liên kết đã hết hạn hoặc không hợp lệ.");
         } finally {
             setIsLoading(false);
         }
     };
 
+    // Trường hợp thiếu thông tin trên URL
     if (!token || !id) {
         return (
-            <div className="reset-password-page">
-                <div className="rp-card">
-                    <h2 style={{color: '#991b1b'}}>Invalid Link</h2>
-                    <p className="rp-subtitle">This link is broken or expired.</p>
-                    <Link to="/forgot-password" style={{color: '#000', fontWeight: 'bold'}}>
-                        Request a new link
+            <div className="resetpass-page">
+                <div className="resetpass-card">
+                    <h2 style={{color: '#991b1b'}}>Liên kết không hợp lệ</h2>
+                    <p className="resetpass-subtitle">Đường dẫn này đã bị hỏng hoặc hết hạn sử dụng.</p>
+                    <Link to="/forgot-password" style={{color: '#d4af37', fontWeight: 'bold', textDecoration: 'none'}}>
+                        Yêu cầu gửi lại liên kết mới
                     </Link>
                 </div>
             </div>
@@ -56,63 +58,60 @@ const ResetPassword = () => {
     }
 
     return (
-        <div className="reset-password-page">
-            <div className="rp-card">
-                <h2>🔄 Reset Password</h2>
-                <p className="rp-subtitle">Create a new secure password.</p>
+        <div className="resetpass-page">
+            <div className="resetpass-card">
+                <h2 className="resetpass-title">Đặt lại mật khẩu</h2>
+                <p className="resetpass-subtitle">Vui lòng tạo mật khẩu mới an toàn cho tài khoản của bạn.</p>
 
                 {message ? (
-                    <div className="rp-success-msg">
+                    <div className="resetpass-alert resetpass-success">
                         {message}
-                        <br/><small>Redirecting to login...</small>
+                        <br/><small>Đang chuyển hướng về trang đăng nhập...</small>
                     </div>
                 ) : (
-                    <form onSubmit={handleSubmit}>
-                        {error && <div className="rp-error-msg">{error}</div>}
+                    <form onSubmit={handleSubmit} className="resetpass-form">
+                        {error && <div className="resetpass-alert resetpass-error">{error}</div>}
 
-                        {/* New Password Field */}
-                    <div className="rp-input-group">
-                        <label htmlFor="newPwd">New Password</label>
-                        
-                        {/* Wrapper for Input + Icon */}
-                        <div className="rp-input-wrapper">
-                            <input
-                                id="newPwd"
-                                type={showPwd ? "text" : "password"}
-                                value={newPwd}
-                                onChange={(e) => setNewPwd(e.target.value)}
-                                required
-                                className={`rp-input ${error ? 'error' : ''}`}
-                            />
-                            
-                            <button 
-                                type="button" 
-                                className="rp-toggle-btn"
-                                onClick={() => setShowPwd(!showPwd)}
-                                tabIndex="-1" // Prevents tabbing to the icon
-                                aria-label="Toggle password visibility"
-                            >
-                                {showPwd ? <FiEyeOff /> : <FiEye />}
-                            </button>
+                        <div className="resetpass-input-group">
+                            <label htmlFor="newPwd">Mật khẩu mới</label>
+                            <div className="resetpass-input-wrapper">
+                                <input
+                                    id="newPwd"
+                                    type={showPwd ? "text" : "password"}
+                                    value={newPwd}
+                                    onChange={(e) => setNewPwd(e.target.value)}
+                                    required
+                                    className="resetpass-input"
+                                    placeholder="••••••••"
+                                />
+                                <button 
+                                    type="button" 
+                                    className="resetpass-toggle-btn"
+                                    onClick={() => setShowPwd(!showPwd)}
+                                    tabIndex="-1"
+                                >
+                                    {showPwd ? <FiEyeOff /> : <FiEye />}
+                                </button>
+                            </div>
                         </div>
-                    </div>
 
-                        <div className="rp-input-group">
-                            <label htmlFor="confirmPwd">Confirm Password</label>
-                            <div className="rp-input-wrapper">
+                        <div className="resetpass-input-group">
+                            <label htmlFor="confirmPwd">Xác nhận mật khẩu</label>
+                            <div className="resetpass-input-wrapper">
                                 <input
                                     id="confirmPwd"
                                     type="password"
                                     value={confirmPwd}
                                     onChange={(e) => setConfirmPwd(e.target.value)}
                                     required
-                                    className={`rp-input ${error ? 'error' : ''}`}
+                                    className="resetpass-input"
+                                    placeholder="••••••••"
                                 />
                             </div>
                         </div>
 
-                        <button type="submit" className="rp-btn" disabled={isLoading}>
-                            {isLoading ? "Updating..." : "Update Password"}
+                        <button type="submit" className="resetpass-btn" disabled={isLoading}>
+                            {isLoading ? "Đang cập nhật..." : "Cập nhật mật khẩu"}
                         </button>
                     </form>
                 )}

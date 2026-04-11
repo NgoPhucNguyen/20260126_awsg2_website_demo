@@ -350,7 +350,7 @@
 
 /* Khi class visible được thêm vào, nó sẽ trượt vút lên */
 .product-detail-page-sticky-bar.visible {
-    top: 90px;
+    top: 70px;
     transform: translateY(0);
     visibility: visible;
     pointer-events: auto; /* Cho phép tương tác khi đã hiện */

@@ -291,25 +291,24 @@ export const handleRefresh = async (req, res) => {
 };
 
 
-// ➤ FORGOT PASSWORD (Request link)
+// ➤ FORGOT PASSWORD (Yêu cầu gửi liên kết)
 export const handleForgotPassword = async (req, res) => {
     const { mail } = req.body;
-    if (!mail) return res.status(400).json({ 'message': 'Email is required.' });
+    if (!mail) return res.status(400).json({ 'message': 'Vui lòng cung cấp địa chỉ email.' });
 
     try {
         const foundUser = await prisma.customer.findUnique({ where: { mail } });
 
-        // Security: Don't confirm if email exists or not
+        // Bảo mật: Trả về thông báo chung để tránh bị dò quét email (Email Harvesting)
         if (!foundUser) {
-            return res.status(200).json({ 'message': 'If an account exists, a reset link has been sent.' });
+            return res.status(200).json({ 'message': 'Nếu email đã được đăng ký, liên kết khôi phục sẽ được gửi.' });
         }
 
-        // 1. Generate a plain token for the user and a hash for the DB
+        // Tạo token ngẫu nhiên và hash để lưu vào DB
         const resetToken = crypto.randomBytes(32).toString('hex');
         const tokenHash = await bcrypt.hash(resetToken, 10);
-        const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 Minutes expiry
+        const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // Hết hạn sau 15 phút
 
-        // 2. Save hashed token to DB
         await prisma.passwordResetToken.create({
             data: {
                 tokenHash: tokenHash,
@@ -318,9 +317,8 @@ export const handleForgotPassword = async (req, res) => {
             }
         });
 
-        // 3. Construct URL (Frontend URL)
-        const clientUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-    
+        // 🔗 FRONTEND_URL: Trên Production sẽ là link CloudFront/Amplify của bạn
+        const clientUrl = process.env.VITE_API_URL || 'http://localhost:5173';
         const resetUrl = `${clientUrl}/reset-password?token=${resetToken}&id=${foundUser.id}`;
         
         const transporter = nodemailer.createTransport({
@@ -332,43 +330,50 @@ export const handleForgotPassword = async (req, res) => {
         });
 
         const mailOptions = {
-            from: `"Aphrodite Support" <${process.env.EMAIL_USER}>`,
+            from: `"Hỗ trợ Aphrodite" <${process.env.EMAIL_USER}>`,
             to: foundUser.mail,
-            subject: 'Reset Your Password - Aphrodite',
+            subject: 'Khôi phục mật khẩu - Aphrodite',
             html: `
-                <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
-                    <h2 style="color: #d4af37;">Aphrodite</h2>
-                    <p>You requested a password reset. Click the button below to set a new password:</p>
-                    <a href="${resetUrl}" style="background-color: #000; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; margin: 20px 0; font-weight: bold;">Reset Password</a>
-                    <p>Or copy this link:</p>
-                    <p style="color: #555; word-break: break-all;">${resetUrl}</p>
-                    <p>This link expires in 15 minutes.</p>
+                <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; line-height: 1.6;">
+                    <h2 style="color: #d4af37; border-bottom: 2px solid #d4af37; padding-bottom: 10px;">Aphrodite</h2>
+                    <p>Chào bạn,</p>
+                    <p>Chúng tôi nhận được yêu cầu khôi phục mật khẩu cho tài khoản của bạn. Nhấn vào nút bên dưới để đặt mật khẩu mới:</p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="${resetUrl}" style="background-color: #000; color: #fff; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Đặt lại mật khẩu</a>
+                    </div>
+                    <p>Hoặc sao chép đường dẫn này vào trình duyệt:</p>
+                    <p style="color: #666; word-break: break-all; font-size: 14px;">${resetUrl}</p>
+                    <p style="font-style: italic; color: #888;">Lưu ý: Liên kết này sẽ hết hạn sau 15 phút.</p>
+                    <hr style="border: 0; border-top: 1px solid #eee; margin-top: 30px;">
+                    <p style="font-size: 12px; color: #aaa;">Nếu bạn không yêu cầu thay đổi này, vui lòng bỏ qua email này.</p>
                 </div>
             `
         };
 
         await transporter.sendMail(mailOptions);
-        // 💡 Later: Use a mailer like Resend or Nodemailer here
 
-        res.status(200).json({ 'message': 'Check your email for the reset link.' });
+        res.status(200).json({ 'message': 'Vui lòng kiểm tra email để nhận liên kết khôi phục.' });
 
     } catch (err) {
-        res.status(500).json({ 'message': 'Server Error' });
+        console.error(err);
+        res.status(500).json({ 'message': 'Lỗi máy chủ hệ thống.' });
     }
 };
 
-// ➤ RESET PASSWORD (Update DB)
+// ➤ RESET PASSWORD (Cập nhật mật khẩu mới vào DB)
 export const handleResetPassword = async (req, res) => {
     const { token, id, newPwd } = req.body;
-    if (!token || !id || !newPwd) return res.status(400).json({ 'message': 'All fields required.' });
+    if (!token || !id || !newPwd) {
+        return res.status(400).json({ 'message': 'Vui lòng cung cấp đầy đủ thông tin.' });
+    }
 
     try {
-        // 1. Get all active tokens for this user
+        // 1. Lấy tất cả token đang hoạt động của người dùng này
         const tokens = await prisma.passwordResetToken.findMany({
             where: { customerId: id }
         });
 
-        // 2. Find the matching token
+        // 2. Tìm token khớp với mã hash trong DB
         let validTokenRecord = null;
         for (const record of tokens) {
             const isMatch = await bcrypt.compare(token, record.tokenHash);
@@ -381,24 +386,25 @@ export const handleResetPassword = async (req, res) => {
         }
 
         if (!validTokenRecord) {
-            return res.status(400).json({ 'message': 'Invalid or expired token.' });
+            return res.status(400).json({ 'message': 'Liên kết không hợp lệ hoặc đã hết hạn.' });
         }
 
-        // 3. Hash new password & Update user
+        // 3. Hash mật khẩu mới & Cập nhật cho Customer
         const newHashedPassword = await bcrypt.hash(newPwd, 10);
         await prisma.customer.update({
             where: { id: id },
             data: { passwordHash: newHashedPassword }
         });
 
-        // 4. Clean up: Delete the used token
+        // 4. Dọn dẹp: Xóa token đã sử dụng
         await prisma.passwordResetToken.delete({
             where: { id: validTokenRecord.id }
         });
 
-        res.status(200).json({ 'message': 'Password reset successful! You can now login.' });
+        res.status(200).json({ 'message': 'Đặt lại mật khẩu thành công! Bạn có thể đăng nhập ngay bây giờ.' });
 
     } catch (err) {
-        res.status(500).json({ 'message': 'Server Error' });
+        console.error(err);
+        res.status(500).json({ 'message': 'Lỗi máy chủ hệ thống.' });
     }
 };

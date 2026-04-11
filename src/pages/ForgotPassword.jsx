@@ -1,5 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
+// 🚀 Sử dụng instance đã cấu hình sẵn của bạn
+import axios from "@/api/axios"; 
 import { Link } from "react-router-dom";
 import "./ForgotPassword.css";
 
@@ -9,8 +10,8 @@ const ForgotPassword = () => {
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    // Environment variable for backend URL
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3500';
+    // Không cần định nghĩa API_URL thủ công nữa vì instance @/api/axios 
+    // thường đã có baseURL trỏ đến CloudFront/ECS rồi.
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,59 +20,70 @@ const ForgotPassword = () => {
         setError("");
 
         try {
-            await axios.post(`${API_URL}/api/auth/forgot-password`, { mail });
-            setMessage("If an account exists, a reset link has been sent to your email.");
+            // Sử dụng đường dẫn tương đối, axios instance sẽ tự ghép với baseURL
+            await axios.post('/api/auth/forgot-password', { mail });
+            setMessage("Nếu email này đã được đăng ký, bạn sẽ nhận được một liên kết đặt lại mật khẩu.");
         } catch (err) {
-            setError("Unable to send link. Please try again later.");
+            // Xử lý lỗi tinh tế hơn dựa trên phản hồi của server
+            const errorMsg = err.response?.data?.message || "Không thể gửi yêu cầu. Vui lòng thử lại sau.";
+            setError(errorMsg);
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <div className="forgot-password-page">
-            <div className="fp-card">
-                <h2>Forgot Password</h2>
-                <p className="fp-subtitle">
-                    Enter your email to receive a secure link.
+        <div className="forgotpass-page">
+            <div className="forgotpass-card">
+                <h2 className="forgotpass-title">Quên mật khẩu</h2>
+                <p className="forgotpass-subtitle">
+                    Nhập email của bạn để nhận liên kết khôi phục tài khoản. Nếu email tồn tại, chúng tôi sẽ gửi hướng dẫn đặt lại mật khẩu.
                 </p>
 
                 {message ? (
-                    <div className="fp-alert success">
-                        ✅ {message}
-                        <div style={{ marginTop: '1rem', textAlign: 'center' }}>
-                            <Link to="/?login=true" className="fp-link">
-                                Return to Login
+                    <div className="forgotpass-alert forgotpass-success">
+                        <span className="forgotpass-icon"></span> {message}
+                        <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+                            <Link to="/?login=true" className="forgotpass-link">
+                                Quay lại Đăng nhập
                             </Link>
                         </div>
                     </div>
                 ) : (
-                    <form onSubmit={handleSubmit} className="fp-form">
-                        <div className="fp-input-group">
-                            <label htmlFor="email">Email Address</label>
+                    <form onSubmit={handleSubmit} className="forgotpass-form">
+                        <div className="forgotpass-input-group">
+                            <label htmlFor="email">Địa chỉ Email</label>
                             <input
                                 id="email"
                                 type="email"
-                                placeholder="name@example.com"
+                                placeholder="vidu@email.com"
                                 value={mail}
                                 onChange={(e) => setMail(e.target.value)}
                                 required
-                                className="fp-input"
+                                className="forgotpass-input"
                             />
                         </div>
 
-                        {error && <div className="fp-alert error">{error}</div>}
+                        {error && (
+                            <div className="forgotpass-alert forgotpass-error">
+                                <span className="forgotpass-icon"></span> {error}
+                            </div>
+                        )}
 
-                        <button type="submit" className="fp-btn" disabled={isLoading}>
-                            {isLoading ? "Sending..." : "Send Reset Link"}
+                        <button type="submit" className="forgotpass-btn" disabled={isLoading}>
+                            {isLoading ? (
+                                <span className="forgotpass-loading">Đang xử lý...</span>
+                            ) : (
+                                "Gửi liên kết khôi phục"
+                            )}
                         </button>
                     </form>
                 )}
 
                 {!message && (
-                    <div className="fp-footer">
-                        <Link to="/?login=true" className="fp-link">
-                            Back to Login
+                    <div className="forgotpass-footer">
+                        <Link to="/?login=true" className="forgotpass-link">
+                            Quay lại Đăng nhập
                         </Link>
                     </div>
                 )}
