@@ -275,11 +275,9 @@ const Product = () => {
                 <header className="product-page-header">
                     <div className="product-page-header-top">
                         <div className="product-page-header-titles">
-                            <h1>Sản Phẩm</h1>
-                            <p>{products.length} tùy chọn có sẵn</p>
-                            {/* 🚀 BỌC H1 VÀ NÚT VÀO ĐÂY ĐỂ CĂN CHỈNH */}
                             <div className="product-page-title-group">
                                 <h1>Sản Phẩm</h1>
+                                <p>{products.length} tùy chọn có sẵn</p>
                                 <button 
                                     type="button" 
                                     className="product-page-analyze-btn" 
