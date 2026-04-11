@@ -318,7 +318,7 @@ export const handleForgotPassword = async (req, res) => {
         });
 
         // 🔗 FRONTEND_URL: Trên Production sẽ là link CloudFront/Amplify của bạn
-        const clientUrl = process.env.VITE_API_URL || 'http://localhost:5173';
+        const clientUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
         const resetUrl = `${clientUrl}/reset-password?token=${resetToken}&id=${foundUser.id}`;
         
         const transporter = nodemailer.createTransport({
