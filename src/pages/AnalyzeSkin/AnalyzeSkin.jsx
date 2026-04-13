@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from '@/api/axios'; // Đảm bảo đường dẫn import đúng
+import axios from '@/api/axios'; 
 import './AnalyzeSkin.css';
 
-// Import 4 component con
 import InstructionsStep from '@/components/AnalyzeSkin/InstructionsStep';
 import CameraStep from '@/components/AnalyzeSkin/CameraStep';
 import PreviewStep from '@/components/AnalyzeSkin/PreviewStep';
@@ -12,23 +11,22 @@ const AnalyzeSkin = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState('instructions'); 
   
-  // --- LƯU TRỮ DỮ LIỆU ---
-  const [skinType, setSkinType] = useState(''); // THÊM MỚI: Lưu loại da
+  const [skinType, setSkinType] = useState(''); 
   const [imageFile, setImageFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
-  const [result, setResult] = useState(null);
+  const [isFromCamera, setIsFromCamera] = useState(false); // <--- THÊM MỚI: State lưu nguồn gốc ảnh
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
 
-  // Bắt lỗi nếu chưa chọn loại da
+  // 🚀 THÊM LẠI HÀM NÀY VÀO TRƯỚC handleFileChange
   const validateBeforeCapture = () => {
     if (!skinType) {
-      setError('Vui lòng chọn Loại Da của bạn trước khi bắt đầu!');
+      setError('Vui lòng chọn Loại da của bạn trước khi tiếp tục.');
       return false;
     }
-    setError(null);
+    setError(null); // Xóa lỗi cũ nếu đã chọn đúng
     return true;
   };
 
@@ -38,7 +36,7 @@ const AnalyzeSkin = () => {
     if (file) {
       setImageFile(file);
       setPreviewUrl(URL.createObjectURL(file));
-      setResult(null);
+      setIsFromCamera(false); // <--- QUAN TRỌNG: Upload ảnh thì flag là false
       setCurrentStep('preview'); 
     }
   };
@@ -53,16 +51,18 @@ const AnalyzeSkin = () => {
     setCurrentStep('camera');
   }
 
-  const handlePhotoCaptured = (file, url) => {
+  // CẬP NHẬT: Nhận thêm tham số isCamera từ CameraStep
+  const handlePhotoCaptured = (file, url, isCamera = false) => {
     setImageFile(file);
     setPreviewUrl(url);
+    setIsFromCamera(isCamera); // <--- QUAN TRỌNG: Lưu flag từ camera truyền qua
     setCurrentStep('preview');
   };
-  // 1. THÊM USEEFFECT ĐỂ KIỂM TRA DỮ LIỆU CŨ KHI VỪA VÀO TRANG
+
   useEffect(() => {
     const savedResult = sessionStorage.getItem('skinAnalyzeResult');
     if (savedResult) {
-      navigate('/analyze-skin/result'); // Nhảy thẳng sang page mới
+      navigate('/analyze-skin/result');
     }
   }, [navigate]);
 
@@ -70,46 +70,32 @@ const AnalyzeSkin = () => {
     if (!imageFile) return;
     setLoading(true);
     setError(null);
-    setResult(null);
 
     const formData = new FormData();
     formData.append('image', imageFile);
-    formData.append('skinType', skinType); // <--- THÊM LOẠI DA VÀO ĐÂY
-    // ==========================================
-    // 🛑 ĐOẠN DEBUG: IN RA CONSOLE ĐỂ BẠN KIỂM TRA
-    // ==========================================
-    console.log("=== KIỂM TRA DỮ LIỆU TRƯỚC KHI GỬI API ===");
-    console.log("1. Loại da đang chọn:", formData.get('skinType'));
-    console.log("2. Tên file ảnh:", formData.get('image')?.name);
-    console.log("3. Dung lượng ảnh:", Math.round(formData.get('image')?.size / 1024) + " KB");
-    console.log("==========================================");
+    formData.append('skinType', skinType);
 
     try {
       const response = await axios.post('/api/analyze-skin', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      setResult(response.data);
-      // --> THÊM 2 DÒNG NÀY VÀO SAU KHI CÓ RESPONSE <--
       sessionStorage.setItem('skinAnalyzeResult', JSON.stringify(response.data));
       sessionStorage.setItem('skinAnalyzeType', skinType);
-      navigate('/analyze-skin/result'); //
-      setCurrentStep('result'); 
+      navigate('/analyze-skin/result'); 
     } catch (err) {
-      const errorMessage = err.response?.data?.error || err.message || 'Có lỗi xảy ra khi phân tích.';
+      const errorMessage = err.response?.data?.error || err.message || 'Có lỗi xảy ra.';
       setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-  // 3. SỬA HÀM resetFlow ĐỂ XÓA BỘ NHỚ KHI CHỤP LẠI
   const resetFlow = () => {
     sessionStorage.removeItem('skinAnalyzeResult');
     sessionStorage.removeItem('skinAnalyzeType');
-    
     setImageFile(null);
     setPreviewUrl(null);
-    setResult(null);
+    setIsFromCamera(false); // Reset luôn flag nguồn ảnh
     setError(null);
     setCurrentStep('instructions');
   };
@@ -118,30 +104,33 @@ const AnalyzeSkin = () => {
     <div className="analyze-skin-page-container">
       <input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileChange} style={{ display: 'none' }} />
 
-      {error && (
-        <div className="analyze-skin-page-error-box">
-          <span>⚠️ {error}</span>
-          <button onClick={() => setError(null)}>X</button>
-        </div>
-      )}
-
       {currentStep === 'instructions' && (
         <InstructionsStep 
           skinType={skinType}
           setSkinType={setSkinType}
           onStartCamera={handleStartCamera} 
           triggerFileInput={triggerFileInput} 
+          error={error}
+        clearError={() => setError(null)}
         />
       )}
 
       {currentStep === 'camera' && (
-        <CameraStep onCapture={handlePhotoCaptured} onCancel={resetFlow} />
+        <CameraStep 
+          onCapture={handlePhotoCaptured} // Sẽ nhận (file, url, true)
+          onCancel={resetFlow} 
+        />
       )}
 
       {currentStep === 'preview' && (
-        <PreviewStep previewUrl={previewUrl} loading={loading} onAnalyze={handleAnalyze} onRetake={resetFlow} />
+        <PreviewStep 
+          previewUrl={previewUrl} 
+          isFromCamera={isFromCamera} // <--- TRUYỀN FLAG VÀO ĐÂY
+          loading={loading} 
+          onAnalyze={handleAnalyze} 
+          onRetake={resetFlow} 
+        />
       )}
-      
     </div>
   );
 };

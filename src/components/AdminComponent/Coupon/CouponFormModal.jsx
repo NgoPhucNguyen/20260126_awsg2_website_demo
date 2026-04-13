@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import axios from '@/api/axios';
+import { useAxiosPrivate } from '@/hooks/useAxiosPrivate'; // 🚀 Dùng instance bảo mật
+import { useToast } from '@/context/ToastProvider'; // 🚀 Import Toast
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 import { formatToLocalDatetime } from '@/utils/dateUtils';
 import './CouponFormModal.css';
 
-const API_COUPONS = '/api/coupons';
+const API_COUPONS = '/api/admin/coupons';
 
 const FormField = ({ label, error, required, children }) => (
     <div className="coupon-form-modal-group">
@@ -19,6 +20,8 @@ const FormField = ({ label, error, required, children }) => (
 
 // 🚀 Đã bỏ props 'products' và 'categories' vì không còn dùng tới
 const CouponFormModal = ({ coupon, onClose, onSuccess }) => {
+    const axiosPrivate = useAxiosPrivate();
+    const { showToast } = useToast(); // 🚀 Dùng Toast
     const isEditing = !!coupon;
     const [submitting, setSubmitting] = useState(false);
     const [generalError, setGeneralError] = useState('');
@@ -37,7 +40,7 @@ const CouponFormModal = ({ coupon, onClose, onSuccess }) => {
         createdAt: coupon?.createdAt ? formatToLocalDatetime(coupon.createdAt) : formatToLocalDatetime(new Date()),
         expireAt: coupon?.expireAt ? formatToLocalDatetime(coupon.expireAt) : '',
         // 🚀 Đã xóa 'applicableVariants' ra khỏi rule
-        rule: coupon?.rule || { minOrderValue: 0, maxDiscountValue: 0, usagePerUser: 0, isFirstOrder: false }
+        rule: coupon?.rule || { minOrderValue: 0, maxDiscountValue: 0, usagePerUser: 0 }
     });
 
     const validateForm = () => {
@@ -94,13 +97,20 @@ const CouponFormModal = ({ coupon, onClose, onSuccess }) => {
                 expireAt: new Date(formData.expireAt).toISOString(),
             };
 
-            if (isEditing) await axios.put(`${API_COUPONS}/${coupon.id}`, submitData);
-            else await axios.post(API_COUPONS, submitData);
-            
+            if (isEditing) {
+                await axiosPrivate.put(`${API_COUPONS}/${coupon.id}`, submitData);
+                showToast("Cập nhật mã giảm giá thành công!");
+            } else {
+                await axiosPrivate.post(API_COUPONS, submitData);
+                showToast("Phát hành mã giảm giá mới thành công!");
+            }
+
             onSuccess(); 
             onClose(); 
         } catch (error) {
-            setGeneralError(error.response?.data?.message || 'Lỗi hệ thống');
+            const message = error.response?.data?.message || 'Lỗi hệ thống';
+            setGeneralError(message);
+            showToast(message, "error");
         } finally {
             setSubmitting(false);
         }
@@ -264,16 +274,6 @@ const CouponFormModal = ({ coupon, onClose, onSuccess }) => {
                                     disabled={formData.type === 'FIXED'}
                                 />
                             </FormField>
-                        </div>
-
-                        <div className="coupon-form-modal-checkbox-row">
-                            <input 
-                                type="checkbox" 
-                                id="isFirstOrder" 
-                                checked={formData.rule?.isFirstOrder || false}
-                                onChange={(e) => setFormData({ ...formData, rule: { ...formData.rule, isFirstOrder: e.target.checked }})}
-                            />
-                            <label htmlFor="isFirstOrder">Chỉ cho phép khách mua hàng lần đầu (First Order)</label>
                         </div>
                     </div>
 

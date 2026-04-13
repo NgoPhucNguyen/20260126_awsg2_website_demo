@@ -25,6 +25,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
     const emailRef = useRef();
     const errRef = useRef();
+    const overlayRef = useRef();
 
     const [remember, setRemember] = useState(false);
     const [email, setEmail] = useState('');
@@ -48,7 +49,19 @@ const Login = ({ onClose, onSwitchToRegister }) => {
             setGeneralErr('');
         }, [pwd]);
 
-    
+    useEffect(() => {
+        // 🔒 Khóa cuộn trang khi Modal mở
+        document.body.style.overflow = 'hidden';
+        // 🆕 Thêm class để báo hiệu cho các thành phần khác (như Chatbot)
+        document.body.classList.add('modal-open');
+
+        return () => {
+            // 🔓 Mở lại cuộn trang khi Modal đóng
+            document.body.style.overflow = 'unset';
+            document.body.classList.remove('modal-open');
+        };
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -151,10 +164,16 @@ const Login = ({ onClose, onSwitchToRegister }) => {
         navigate('/forgot-password');
     };
     
-
+    const handleOverlayMouseDown = (e) => {
+        // Chỉ đóng nếu điểm NHẤN CHUỘT và NHẢ CHUỘT đều nằm trên chính overlayRef
+        // Điều này chặn việc nhấn bên trong rồi kéo chuột nhả bên ngoài (lỗi drag-out)
+        if (e.target === overlayRef.current) {
+            onClose();
+        }
+    };
     return (
-        <div className="login-modal-overlay" onClick={onClose}>
-            <div className="login-modal-container" onClick={(e) => e.stopPropagation()}>
+        <div className="login-modal-overlay" ref={overlayRef} onMouseDown={handleOverlayMouseDown}>
+            <div className="login-modal-container" onMouseDown={(e) => e.stopPropagation()}>
                 
                 <button className="login-modal-close-btn" onClick={onClose} aria-label="Đóng">
                     <FontAwesomeIcon icon={faXmark} />

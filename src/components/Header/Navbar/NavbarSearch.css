@@ -1,76 +1,186 @@
-/* --- LỚP VỎ CHÍNH (WRAPPER TỐI GIẢN) --- */
-.navbar-search-wrapper {
+/* Container tổng */
+.navbar-search-container {
     position: relative;
     width: 100%;
-    /* Chiều cao linh hoạt nhưng giữ thiết kế phẳng, trung tính */
-    height: clamp(36px, 4.5vh, 44px); 
-    background-color: #f5f5f5; /* Xám nhạt, không nổi bật */
-    border: 1px solid #e0e0e0;
-    border-radius: 8px; /* Bo góc nhẹ thay vì bo tròn hoàn toàn để trông basic hơn */
-    overflow: hidden;
+    max-width: clamp(200px, 30vw, 450px); /* Tự co giãn theo độ rộng màn hình */
 }
 
-/* Tập trung (Focus) cơ bản, không màu mè */
-.navbar-search-wrapper:focus-within {
-    background-color: #ffffff;
-    border-color: #999999;
-}
-
-/* --- ĐỊNH VỊ ICONS CƠ BẢN --- */
-.navbar-search-icon, 
-.navbar-search-clear-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #666666; /* Màu xám trung tính */
+/* Khung Input */
+.navbar-search-input-wrapper {
     display: flex;
     align-items: center;
-    justify-content: center;
+    background-color: #f3f4f6; /* Xám cực nhạt */
+    border-radius: 50px; /* Bo tròn kiểu viên thuốc */
+    padding: 6px 16px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
 }
 
-.navbar-search-icon {
-    left: clamp(10px, 1.5vw, 16px);
-    font-size: clamp(1rem, 1.2vw, 1.2rem);
-    pointer-events: none;
-    padding-right: 10px;
+.navbar-search-input-wrapper:focus-within {
+    background-color: #fff;
+    border-color: #cca858; /* Vàng Gold khi focus */
+    box-shadow: 0 0 0 4px rgba(204, 168, 88, 0.1);
 }
 
-.navbar-search-clear-btn {
-    right: 8px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 6px;
-    font-size: 1.1rem;
-    border-radius: 4px;
+.navbar-search-input-icon {
+    color: #9ca3af;
+    font-size: 18px;
+    margin-right: 10px;
+    flex-shrink: 0;
 }
 
-/* Hover trung tính, không dùng màu đỏ */
-.navbar-search-clear-btn:hover {
-    color: #000000;
-    background-color: #e5e5e5;
-}
-
-/* --- VÙNG NHẬP LIỆU (INPUT) --- */
-.navbar-search-input {
+.navbar-search-input-field {
     width: 100%;
-    height: 100%;
     border: none;
     background: transparent;
     outline: none;
-    
-    /* Tính toán khoảng cách chừa chỗ cho 2 icon */
-    padding-left: calc(clamp(10px, 1.5vw, 16px) + 24px);
-    padding-right: 40px;
-    
-    font-family: inherit;
-    font-size: clamp(0.85rem, 1vw + 0.5rem, 0.95rem);
-    color: #1a1a1a;
+    font-size: 14px;
+    color: #1f2937;
+    padding: 4px 0;
 }
 
-/* Tối ưu Placeholder cho mobile nhỏ */
-@media screen and (max-width: 375px) {
-    .navbar-search-input::placeholder {
-        font-size: 0.8rem;
+.navbar-search-input-field::placeholder {
+    color: #9ca3af;
+}
+
+.navbar-search-input-clear-btn {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.navbar-search-input-clear-btn:hover {
+    color: #ef4444; /* Chuyển đỏ khi xóa */
+}
+
+/* 🚀 DROPDOWN GỢI Ý */
+.navbar-search-dropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border: 1px solid #f1f5f9;
+    overflow: hidden;
+    z-index: 10001; /* Phải cao hơn Navbar */
+    animation: navbarSearchFadeIn 0.2s ease-out;
+}
+
+@keyframes navbarSearchFadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.navbar-search-dropdown-header {
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #94a3b8;
+    background: #f8fafc;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.navbar-search-results-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 380px;
+    overflow-y: auto;
+}
+
+.navbar-search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.navbar-search-result-item:hover {
+    background-color: #f1f5f9;
+}
+
+.navbar-search-result-image {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+}
+
+.navbar-search-result-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.navbar-search-result-name {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 2px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.navbar-search-result-price {
+    font-size: 12px;
+    color: #8A1C31; /* Màu đỏ đô thương hiệu */
+    font-weight: 700;
+}
+
+.navbar-search-dropdown-footer {
+    padding: 12px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #cca858;
+    background-color: #fff;
+    border-top: 1px solid #f1f5f9;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background 0.2s;
+}
+
+.navbar-search-dropdown-footer:hover {
+    background-color: #fefce8;
+    text-decoration: underline;
+}
+
+.navbar-search-dropdown-loading, 
+.navbar-search-no-results {
+    padding: 30px 20px;
+    text-align: center;
+    color: #64748b;
+    font-size: 14px;
+    font-style: italic;
+}
+
+/* 📱 Responsive cho Mobile */
+@media (max-width: 768px) {
+    .navbar-search-container {
+        max-width: 100%;
+    }
+    
+    .navbar-search-dropdown {
+        position: fixed; /* Tràn màn hình trên mobile cho dễ nhìn */
+        top: 70px;
+        left: 10px;
+        right: 10px;
+        width: calc(100% - 20px);
     }
 }

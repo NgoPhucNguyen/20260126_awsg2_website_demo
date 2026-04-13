@@ -1,13 +1,15 @@
 import axios from "@/api/axios";
 import { useEffect, useState, useRef, useMemo } from "react";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartProvider";
 import { getImageUrl } from "@/utils/getImageUrl";
 import { FiX } from "react-icons/fi";
 import ProductFilter from "@/components/ProductComponents/ProductFilter";
 import ProductCard from "@/components/ProductComponents/ProductCard";
 import ProductCardSkeleton from "@/components/Skeleton/ProductCardSkeleton";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import "./Product.css";
+import { faBagShopping, faSpinner, faWandMagicSparkles  } from '@fortawesome/free-solid-svg-icons';
 
 // 🛠️ HELPER: Extract Variant Label
 const getVariantLabel = (variant) => {
@@ -24,6 +26,7 @@ const getVariantLabel = (variant) => {
 
 const Product = () => {
     const { addToCart } = useCart();
+    const navigate = useNavigate();
     const location = useLocation();
     const gridRef = useRef(null);
     const [products, setProducts] = useState([]);
@@ -272,8 +275,18 @@ const Product = () => {
                 <header className="product-page-header">
                     <div className="product-page-header-top">
                         <div className="product-page-header-titles">
-                            <h1>Sản Phẩm</h1>
-                            <p>{products.length} tùy chọn có sẵn</p> 
+                            <div className="product-page-title-group">
+                                <h1>Sản Phẩm</h1>
+                                <p>{products.length} tùy chọn có sẵn</p>
+                                <button 
+                                    type="button" 
+                                    className="product-page-analyze-btn" 
+                                    onClick={() => navigate('/analyze-skin')}
+                                >
+                                    <FontAwesomeIcon icon={faWandMagicSparkles} className="product-page-magic-icon" />
+                                    <span>Phân tích da</span>
+                                </button>
+                            </div> 
                         </div>
                         <div className="product-page-header-actions">
                             {/* 🚀 DROP DOWN SẮP XẾP MỚI */}

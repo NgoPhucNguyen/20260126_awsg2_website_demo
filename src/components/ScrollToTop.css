@@ -8,7 +8,12 @@
     /* 📐 Toán học tọa độ: Tránh nút dính sát rạt mép màn hình */
     /* Mobile: cách 16px, Desktop: cách 32px */
     bottom: clamp(1rem, 4vh, 2rem);
-    right: clamp(1rem, 3vw, 2rem);
+
+    /* 🚀 THAY ĐỔI TẠI ĐÂY:
+       Công thức = Khoảng cách lề (clamp cũ) + Độ rộng Chatbot (56px) + Spacing (12px)
+       Tổng cộng chúng ta cần cộng thêm khoảng 70px vào thuộc tính right
+    */
+    right: calc(clamp(1rem, 3vw, 2rem) + 70px);
     
     /* 🎨 Kiểu dáng Nút */
     width: clamp(40px, 4vw + 10px, 50px);
@@ -53,5 +58,14 @@
     .scroll-to-top-btn:hover {
         /* Xóa hiệu ứng hover nhảy lên trên thiết bị cảm ứng để tránh giật lag */
         transform: translateY(0);
+    }
+}
+
+@media (max-width: 640px) {
+    .scroll-to-top-btn {
+        /* Quay lại lề phải như cũ */
+        right: clamp(1rem, 3vw, 2rem);
+        /* 🚀 Đẩy lên cao hơn Chatbot (độ cao chatbot ~56px + lề) */
+        bottom: calc(clamp(1rem, 3vh, 2rem) + 65px);
     }
 }

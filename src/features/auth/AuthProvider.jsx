@@ -18,7 +18,6 @@ export const AuthProvider = ({ children }) => {
             await axios.get('/api/auth/logout', {
                 withCredentials: true
             });
-            console.log("Successfully logged out");
         } catch (err) {
             console.error("Server logout failed, but local state cleared:", err);
         }

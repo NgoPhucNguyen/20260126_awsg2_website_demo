@@ -73,8 +73,8 @@ const CustomerHistory = () => {
                     console.error("Lỗi fetch lịch sử:", err);
                 }
                 if (err.response?.status === 403) {
-                        console.log("Token bị từ chối. Hãy thử F5 hoặc Đăng xuất/Đăng nhập lại nhé!");
-                    }
+                    setError("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+                }
             } finally {
                 if (isMounted) setLoading(false);
             }
@@ -103,11 +103,14 @@ const CustomerHistory = () => {
                 headers: { Authorization: `Bearer ${auth.accessToken}` }
             });
 
+            // 🚀 Nhận paymentStatus trả về từ Backend để gán chính xác (FAILED hoặc REFUNDING)
+            const updatedPaymentStatus = response.data.paymentStatus || 'FAILED';
+            
             // Cập nhật lại list ở Frontend mà không cần gọi lại API GET
             setOrders(prevOrders => 
                 prevOrders.map(order => 
                     order.id === orderId 
-                    ? { ...order, status: 'CANCELLED', paymentStatus: 'FAILED' } // Đổi status ảo
+                    ? { ...order, status: 'CANCELLED', paymentStatus: updatedPaymentStatus } // Đổi status ảo
                     : order
                 )
             );
@@ -307,7 +310,7 @@ const CustomerHistory = () => {
                                             </button>
                                             <CountdownTimer 
                                                 createdAt={order.createdAt} 
-                                                onExpire={() => setOrders([...orders])} 
+                                                onExpire={() => setOrders(prev => [...prev])} // ✅ Chuẩn xác 100%
                                             />
                                         </div>
                                     )}

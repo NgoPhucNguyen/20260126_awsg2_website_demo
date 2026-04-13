@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FiMessageCircle, FiSend, FiX, FiMaximize2, FiMinimize2 } from "react-icons/fi";
 import ReactMarkdown from "react-markdown"; // 🆕 Import Markdown
-import { useAxiosPrivate } from "@/hooks/useAxiosPrivate";
+import axios from "@/api/axios";
 import { useAuth } from "@/features/auth/AuthProvider";
+import ChatbotProductCard from "./ChatbotProductCard";
 import "./ChatbotWidget.css";
 
 const STORAGE_KEY = "chatbot_widget_history_v1";
@@ -16,15 +17,39 @@ const createMessage = (role, text) => ({
 });
 
 const QUICK_REPLIES = [
-    "Tư vấn da dầu",
+    "Tôi có mã giảm giá nào? ",
     "Kem chống nắng",
-    "Tìm nước tẩy trang",
-    "Mã giảm giá hot"
+    "Hãng Cocoon",
 ];
+
+const renderBotMessage = (text) => {
+    const regex = /\[ID:\s*(\d+)\]/g;
+    const parts = text.split(regex);
+    
+    // Tìm tất cả các ID có trong tin nhắn này
+    const allIds = [...text.matchAll(regex)].map(match => match[1]);
+
+    return (
+        <div className="chatbot-markdown-content">
+            {/* Render phần chữ của AI trước */}
+            <ReactMarkdown>
+                {text.replace(regex, "").trim()} 
+            </ReactMarkdown>
+
+            {/* Nếu có ID sản phẩm, render chúng vào một Carousel trượt ngang */}
+            {allIds.length > 0 && (
+                <div className="chatbot-widget-carousel">
+                    {allIds.map((id, index) => (
+                        <ChatbotProductCard key={index} productId={id} />
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
 
 const ChatbotWidget = () => {
     const { auth } = useAuth();
-    const axiosPrivate = useAxiosPrivate();
     const [isOpen, setIsOpen] = useState(false);
     const [isMaximized, setIsMaximized] = useState(false); // 🆕 Maximize state
     const [isTyping, setIsTyping] = useState(false);
@@ -61,14 +86,36 @@ const ChatbotWidget = () => {
     };
 
     const sendMessageToBot = async (promptText) => {
-        if (!auth?.accessToken) {
-            pushMessage("bot", "Xin lỗi, bạn cần đăng nhập để sử dụng tính năng này.");
-            return;
-        }
-
         setIsTyping(true);
         try {
-            const response = await axiosPrivate.post("/api/chatbot/ask", { prompt: promptText });
+            // 🧠 CHIẾN THUẬT SLIDING WINDOW:
+            // Lấy tối đa 6 tin nhắn gần nhất từ mảng messages để tạo lịch sử chat
+            // Chúng ta dùng .slice(-6) để đảm bảo context vừa đủ (3 cặp User-Bot)
+            const chatHistory = messages.slice(-6).map(msg => ({
+                role: msg.role === "user" ? "user" : "assistant",
+                content: msg.text
+            }));
+            // Loại bỏ các tin nhắn đầu tiên nếu chúng là của bot để tránh gửi quá nhiều context không cần thiết
+            while (chatHistory.length > 0 && chatHistory[0].role === "assistant") {
+                chatHistory.shift();
+            }
+
+            // 🚀 2. Dùng axios thường để tránh bị kẹt vào vòng lặp 403 của axiosPrivate
+            const response = await axios.post("/api/chatbot/ask", 
+                { 
+                    prompt: promptText,
+                    history: chatHistory 
+                }, 
+                {
+                    // 🚀 3. CỰC KỲ QUAN TRỌNG: 
+                    // Tự tay gắn Token nếu user đã login, nếu không có thì gửi null (Guest)
+                    headers: {
+                        Authorization: auth?.accessToken ? `Bearer ${auth.accessToken}` : ""
+                    },
+                    withCredentials: true // Để gửi kèm cookie nếu có
+                }
+            );
+
             const botContent = response?.data?.content;
             if (typeof botContent === "string" && botContent.trim()) {
                 pushMessage("bot", botContent);
@@ -77,7 +124,7 @@ const ChatbotWidget = () => {
             }
         } catch (error) {
             console.error("[CHATBOT UI] Ask failed", error);
-            pushMessage("bot", "Xin lỗi, mình không thể trả lời câu hỏi của bạn vào lúc này. Vui lòng thử lại sau ít phút.");
+            pushMessage("bot", "Xin lỗi, hệ thống đang bận. Bạn chờ xíu nhé.");
         } finally {
             setIsTyping(false);
         }
@@ -124,7 +171,7 @@ const ChatbotWidget = () => {
                             <span className="chatbot-widget-avatar">AI</span>
                             <div>
                                 <h3>Trợ lý chăm sóc da</h3>
-                                <p>Sẵn sàng hỗ trợ bạn ✨</p>
+                                <p>Sẵn sàng hỗ trợ bạn</p>
                             </div>
                         </div>
                         <div className="chatbot-widget-header-actions">
@@ -144,14 +191,11 @@ const ChatbotWidget = () => {
                                 key={message.id}
                                 className={`chatbot-widget-message ${message.role === "user" ? "chatbot-widget-message-user" : "chatbot-widget-message-bot"}`}
                             >
-                                {/* 🆕 Render Markdown instead of raw text */}
-                                <div className="chatbot-markdown-content">
-                                    {message.role === "bot" ? (
-                                        <ReactMarkdown>{message.text}</ReactMarkdown>
-                                    ) : (
-                                        <p>{message.text}</p>
-                                    )}
-                                </div>
+                                {message.role === "bot" ? (
+                                    renderBotMessage(message.text) // Gọi hàm xử lý Card
+                                ) : (
+                                    <p>{message.text}</p>
+                                )}
                             </article>
                         ))}
 
@@ -184,6 +228,9 @@ const ChatbotWidget = () => {
                             <FiSend size={18} />
                         </button>
                     </form>
+                    <div className="chatbot-widget-disclaimer">
+                        Trợ lý AI có thể mắc lỗi. Các thông tin tư vấn chỉ mang tính chất tham khảo.
+                    </div>
                 </section>
             )}
         </div>

@@ -1,3 +1,4 @@
+// src/features/auth/AuthRoutes.jsx
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/features/auth/AuthProvider";

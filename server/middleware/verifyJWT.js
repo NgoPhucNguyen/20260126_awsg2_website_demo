@@ -6,7 +6,6 @@ export const verifyJWT = (req, res, next) => {
     
     // 2. If there is no header, or it doesn't start with "Bearer ", kick them out!
     if (!authHeader?.startsWith('Bearer ')) {
-        console.log("Missing or invalid Authorization header");
         return res.sendStatus(401); // 401 Unauthorized
     }
 
@@ -28,7 +27,7 @@ export const verifyJWT = (req, res, next) => {
             // and attach it to the request object so the controller can use it.
             req.user = {
                 id: decoded.id,
-                account_name: decoded.account_name, 
+                account_name: decoded.accountName, 
                 role: decoded.role
             };
             

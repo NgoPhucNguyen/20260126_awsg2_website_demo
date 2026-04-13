@@ -1,13 +1,10 @@
 import './Customers.css';
-import { FaUserTag, FaEnvelope, FaCrown, FaArrowRight } from "react-icons/fa6"; 
+import { FaUserTag, FaEnvelope, FaArrowRight } from "react-icons/fa6"; // Thêm icon túi xách
 import { useState, useEffect } from "react";
 import { useAxiosPrivate } from "@/hooks/useAxiosPrivate"; 
-
-// 👇 1. Import the translation hook!
 import { useTranslation } from 'react-i18next'; 
 
 const Customers = () => {
-    // 👇 2. Initialize the translation function
     const { t } = useTranslation();
 
     const [customers, setCustomers] = useState([]); 
@@ -24,12 +21,12 @@ const Customers = () => {
             try {
                 setError("");
                 setIsLoading(true);
-                const response = await axiosPrivate.get('/api/customers', { signal: controller.signal });
+                const response = await axiosPrivate.get('/api/admin/customers', { signal: controller.signal });
                 setCustomers(response.data);
             } catch (err) {
                 if (err.name !== 'CanceledError') {
                     console.error("Fetch Error:", err);
-                    setError(t('customers.errorFetch')); // 👈 Translated Error
+                    setError(t('customers.errorFetch')); 
                 }
             } finally {
                 if (!controller.signal.aborted) setIsLoading(false);
@@ -37,7 +34,7 @@ const Customers = () => {
         };
         getCustomers();
         return () => controller.abort();
-    }, [axiosPrivate, t]); // Added 't' to dependencies
+    }, [axiosPrivate, t]); 
 
     const handleShowMore = () => setVisibleCount(prev => prev + 5);
 
@@ -52,8 +49,8 @@ const Customers = () => {
     return (
         <div className="fade-in">
             <header className="dashboard-header">
-                <h2>{t('customers.title')}</h2> {/* 👈 Translated */}
-                <p className="admin-subtitle">{t('customers.subtitle')}</p> {/* 👈 Translated */}
+                <h2>{t('customers.title')}</h2> 
+                <p className="admin-subtitle">{t('customers.subtitle')}</p> 
             </header>
 
             {error && <div className="error-banner">⚠️ {error}</div>}
@@ -66,7 +63,7 @@ const Customers = () => {
                         <div className="search-wrapper">
                             <input 
                                 type="text" 
-                                placeholder={t('customers.searchPlaceholder')} /* 👈 Translated */
+                                placeholder={t('customers.searchPlaceholder')} 
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="search-input"
@@ -78,37 +75,33 @@ const Customers = () => {
                         <table className="customers-table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    {/* 🚀 Đổi ID thành STT */}
+                                    <th>STT</th>
                                     <th><FaUserTag /> {t('customers.colAccount')}</th>
                                     <th><FaEnvelope /> {t('customers.colEmail')}</th>
-                                    <th><FaCrown /> {t('customers.colTier')}</th>
-                                    <th>{t('customers.colStatus')}</th>
+                                    {/* 🚀 Thêm cột Tổng Đơn Hàng */}
+                                    <th>Tổng Đơn</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {filteredCustomers.length > 0 ? (
                                     filteredCustomers.slice(0, visibleCount).map((customer, i) => (
-                                        <tr key={customer.id || i}>
-                                            <td className="col-id">#{customer.id}</td> 
+                                        <tr key={customer.id}>
+                                            {/* 🚀 Dùng index (i) + 1 làm Số thứ tự */}
+                                            <td className="col-id">{i + 1}</td> 
                                             <td className="col-name">{customer.accountName}</td>
                                             <td>{customer.mail}</td>
+                                            {/* 🚀 Render số lượng đơn hàng (Đợi Backend trả về) */}
                                             <td>
-                                                <span className={`badge tier-${customer.tier || 0}`}>
-                                                    {t('customers.level')} {customer.tier || 0} {/* 👈 Translated */}
+                                                <span className="badge-orders">
+                                                    {customer._count?.carts || 0} đơn
                                                 </span>
-                                            </td>
-                                            <td>
-                                                {customer.isActive ? (
-                                                    <span className="status-active">• {t('customers.active')}</span>
-                                                ) : (
-                                                    <span className="status-inactive">• {t('customers.inactive')}</span>
-                                                )}
                                             </td>
                                         </tr>
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="5" className="empty-state">
+                                        <td colSpan="4" className="empty-state">
                                             {searchTerm 
                                                 ? `${t('customers.noMatch')} "${searchTerm}"` 
                                                 : t('customers.noCustomers')}

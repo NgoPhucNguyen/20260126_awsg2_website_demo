@@ -1,7 +1,7 @@
 // src/components/AdminComponent/SelectFormProduct.jsx
-import { useState } from 'react';
+import { useState, useMemo } from 'react'; // 🚀 Thêm useMemo để tối ưu tốc độ
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faCheck, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import './SelectFormProduct.css';
 
 const SelectFormProduct = ({ 
@@ -13,53 +13,54 @@ const SelectFormProduct = ({
 }) => {
     const [filterType, setFilterType] = useState('product');
     const [selectedFilterValue, setSelectedFilterValue] = useState('');
-    
-    // State local để quản lý việc chọn trước khi ấn "Xác Nhận"
+    const [localSearch, setLocalSearch] = useState(''); // 🚀 State cho ô tìm kiếm nhanh
     const [localSelectedIds, setLocalSelectedIds] = useState(initialSelectedIds);
 
-    // Lọc biến thể dựa trên lựa chọn
-    const getFilteredVariants = () => {
-        let filtered = [];
+    const safeProducts = Array.isArray(products) ? products : (products?.data || []);
+
+    // 1. Chuyển tất cả sản phẩm thành danh sách biến thể phẳng (Flat list) để tìm kiếm nhanh
+    const allVariants = useMemo(() => {
+        return safeProducts.flatMap(p => 
+            (p.variants || []).map(v => ({ 
+                ...v, 
+                productName: p.nameVn,
+                categoryId: p.categoryId 
+            }))
+        );
+    }, [safeProducts]);
+
+    // 2. Logic lọc "Phòng thủ" (Sử dụng cả Dropdown Filter và Search Box)
+    const displayVariants = useMemo(() => {
+        let result = allVariants;
+
+        // Lọc theo Dropdown (Nếu có chọn)
         if (filterType === 'product' && selectedFilterValue) {
-            const product = products.find(p => p.id === parseInt(selectedFilterValue));
-            if (product?.variants) {
-                filtered = product.variants.map(v => ({ ...v, productName: product.nameVn }));
-            }
+            result = result.filter(v => v.productId === parseInt(selectedFilterValue));
         } else if (filterType === 'category' && selectedFilterValue) {
-            products.forEach(product => {
-                if (product.categoryId == selectedFilterValue && product.variants) {
-                    const variantsWithProduct = product.variants.map(v => ({ ...v, productName: product.nameVn }));
-                    filtered.push(...variantsWithProduct);
-                }
-            });
+            result = result.filter(v => v.categoryId == selectedFilterValue);
         }
-        return filtered;
-    };
 
-    const getAllDisplayVariants = () => {
-        const filtered = getFilteredVariants();
-        const allVariants = products.flatMap(p => (p.variants || []).map(v => ({ ...v, productName: p.nameVn })));
-        
-        // Giữ lại những biến thể đã chọn dù nó không nằm trong bộ lọc hiện tại
-        const selectedNotFiltered = localSelectedIds
-            .map(id => allVariants.find(v => v.id === id))
-            .filter(v => v && !filtered.some(f => f.id === v.id));
-            
-        return [...selectedNotFiltered, ...filtered];
-    };
+        // 🚀 LỌC THEO TỪ KHÓA (Tìm theo tên hoặc SKU)
+        if (localSearch.trim()) {
+            const searchLower = localSearch.toLowerCase();
+            result = result.filter(v => 
+                v.productName.toLowerCase().includes(searchLower) || 
+                v.sku.toLowerCase().includes(searchLower)
+            );
+        }
 
-    const displayVariants = getAllDisplayVariants();
+        return result;
+    }, [allVariants, filterType, selectedFilterValue, localSearch]);
 
     const getVariantDisplayName = (variant) => {
         if (!variant) return '';
-        const specDetails = variant.specification ? Object.values(variant.specification).join(' - ') : '';
-        return `${variant.productName || 'Sản phẩm'} - ${specDetails}`;
+        const spec = variant.specification ? Object.values(variant.specification).join(' - ') : '';
+        return `${variant.productName} ${spec ? `(${spec})` : ''}`;
     };
 
     const handleSelectAll = () => {
         const displayedIds = displayVariants.map(v => v.id);
-        const merged = [...new Set([...localSelectedIds, ...displayedIds])];
-        setLocalSelectedIds(merged);
+        setLocalSelectedIds([...new Set([...localSelectedIds, ...displayedIds])]);
     };
 
     const handleClearAll = () => {
@@ -67,59 +68,71 @@ const SelectFormProduct = ({
         setLocalSelectedIds(localSelectedIds.filter(id => !displayedIdSet.has(id)));
     };
 
-    const handleConfirm = () => {
-        onSave(localSelectedIds); // Trả mảng ID về cho Form cha
-    };
-
     return (
         <div className="select-product-overlay" onClick={onClose}>
             <div className="select-product-modal" onClick={e => e.stopPropagation()}>
                 <div className="select-product-header">
-                    <h3>Chỉ Định Sản Phẩm Khuyến Mãi</h3>
+                    <h3>Chỉ Định Sản Phẩm ({localSelectedIds.length} đã chọn)</h3>
                     <button className="select-product-close-btn" onClick={onClose} type="button">
                         <FontAwesomeIcon icon={faXmark} />
                     </button>
                 </div>
                 
-                <div className="select-product-filters-row">
-                    <div className="select-product-filter-group">
-                        <label className="select-product-label">Bộ Lọc Theo</label>
-                        <select className="select-product-input" value={filterType} onChange={(e) => { setFilterType(e.target.value); setSelectedFilterValue(''); }}>
-                            <option value="product">Từng Sản Phẩm</option>
-                            <option value="category">Toàn Danh Mục</option>
-                        </select>
+                {/* 🚀 KHU VỰC TÌM KIẾM & BỘ LỌC */}
+                <div className="select-product-controls">
+                    <div className="select-product-search-wrapper">
+                        <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
+                        <input 
+                            type="text" 
+                            className="select-product-quick-search"
+                            placeholder="Gõ tên sản phẩm hoặc mã SKU để tìm nhanh..."
+                            value={localSearch}
+                            onChange={(e) => setLocalSearch(e.target.value)}
+                        />
                     </div>
-                    <div className="select-product-filter-group">
-                        <label className="select-product-label">Giá Trị Lọc</label>
-                        <select className="select-product-input" value={selectedFilterValue} onChange={(e) => setSelectedFilterValue(e.target.value)}>
-                            <option value="">-- Chọn --</option>
-                            {filterType === 'product' 
-                                ? products.map(p => <option key={p.id} value={p.id}>{p.nameVn}</option>)
-                                : categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)
-                            }
-                        </select>
+
+                    <div className="select-product-filters-row">
+                        <div className="select-product-filter-group">
+                            <select className="select-product-input" value={filterType} onChange={(e) => { setFilterType(e.target.value); setSelectedFilterValue(''); }}>
+                                <option value="product">Lọc theo sản phẩm</option>
+                                <option value="category">Lọc theo danh mục</option>
+                            </select>
+                        </div>
+                        <div className="select-product-filter-group">
+                            <select className="select-product-input" value={selectedFilterValue} onChange={(e) => setSelectedFilterValue(e.target.value)}>
+                                <option value="">-- Tất cả {filterType === 'product' ? 'Sản phẩm' : 'Danh mục'} --</option>
+                                {filterType === 'product' 
+                                    ? safeProducts.map(p => <option key={p.id} value={p.id}>{p.nameVn}</option>)
+                                    : categories.map(c => <option key={c.id} value={c.id}>{c.nameVn}</option>)
+                                }
+                            </select>
+                        </div>
                     </div>
                 </div>
 
                 <div className="select-product-list-container">
                     <div className="select-product-bulk-actions">
                         <button type="button" className="select-product-text-btn" onClick={handleSelectAll} disabled={displayVariants.length === 0}>
-                            + Chọn tất cả đang hiển thị
+                            + Chọn tất cả đang hiện ({displayVariants.length})
                         </button>
                         <button type="button" className="select-product-text-btn text-danger" onClick={handleClearAll} disabled={displayVariants.length === 0}>
-                            - Bỏ chọn hiển thị
+                            - Bỏ chọn các mục này
                         </button>
                     </div>
                     
                     <div className="select-product-scroll-area">
                         {displayVariants.length === 0 ? (
-                            <p className="select-product-empty-msg">Vui lòng sử dụng bộ lọc bên trên...</p>
+                            <div className="select-product-empty-msg">
+                                <p>Không tìm thấy sản phẩm nào khớp với từ khóa "{localSearch}"</p>
+                            </div>
                         ) : (
                             displayVariants.map(variant => {
                                 const isSelected = localSelectedIds.includes(variant.id);
                                 return (
                                     <label key={variant.id} className={`select-product-card ${isSelected ? 'selected' : ''}`}>
-                                        <input type="checkbox" checked={isSelected}
+                                        <input 
+                                            type="checkbox" 
+                                            checked={isSelected}
                                             onChange={(e) => {
                                                 if (e.target.checked) setLocalSelectedIds([...localSelectedIds, variant.id]);
                                                 else setLocalSelectedIds(localSelectedIds.filter(id => id !== variant.id));
@@ -138,8 +151,9 @@ const SelectFormProduct = ({
                 </div>
 
                 <div className="select-product-footer">
-                    <button type="button" className="select-product-btn select-product-btn-primary" onClick={handleConfirm}>
-                        Xác Nhận ({localSelectedIds.length})
+                    <button type="button" className="select-product-btn select-product-btn-secondary" onClick={onClose}>Hủy</button>
+                    <button type="button" className="select-product-btn select-product-btn-primary" onClick={() => onSave(localSelectedIds)}>
+                        Xác Nhận ({localSelectedIds.length} món)
                     </button>
                 </div>
             </div>

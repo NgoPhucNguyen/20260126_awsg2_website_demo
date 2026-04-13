@@ -1,103 +1,5 @@
+// server/controllers/productController.js
 import prisma from '../prismaClient.js';
-import EmbeddingClient from '#server/chatbot/core/embedding_model.js';
-
-const embeddingClient = new EmbeddingClient();
-let vectorInfraReady = false;
-
-const toVectorLiteral = (values = []) => {
-  const sanitized = values.map((v) => {
-    const num = Number(v);
-    return Number.isFinite(num) ? num : 0;
-  });
-  return `[${sanitized.join(',')}]`;
-};
-
-const buildProductDocument = (product) => {
-  const name = product.name?.trim() || 'Không có tên tiếng Anh';
-  const nameVn = product.nameVn?.trim() || 'Không có tên tiếng Việt';
-  const description = product.description?.trim() || 'Không có mô tả';
-  const ingredient = product.ingredient?.trim() || 'Không có thành phần';
-
-  return [
-    `Product ID: ${product.id}`,
-    `English Name: ${name}`,
-    `Vietnamese Name: ${nameVn}`,
-    `Description: ${description}`,
-    `Ingredients: ${ingredient}`,
-  ].join('\n');
-};
-
-const ensureVectorInfra = async (dimensions) => {
-  if (!Number.isInteger(dimensions) || dimensions <= 0) {
-    throw new Error(`Kích thước embedding không hợp lệ: ${dimensions}`);
-  }
-
-  if (vectorInfraReady) {
-    return;
-  }
-
-  await prisma.$executeRawUnsafe('CREATE EXTENSION IF NOT EXISTS vector;');
-  await prisma.$executeRawUnsafe(`
-    CREATE TABLE IF NOT EXISTS product_vectors (
-      product_id INTEGER PRIMARY KEY REFERENCES product(id) ON DELETE CASCADE,
-      content TEXT NOT NULL,
-      embedding VECTOR(${dimensions}) NOT NULL,
-      metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    );
-  `);
-  await prisma.$executeRawUnsafe(`
-    ALTER TABLE product_vectors
-    ALTER COLUMN embedding TYPE VECTOR(${dimensions});
-  `);
-  vectorInfraReady = true;
-};
-
-const syncProductVector = async (productId) => {
-  const product = await prisma.product.findUnique({
-    where: { id: Number(productId) },
-    select: {
-      id: true,
-      name: true,
-      nameVn: true,
-      description: true,
-      ingredient: true,
-    },
-  });
-
-  if (!product) {
-    return;
-  }
-
-  const content = buildProductDocument(product);
-  const embedding = await embeddingClient.createEmbedding(content);
-  const dimensions = embedding.length;
-
-  await ensureVectorInfra(dimensions);
-
-  const vectorLiteral = toVectorLiteral(embedding);
-  const metadata = {
-    name: product.name ?? '',
-    nameVn: product.nameVn ?? '',
-  };
-
-  await prisma.$executeRawUnsafe(
-    `
-      INSERT INTO product_vectors (product_id, content, embedding, metadata, updated_at)
-      VALUES ($1, $2, $3::vector, $4::jsonb, NOW())
-      ON CONFLICT (product_id)
-      DO UPDATE SET
-        content = EXCLUDED.content,
-        embedding = EXCLUDED.embedding,
-        metadata = EXCLUDED.metadata,
-        updated_at = NOW();
-    `,
-    product.id,
-    content,
-    vectorLiteral,
-    JSON.stringify(metadata)
-  );
-};
 
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
@@ -261,7 +163,7 @@ export const getFilterAttributes = async (req, res) => {
       prisma.brand.findMany({ select: { id: true, name: true } }),
       prisma.category.findMany({ select: { id: true, name: true, nameVn: true } }),
     ]);
-    const targetSkinTypes = ["da thường", "da nhạy cảm", "da khô", "da dầu", "da mụn"];
+    const targetSkinTypes = ["da thường", "da nhạy cảm", "da khô", "da dầu"];
 
     res.json({
       brands,
@@ -288,7 +190,7 @@ export const getRelatedProducts = async (req, res) => {
 
     if (!currentProduct) return res.json([]);
 
-    const targetKeywords = ["da thường", "da nhạy cảm", "da khô", "da dầu", "da mụn"];
+    const targetKeywords = ["da thường", "da nhạy cảm", "da khô", "da dầu"];
     const currentSkinString = (currentProduct.skinType || "").toLowerCase();
     
     const matchedKeywords = targetKeywords.filter(keyword => 
@@ -348,172 +250,44 @@ export const getRelatedProducts = async (req, res) => {
   }
 };
 
-export const deleteProduct = async (req, res) => {
+
+// server/controllers/productController.js
+
+export const getQuickSearchResults = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { search } = req.query;
 
-    const existingProduct = await prisma.product.findUnique({
-      where: { id: Number(id) }
-    });
-
-    if (!existingProduct) {
-      return res.status(404).json({ error: "Không tìm thấy sản phẩm" });
+    if (!search || search.trim().length < 2) {
+      return res.json([]);
     }
 
-    await prisma.product.update({
-      where: { id: Number(id) },
-      data: { isActive: false } 
-    });
-
-    res.json({ message: "Đã ẩn sản phẩm khỏi cửa hàng!" });
-
-  } catch (error) {
-    console.error("[SOFT_DELETE_ERROR]:", error);
-    res.status(500).json({ error: "Xóa sản phẩm thất bại" });
-  }
-};
-
-export const restoreProduct = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    await prisma.product.update({
-      where: { id: Number(id) },
-      data: { isActive: true } 
-    });
-
-    res.json({ message: "Đã khôi phục sản phẩm trên cửa hàng!" });
-  } catch (error) {
-    console.error("[RESTORE_PRODUCT_ERROR]:", error);
-    res.status(500).json({ error: "Khôi phục sản phẩm thất bại" });
-  }
-};
-
-export const createProduct = async (req, res) => {
-    try {
-        const { 
-            name, nameVn, brandId, categoryId, description, 
-            ingredient, skinType, sku, unitPrice, stock, imageUrls 
-        } = req.body;
-
-        let warehouse = await prisma.warehouse.findFirst();
-        if (!warehouse) {
-            warehouse = await prisma.warehouse.create({
-                data: {
-                    name: "Main Warehouse",
-                    fullAddress: "System Default",
-                    province: "Default", district: "Default", ward: "Default", streetAddress: "Default"
-                }
-            });
+    const products = await prisma.product.findMany({
+      where: {
+        isActive: true,
+        OR: [
+          { name: { contains: search, mode: 'insensitive' } },
+          { nameVn: { contains: search, mode: 'insensitive' } }
+        ],
+      },
+      take: 5, // 🚀 Giới hạn đúng 5 sản phẩm như bạn muốn
+      select: {
+        id: true,
+        name: true,
+        nameVn: true,
+        // 🚀 Chỉ lấy biến thể đầu tiên để lấy giá và ảnh thumbnail, không lấy inventories
+        variants: {
+          take: 1,
+          select: {
+            unitPrice: true,
+            thumbnailUrl: true,
+          }
         }
-        const safeImageUrls = Array.isArray(imageUrls) ? imageUrls : [];
-        const imageRecords = safeImageUrls.map((url, index) => ({
-            imageUrl: url,
-            displayOrder: index + 1,
-            altText: `${name} image ${index + 1}`
-        }));
-
-        const newProduct = await prisma.product.create({
-            data: {
-                name,
-                nameVn: nameVn || name, 
-                brandId,
-                categoryId: Number(categoryId),
-                description,
-                ingredient,
-                skinType,
-                isActive: true, 
-                
-                variants: {
-                    create: [{
-                        sku: sku || `SKU-${Date.now()}`, 
-                        unitPrice: Number(unitPrice),
-                        thumbnailUrl: safeImageUrls[0] || "",
-                        specification: { packaging: "Standard" }, 
-                        
-                        images: {
-                            create: imageRecords
-                        },
-                        
-                        inventories: {
-                            create: [{
-                                warehouseId: warehouse.id,
-                                quantity: Number(stock)
-                            }]
-                        }
-                    }]
-                }
-            }, 
-
-            include: {
-                category: true,
-                variants: {
-                    include: {
-                        images: true,
-                        inventories: true
-                    }
-                }
-            }
-        });
-
-        await syncProductVector(newProduct.id);
-
-        res.status(201).json({ message: "Tạo sản phẩm thành công!", product: newProduct });
-        
-    } catch (error) {
-        console.error("[CREATE_PRODUCT_ERROR]:", error);
-        res.status(500).json({ error: "Lưu sản phẩm vào cơ sở dữ liệu thất bại." });
-    }
-};
-
-export const updateProduct = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const productId = Number(id);
-
-    if (Number.isNaN(productId)) {
-      return res.status(400).json({ error: 'Mã sản phẩm không hợp lệ' });
-    }
-
-    const {
-      name,
-      nameVn,
-      brandId,
-      categoryId,
-      description,
-      ingredient,
-      skinType,
-      isActive,
-    } = req.body;
-
-    const existingProduct = await prisma.product.findUnique({ where: { id: productId } });
-    if (!existingProduct) {
-      return res.status(404).json({ error: 'Không tìm thấy sản phẩm' });
-    }
-
-    const updatedProduct = await prisma.product.update({
-      where: { id: productId },
-      data: {
-        ...(name !== undefined ? { name } : {}),
-        ...(nameVn !== undefined ? { nameVn } : {}),
-        ...(brandId !== undefined ? { brandId } : {}),
-        ...(categoryId !== undefined ? { categoryId: Number(categoryId) } : {}),
-        ...(description !== undefined ? { description } : {}),
-        ...(ingredient !== undefined ? { ingredient } : {}),
-        ...(skinType !== undefined ? { skinType } : {}),
-        ...(isActive !== undefined ? { isActive: Boolean(isActive) } : {}),
-      },
-      include: {
-        brand: true,
-        category: true,
-      },
+      }
     });
 
-    await syncProductVector(updatedProduct.id);
-
-    return res.json({ message: 'Cập nhật sản phẩm thành công!', product: updatedProduct });
+    res.json(products);
   } catch (error) {
-    console.error('[UPDATE_PRODUCT_ERROR]:', error);
-    return res.status(500).json({ error: 'Cập nhật sản phẩm thất bại.' });
+    console.error("[QUICK_SEARCH_ERROR]:", error);
+    res.status(500).json({ error: 'Lỗi tìm kiếm nhanh' });
   }
 };

@@ -1,105 +1,217 @@
 /* ==========================================================================
-   PREVIEW STEP COMPONENT STYLES
+   PREVIEW STEP COMPONENT STYLES - MINIMALIST MONOCHROME THEME
    ========================================================================== */
 
-/* Khung viền ngoài giống chiếc điện thoại (khớp với CameraStep) */
-.analyzeskin-previewstep-container {
-  width: 100%;
-  max-width: 450px; /* Chiều rộng chuẩn điện thoại */
-  margin: 0 auto;
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 20px; /* Bo góc mềm mại */
-  padding: 24px;
-  box-sizing: border-box;
+/* TỔNG THỂ */
+.analyze-preview-step-container {
   display: flex;
   flex-direction: column;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05); /* Bóng đổ êm */
+  padding: 20px;
+  background: #ffffff;
+  min-height: 100dvh;
+  max-width: 500px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: #0f172a;
 }
 
-.analyzeskin-previewstep-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #0f172a; /* Slate 900 */
-  text-align: center;
-  margin-top: 0;
-  margin-bottom: 20px;
+.analyze-preview-step-header h2 {
+  font-size: 24px;
+  margin-bottom: 8px;
 }
 
-/* Khung chứa ảnh chân dung (Ép tỷ lệ 3:4) */
-.analyzeskin-previewstep-image-wrapper {
-  width: 100%;
-  aspect-ratio: 3 / 4; /* Tỷ lệ dọc Portrait */
-  border-radius: 12px;
-  overflow: hidden;
-  background-color: #f8fafc; /* Màu lót khi ảnh tải */
+.analyze-preview-step-header p {
+  color: #64748b;
+  font-size: 15px;
   margin-bottom: 24px;
 }
 
-.analyzeskin-previewstep-image {
+.analyze-preview-step-content-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
   width: 100%;
-  height: 100%;
-  object-fit: cover; /* Đảm bảo ảnh luôn lấp đầy khung mà không bị méo */
-  display: block;
 }
 
-/* Khu vực nút bấm */
-.analyzeskin-previewstep-action-group {
+/* ==========================================================================
+   DANH SÁCH KIỂM TRA (CHECKLIST)
+   ========================================================================== */
+.analyze-preview-step-checklist {
+  display: flex;
+  flex-direction: column; 
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.analyze-preview-step-check-item {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #f8fafc; 
+  border: 1px solid #e2e8f0; 
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a; /* Màu mặc định khi đang checking */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s;
+}
+
+.analyze-preview-step-icon {
+  font-size: 16px;
+  font-weight: 800;
+  /* Bỏ color cố định để icon tự đổi màu theo trạng thái của thẻ cha */
+}
+
+/* 🚀 TRẠNG THÁI ĐẠT CHUẨN (MÀU XANH LÁ TƯƠI MÁT) */
+.analyze-preview-step-check-item.good { 
+  color: #059669; 
+  background-color: #ecfdf5; 
+  border-color: #a7f3d0; 
+}
+
+/* 🚀 TRẠNG THÁI CÓ LỖI (MÀU ĐỎ CẢNH BÁO) */
+.analyze-preview-step-check-item.bad { 
+  color: #dc2626; 
+  background-color: #fef2f2; 
+  border-color: #fecaca; 
+}
+
+/* ==========================================================================
+   KHU VỰC ẢNH VÀ HIỆU ỨNG PROGRESS BAR (SCANNING)
+   ========================================================================== */
+.analyze-preview-step-image-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  background-color: #f1f5f9; 
+}
+
+.analyze-preview-step-img { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+  transition: filter 0.3s ease;
+}
+
+/* Làm tối ảnh đi một chút khi đang quét AI để làm nổi bật tia laser */
+.analyze-preview-step-img.analyze-preview-step-analyzing {
+  filter: brightness(0.6) contrast(1.1) grayscale(0.2);
+}
+
+.analyze-preview-step-oval-overlay {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 65%;
+  aspect-ratio: 1 / 1.35;
+  border: 2px dashed rgba(255,255,255,0.8);
+  border-radius: 50% / 50%;
+  box-shadow: 0 0 0 1000px rgba(0,0,0,0.3);
+  z-index: 2;
+}
+
+/* 🚀 TIA LASER QUÉT MÀU ÁNH BẠC (SILVER GLOW) */
+.analyze-preview-step-scanning-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #ffffff; 
+  box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.6); 
+  z-index: 10;
+  animation: scanEffect 2s linear infinite;
+}
+
+@keyframes scanEffect {
+  0% { top: 0%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* ==========================================================================
+   KHU VỰC NÚT BẤM (CÓ BORDER RÕ RÀNG)
+   ========================================================================== */
+.analyze-preview-step-button-group {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-/* Nút Phân Tích (Xanh Ngọc - Emerald) */
-.analyzeskin-previewstep-btn-analyze {
+.analyze-preview-step-btn-main {
   width: 100%;
-  background-color: #E6C27A;
-  color: #ffffff;
-  border: none;
+  background: #0f172a; /* Nút chính đen tuyền */
+  color: white;
+  border: 2px solid #0f172a;
   padding: 16px;
+  border-radius: 12px;
   font-size: 16px;
   font-weight: 600;
-  border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition: all 0.2s ease;
 }
 
-.analyzeskin-previewstep-btn-analyze:hover:not(:disabled) {
-  background-color: #E6C27A;
+.analyze-preview-step-btn-main:hover:not(:disabled) { 
+  background: #1e293b; 
 }
 
-.analyzeskin-previewstep-btn-analyze:active:not(:disabled) {
-  transform: scale(0.98);
+.analyze-preview-step-btn-main.analyze-preview-step-warning { 
+  background: #94a3b8; 
+  border-color: #94a3b8;
 }
 
-/* Trạng thái đang tải (Loading) */
-.analyzeskin-previewstep-btn-analyze.loading,
-.analyzeskin-previewstep-btn-analyze:disabled {
-  background-color: #94a3b8; /* Xám Slate 400 */
+.analyze-preview-step-btn-main:disabled {
   cursor: not-allowed;
   opacity: 0.8;
 }
 
-/* Nút Chụp Lại */
-.analyzeskin-previewstep-btn-secondary {
-  width: 100%;
-  background-color: transparent;
-  color: #64748b; /* Slate 500 */
-  border: 1px solid #cbd5e1; /* Slate 300 */
-  padding: 14px;
-  font-size: 15px;
-  font-weight: 600;
+.analyze-preview-step-btn-sub { 
+  width: 100%; 
+  background: #ffffff; 
+  border: 1px solid #cbd5e1; 
+  color: #475569; 
+  padding: 16px;
   border-radius: 12px;
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  font-size: 15px;
+  font-weight: 600; 
+  cursor: pointer; 
+  transition: all 0.2s ease;
 }
 
-.analyzeskin-previewstep-btn-secondary:hover:not(:disabled) {
-  background-color: #f1f5f9;
+.analyze-preview-step-btn-sub:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #94a3b8;
   color: #0f172a;
 }
 
-.analyzeskin-previewstep-btn-secondary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+/* ==========================================================================
+   RESPONSIVE MÀN HÌNH RỘNG (DESKTOP)
+   ========================================================================== */
+@media (min-width: 1024px) {
+  .analyze-preview-step-container {
+    max-width: 1100px;
+    justify-content: center;
+    padding: 40px;
+  }
+
+  .analyze-preview-step-content-layout {
+    flex-direction: row-reverse; 
+    align-items: center;
+    gap: 60px;
+  }
+
+  .analyze-preview-step-image-section { flex: 1.2; }
+  
+  .analyze-preview-step-sidebar { 
+    flex: 1; 
+    padding: 30px;
+    background: #f8fafc;
+    border-radius: 24px;
+    border: 1px solid #e2e8f0;
+  }
 }

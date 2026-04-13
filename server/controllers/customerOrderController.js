@@ -13,7 +13,7 @@ export const getMyOrders = async (req, res) => {
         const orders = await prisma.cart.findMany({
             where: {
                 customerId: customerId,
-                status: { notIn: ['CART', 'DRAFT'] } 
+                status: { notIn: ['DRAFT', 'EXPIRED'] } 
             },
             include: {
                 mainCoupon: true,
@@ -53,7 +53,8 @@ export const cancelOrder = async (req, res) => {
 
         const isAdmin = userRole === 5150 || userRole === 'Admin' || userRole === 'ADMIN';
 
-        if (!isAdmin && order.customerId !== currentUserId) {
+        // 🚀 FIX LỖI 403: So sánh chuỗi UUID trực tiếp
+        if (!isAdmin && String(order.customerId).trim() !== String(currentUserId).trim()) {
             return res.status(403).json({ message: "Bạn không có quyền hủy đơn hàng này." });
         }
 
@@ -120,9 +121,9 @@ export const cancelOrder = async (req, res) => {
         });
 
         if (order.paymentStatus === 'PAID' && order.paymentMethod === 'VNPAY') {
-            res.json({ message: "Hủy đơn thành công. Yêu cầu hoàn tiền đang được xử lý (3-7 ngày)." });
+            res.json({ message: "Hủy đơn thành công. Yêu cầu hoàn tiền đang được xử lý (3-7 ngày).", paymentStatus: "REFUNDING" });
         } else {
-            res.json({ message: "Hủy đơn hàng thành công. Tồn kho và Voucher đã được hoàn trả." });
+            res.json({ message: "Hủy đơn hàng thành công. Tồn kho và Voucher đã được hoàn trả.", paymentStatus: "FAILED" });
         }
 
     } catch (error) {

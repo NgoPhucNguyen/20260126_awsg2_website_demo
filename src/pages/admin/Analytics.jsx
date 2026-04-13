@@ -10,6 +10,8 @@ import {
 } from 'recharts';
 import './Analytics.css';
 
+const API_ANALYTICS = '/api/admin/analytics';
+
 // 🎨 MANG MÀU SẮC SỐNG ĐỘNG TRỞ LẠI CHO BIỂU ĐỒ PIE CHART
 const COLORS = {
     'DELIVERED': '#10b981', // Xanh lá ngọc (Thành công)
@@ -23,7 +25,13 @@ const Analytics = () => {
     const { t } = useTranslation();
     const axiosPrivate = useAxiosPrivate();
 
-    const [summary, setSummary] = useState({ totalRevenue: 0, totalOrders: 0, newCustomers: 0 });
+    const [summary, setSummary] = useState({ 
+        periodRevenue: 0, 
+        allTimeRevenue: 0, 
+        totalOrders: 0, 
+        newCustomers: 0, 
+        label: ""
+    });
     const [chartData, setChartData] = useState({ revenueData: [], orderStatusData: [], topProductsData: [] });
     const [timeRange, setTimeRange] = useState('30days'); 
     
@@ -37,8 +45,8 @@ const Analytics = () => {
             try {
                 setIsLoading(true);
                 const [summaryRes, chartsRes] = await Promise.all([
-                    axiosPrivate.get('/api/analytics/summary', { signal: controller.signal }),
-                    axiosPrivate.get(`/api/analytics/charts?timeRange=${timeRange}`, { signal: controller.signal })
+                    axiosPrivate.get(`${API_ANALYTICS}/summary?timeRange=${timeRange}`, { signal: controller.signal }),
+                    axiosPrivate.get(`${API_ANALYTICS}/charts?timeRange=${timeRange}`, { signal: controller.signal })
                 ]);
                 
                 setSummary(summaryRes.data);
@@ -91,6 +99,7 @@ const Analytics = () => {
                     >
                         <option value="7days">7 Ngày qua</option>
                         <option value="30days">30 Ngày qua</option>
+                        <option value="all">Toàn thời gian</option>
                     </select>
                 </div>
             </header>
@@ -106,33 +115,32 @@ const Analytics = () => {
                 <>
                     {/* --- KPI CARDS (Giữ nguyên phong cách Monochrome) --- */}
                     <div className="admin-analytics-page-kpi-grid">
+                        {/* Card Doanh Thu */}
                         <div className="admin-analytics-page-kpi-card">
                             <div className="admin-analytics-page-kpi-icon-wrapper">
                                 <FaChartLine className="admin-analytics-page-icon" />
                             </div>
                             <div className="admin-analytics-page-kpi-content">
-                                <span className="admin-analytics-page-kpi-label">Tổng Doanh Thu (Đã thu)</span>
-                                <h3 className="admin-analytics-page-kpi-value">{formatCurrency(summary.totalRevenue)}</h3>
+                                <span className="admin-analytics-page-kpi-label">Doanh Thu {summary.label}</span>
+                                <h3 className="admin-analytics-page-kpi-value">{formatCurrency(summary.periodRevenue)}</h3>
+                                <p className="admin-analytics-page-kpi-subtext">
+                                    Tổng lịch sử: <strong>{formatCurrency(summary.allTimeRevenue)}</strong>
+                                </p>
                             </div>
                         </div>
-                        
+
+                        {/* Card Đơn Hàng */}
                         <div className="admin-analytics-page-kpi-card">
                             <div className="admin-analytics-page-kpi-icon-wrapper">
                                 <FaBoxOpen className="admin-analytics-page-icon" />
                             </div>
                             <div className="admin-analytics-page-kpi-content">
-                                <span className="admin-analytics-page-kpi-label">Tổng Đơn Hàng</span>
-                                <h3 className="admin-analytics-page-kpi-value">{summary.totalOrders}</h3>
-                            </div>
-                        </div>
-                        
-                        <div className="admin-analytics-page-kpi-card">
-                            <div className="admin-analytics-page-kpi-icon-wrapper">
-                                <FaUsers className="admin-analytics-page-icon" />
-                            </div>
-                            <div className="admin-analytics-page-kpi-content">
-                                <span className="admin-analytics-page-kpi-label">Khách Hàng Mới</span>
-                                <h3 className="admin-analytics-page-kpi-value">+{summary.newCustomers}</h3>
+                                <span className="admin-analytics-page-kpi-label">Đơn hàng {summary.label}</span>
+                                <h3 className="admin-analytics-page-kpi-value">{summary.totalOrders} Đơn</h3>
+                                <div className="admin-analytics-page-trend positive">
+                                    {/* Bạn có thể thêm logic tính % tăng trưởng ở đây */}
+                                    <span className="trend-text">Dữ liệu thực tế từ kho</span>
+                                </div>
                             </div>
                         </div>
                     </div>

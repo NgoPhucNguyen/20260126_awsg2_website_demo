@@ -2,7 +2,7 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-//Get all customer for customer page
+// Lấy danh sách khách hàng cho trang Admin Customer
 export const getAllCustomers = async (req, res) => {
     try {
         const customers = await prisma.customer.findMany({
@@ -14,6 +14,17 @@ export const getAllCustomers = async (req, res) => {
                 tier: true,
                 isActive: true,
                 createdAt: true,
+                
+                // 🚀 BẢN NÂNG CẤP: Đếm số lượng đơn hàng (LOẠI BỎ ĐƠN NHÁP VÀ HẾT HẠN)
+                _count: {
+                    select: { 
+                        carts: {
+                            where: {
+                                status: { notIn: ['DRAFT', 'EXPIRED'] }
+                            }
+                        } 
+                    }
+                }
             },
             orderBy: {
                 createdAt: 'desc' // Newest users first

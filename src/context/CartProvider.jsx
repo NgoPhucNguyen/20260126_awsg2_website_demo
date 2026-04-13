@@ -169,7 +169,6 @@ export const CartProvider = ({ children }) => {
         let updateSuccess = false;
 
         if (auth?.accessToken) {
-            console.log(`🚀 [FRONTEND] Sending to DB - Variant ID: ${variantId}, Target Qty: ${newQuantity}`);
             
             try {
                 // 🗄️ BƯỚC 1: BÁO CHO BACKEND

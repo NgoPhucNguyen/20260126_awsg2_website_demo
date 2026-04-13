@@ -12,3 +12,5 @@ note.txt
 /src/generated/prisma
 .*
 _*.*
+debug_output/
+*.jpg

@@ -329,25 +329,31 @@
 .product-detail-page-sticky-bar {
     position: fixed;
     /* 🛑 Gắn chặt vào đỉnh màn hình thay vì đáy */
-    top: 0; 
+    top: -100px; 
     left: 0;
     width: 100%;
+    height: 70px;
     background-color: #ffffff;
     
     border-bottom: 1px solid var(--border-color, #e5e5e5);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); 
     
     /* 🚀 Nâng z-index lên cao nhất để chắc chắn đè qua Navbar chính */
-    z-index: 9999; 
+    z-index: 999; 
     
     /* 🛑 Giấu nó chìm lên TRÊN đỉnh màn hình (dùng số âm -100%) */
     transform: translateY(-100%); 
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    visibility: hidden; /* Giữ nguyên cái này để tránh click nhầm khi nó đang ẩn */
+    pointer-events: none; /* Không cho phép tương tác khi đang ẩn */
 }
 
 /* Khi class visible được thêm vào, nó sẽ trượt vút lên */
 .product-detail-page-sticky-bar.visible {
+    top: 70px;
     transform: translateY(0);
+    visibility: visible;
+    pointer-events: auto; /* Cho phép tương tác khi đã hiện */
 }
 
 .product-detail-page-sticky-container {

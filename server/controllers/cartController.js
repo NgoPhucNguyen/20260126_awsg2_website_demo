@@ -257,7 +257,6 @@ export const updateCartItemQuantity = async (req, res) => {
         const safeVariantId = Number(variantId);
         const requestedQuantity = Number(quantity);
 
-        console.log(`\n📥 [BACKEND] Received Update: User: ${userId}, Variant: ${variantId}, New Qty: ${quantity}`); // 🐛 DEBUG LOG
 
         // 1. Find active cart
         const dbCart = await prisma.cart.findFirst({
@@ -265,7 +264,6 @@ export const updateCartItemQuantity = async (req, res) => {
         });
 
         if (!dbCart) {
-            console.log(`❌ [BACKEND] Active cart not found for user!`);
             return res.status(404).json({ message: "Cart not found" });
         }
 
@@ -273,7 +271,6 @@ export const updateCartItemQuantity = async (req, res) => {
 
         const ONE_DAY_MS = 24 * 60 * 60 * 1000;
         if (new Date() - new Date(dbCart.createdAt) > ONE_DAY_MS) {
-            console.log(`⚠️ [BACKEND] Cart is expired! Updating status to EXPIRED.`); // 🐛 DEBUG LOG
             await prisma.cart.update({
                 where: { id: dbCart.id },
                 data: { status: 'EXPIRED' }
@@ -281,7 +278,6 @@ export const updateCartItemQuantity = async (req, res) => {
             return res.status(400).json({ message: "Cart has expired. Please refresh." });
         }
 
-        console.log(`🛒 [BACKEND] Found valid Cart ID: ${dbCart.id}`); // 🐛 DEBUG LOG
         
         // Check stock availability BEFORE updating quantity
         const stockData = await prisma.inventory.aggregate({
@@ -309,10 +305,8 @@ export const updateCartItemQuantity = async (req, res) => {
             data: { quantity: safeQuantity }
         });
         
-        console.log(`📝 [BACKEND] Prisma Update Result: Modified ${updateResult.count} rows`); 
 
         if (updateResult.count === 0) {
-            console.log(`⚠️ [BACKEND] Warning: Found the cart, but could not find Variant ${variantId} inside it!`); 
         }
 
         res.status(200).json({ message: "Quantity updated" });

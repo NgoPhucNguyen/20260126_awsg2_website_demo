@@ -3,61 +3,57 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+
 export const getDashboardSummary = async (req, res) => {
-  try {
-    // --------------------------------------------------------
-    // 1. TÍNH TỔNG DOANH THU THỰC TẾ (Chỉ đếm đơn ĐÃ THANH TOÁN)
-    // --------------------------------------------------------
-    const revenueStats = await prisma.cart.aggregate({
-      _sum: {
-        finalPrice: true,
-      },
-      where: {
-        paymentStatus: 'PAID', // 👈 ĐÂY LÀ CHÌA KHÓA: Tiền đã vào túi
-      }
-    });
+    try {
+        const { timeRange } = req.query; // Nhận '7days', '30days' hoặc 'all'
+        
+        let startDate;
+        const now = new Date();
 
-    // --------------------------------------------------------
-    // 2. TÍNH TỔNG ĐƠN HÀNG (Tất cả đơn không phải là DRAFT hoặc CANCELLED)
-    // --------------------------------------------------------
-    const orderStats = await prisma.cart.aggregate({
-      _count: {
-        id: true,
-      },
-      where: {
-        status: { 
-            notIn: ['DRAFT', 'CANCELLED', 'PENDING'] 
-        }, 
-      }
-    });
+        if (timeRange === '7days') startDate = new Date(now.setDate(now.getDate() - 7));
+        else if (timeRange === '30days') startDate = new Date(now.setDate(now.getDate() - 30));
+        else startDate = new Date(0); // Lấy từ khởi tạo (All time)
 
-    // --------------------------------------------------------
-    // 3. ĐẾM SỐ KHÁCH HÀNG MỚI TRONG 30 NGÀY QUA
-    // --------------------------------------------------------
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        // 1. Doanh thu trong khoảng thời gian đã chọn
+        const currentRevenue = await prisma.cart.aggregate({
+            _sum: { finalPrice: true },
+            where: {
+                paymentStatus: 'PAID',
+                createdAt: { gte: startDate }
+            }
+        });
 
-    const newCustomersCount = await prisma.customer.count({
-      where: {
-        createdAt: {
-          gte: thirtyDaysAgo
-        }
-      }
-    });
+        // 2. TỔNG DOANH THU TỪ TRƯỚC ĐẾN NAY (Để so sánh tổng quát)
+        const allTimeRevenue = await prisma.cart.aggregate({
+            _sum: { finalPrice: true },
+            where: { paymentStatus: 'PAID' }
+        });
 
-    // --------------------------------------------------------
-    // 4. TRẢ KẾT QUẢ VỀ CHO FRONTEND
-    // --------------------------------------------------------
-    return res.status(200).json({
-      totalRevenue: revenueStats._sum.finalPrice || 0,
-      totalOrders: orderStats._count.id || 0,
-      newCustomers: newCustomersCount
-    });
+        // 3. Đơn hàng trong khoảng thời gian
+        const orderCount = await prisma.cart.count({
+            where: {
+                status: { notIn: ['DRAFT', 'CANCELLED'] },
+                createdAt: { gte: startDate }
+            }
+        });
 
-  } catch (error) {
-    console.error("❌ Lỗi khi lấy dữ liệu Analytics Summary:", error);
-    return res.status(500).json({ error: "Lỗi máy chủ khi tính toán số liệu thống kê" });
-  }
+        // 4. Khách hàng mới trong khoảng thời gian
+        const customersCount = await prisma.customer.count({
+            where: { createdAt: { gte: startDate } }
+        });
+
+        res.json({
+            periodRevenue: currentRevenue._sum.finalPrice || 0,
+            allTimeRevenue: allTimeRevenue._sum.finalPrice || 0,
+            totalOrders: orderCount,
+            newCustomers: customersCount,
+            label: timeRange === 'all' ? 'Toàn thời gian' : `Trong ${timeRange.replace('days', ' ngày')} qua`
+        });
+
+    } catch (error) {
+        res.status(500).json({ error: "Lỗi tính toán thống kê" });
+    }
 };
 
 

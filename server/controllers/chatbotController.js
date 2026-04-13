@@ -1,36 +1,35 @@
-// import express from "express";
+// server/controllers/chatbotController.js
 import AgentClient from "../chatbot/agents.js";
-// import { verifyJWT } from "../middleware/verifyJWT.js";
 
 const agent = new AgentClient();
 
 const askHandler = async (req, res) => {
-    // req
-    //  - body: { prompt: string, history?: array }
-    //  - user: { id: string, ... } (added by verifyJWT middleware)
-    // console.log("[CHATBOT REQUEST] Prompt:", req.body?.prompt);
-    // console.log("[CHATBOT REQUEST] User:", req.user);
-	try {
-		const prompt = typeof req.body?.prompt === "string" ? req.body.prompt.trim() : "";
-		const history = Array.isArray(req.body?.history) ? req.body.history : [];
+  try {
+    const prompt = typeof req.body?.prompt === "string" ? req.body.prompt.trim() : "";
+    const history = Array.isArray(req.body?.history) ? req.body.history : [];
 
-		if (!prompt) {
-			return res.status(400).json({ message: "prompt is required" });
-		}
+    if (!prompt) {
+      return res.status(400).json({ message: "prompt is required" });
+    }
 
-		const content = await agent.run(prompt, {
-			history,
-			auth: {
-				authId: req.user.id,
-				role: req.user.role,
-			},
-		});
+    const content = await agent.run(prompt, {
+      history,
+      auth: {
+        // 🛡️ Nếu là Guest, hãy để authId là undefined hoặc null 
+        // để các Tool (như getCoupon) kiểm tra if (!authId) và trả về thông báo "Vui lòng đăng nhập"
+        authId: req.user?.id || undefined, 
+        
+        // 🛡️ Ép về CUSTOMER_ROLE (thường là số 3 hoặc tùy .env của bạn)
+        // Dùng Number() để đảm bảo khớp với logic loadSystemMessageByRole
+        role: req.user?.role ? Number(req.user.role) : Number(process.env.CUSTOMER_ROLE), 
+      },
+    });
 
-		return res.status(200).json({ content });
-	} catch (error) {
-		console.error("[CHATBOT CONTROLLER ERROR]", error);
-		return res.status(500).json({ message: "Failed to process chatbot request" });
-	}
+    return res.status(200).json({ content });
+  } catch (error) {
+    console.error("[CHATBOT CONTROLLER ERROR]", error);
+    return res.status(500).json({ message: "Failed to process chatbot request" });
+  }
 }
 
 export default askHandler;

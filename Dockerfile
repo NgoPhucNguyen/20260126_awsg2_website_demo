@@ -1,5 +1,5 @@
-# 1. Base image Node 18 Slim
-FROM node:18-slim
+# 1. BẮT BUỘC: Nâng lên Node 20 Slim để fix cảnh báo AWS SDK deprecation năm 2026
+FROM node:20-slim
 
 # 2. Cài OpenSSL, Python3, Pip, thư viện OpenCV VÀ tạo bí danh python -> python3
 RUN apt-get update -y && apt-get install -y \
@@ -14,7 +14,7 @@ RUN apt-get update -y && apt-get install -y \
 # 3. Chuyển thư mục làm việc
 WORKDIR /app
 
-# 4. Dùng pip3 cài thư viện AI (Chốt cứng phiên bản)
+# 4. Dùng pip3 cài thư viện AI (Layer này nặng, để đây để tận dụng Cache)
 RUN pip3 install --no-cache-dir \
   tensorflow==2.15.0 \
   mediapipe==0.10.14 \
@@ -33,7 +33,7 @@ RUN npm install
 COPY prisma ./prisma/
 RUN npx prisma generate
 
-# 7. Copy toàn bộ source code
+# 7. Copy toàn bộ source code (Chỉ copy sau khi đã cài xong các dependencies)
 COPY . .
 
 # 8. Mở cổng và chạy server

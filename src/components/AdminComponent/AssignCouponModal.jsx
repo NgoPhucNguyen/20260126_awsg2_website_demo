@@ -1,13 +1,18 @@
+// src/components/AdminComponent/AssignCouponModal.jsx
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import axios from '@/api/axios';
+import { useAxiosPrivate } from '@/hooks/useAxiosPrivate';
+import { useToast } from '@/context/ToastProvider';
 import './AssignCouponModal.css'; 
 
-const API_COUPONS = '/api/coupons';
-const API_CUSTOMERS = '/api/customers'; 
+const API_ADMIN_COUPONS = '/api/admin/coupons';
+const API_ADMIN_CUSTOMERS = '/api/admin/customers';
 
 const AssignCouponModal = ({ coupon, onClose, onAssigned }) => {
+    const axiosPrivate = useAxiosPrivate();
+    const { showToast } = useToast();
+
     const [assignEmail, setAssignEmail] = useState('');
     const [assignError, setAssignError] = useState('');
     const [assignSuccess, setAssignSuccess] = useState('');
@@ -21,14 +26,14 @@ const AssignCouponModal = ({ coupon, onClose, onAssigned }) => {
     useEffect(() => {
         const fetchCustomers = async () => {
             try {
-                const response = await axios.get(API_CUSTOMERS);
+                const response = await axiosPrivate.get(API_ADMIN_CUSTOMERS);
                 setCustomers(response.data);
             } catch (err) {
                 console.error("Không thể tải danh sách khách hàng:", err);
             }
         };
         fetchCustomers();
-    }, []);
+    }, [axiosPrivate]);
 
     const handleSearchChange = (e) => {
         const value = e.target.value;
@@ -62,25 +67,26 @@ const AssignCouponModal = ({ coupon, onClose, onAssigned }) => {
         setAssignSuccess('');
         
         if (!assignEmail.trim()) {
-            setAssignError('Vui lòng chọn hoặc nhập Email khách hàng.');
+            showToast("Vui lòng chọn khách hàng", "error");
             return;
         }
 
         try {
             setSubmitting(true);
-            const response = await axios.post(`${API_COUPONS}/assign`, {
+            const response = await axiosPrivate.post(`${API_ADMIN_COUPONS}/assign`, {
                 couponId: coupon.id,
                 email: assignEmail.trim()
             });
             
-            setAssignSuccess(response.data.message);
-            setAssignEmail(''); 
-            setSearchTerm('');
-            
+            showToast(response.data.message || "Tặng mã thành công!");
             if (onAssigned) onAssigned(); 
-            
+            onClose();
+            setAssignEmail('');
+            setSearchTerm('');
+
         } catch (error) {
-            setAssignError(error.response?.data?.message || 'Lỗi hệ thống khi tặng mã');
+            const msg = error.response?.data?.message || 'Lỗi khi tặng mã';
+            showToast(msg, "error");
         } finally {
             setSubmitting(false);
         }

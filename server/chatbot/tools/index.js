@@ -1,7 +1,7 @@
+// chatbot/tools/index.js
 import { allToolsMap } from "./catalog.js";
 import { adminTools, adminToolsMap } from "./adminTools.js";
 import { customerTools, customerToolsMap } from "./customerTools.js";
-// import { employeeTools, employeeToolsMap } from "./employeeTools.js";
 
 const allTools = Object.values(allToolsMap);
 
@@ -17,7 +17,6 @@ const getToolsForRole = (role) => {
 
 const getToolsMapForRole = (role) => {
     if (Number(role) === Number(process.env.ADMIN_ROLE)) {
-        // console.log("[TOOLS] Returning admin tools", adminToolsMap);
         return adminToolsMap;
     } if (Number(role) === Number(process.env.CUSTOMER_ROLE)) {
         return customerToolsMap;
@@ -27,12 +26,6 @@ const getToolsMapForRole = (role) => {
 };
 
 export {
-    // allTools,
-    // allToolsMap,
-    // customerTools,
-    // customerToolsMap,
-    // adminTools,
-    // adminToolsMap,
     getToolsForRole,
     getToolsMapForRole,
 };

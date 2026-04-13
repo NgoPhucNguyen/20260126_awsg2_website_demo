@@ -81,9 +81,6 @@ export const getCouponInfoTool = tool(
         description: "Lấy thông tin mã giảm giá của khách hàng (chỉ coupon họ sở hữu)",
         schema: z.object({
             couponCode: z.string().describe("Mã giảm giá"),
-            // customerId: z.string().optional().describe("Admin only: customer ID cần xem coupon"),
-            // authId: z.string().optional().describe("Injected by backend auth context"),
-            // authRole: z.number().optional().describe("Injected by backend auth context"),
         }).passthrough(),
     }
 );
@@ -92,20 +89,30 @@ export const getCouponInfoTool = tool(
 export const getAvailableCouponsTool = tool(
     async ({ authId, authRole, limit = 20 }) => {
         try {
-            if ((isAdmin(authRole) || isEmployee(authRole))) {
+            // 🚀 TRƯỜNG HỢP 1: ADMIN HOẶC NHÂN VIÊN (Xem toàn bộ kho coupon)
+            if (authRole && (isAdmin(authRole) || isEmployee(authRole))) {
                 const coupons = await prisma.coupon.findMany({
                     where: {
                         expireAt: { gt: new Date() },
                     },
                     take: limit,
                 });
-                return JSON.stringify(coupons);
+
+                if (coupons.length === 0) return "Hiện hệ thống không có mã giảm giá nào đang khả dụng.";
+
+                const adminList = coupons.map(c => 
+                    `- Mã: ${c.code} | Loại: ${c.category} | Giảm: ${c.type === 'PERCENTAGE' ? c.value + '%' : c.value.toLocaleString() + 'đ'} | Hạn: ${c.expireAt.toLocaleDateString('vi-VN')}`
+                ).join('\n');
+
+                return `BÁO CÁO MÃ GIẢM GIÁ TOÀN HỆ THỐNG (ADMIN):\n${adminList}`;
             }
 
+            // 🚀 TRƯỜNG HỢP 2: GUEST (Khách chưa đăng nhập)
             if (!authId) {
-                return JSON.stringify({ error: "Unauthorized: thiếu thông tin auth" });
+                return "ERROR_UNAUTHORIZED: Khách hàng chưa đăng nhập nên không thể kiểm tra ví voucher cá nhân.";
             }
 
+            // 🚀 TRƯỜNG HỢP 3: CUSTOMER (Khách đã đăng nhập - Xem ví cá nhân)
             const couponUsages = await prisma.couponUsage.findMany({
                 where: {
                     customerId: authId,
@@ -115,33 +122,34 @@ export const getAvailableCouponsTool = tool(
                         expireAt: { gt: new Date() },
                     },
                 },
-                include: {
-                    coupon: true,
-                },
+                include: { coupon: true },
                 take: limit,
             });
 
-            // Extract coupon data
-            const coupons = couponUsages.map((usage) => ({
-                ...usage.coupon,
-                status: usage.status,
-                remaining: usage.remaining,
-            }));
+            if (couponUsages.length === 0) {
+                return "Bạn hiện chưa có mã giảm giá nào trong ví. Hãy tham gia các chương trình của Aphrodite để nhận ưu đãi nhé!";
+            }
 
-            return JSON.stringify(coupons);
+            const customerList = couponUsages.map(usage => {
+                const c = usage.coupon;
+                const valueTxt = c.type === 'PERCENTAGE' ? `${c.value}%` : `${c.value.toLocaleString()}đ`;
+                return `- Mã: ${c.code} (Giảm ${valueTxt}) - Hạn dùng: ${c.expireAt.toLocaleDateString('vi-VN')} - Còn lại: ${usage.remaining} lần sử dụng.`;
+            }).join('\n');
+
+            return `DANH SÁCH MÃ GIẢM GIÁ TRONG VÍ CỦA BẠN:\n${customerList}\n\nLưu ý: Bạn có thể nhập các mã này ở bước thanh toán để được áp dụng ưu đãi.`;
+
         } catch (error) {
-            return JSON.stringify({ error: error.message });
+            return `Lỗi hệ thống khi kiểm tra mã giảm giá: ${error.message}`;
         }
     },
     {
         name: "getAvailableCoupons",
-        description: "Lấy danh sách mã giảm giá còn hiệu lực của khách hàng (SHIPPING hoặc ORDER)",
+        description: "Lấy danh sách mã giảm giá còn hiệu lực của khách hàng (SHIPPING hoặc ORDER). Trả về lỗi nếu khách chưa đăng nhập.",
         schema: z.object({
             limit: z.number().int().positive().default(20).describe("Số lượng mã"),
         }).passthrough(),
     }
 );
-
 // Validate coupon
 export const validateCouponTool = tool(
     async ({ couponCode, customerId, authId, authRole, orderAmount = null }) => {
@@ -233,9 +241,48 @@ export const getPromotionsTool = tool(
                 },
                 take: limit,
             });
-            return JSON.stringify(promotions);
+
+            if (!promotions || promotions.length === 0) {
+                return "Hiện tại cửa hàng không có chương trình khuyến mãi nào.";
+            }
+
+            const formattedPromos = promotions.map(promo => {
+                const promoDesc = promo.description || "Chương trình khuyến mãi đặc biệt";
+                const promoValue = promo.type === "PERCENTAGE" 
+                    ? `${promo.value}%` 
+                    : `${promo.value.toLocaleString('vi-VN')} VND`;
+                
+                let productListText = "";
+
+                // Kiểm tra xem khuyến mãi có link trực tiếp tới sản phẩm không
+                if (promo.products && promo.products.length > 0) {
+                    const sampleProducts = promo.products.slice(0, 3).map(pp => {
+                        const prod = pp.variant?.product;
+                        return prod ? `- ${prod.nameVn} [ID: ${prod.id}]` : null;
+                    }).filter(Boolean);
+
+                    if (sampleProducts.length > 0) {
+                        productListText = `\n  * Sản phẩm tiêu biểu:\n  ${sampleProducts.join('\n  ')}`;
+                        if (promo.products.length > 3) {
+                            productListText += `\n  ...và nhiều sản phẩm khác.`;
+                        }
+                    }
+                } else {
+                    // 🚀 NẾU ÁP DỤNG THEO CATEGORY MÀ RỖNG, GIẢI VÂY CHO AI BẰNG CÂU NÀY
+                    productListText = `\n  * (Áp dụng cho toàn bộ danh mục/thương hiệu liên quan. Khách hàng vui lòng hỏi tên sản phẩm cụ thể để kiểm tra giá ưu đãi).`;
+                }
+
+                return `🎁 ${promoDesc} (GIẢM ${promoValue})${productListText}`;
+            });
+
+            // 🚀 BƠM CAMERA VÀO ĐÂY ĐỂ DEBUG
+            console.log("=== GET PROMOTIONS TOOL OUTPUT ===");
+            console.log(formattedPromos.join('\n\n'));
+
+            return `DANH SÁCH KHUYẾN MÃI ĐANG DIỄN RA:\n\n${formattedPromos.join('\n\n')}\n\nLƯU Ý ĐẶC BIỆT CHO AI: TUYỆT ĐỐI KHÔNG SỬ DỤNG mã ID dài (như 524cd0e9...) trong câu trả lời. Nếu chương trình không liệt kê sẵn [ID: X], CHỈ CẦN thông báo tên chương trình và không cần chèn thẻ [ID].`;
+
         } catch (error) {
-            return JSON.stringify({ error: error.message });
+            return `Lỗi hệ thống khi lấy khuyến mãi: ${error.message}`;
         }
     },
     {
