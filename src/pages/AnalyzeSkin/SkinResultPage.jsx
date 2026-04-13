@@ -129,7 +129,7 @@ const SkinResultPage = () => {
 
         <div className="skinresultpage-score-item">
           <div className="score-header">
-            <span className="score-label">Độ căng da vùng mắt</span>
+            <span className="score-label">Độ nhăn rãnh mắt</span>
             <strong className={`score-value ${getScoreStatusClass(wEye)}`}>{wEye}/5</strong>
           </div>
           <div className="score-bar-bg">
@@ -139,7 +139,7 @@ const SkinResultPage = () => {
 
         <div className="skinresultpage-score-item">
           <div className="score-header">
-            <span className="score-label">Độ căng da vùng trán</span>
+            <span className="score-label">Độ nhăn vùng trán</span>
             <strong className={`score-value ${getScoreStatusClass(wForehead)}`}>{wForehead}/5</strong>
           </div>
           <div className="score-bar-bg">
@@ -149,7 +149,7 @@ const SkinResultPage = () => {
 
         <div className="skinresultpage-score-item">
           <div className="score-header">
-            <span className="score-label">Độ căng da vùng miệng</span>
+            <span className="score-label">Độ nhăn mếp miệng</span>
             <strong className={`score-value ${getScoreStatusClass(wMouth)}`}>{wMouth}/5</strong>
           </div>
           <div className="score-bar-bg">

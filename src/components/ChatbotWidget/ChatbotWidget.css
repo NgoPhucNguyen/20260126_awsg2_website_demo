@@ -403,3 +403,17 @@
     border-bottom-right-radius: 16px;
     line-height: 1.4;
 }
+
+/* 🤖 Xử lý Chatbot khi Modal Đăng nhập/Đăng ký mở */
+body.modal-open .chatbot-widget-root {
+    /* Cách 1: Cho nó mờ tịt đi (Vẫn thấy bóng dáng nhưng không tương tác được) */
+    opacity: 0.1 !important;
+    filter: blur(4px); /* Làm mờ thêm để hòa vào background */
+    pointer-events: none !important; /* Khóa click hoàn toàn */
+    
+    /* Cách 2: Nếu bạn muốn nó biến mất hẳn luôn */
+    /* display: none !important; */
+    
+    transition: all 0.3s ease;
+    z-index: 1; /* Hạ thấp z-index xuống mức tối thiểu */
+}

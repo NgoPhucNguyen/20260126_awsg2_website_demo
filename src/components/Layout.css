@@ -1,3 +1,4 @@
+/* src/components/layout.css */
 /* --- CẤU TRÚC TỔNG THỂ (SHELL) --- */
 .app-shell {
   display: flex;
@@ -30,17 +31,9 @@
   /* 🛡️ Clamp Max-Width: Đảm bảo hiển thị đẹp trên cả iPad Pro và Desktop */
   max-width: clamp(320px, 95vw, 1440px);
   margin: 0 auto;
-
-  /* 📏 Advanced Fluid Padding: 
-     - iPhone SE (320px): Padding sẽ là 1rem (16px)
-     - iPad (768px): Padding sẽ tự tính toán lên khoảng ~2rem (32px)
-     - Công thức: calc(giá trị gốc + tỉ lệ thay đổi theo màn hình)
-  */
   padding: clamp(1rem, calc(0.5rem + 2.5vw), 3rem);
-  
   /* Tạo khoảng trống phía dưới để nội dung không sát đáy màn hình */
   padding-bottom: clamp(2rem, 5vh, 5rem);
-
   /* Hiệu ứng chuyển cảnh mượt mà */
   animation: pageFadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }

@@ -24,9 +24,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 2000;
+    z-index: 30000;
     padding: clamp(1rem, 3vw, 2rem); 
     animation: loginModalFadeIn 0.3s ease-out;
+    overflow: hidden; /* Ngăn scroll khi modal mở */
 }
 
 @keyframes loginModalFadeIn {
