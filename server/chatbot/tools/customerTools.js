@@ -1,3 +1,4 @@
+// chatbot/tool/customerTools.js
 import { allToolsMap, pickToolsMap } from "./catalog.js";
 
 const customerToolNames = [

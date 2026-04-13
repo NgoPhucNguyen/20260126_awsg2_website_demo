@@ -1,44 +1,79 @@
-// server/chatbot/tools/inventoryTools.js
 import { tool } from "@langchain/core/tools";
 import { z } from "zod";
 import prisma from "../../prismaClient.js";
 
-// Check inventory for a product variant
+// Check inventory for a product or specific variant
 export const checkInventoryTool = tool(
-    async ({ productVariantId, warehouseId = null }) => {
+    async ({ productId, productVariantId, warehouseId = null }) => {
         try {
-            const where = { productVariantId: parseInt(productVariantId) };
-            if (warehouseId) {
-                where.warehouseId = warehouseId;
+            if (!productId && !productVariantId) {
+                return "Thiếu ID sản phẩm hoặc ID biến thể.";
             }
 
-            const inventory = await prisma.inventory.findMany({
-                where,
-                include: {
-                    variant: { include: { product: true } },
-                    warehouse: true,
-                },
-            });
+            let variants = [];
 
-            if (inventory.length === 0) {
-                return JSON.stringify({
-                    message: "Sản phẩm không có trong kho",
-                    totalQuantity: 0,
+            // 1. Lấy thông tin biến thể dựa theo schema
+            if (productVariantId) {
+                const v = await prisma.productVariant.findUnique({
+                    where: { id: parseInt(productVariantId) },
+                    include: { inventories: true, product: true }
+                });
+                if (v) variants = [v];
+            } else if (productId) {
+                variants = await prisma.productVariant.findMany({
+                    where: { productId: parseInt(productId) },
+                    include: { inventories: true, product: true }
                 });
             }
 
-            const totalQuantity = inventory.reduce((sum, inv) => sum + inv.quantity, 0);
-            return JSON.stringify({ inventory, totalQuantity });
+            // 2. Nếu không tìm thấy biến thể nào
+            if (!variants || variants.length === 0) {
+                return "Sản phẩm này hiện ĐÃ HẾT HÀNG. Vui lòng xin lỗi và gợi ý khách hàng sản phẩm khác tương tự.";
+            }
+
+            const resultLines = [];
+            let hasStock = false;
+
+            // 3. Xử lý tồn kho cho TỪNG BIẾN THỂ (Không cộng dồn lung tung)
+            for (const v of variants) {
+                // Lọc theo kho nếu có yêu cầu
+                const invs = warehouseId 
+                    ? v.inventories.filter(i => i.warehouseId === warehouseId) 
+                    : v.inventories;
+                
+                // Số lượng của riêng biến thể này
+                const qty = invs.reduce((sum, i) => sum + i.quantity, 0);
+                
+                // Lấy tên phân loại từ trường JSON specification hoặc mã sku
+                const specString = v.specification ? JSON.stringify(v.specification).replace(/["{}]/g, '') : v.sku;
+
+                if (qty > 0) {
+                    hasStock = true;
+                    resultLines.push(`- Phân loại [${specString}]: CÒN ${qty} sản phẩm`);
+                } else {
+                    resultLines.push(`- Phân loại [${specString}]: HẾT HÀNG`);
+                }
+            }
+
+            // 4. Nếu toàn bộ các phân loại đều hết hàng
+            if (!hasStock) {
+                return "Tất cả các phân loại của sản phẩm này ĐÃ HẾT HÀNG. Bạn CẦN PHẢI xin lỗi khách và gợi ý sản phẩm khác có công dụng tương tự.";
+            }
+
+            // 5. Trả về cho AI đọc
+            return `TÌNH TRẠNG TỒN KHO CHI TIẾT TỪNG PHÂN LOẠI:\n${resultLines.join('\n')}\n\nLƯU Ý CHO AI: Hãy báo cho khách biết chính xác phân loại nào đang còn hàng và còn số lượng bao nhiêu. Không cần nhắc đến các loại đã hết hàng trừ khi khách hỏi.`;
+
         } catch (error) {
-            return JSON.stringify({ error: error.message });
+            return `Lỗi kiểm tra tồn kho: ${error.message}`;
         }
     },
     {
         name: "checkInventory",
-        description: "Kiểm tra tồn kho của biến thể sản phẩm (toàn bộ hoặc ở kho cụ thể)",
+        description: "Kiểm tra tồn kho thực tế. Dùng productId để quét tất cả biến thể của sản phẩm, hoặc productVariantId để kiểm tra 1 loại. BẮT BUỘC gọi hàm này khi khách hỏi còn hàng không.",
         schema: z.object({
-            productVariantId: z.string().describe("ID biến thể sản phẩm"),
-            warehouseId: z.string().optional().describe("ID kho (nếu không, kiểm tra tất cả kho)"),
+            productId: z.string().optional().describe("ID của sản phẩm (nếu khách hỏi chung chung)"),
+            productVariantId: z.string().optional().describe("ID của biến thể cụ thể"),
+            warehouseId: z.string().optional().describe("ID kho cụ thể"),
         }),
     }
 );
@@ -54,9 +89,20 @@ export const getInventoryByWarehouseTool = tool(
                     warehouse: true,
                 },
             });
-            return JSON.stringify(inventory);
+
+            if (!inventory || inventory.length === 0) {
+                return "Kho này hiện không có sản phẩm nào hoặc không tồn tại.";
+            }
+
+            const wName = inventory[0].warehouse.name;
+            const formatted = inventory.map(inv => {
+                const prodName = inv.variant?.product?.nameVn || "Sản phẩm ẩn";
+                return `- ${prodName} [ID: ${inv.productVariantId}] - Số lượng: ${inv.quantity}`;
+            });
+
+            return `BÁO CÁO TỒN KHO TẠI [${wName}]:\n${formatted.join('\n')}`;
         } catch (error) {
-            return JSON.stringify({ error: error.message });
+            return `Lỗi lấy tồn kho theo kho: ${error.message}`;
         }
     },
     {
@@ -83,9 +129,20 @@ export const getLowStockItemsTool = tool(
                 take: limit,
                 orderBy: { quantity: "asc" },
             });
-            return JSON.stringify(lowStock);
+
+            if (!lowStock || lowStock.length === 0) {
+                return `Tuyệt vời! Hiện không có sản phẩm nào có tồn kho dưới ${threshold}.`;
+            }
+
+            const formatted = lowStock.map(item => {
+                const prodName = item.variant?.product?.nameVn || "Sản phẩm ẩn";
+                const wName = item.warehouse?.name || "Kho không xác định";
+                return `- ${prodName} [ID Biến thể: ${item.productVariantId}] - CÒN LẠI: ${item.quantity} (Tại: ${wName})`;
+            });
+
+            return `🚨 CẢNH BÁO SẮP HẾT HÀNG (Dưới ${threshold} sản phẩm):\n\n${formatted.join('\n')}\n\nLƯU Ý DÀNH CHO ADMIN: Báo cáo rõ tên sản phẩm, số lượng còn và tên kho tương ứng.`;
         } catch (error) {
-            return JSON.stringify({ error: error.message });
+            return `Lỗi lấy danh sách sắp hết hàng: ${error.message}`;
         }
     },
     {

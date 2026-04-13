@@ -1,21 +1,20 @@
 // src/components/ChatbotWidget/ChatbotProductCard.jsx
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useAxiosPrivate } from "@/hooks/useAxiosPrivate";
-import { getImageUrl } from "@/utils/getImageUrl"; // 🆕 Import helper function
+import { getImageUrl } from "@/utils/getImageUrl"; // 🆕 Import helper functiom
+import axios from "@/api/axios";
 import "./ChatbotProductCard.css";
 
 const ChatbotProductCard = ({ productId }) => {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
-    const axiosPrivate = useAxiosPrivate();
 
     useEffect(() => {
         const fetchProduct = async () => {
             try {
                 // ✅ Gọi trực tiếp endpoint lấy sản phẩm theo ID
                 // Đường dẫn này khớp với router.use('/products', productRoutes) của bạn
-                const response = await axiosPrivate.get(`/api/products/${productId}`);
+                const response = await axios.get(`/api/products/${productId}`);
                 
                 // Dữ liệu từ getProductById trả về object { ...product, variants: [...] }
                 setProduct(response.data); 
@@ -27,10 +26,19 @@ const ChatbotProductCard = ({ productId }) => {
         };
 
         if (productId) fetchProduct();
-    }, [productId, axiosPrivate]);
+    }, [productId]);
 
     if (loading) return <div className="ChatbotProductCard-loading">Đang tải...</div>;
     if (!product) return null;
+    // 🚀 LỚP PHÒNG THỦ CUỐI CÙNG: Kiểm tra tổng tồn kho
+    const totalStock = product.variants?.reduce((sum, v) => {
+        const variantStock = v.inventories?.reduce((s, i) => s + i.quantity, 0) || 0;
+        return sum + variantStock;
+    }, 0);
+
+
+    // Nếu tổng kho bằng 0, biến mất luôn không để lại dấu vết
+    if (totalStock === 0) return null;
 
     const variant = product.variants?.[0];
 

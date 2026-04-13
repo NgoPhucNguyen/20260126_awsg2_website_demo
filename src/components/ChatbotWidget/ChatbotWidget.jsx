@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FiMessageCircle, FiSend, FiX, FiMaximize2, FiMinimize2 } from "react-icons/fi";
 import ReactMarkdown from "react-markdown"; // 🆕 Import Markdown
-import { useAxiosPrivate } from "@/hooks/useAxiosPrivate";
+import axios from "@/api/axios";
 import { useAuth } from "@/features/auth/AuthProvider";
 import ChatbotProductCard from "./ChatbotProductCard";
 import "./ChatbotWidget.css";
@@ -50,7 +50,6 @@ const renderBotMessage = (text) => {
 
 const ChatbotWidget = () => {
     const { auth } = useAuth();
-    const axiosPrivate = useAxiosPrivate();
     const [isOpen, setIsOpen] = useState(false);
     const [isMaximized, setIsMaximized] = useState(false); // 🆕 Maximize state
     const [isTyping, setIsTyping] = useState(false);
@@ -87,11 +86,6 @@ const ChatbotWidget = () => {
     };
 
     const sendMessageToBot = async (promptText) => {
-        if (!auth?.accessToken) {
-            pushMessage("bot", "Xin lỗi, bạn cần đăng nhập để sử dụng tính năng này.");
-            return;
-        }
-
         setIsTyping(true);
         try {
             // 🧠 CHIẾN THUẬT SLIDING WINDOW:
@@ -106,10 +100,21 @@ const ChatbotWidget = () => {
                 chatHistory.shift();
             }
 
-            const response = await axiosPrivate.post("/api/chatbot/ask", { 
-                prompt: promptText,
-                history: chatHistory // 👈 Gửi lịch sử chat kèm theo request
-            });
+            // 🚀 2. Dùng axios thường để tránh bị kẹt vào vòng lặp 403 của axiosPrivate
+            const response = await axios.post("/api/chatbot/ask", 
+                { 
+                    prompt: promptText,
+                    history: chatHistory 
+                }, 
+                {
+                    // 🚀 3. CỰC KỲ QUAN TRỌNG: 
+                    // Tự tay gắn Token nếu user đã login, nếu không có thì gửi null (Guest)
+                    headers: {
+                        Authorization: auth?.accessToken ? `Bearer ${auth.accessToken}` : ""
+                    },
+                    withCredentials: true // Để gửi kèm cookie nếu có
+                }
+            );
 
             const botContent = response?.data?.content;
             if (typeof botContent === "string" && botContent.trim()) {
@@ -119,7 +124,7 @@ const ChatbotWidget = () => {
             }
         } catch (error) {
             console.error("[CHATBOT UI] Ask failed", error);
-            pushMessage("bot", "Xin lỗi, mình không thể trả lời câu hỏi của bạn vào lúc này.");
+            pushMessage("bot", "Xin lỗi, hệ thống đang bận. Bạn chờ xíu nhé.");
         } finally {
             setIsTyping(false);
         }

@@ -10,12 +10,26 @@ export const getCategoriesTool = tool(
                 where: parentId ? { parentId: parseInt(parentId) } : { parentId: null },
                 include: {
                     children: true,
-                    products: { select: { id: true, name: true } },
+                    // 🚀 TỐI ƯU: Chỉ lấy số lượng đếm, không kéo nguyên mảng data sản phẩm
+                    _count: { select: { products: true } }
                 },
             });
-            return JSON.stringify(categories);
+
+            if (!categories || categories.length === 0) {
+                return "Không tìm thấy danh mục nào.";
+            }
+
+            // 🚀 ÉP TEXT ĐỂ TRÁNH ẢO GIÁC JSON
+            const formattedCats = categories.map(c => {
+                const childNames = c.children.length > 0 
+                    ? ` (Gồm các danh mục con: ${c.children.map(child => child.nameVn).join(', ')})` 
+                    : "";
+                return `- Danh mục: ${c.nameVn} [Mã: ${c.id}] - Có ${c._count.products} sản phẩm${childNames}`;
+            });
+
+            return `DANH SÁCH DANH MỤC:\n${formattedCats.join('\n')}\n\nLƯU Ý CHO AI: Nếu khách muốn xem sản phẩm, hãy dùng công cụ searchProducts.`;
         } catch (error) {
-            return JSON.stringify({ error: error.message });
+            return `Lỗi hệ thống: ${error.message}`;
         }
     },
     {
@@ -36,39 +50,62 @@ export const getCategoryDetailsTool = tool(
                 include: {
                     parent: true,
                     children: true,
-                    products: true,
+                    _count: { select: { products: true } }
                 },
             });
             if (!category) {
-                return JSON.stringify({ error: "Danh mục không tìm thấy" });
+                return "Danh mục không tìm thấy.";
             }
-            return JSON.stringify(category);
+
+            const parentTxt = category.parent ? `Nằm trong danh mục cha: ${category.parent.nameVn}` : "Là danh mục gốc";
+            const childrenTxt = category.children.length > 0 ? `Danh mục con: ${category.children.map(c => c.nameVn).join(', ')}` : "Không có danh mục con";
+
+            return `THÔNG TIN DANH MỤC:\n- Tên: ${category.nameVn} [Mã: ${category.id}]\n- Vị trí: ${parentTxt}\n- ${childrenTxt}\n- Tổng số sản phẩm đang có: ${category._count.products}`;
         } catch (error) {
-            return JSON.stringify({ error: error.message });
+            return `Lỗi hệ thống: ${error.message}`;
         }
     },
     {
         name: "getCategoryDetails",
-        description: "Lấy thông tin chi tiết danh mục kèm danh mục con và sản phẩm",
+        description: "Lấy thông tin chi tiết danh mục kèm danh mục con và số lượng sản phẩm",
         schema: z.object({
             categoryId: z.string().describe("ID danh mục"),
         }),
     }
 );
 
+//Customer or Admin?
 // Get brands
 export const getBrandsTool = tool(
     async ({ limit = 50 }) => {
         try {
             const brands = await prisma.brand.findMany({
                 include: {
-                    products: { select: { id: true, name: true } },
+                    // 🚀 TỐI ƯU: Đếm số lượng, không lấy danh sách sản phẩm dài dằng dặc
+                    _count: { select: { products: true } }
                 },
                 take: limit,
             });
-            return JSON.stringify(brands);
+
+            if (!brands || brands.length === 0) {
+                return "Không tìm thấy thương hiệu nào.";
+            }
+
+            const formattedBrands = brands.map(b => 
+                `- ${b.name} (Có ${b._count.products} sản phẩm)`
+            );
+
+            // 🚀 ÉP AI VÀO THẾ BÍ: Không cho nó đường thoát để bịa đặt
+            const resultText = `
+                [BÁO CÁO NỘI BỘ - TUYỆT MẬT]
+                - Tổng số hãng: ${brands.length} (CẤM NÓI SỐ KHÁC)
+                - Danh sách hãng đang có: ${brands.map(b => b.name).join(", ")}
+                - CẢNH BÁO: Cửa hàng KHÔNG CÓ Dior, Chanel, Sulwhasoo, Estee Lauder. 
+                - YÊU CẦU: Trả lời khách đúng số ${brands.length} và liệt kê 3-5 hãng từ danh sách trên.
+            `;
+            return resultText;
         } catch (error) {
-            return JSON.stringify({ error: error.message });
+            return `Lỗi hệ thống: ${error.message}`;
         }
     },
     {

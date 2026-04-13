@@ -9,7 +9,10 @@ import apiRoutes from './routes/api.js';
 
 const app = express();
 const PORT = process.env.PORT || 3500;
-
+// 🚀 QUAN TRỌNG CHO AWS/PRODUCTION:
+// Khi chạy sau Load Balancer hoặc CloudFront, IP thật của khách nằm trong header 'X-Forwarded-For'.
+// Dòng này cho phép express-rate-limit đọc đúng IP đó để chặn đúng người, tránh chặn nhầm Load Balancer.
+app.set('trust proxy', 1);
 // 1. CONFIGURATION
 const allowedOrigins = [
     'http://localhost:5173',
@@ -35,9 +38,6 @@ app.use(express.json());
 app.use(cookieParser());
 
 // 3. ROUTES
-// All routes will now start with /api
-// e.g., localhost:3500/api/auth/login
-// e.g., localhost:3500/api/products
 app.use('/api', apiRoutes); 
 
 // 4. GLOBAL ERROR HANDLER (Safety Net)
@@ -47,4 +47,5 @@ app.use((err, req, res, next) => {
 
 // 5. START
 app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Server is running on port ${PORT}`);
 });

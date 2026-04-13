@@ -132,31 +132,28 @@ class AgentClient {
 		return `[${sanitized.join(",")}]`;
 	}
 
+	//Quan trọng: Hàm này ép định dạng text thuần túy, không RAG, không Score để AI không bị ảo giác và bắt chước format trả về
 	async buildRagSystemMessage(items) {
     if (!Array.isArray(items) || items.length === 0) {
-      return "";
+      // 🚀 NẾU KHÔNG CÓ HÀNG TRONG KHO (RAG rỗng)
+      return "THÔNG BÁO: Hiện tại không có sản phẩm nào khớp với yêu cầu của khách còn hàng trong kho. Hãy xin lỗi và chủ động dùng tool searchProducts hoặc gợi ý khách các dòng sản phẩm tương tự.";
     }
 
     const ragInstruction = await this.loadRagMessage();
 
     const lines = items.map((item, index) => {
-      const score = Number(item?.score ?? 0).toFixed(3);
+      // 🚀 GIỮ NGUYÊN format sạch: Không RAG, không Score để AI không bắt chước
       let content = typeof item?.content === "string" ? item.content.trim() : "";
-      
-      // 🚀 SỬA LỖI 1: XÓA BỎ DÒNG REPLACE ID. CHÚNG TA CẦN GIỮ LẠI ID ĐỂ GỌI CARD!
-      // (Xóa hoặc comment lại dòng: content = content.replace(...))
-
-      return `[RAG-${index + 1}] (score=${score})\n${content}`;
+      return `### Sản phẩm ${index + 1}:\n${content}`;
     });
 
-    // 🚀 SỬA LỖI 2: THÊM LỆNH "THIẾT QUÂN LUẬT" VÀO CUỐI RAG (Nơi AI chú ý nhất)
     return [
       ragInstruction,
-      "CẢNH BÁO TỐI CAO TỪ HỆ THỐNG:",
-      "1. HÃY BỎ QUA các sản phẩm đã nhắc đến trong Lịch sử Chat nếu chúng KHÔNG XUẤT HIỆN trong danh sách RAG dưới đây. Lịch sử có thể bị sai lệch.",
-      "2. BẠN CHỈ ĐƯỢC PHÉP tư vấn những sản phẩm có mặt trong danh sách RAG MỚI NHẤT này.",
-      "3. KHI GIỚI THIỆU SẢN PHẨM, BẮT BUỘC PHẢI THÊM CÚ PHÁP [ID: <mã_sản_phẩm>] VÀO SAU TÊN SẢN PHẨM để hệ thống hiển thị hình ảnh (Ví dụ: Nước tẩy trang Cocoon [ID: 12]). Nếu không có mã ID trong RAG, tuyệt đối không được tự bịa số.",
-      "--- DANH SÁCH SẢN PHẨM TRONG KHO (RAG) ---",
+      "⚠️ QUY TẮC SINH TỒN (PHẢI TUÂN THỦ):",
+      "1. CHỈ ĐƯỢC PHÉP xác nhận 'CÒN HÀNG' cho những sản phẩm có tên trong danh sách dưới đây.",
+      "2. NẾU khách hỏi một sản phẩm cụ thể (VD: Kem Vichy ban đêm) mà KHÔNG CÓ trong danh sách này, bạn BẮT BUỘC phải báo là 'Hiện tại sản phẩm này đang tạm hết hàng' và gợi ý sản phẩm khác có trong danh sách.",
+      "3. CÚ PHÁP HIỂN THỊ: Bắt buộc dùng [ID: X] ngay sau tên sản phẩm còn hàng. Tuyệt đối không nhắc đến từ 'RAG', 'hệ thống' hay 'công cụ'.",
+      "--- DANH SÁCH SẢN PHẨM CÒN HÀNG TRONG KHO ---",
       lines.join("\n\n"),
     ].join("\n\n");
   }
@@ -173,26 +170,31 @@ class AgentClient {
 			const embedding = await this.embeddingClient.createEmbedding(prompt);
 			const vectorLiteral = this.toVectorLiteral(embedding);
 
-			const rows = await prisma.$queryRawUnsafe(
-				`
-					SELECT
-						product_id,
-						content,
-						metadata,
-						(1 - (embedding <=> $1::vector)) AS score
-					FROM product_vectors
-					ORDER BY embedding <=> $1::vector
-					LIMIT $2;
-				`,
-				vectorLiteral,
-				ragTopK
-			);
+// 🚀 SQL FIX: Tính đúng tổng kho bằng cách cộng dồn các Variant thuộc Product đó
+      const rows = await prisma.$queryRawUnsafe(`
+          SELECT 
+            pv.product_id, 
+            pv.content, 
+            pv.metadata, 
+            (1 - (pv.embedding <=> $1::vector)) AS score,
+            (
+              SELECT COALESCE(SUM(inv.quantity), 0)
+              FROM product_variant var
+              LEFT JOIN inventory inv ON var.id = inv.product_variant_id
+              WHERE var.product_id = pv.product_id
+            ) as total_stock
+          FROM product_vectors pv
+          ORDER BY pv.embedding <=> $1::vector
+          LIMIT $2;
+      `, vectorLiteral, ragTopK);
 
 			if (!Array.isArray(rows) || rows.length === 0) {
 				return "";
 			}
 
-			const filtered = rows.filter((row) => Number(row?.score ?? 0) >= ragMinScore);
+			const filtered = rows.filter((row) => 
+					Number(row?.score ?? 0) >= ragMinScore && Number(row?.total_stock ?? 0) > 0
+			);
 			return this.buildRagSystemMessage(filtered);
 		} catch (error) {
 			console.warn("[CHATBOT] RAG retrieval failed. Continuing without RAG context.", error?.message ?? error);
@@ -200,6 +202,25 @@ class AgentClient {
 		}
 	}
 
+	cleanseResponse(text) {
+    if (!text) return "";
+    
+    // Danh sách các từ khóa "nhạy cảm" cần xóa sạch
+    const technicalTerms = [
+        /getAvailableCoupons/gi, /searchProducts/gi, /getBrands/gi, /getPromotions/gi,
+        /checkInventory/gi, /tool/gi, /công cụ/gi, /hệ thống/gi, /database/gi, /mã lỗi/gi,
+        /JSON/gi, /RAG/gi, /API/gi
+    ];
+
+    let cleansedText = text;
+    technicalTerms.forEach(regex => {
+        cleansedText = cleansedText.replace(regex, "");
+    });
+
+    // Xử lý các khoảng trắng thừa sau khi xóa
+    return cleansedText.replace(/\s+/g, ' ').trim();
+  }
+	
 	async run(prompt, options = {}) {
 		const {
 			maxToolCalls = 5,
@@ -226,9 +247,13 @@ class AgentClient {
 			messages.push(response);
 
 			const toolCalls = this.llmClient.getToolCalls(response);
+
 			if (toolCalls.length === 0) {
-				return this.llmClient.normalizeModelContent(response.content);
-			}
+        const rawContent = this.llmClient.normalizeModelContent(response.content);
+        
+        // 🚀 SỬA TẠI ĐÂY: Gọi bộ lọc trước khi trả về cho khách
+        return this.cleanseResponse(rawContent) || "Dạ, em có thể giúp gì thêm cho bạn không ạ?";
+      }
 
 			const toolMessages = await this.invokeToolCallsInParallel(toolCalls, toolsMap, auth);
 			messages.push(...toolMessages);

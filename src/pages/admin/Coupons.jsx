@@ -129,7 +129,7 @@ const Coupons = () => {
         <div className="admin-coupons-page-container fade-in">
             <header className="admin-coupons-page-header">
                 <div>
-                    <h2 className="admin-coupons-page-title">Khuyến Mãi & Mã Giảm Giá</h2>
+                    <h2 className="admin-coupons-page-title">Quản Lý Mã Giảm Giá</h2>
                     <p className="admin-coupons-page-subtitle">Quản lý chiến dịch và tặng mã cho khách hàng</p>
                 </div>
                 <button className="admin-coupons-page-btn-add" onClick={handleCreateNew}>

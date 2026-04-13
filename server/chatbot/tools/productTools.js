@@ -60,7 +60,16 @@ export const searchProductsTool = tool(
             const productIds = searchResults.map(r => r.id);
             const variants = await prisma.productVariant.findMany({
                 where: { productId: { in: productIds } },
-                select: { id: true, productId: true, unitPrice: true, thumbnailUrl: true }
+                select: {
+                    id: true, 
+                    productId: true, 
+                    unitPrice: true, 
+                    thumbnailUrl: true,
+                    promotions: { 
+                        include: { promotion: true } 
+                    },
+                    inventories: {select : { quantity: true}}            
+                }
             });
 
             // 6. Format dữ liệu trả về cho LLM đọc
@@ -69,21 +78,56 @@ export const searchProductsTool = tool(
                 const defaultVariant = pVariants.length > 0 ? pVariants[0] : null;
                 const minPrice = pVariants.length > 0 ? Math.min(...pVariants.map(v => v.unitPrice)) : null;
                 
-                if (!defaultVariant) return null; // Bỏ qua sản phẩm nếu không có biến thể nào
+                if (!defaultVariant || minPrice === null) return null; 
+                
+                // 🚀 TÍNH TỔNG TỒN KHO CỦA SẢN PHẨM NÀY
+                const totalStock = pVariants.reduce((sum, v) => {
+                    const variantStock = v.inventories?.reduce((s, i) => s + i.quantity, 0) || 0;
+                    return sum + variantStock;
+                }, 0);
 
-                // 🚀 ĐÚC SẴN ĐỊNH DẠNG TEXT CHO AI LUÔN, KHÔNG DÙNG OBJECT NỮA
-                const priceText = minPrice ? `${minPrice.toLocaleString('vi-VN')} VND` : "Liên hệ";
+                // 🚀 THAY ĐỔI CÁCH HIỂN THỊ ID ĐỂ ĐÁNH LỪA AI
+                const idTag = totalStock > 0 ? `[ID: ${p.id}]` : `(Mã: ${p.id} - ĐÃ HẾT HÀNG)`;
+                const stockStatus = totalStock > 0 ? "CÒN HÀNG" : "ĐÃ HẾT HÀNG";
+
+                // 🚀 BƯỚC TÍNH TOÁN GIÁ NGAY TRONG BACKEND (KHÔNG GIAO CHO AI)
+                let priceInfo = "";
+                const now = new Date();
+                
+                const activePromos = defaultVariant.promotions?.filter(prm => {
+                    const promo = prm.promotion;
+                    return promo.startTime <= now && promo.endTime >= now;
+                });
+
+                if (activePromos && activePromos.length > 0) {
+                    const currentPromo = activePromos[0].promotion;
+                    let finalPrice = minPrice;
+
+                    if (currentPromo.type === "PERCENTAGE") {
+                        // Tính giá sau khi giảm %
+                        finalPrice = minPrice - (minPrice * currentPromo.value / 100);
+                        priceInfo = `Giá gốc ${minPrice.toLocaleString('vi-VN')} VND, ĐANG GIẢM ${currentPromo.value}%, CHỈ CÒN ${finalPrice.toLocaleString('vi-VN')} VND`;
+                    } else if (currentPromo.type === "FIXED") {
+                        // Tính giá sau khi trừ tiền mặt
+                        finalPrice = minPrice - currentPromo.value;
+                        priceInfo = `Giá gốc ${minPrice.toLocaleString('vi-VN')} VND, ĐANG GIẢM ${currentPromo.value.toLocaleString('vi-VN')} VND, CHỈ CÒN ${finalPrice.toLocaleString('vi-VN')} VND`;
+                    }
+                } else {
+                    priceInfo = `Giá: ${minPrice.toLocaleString('vi-VN')} VND (Không có khuyến mãi)`;
+                }
+
                 const skin = p.skinType || "Mọi loại da";
                 const desc = p.description?.substring(0, 100) || "Không có mô tả";
 
-                // ÉP CÚ PHÁP: Tên Sản Phẩm [ID: X] - Thông tin...
-                return `- ${p.nameVn} [ID: ${p.id}] - Giá: ${priceText}. (Phù hợp: ${skin}. Công dụng: ${desc}...)`;
+                // 🚀 DÙNG idTag mới ở đây
+                return `- ${p.nameVn} ${idTag} - ${priceInfo}. (Tình trạng: ${stockStatus}). (Phù hợp: ${skin}...)`;
             }).filter(Boolean);
 
             // Ghép danh sách thành một đoạn văn bản duy nhất
             const resultText = formattedProducts.join("\n\n");
-            // 🚀 BƯỚC NGOẶT: Trả về một chuỗi Text mệnh lệnh thép thay vì JSON
-            return `ĐÂY LÀ KẾT QUẢ TỪ DATABASE CỦA CỬA HÀNG. BẠN BẮT BUỘC PHẢI DÙNG DANH SÁCH NÀY ĐỂ TRẢ LỜI. GIỮ NGUYÊN ĐỊNH DẠNG [ID: x] BÊN CẠNH TÊN SẢN PHẨM. TUYỆT ĐỐI KHÔNG ĐƯỢC TỰ BỊA RA SẢN PHẨM HAY SỐ ID KHÁC:\n\n${resultText}`;
+            
+            // CẬP NHẬT LỆNH: Cấm dùng thẻ ID cho hàng hết
+            return `ĐÂY LÀ KẾT QUẢ TỪ DATABASE:\n\n${resultText}\n\nLƯU Ý DÀNH CHO AI:\n- Nếu sản phẩm ghi "ĐÃ HẾT HÀNG", bạn TUYỆT ĐỐI KHÔNG ĐƯỢC gắn thẻ [ID: X] vào câu trả lời, chỉ cần nêu tên và xin lỗi khách.\n- CHỈ dùng thẻ [ID: X] cho các sản phẩm "CÒN HÀNG" mà bạn muốn gợi ý thay thế.`;
 
         } catch (error) {
             console.error("Hybrid Search Error:", error);
