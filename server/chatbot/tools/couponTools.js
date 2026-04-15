@@ -96,6 +96,7 @@ export const getAvailableCouponsTool = tool(
                         expireAt: { gt: new Date() },
                     },
                     take: limit,
+                    orderBy: { createdAt: "desc" }, // Lấy mã mới nhất trước
                 });
 
                 if (coupons.length === 0) return "Hiện hệ thống không có mã giảm giá nào đang khả dụng.";
@@ -104,7 +105,8 @@ export const getAvailableCouponsTool = tool(
                     `- Mã: ${c.code} | Loại: ${c.category} | Giảm: ${c.type === 'PERCENTAGE' ? c.value + '%' : c.value.toLocaleString() + 'đ'} | Hạn: ${c.expireAt.toLocaleDateString('vi-VN')}`
                 ).join('\n');
 
-                return `BÁO CÁO MÃ GIẢM GIÁ TOÀN HỆ THỐNG (ADMIN):\n${adminList}`;
+                // 🚀 BƠM THẲNG SỐ LƯỢNG THỰC TẾ VÀO ĐÂY ĐỂ AI KHÔNG BỊA RA SỐ 10 HAY 20 NỮA
+                return `BÁO CÁO: TÌM THẤY TỔNG CỘNG ${coupons.length} MÃ GIẢM GIÁ ĐANG CHẠY TRÊN HỆ THỐNG:\n${adminList}\n\nLệnh cho AI: Hãy in chính xác danh sách ${coupons.length} mã này ra màn hình, không được tóm tắt.`;
             }
 
             // 🚀 TRƯỜNG HỢP 2: GUEST (Khách chưa đăng nhập)
@@ -121,9 +123,11 @@ export const getAvailableCouponsTool = tool(
                     coupon: {
                         expireAt: { gt: new Date() },
                     },
+                    // 🚀 Lấy những mã SẮP HẾT HẠN nhất để hối thúc khách dùng
                 },
                 include: { coupon: true },
                 take: limit,
+                orderBy: { coupon: { expireAt: 'asc' } },
             });
 
             if (couponUsages.length === 0) {
@@ -144,7 +148,7 @@ export const getAvailableCouponsTool = tool(
     },
     {
         name: "getAvailableCoupons",
-        description: "Lấy danh sách mã giảm giá còn hiệu lực của khách hàng (SHIPPING hoặc ORDER). Trả về lỗi nếu khách chưa đăng nhập.",
+        description: "BẮT BUỘC SỬ DỤNG công cụ này khi Sếp hoặc Khách hỏi về 'mã giảm giá', 'coupon', 'voucher'. TUYỆT ĐỐI KHÔNG ĐƯỢC TỰ BỊA RA các mã (như SUMMER22, FREESHIP, v.v.). CHỈ ĐƯỢC trả lời dựa trên kết quả tool này trả về. Lấy danh sách mã giảm giá (SHIPPING hoặc ORDER). Nếu là Admin, tool này trả về toàn bộ mã của hệ thống. Nếu là Khách, trả về ví mã cá nhân của họ.",
         schema: z.object({
             limit: z.number().int().positive().default(20).describe("Số lượng mã"),
         }).passthrough(),
@@ -214,9 +218,6 @@ export const validateCouponTool = tool(
         description: "Kiểm tra tính hợp lệ của mã giảm giá (hạn sử dụng, đã dùng chưa, tính chiết khấu)",
         schema: z.object({
             couponCode: z.string().describe("Mã giảm giá"),
-            // customerId: z.string().optional().describe("Admin only: customer ID cần validate"),
-            // authId: z.string().optional().describe("Injected by backend auth context"),
-            // authRole: z.number().optional().describe("Injected by backend auth context"),
             orderAmount: z.number().optional().describe("Tổng tiền đơn hàng (để tính % giảm)"),
         }).passthrough(),
     }
@@ -287,9 +288,9 @@ export const getPromotionsTool = tool(
     },
     {
         name: "getPromotions",
-        description: "Lấy danh sách chương trình khuyến mãi đang diễn ra",
+        description: "BẮT BUỘC SỬ DỤNG công cụ này khi Sếp hoặc Khách hỏi về 'khuyến mãi', 'chương trình giảm giá'. TUYỆT ĐỐI KHÔNG ĐƯỢC TỰ BỊA RA dữ liệu. Phải gọi tool để lấy dữ liệu thực tế từ Database cửa hàng. Lấy danh sách các chương trình khuyến mãi đang diễn ra, bao gồm mô tả, giá trị giảm và sản phẩm áp dụng (nếu có).",
         schema: z.object({
             limit: z.number().int().positive().default(20).describe("Số lượng CTKM"),
-        }),
+        }).passthrough(),
     }
 );

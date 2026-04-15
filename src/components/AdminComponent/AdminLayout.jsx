@@ -7,7 +7,8 @@ import "./AdminLayout.css";
 // 🎨 Import FontAwesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
-
+import ScrollToTop from "@/components/ScrollToTop";
+import ChatbotWidget from "@/components/ChatbotWidget/ChatbotWidget";
 const AdminLayout = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -38,6 +39,8 @@ const AdminLayout = () => {
                     <Outlet />
                 </div>
             </main>
+            <ScrollToTop />
+            <ChatbotWidget />
         </div>
     );
 };

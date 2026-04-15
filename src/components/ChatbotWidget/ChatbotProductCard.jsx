@@ -5,7 +5,7 @@ import { getImageUrl } from "@/utils/getImageUrl"; // 🆕 Import helper functio
 import axios from "@/api/axios";
 import "./ChatbotProductCard.css";
 
-const ChatbotProductCard = ({ productId }) => {
+const ChatbotProductCard = ({ productId, onClose }) => {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -60,8 +60,11 @@ const ChatbotProductCard = ({ productId }) => {
                     {variant?.unitPrice ? `${variant.unitPrice.toLocaleString()}đ` : "Liên hệ"}
                 </p>
                 <Link 
-                    to={`/product/${product.id}`} 
+                    to={`/product/${product.id}?variant=${variant?.id}`} 
                     className="ChatbotProductCard-button"
+                    onClick={() => {
+                        if (onClose) onClose(); // Đóng Chatbot mượt mà
+                    }}
                 >
                     Xem ngay
                 </Link>

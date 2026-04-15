@@ -5,6 +5,7 @@ const agent = new AgentClient();
 
 const askHandler = async (req, res) => {
   try {
+    
     const prompt = typeof req.body?.prompt === "string" ? req.body.prompt.trim() : "";
     const history = Array.isArray(req.body?.history) ? req.body.history : [];
 
@@ -12,7 +13,8 @@ const askHandler = async (req, res) => {
       return res.status(400).json({ message: "prompt is required" });
     }
 
-    const content = await agent.run(prompt, {
+    const content = await agent.
+    run(prompt, {
       history,
       auth: {
         // 🛡️ Nếu là Guest, hãy để authId là undefined hoặc null 
@@ -24,7 +26,6 @@ const askHandler = async (req, res) => {
         role: req.user?.role ? Number(req.user.role) : Number(process.env.CUSTOMER_ROLE), 
       },
     });
-
     return res.status(200).json({ content });
   } catch (error) {
     console.error("[CHATBOT CONTROLLER ERROR]", error);
