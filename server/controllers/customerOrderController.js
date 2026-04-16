@@ -1,4 +1,4 @@
-// controllers/orderUserController.js
+// controllers/customerOrderController.js
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -63,10 +63,17 @@ export const cancelOrder = async (req, res) => {
         }
 
         if (!isAdmin) {
-            const now = new Date();
-            const orderTime = new Date(order.createdAt);
+            const now = Date.now(); 
+            const orderTime = new Date(order.createdAt).getTime();
             const diffInHours = (now - orderTime) / (1000 * 60 * 60);
-
+            // 🚩 LOG THẦN THÁNH ĐỂ DEBUG
+            console.log("=== DEBUG HỦY ĐƠN ===");
+            console.log("Giờ Server hiện tại (VN):", new Date(now).toLocaleString("vi-VN"));
+            console.log("Giờ Đơn hàng trong DB (UTC/VN):", order.createdAt);
+            console.log("Giờ Đơn hàng sau khi parse Date:", new Date(orderTime).toLocaleString("vi-VN"));
+            console.log("Chênh lệch (miliseconds):", now - orderTime);
+            console.log("Chênh lệch (hours):", (now - orderTime) / (1000 * 60 * 60));
+            console.log(`[DEBUG] Giờ hiện tại: ${now}, Giờ đơn: ${orderTime}, Diff: ${diffInHours}`);
             if (diffInHours > 2) {
                 return res.status(400).json({ message: "Đã quá 2 tiếng. Vui lòng liên hệ Admin để được hỗ trợ." });
             }
