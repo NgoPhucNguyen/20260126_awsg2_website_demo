@@ -77,17 +77,21 @@ const OrderSuccess = () => {
                 {status === 'success' && (
                     <div className="order-success-content fade-in">
                         <FontAwesomeIcon icon={faCircleCheck} className="order-success-icon success" />
-                        <h2>Tuyệt vời! {message}</h2>
-                        <p>Cảm ơn bạn đã tin tưởng và mua sắm tại cửa hàng của chúng tôi. Bạn có thể theo dõi tiến trình giao hàng trong mục Lịch sử đơn hàng.</p>
+                        <h2>Tuyệt vời!</h2>
+                        <p style={{ fontWeight: 600, color: '#1c1917', marginBottom: '0.5rem' }}>{message}</p>
+                        <p>
+                            Cảm ơn bạn đã tin tưởng và mua sắm tại Aphrodite. <br />
+                            Bạn có thể theo dõi đơn hàng của mình trong mục lịch sử để cập nhật trạng thái mới nhất.
+                        </p>
                     </div>
                 )}
 
                 {status === 'failed' && (
                     <div className="order-success-content fade-in">
                         <FontAwesomeIcon icon={faCircleXmark} className="order-success-icon failed" />
-                        <h2>Thanh toán thất bại</h2>
-                        <p>{message}</p>
-                        <p>Đơn hàng của bạn đã bị hủy. Vui lòng thử đặt lại nhé!</p>
+                        <h2>Rất tiếc!</h2>
+                        <p style={{ fontWeight: 600, color: '#ef4444', marginBottom: '0.5rem' }}>{message}</p>
+                        <p>Đơn hàng của bạn chưa thể hoàn tất lúc này. Đừng lo lắng, bạn có thể thử thanh toán lại hoặc chọn phương thức khác nhé.</p>
                     </div>
                 )}
 

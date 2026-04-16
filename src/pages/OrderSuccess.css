@@ -1,77 +1,114 @@
+/* src/pages/OrderSuccess.css */
+
+/* 🚀 Ép font-body cho toàn bộ trang và các thành phần con */
+.order-success-page,
+.order-success-page *,
+.order-success-page button {
+    font-family: var(--font-body, 'Inter', sans-serif) !important;
+}
+
 .order-success-page {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 70vh;
-    padding: clamp(1rem, 3vw, 2rem);
-    font-family: var(--font-body, 'Inter', sans-serif);
+    min-height: 85vh; /* Tăng chiều cao để căn giữa đẹp hơn */
+    padding: clamp(1.5rem, 5vw, 3rem);
 }
 
 .order-success-card {
     background: #ffffff;
-    border-radius: 12px;
-    padding: clamp(2rem, 5vw, 3rem);
+    border-radius: 16px; /* Bo góc mạnh hơn chút cho hiện đại */
+    padding: clamp(2rem, 6vw, 4rem); /* Tăng padding để tạo khoảng không (whitespace) */
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    max-width: 500px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
+    max-width: 750px;
     width: 100%;
+    animation: cardSlideUp 0.5s ease-out;
+}
+
+@keyframes cardSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .order-success-icon {
-    font-size: clamp(4rem, 8vw, 5rem);
-    margin-bottom: 1.5rem;
+    font-size: clamp(4.5rem, 10vw, 5.5rem);
+    margin-bottom: 2.5rem; /* Tăng khoảng cách dưới icon */
 }
+
 .order-success-icon.processing { color: #3b82f6; }
 .order-success-icon.success { color: #22c55e; }
 .order-success-icon.failed { color: #ef4444; }
 
 .order-success-content h2 {
     color: #1c1917;
-    font-size: clamp(1.4rem, 3vw, 1.8rem);
-    margin-bottom: 1rem;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    margin-bottom: 1.5rem; /* Tăng khoảng cách dưới tiêu đề */
+    font-weight: 800;
+    letter-spacing: -0.02em; /* Tạo cảm giác hiện đại */
 }
 
 .order-success-content p {
-    color: #6b7280;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin-bottom: 2rem;
+    color: #4b5563; /* Màu chữ đậm hơn chút để dễ đọc */
+    font-size: 1.05rem;
+    line-height: 1.8; /* Tăng khoảng cách dòng giúp mắt không bị mỏi */
+    margin-bottom: 2.5rem; /* Tăng khoảng cách tới phần nút bấm */
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .order-success-actions {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px; /* Tăng khoảng cách giữa các nút */
 }
 
 .order-btn-primary, .order-btn-outline {
     width: 100%;
-    padding: 14px;
-    border-radius: 8px;
-    font-weight: 600;
+    padding: 16px 24px; /* Nút bấm to hơn, dễ bấm hơn */
+    border-radius: 10px;
+    font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    transition: all 0.2s;
+    gap: 10px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .order-btn-primary {
     background: #1c1917;
-    color: #cca858;
+    color: #E6C27A;
     border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
-.order-btn-primary:hover { background: #333333; transform: translateY(-2px); }
+
+.order-btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
 
 .order-btn-outline {
     background: transparent;
     color: #1c1917;
-    border: 1px solid #d1d5db;
+    border: 1.5px solid #e5e7eb;
 }
-.order-btn-outline:hover { background: #f3f4f6; }
+
+.order-btn-outline:hover {
+    background: #f9fafb;
+    border-color: #1c1917;
+    transform: translateY(-2px);
+}
 
 @media (min-width: 600px) {
-    .order-success-actions { flex-direction: row; }
+    .order-success-actions {
+        flex-direction: row;
+        justify-content: center;
+    }
+    
+    .order-btn-primary, .order-btn-outline {
+        flex: 1; /* Hai nút dài bằng nhau khi ở màn hình lớn */
+    }
 }

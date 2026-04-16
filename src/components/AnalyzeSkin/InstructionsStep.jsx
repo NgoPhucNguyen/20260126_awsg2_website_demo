@@ -33,7 +33,7 @@ const InstructionsStep = ({ skinType, setSkinType, onStartCamera, triggerFileInp
 
   return (
     <div className="analyzeskin-instructionstep-container">
-      <h1 className="analyzeskin-instructionstep-title">Phân Tích Da AI</h1>
+      <h1 className="analyzeskin-instructionstep-title">Phân Tích Da</h1>
       <p className="analyzeskin-instructionstep-subtitle">
         Hãy cho chúng tôi biết loại da hiện tại của bạn để AI đưa ra gợi ý chính xác nhất.
       </p>

@@ -73,7 +73,7 @@ const Orders = () => {
             <header className="admin-orders-page-header">
                 <div>
                     <h2 className="admin-orders-page-title">Quản lý Đơn Hàng</h2>
-                    <p className="admin-orders-page-subtitle">Tổng số: <strong>{filteredOrders.length}</strong> đơn hàng</p>
+                    <p className="admin-orders-page-subtitle">Tổng số: <strong>{filteredOrders.length}</strong> Đơn hàng</p>
                 </div>
             </header>
 
@@ -99,10 +99,10 @@ const Orders = () => {
                             <tr>
                                 <th>Mã Đơn</th>
                                 <th>Khách hàng</th>
-                                <th>Ngày đặt</th>
+                                <th>Thời gian</th>
                                 <th>Thanh toán</th>
                                 <th>Tổng tiền</th>
-                                <th>Trạng thái (Action)</th>
+                                <th>Trạng thái</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -131,10 +131,10 @@ const Orders = () => {
                                                     disabled={order.status === 'DELIVERED'} // Lock if already delivered
                                                     onChange={(e) => handleStatusChange(order.id, e.target.value)}
                                                 >
-                                                    <option value="PENDING">PENDING</option>
-                                                    <option value="PROCESSING">PROCESSING</option>
-                                                    <option value="SHIPPED">SHIPPED</option>
-                                                    <option value="DELIVERED">DELIVERED</option>
+                                                    <option value="PENDING">Chưa xử lý</option>
+                                                    <option value="PROCESSING">Đang xử lý</option>
+                                                    <option value="SHIPPED">Đang giao hàng</option>
+                                                    <option value="DELIVERED">Đã giao hàng</option>
                                                 </select>
                                             )}
                                         </td>

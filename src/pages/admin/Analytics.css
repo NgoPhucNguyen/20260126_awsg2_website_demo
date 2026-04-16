@@ -1,55 +1,78 @@
 /* src/pages/admin/Analytics.css */
 
-.admin-analytics-page-container {
-    padding-bottom: 40px;
-    color: #0f172a;
-    font-family: inherit;
+/* 🚀 1. GLOBAL FONT OVERRIDE */
+.admin-analytics-page-container,
+.admin-analytics-page-container *,
+.admin-analytics-page-container select,
+.admin-analytics-page-container button {
+    font-family: var(--font-body, 'Inter', sans-serif) !important;
+    box-sizing: border-box;
 }
 
-/* --- HEADER --- */
+.admin-analytics-page-container {
+    padding-bottom: 40px;
+    color: #1c1917;
+    animation: adminAnalyticsFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes adminAnalyticsFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 🚀 2. HEADER */
 .admin-analytics-page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
 .admin-analytics-page-title {
     margin: 0;
-    font-size: 24px;
-    font-weight: 600;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 800;
+    color: #1c1917;
+    letter-spacing: -0.02em;
 }
 
 .admin-analytics-page-subtitle {
-    margin: 4px 0 0 0;
+    margin: 6px 0 0 0;
     color: #64748b;
-    font-size: 14px;
+    font-size: 0.95rem;
 }
 
 .admin-analytics-page-select {
-    padding: 8px 16px;
-    border-radius: 6px;
-    border: 1px solid #cbd5e1;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: 1.5px solid #e2e8f0;
     background-color: #ffffff;
-    color: #334155;
-    font-size: 14px;
+    color: #1c1917;
+    font-size: 0.95rem;
+    font-weight: 600;
     cursor: pointer;
     outline: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
 .admin-analytics-page-select:focus {
-    border-color: #94a3b8;
+    border-color: #E6C27A; /* Highlight vàng gold */
+    box-shadow: 0 0 0 4px rgba(230, 194, 122, 0.15);
 }
 
-/* --- TRẠNG THÁI (LỖI & LOADING) --- */
+/* 🚀 3. TRẠNG THÁI (LỖI & LOADING) */
 .admin-analytics-page-error {
-    padding: 12px 16px;
+    padding: 16px 20px;
     background-color: #fef2f2;
     color: #b91c1c;
     border: 1px solid #fecaca;
-    border-radius: 8px;
+    border-radius: 10px;
     margin-bottom: 24px;
-    font-size: 14px;
+    font-weight: 600;
+    border-left: 5px solid #dc2626;
 }
 
 .admin-analytics-page-loading {
@@ -57,59 +80,65 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 60px 0;
+    padding: 80px 0;
     color: #64748b;
 }
 
 .admin-analytics-page-spinner {
-    width: 30px;
-    height: 30px;
-    border: 3px solid #e2e8f0;
-    border-top: 3px solid #64748b;
+    width: 40px;
+    height: 40px;
+    border: 3.5px solid #f1f5f9;
+    border-top: 3.5px solid #E6C27A; /* Spinner Vàng Gold */
     border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 12px;
+    animation: adminAnalyticsSpin 1s linear infinite;
+    margin-bottom: 16px;
 }
 
-@keyframes spin {
+@keyframes adminAnalyticsSpin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 
-/* --- KPI CARDS (TỐI GIẢN) --- */
+/* 🚀 4. KPI CARDS (LUXURY MINIMAL) */
 .admin-analytics-page-kpi-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 24px;
-    margin-bottom: 24px;
+    margin-bottom: 30px;
 }
 
 .admin-analytics-page-kpi-card {
     display: flex;
     align-items: center;
     background-color: #ffffff;
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 24px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Icon Monochrome tiệp với chữ */
+.admin-analytics-page-kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
 .admin-analytics-page-kpi-icon-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
-    border-radius: 8px;
-    background-color: #f8fafc; /* Nền xám rất nhạt */
-    margin-right: 16px;
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    background-color: #fefcf5; /* Nền kem rất nhạt */
+    border: 1px solid #f9f1d9;
+    margin-right: 18px;
     flex-shrink: 0;
 }
 
 .admin-analytics-page-icon {
-    font-size: 20px;
-    color: #475569; /* Icon màu xám chì */
+    font-size: 24px;
+    color: #E6C27A; /* Icon Vàng Gold */
 }
 
 .admin-analytics-page-kpi-content {
@@ -118,22 +147,23 @@
 }
 
 .admin-analytics-page-kpi-label {
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 0.85rem;
+    font-weight: 600;
     color: #64748b;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .admin-analytics-page-kpi-value {
-    font-size: 24px;
-    font-weight: 600;
-    color: #0f172a;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1c1917;
     margin: 0;
+    letter-spacing: -0.02em;
 }
 
-/* --- CHARTS AREA --- */
+/* 🚀 5. CHARTS AREA */
 .admin-analytics-page-charts-layout {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -143,16 +173,18 @@
 .admin-analytics-page-chart-box {
     background-color: #ffffff;
     padding: 24px;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border-radius: 16px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
 }
 
 .admin-analytics-page-chart-title {
-    margin: 0 0 20px 0;
-    font-size: 16px;
-    font-weight: 600;
-    color: #1e293b;
+    margin: 0 0 24px 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1c1917;
+    border-bottom: 1px solid #f8fafc;
+    padding-bottom: 12px;
 }
 
 .admin-analytics-page-text-center {
@@ -161,38 +193,51 @@
 
 .admin-analytics-page-chart-wrapper {
     width: 100%;
-    height: 300px;
+    height: 350px; /* Tăng nhẹ chiều cao cho biểu đồ thở */
 }
 
 .admin-analytics-page-mt-24 {
     margin-top: 24px;
 }
 
-/* Tooltip Custom */
+/* 🚀 6. TOOLTIP CUSTOM (Dùng cho thư viện Chart) */
 .admin-analytics-page-tooltip {
     background-color: #ffffff;
-    padding: 12px;
+    padding: 12px 16px;
     border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 .admin-analytics-page-tooltip-label {
-    margin: 0 0 4px 0;
-    font-weight: 600;
-    font-size: 13px;
-    color: #334155;
+    margin: 0 0 6px 0;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #64748b;
+    text-transform: uppercase;
 }
 
 .admin-analytics-page-tooltip-value {
     margin: 0;
-    font-size: 14px;
-    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #1c1917;
 }
 
-/* Responsive cho layout Biểu đồ */
+/* 🚀 7. RESPONSIVE MOBILE */
 @media (max-width: 1024px) {
     .admin-analytics-page-charts-layout {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .admin-analytics-page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .admin-analytics-page-select {
+        width: 100%;
     }
 }

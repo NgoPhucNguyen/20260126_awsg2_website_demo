@@ -2,13 +2,20 @@
    INSTRUCTION STEP COMPONENT STYLES - SKIN TYPE CARDS THEME
    ========================================================================== */
 
+/* 🚀 1. GLOBAL FONT OVERRIDE CHO COMPONENT */
+.analyzeskin-instructionstep-container,
+.analyzeskin-instructionstep-container *,
+.analyzeskin-instructionstep-container button {
+  font-family: var(--font-body, 'Inter', sans-serif) !important;
+  box-sizing: border-box;
+}
+
 .analyzeskin-instructionstep-container {
   /* 🚀 Mở rộng max-width để chứa đủ 4 thẻ Card nằm ngang trên Desktop */
   max-width: 1000px; 
   margin: 0 auto;
   padding: 40px 20px;
   text-align: center;
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   color: #1e293b;
 }
 
@@ -100,7 +107,7 @@
   transition: color 0.3s ease;
 }
 
-/* Đổi màu chữ Label sang đỏ khi được chọn (giống mẫu) */
+/* Đổi màu chữ Label khi được chọn (giống mẫu) */
 .analyzeskin-skintype-card.active .skintype-card-label {
   color: #7B3F00; 
 }
@@ -255,6 +262,11 @@
 /* ==========================================================================
    ERROR MESSAGE BOX (THÔNG BÁO LỖI)
    ========================================================================== */
+.analyze-skin-page-error-box,
+.analyze-skin-page-error-box button {
+  font-family: var(--font-body, 'Inter', sans-serif) !important;
+}
+
 .analyze-skin-page-error-box {
   background-color: #fef2f2;
   border: 1px solid #f87171;
@@ -267,7 +279,8 @@
   font-size: 14.5px;
   font-weight: 500;
   width: 100%;
-  margin-bottom: 16px; /* Cách nút bấm một khoảng vừa phải */
+  max-width: 600px;
+  margin: 0 auto 16px auto; /* Căn giữa và cách nút bấm */
   box-sizing: border-box;
   animation: shakeError 0.4s ease-in-out;
   box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.1);

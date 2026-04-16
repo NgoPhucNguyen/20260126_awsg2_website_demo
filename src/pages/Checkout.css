@@ -1,11 +1,20 @@
 /* src/pages/Checkout.css */
 
+/* 🚀 1. GLOBAL FONT OVERRIDE: Ép tất cả thành phần bên trong dùng font-body */
+.checkout-page,
+.checkout-page *, 
+.checkout-page input,
+.checkout-page select,
+.checkout-page textarea,
+.checkout-page button {
+    font-family: var(--font-body, 'Inter', sans-serif) !important;
+}
+
 .checkout-page {
     max-width: 1200px;
     margin: 0 auto;
     padding: clamp(1rem, 3vw, 2rem);
     min-height: 80vh;
-    font-family: var(--font-body, 'Inter', sans-serif);
     animation: fadeIn 0.4s ease-out;
 }
 
@@ -65,12 +74,11 @@
 /* ========================================================= */
 .checkout-container {
     display: grid;
-    grid-template-columns: 1.8fr 1.2fr; /* Tỉ lệ Cột Form và Cột Bill */
+    grid-template-columns: 1.8fr 1.2fr;
     gap: clamp(1.5rem, 4vw, 3rem);
     align-items: start;
 }
 
-/* --- CARD STYLE (Dùng chung cho các khối) --- */
 .checkout-card {
     background: #ffffff;
     border-radius: 12px;
@@ -124,7 +132,6 @@
     font-size: 0.95rem;
     outline: none;
     transition: all 0.2s;
-    font-family: inherit;
 }
 
 .checkout-input-group input:focus, 
@@ -217,7 +224,6 @@
     padding-right: 5px;
 }
 
-/* Tùy chỉnh thanh cuộn cho mượt */
 .checkout-item-mini-list::-webkit-scrollbar { width: 4px; }
 .checkout-item-mini-list::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
 
@@ -305,7 +311,8 @@
     font-size: 1.1rem;
     font-weight: 700;
     color: #1c1917;
-    align-items: center;
+    display: flex; /* Đã sửa align-items thành flex */
+    justify-content: space-between;
 }
 
 .checkout-highlight-total {
@@ -315,8 +322,8 @@
 
 .checkout-submit-btn {
     width: 100%;
-    background: #1c1917;
-    color: #cca858;
+    background: #090806;
+    color: #E6C27A;
     padding: clamp(14px, 2vw, 18px);
     border: none;
     border-radius: 8px;
@@ -358,7 +365,6 @@
     .checkout-container { grid-template-columns: 1fr; }
     .checkout-summary-card { position: static; margin-top: 10px; }
 }
-
 
 /* --- TOGGLE ĐỊA CHỈ (RADIO BUTTONS) --- */
 .checkout-address-toggle-group {
@@ -452,7 +458,6 @@
     font-size: 0.95rem;
     background-color: white;
     cursor: pointer;
-    font-family: inherit;
 }
 
 .checkout-input-select:disabled {

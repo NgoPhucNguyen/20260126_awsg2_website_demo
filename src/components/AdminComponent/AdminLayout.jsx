@@ -23,7 +23,7 @@ const AdminLayout = () => {
                     <FontAwesomeIcon icon={faBars} />
                 </button>
                 <div className="admin-topbar-brand">
-                    <span>Aphrodite</span> <small>Admin Panel</small>
+                    <span>Aphrodite</span> <small>Admin</small>
                 </div>
             </header>
 

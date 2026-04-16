@@ -12,3 +12,5 @@ Ngày phát hành: 07/15
 
 Bấm thanh toán, Bấm đồng ý 
 nhập mã OTP 123456 và Thanh Toán.
+
+Bạn có thể giúp tôi đổi các font trong các chữ thành var(--font) hết có được không?

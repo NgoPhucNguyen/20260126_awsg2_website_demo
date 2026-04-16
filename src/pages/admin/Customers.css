@@ -1,252 +1,231 @@
 /* src/pages/admin/Customers.css */
 
-/* --- LAYOUT & ANIMATIONS --- */
-.fade-in {
-    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    /* 📏 Đã xóa padding cứng, dùng layout của AdminLayout cha */
-    background-color: transparent; 
+/* 🚀 1. GLOBAL SCOPE & FONT SETUP */
+.admin-customer-page-container,
+.admin-customer-page-container *,
+.admin-customer-page-container button,
+.admin-customer-page-container input {
+    font-family: var(--font-body, 'Inter', sans-serif) !important;
+    box-sizing: border-box;
+}
+
+.admin-customer-fade-in {
+    animation: adminCustomerFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    background-color: transparent;
     min-height: 100%;
 }
 
-@keyframes fadeIn {
+@keyframes adminCustomerFadeIn {
     from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- HEADER --- */
-.dashboard-header {
-    margin-bottom: clamp(1.5rem, 3vw, 2rem);
+/* 🚀 2. HEADER SECTION */
+.admin-customer-header {
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
 }
 
-.dashboard-header h2 {
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    color: #1c1917; /* Đen tuyền */
-    margin-bottom: 6px;
+.admin-customer-title {
+    font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+    color: #1c1917;
+    margin: 0 0 8px 0;
     font-weight: 800;
-    font-family: var(--font-heading, 'Inter', sans-serif);
+    letter-spacing: -0.02em;
 }
 
-.admin-subtitle {
+.admin-customer-subtitle {
     color: #57534e;
-    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    font-size: clamp(0.85rem, 1.2vw, 1rem);
+    margin: 0;
 }
 
-/* --- STATES (Loading & Errors) --- */
-.error-banner {
+/* 🚀 3. STATES (Loading, Error) */
+.admin-customer-error-banner {
     background-color: #fef2f2;
     color: #991b1b;
-    padding: clamp(12px, 1.5vw, 16px);
-    border-radius: 8px;
-    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+    padding: 16px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
     font-weight: 600;
-    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
-    border-left: 4px solid #dc2626;
+    border-left: 5px solid #dc2626;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.loading-container {
+.admin-customer-loading-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: clamp(2rem, 5vw, 4rem);
-    color: #57534e;
+    padding: 4rem 0;
+}
+
+.admin-customer-spinner {
+    border: 3.5px solid #f3f4f6;
+    border-top: 3.5px solid #cca858; /* Vàng Gold đặc trưng */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: adminSpin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+.admin-customer-loading-text {
+    color: #6b7280;
     font-weight: 500;
 }
 
-.spinner {
-    border: 3px solid #e7e5e4;
-    border-top: 3px solid #cca858; /* Xoay màu Vàng Gold */
-    border-radius: 50%;
-    width: clamp(28px, 4vw, 36px);
-    height: clamp(28px, 4vw, 36px);
-    animation: spin 1s linear infinite;
-    margin-bottom: 12px;
-}
-
-@keyframes spin {
+@keyframes adminSpin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 
-/* --- TABLE CONTROLS (Search Bar) --- */
-.table-controls {
+/* 🚀 4. CONTROLS & SEARCH */
+.admin-customer-controls {
+    margin-bottom: 2rem;
     display: flex;
     justify-content: flex-start;
-    align-items: center;
-    margin-bottom: clamp(1rem, 2vw, 1.5rem);
 }
 
-.search-wrapper {
-    position: relative;
+.admin-customer-search-wrapper {
     width: 100%;
-    max-width: 400px;
+    max-width: 450px;
 }
 
-.search-input {
+.admin-customer-search-input {
     width: 100%;
-    padding: clamp(10px, 1.5vw, 12px) 16px; 
-    border: 1px solid var(--border-color, #e5e5e5);
-    border-radius: 8px;
-    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    padding: 12px 18px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 0.95rem;
     color: #1c1917;
     background-color: #ffffff;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
 }
 
-.search-input:focus {
+.admin-customer-search-input:focus {
     outline: none;
-    border-color: #cca858; /* Đổi viền xanh thành vàng khi focus */
-    box-shadow: 0 0 0 3px rgba(204, 168, 88, 0.15);
+    border-color: #cca858;
+    box-shadow: 0 0 0 4px rgba(204, 168, 88, 0.1);
 }
 
-.search-input::placeholder {
-    color: #a8a29e;
-}
-
-/* --- TABLE STYLING --- */
-.table-responsive {
+/* 🚀 5. DATA TABLE */
+.admin-customer-table-responsive {
     background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    border: 1px solid var(--border-color, #e5e5e5);
-    overflow-x: auto; 
-    margin-bottom: clamp(1.5rem, 3vw, 2rem);
-    
-    /* Ẩn scrollbar ngang xấu xí */
-    scrollbar-width: thin;
-    scrollbar-color: #d4d4d4 transparent;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f1f1f1;
+    overflow-x: auto;
+    margin-bottom: 2rem;
 }
 
-.customers-table {
+.admin-customer-table {
     width: 100%;
     border-collapse: collapse;
     text-align: left;
     white-space: nowrap;
 }
 
-.customers-table th {
-    background-color: #fcfcfc; /* Xám cực nhẹ cho header */
+.admin-customer-th {
+    background-color: #fafaf9;
     color: #1c1917;
     font-weight: 700;
-    font-size: clamp(0.75rem, 1vw, 0.85rem);
+    font-size: 0.8rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: clamp(12px, 1.5vw, 16px);
-    border-bottom: 2px solid var(--border-color, #e5e5e5);
+    letter-spacing: 0.06em;
+    padding: 18px 24px;
+    border-bottom: 2px solid #f1f1f1;
 }
 
-.customers-table th svg {
-    margin-right: 6px;
-    color: #cca858; /* Icon trên header màu vàng */
-    font-size: 1.1em;
+.admin-customer-th svg {
+    margin-right: 8px;
+    color: #cca858;
     vertical-align: middle;
 }
 
-.customers-table td {
-    padding: clamp(12px, 1.5vw, 16px);
-    border-bottom: 1px solid #f0f0f0;
-    color: #444;
-    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+.admin-customer-td {
+    padding: 16px 24px;
+    border-bottom: 1px solid #f8f8f8;
+    color: #4b5563;
+    font-size: 0.95rem;
     transition: background-color 0.2s;
 }
 
-.customers-table tbody tr:hover td {
-    background-color: #fafafa;
+.admin-customer-tr:hover .admin-customer-td {
+    background-color: #fffcf5; /* Highlight vàng cực nhẹ khi hover */
 }
 
-.empty-state {
-    text-align: center;
-    padding: clamp(30px, 5vw, 50px) !important;
-    color: #a8a29e;
-    font-style: italic;
-    font-size: clamp(0.9rem, 1.2vw, 1rem);
+/* Column Specifics */
+.admin-customer-col-id {
+    font-family: 'JetBrains Mono', monospace !important;
+    color: #9ca3af !important;
+    font-weight: 500;
 }
 
-/* --- COLUMN SPECIFICS --- */
-.col-id {
-    font-family: monospace;
-    color: #a8a29e !important;
-    font-size: 0.85rem !important;
-}
-
-.col-name {
+.admin-customer-col-name {
     font-weight: 700;
     color: #1c1917 !important;
 }
 
-/* --- BADGES (Tier & Status) --- */
-.badge {
-    padding: 4px 10px;
-    border-radius: 4px; /* Đổi từ viên thuốc tròn sang vuông bo góc nhẹ cho nam tính/sang trọng */
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+.admin-customer-empty-state {
+    text-align: center;
+    padding: 60px !important;
+    color: #9ca3af;
+    font-style: italic;
 }
 
-/* Tier Colors (Cập nhật màu sang chảnh) */
-.tier-0 { background-color: #f5f5f5; color: #57534e; } /* Silver/Mặc định */
-.tier-1 { background-color: #fce7f3; color: #9d174d; } /* Rose */
-.tier-2 { background-color: #fef08a; color: #854d0e; } /* Gold */
-.tier-3 { background-color: #e0e7ff; color: #3730a3; } /* Diamond */
-
-/* Status indicators */
-.status-active {
-    display: inline-flex;
-    align-items: center;
-    color: #166534;
-    background-color: #dcfce3;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 0.75rem;
+/* 🚀 6. BADGES & PAGINATION */
+.admin-customer-badge-orders {
+    background-color: #f3f4f6;
+    color: #1f2937;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
     font-weight: 700;
-    letter-spacing: 0.5px;
+    border: 1px solid #e5e7eb;
 }
 
-.status-inactive {
-    display: inline-flex;
-    align-items: center;
-    color: #991b1b;
-    background-color: #fee2e2;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-}
-
-/* --- PAGINATION BUTTON --- */
-.pagination-container {
+.admin-customer-pagination-container {
     display: flex;
     justify-content: center;
-    margin-top: clamp(1rem, 3vw, 2rem);
+    margin-top: 2rem;
+    padding-bottom: 2rem;
 }
 
-.btn-show-more {
+.admin-customer-btn-show-more {
     display: flex;
     align-items: center;
-    gap: 8px;
-    background-color: #ffffff;
-    border: 1px solid var(--border-color, #e5e5e5);
-    color: #1c1917;
+    gap: 10px;
+    background-color: #1c1917;
+    color: #cca858;
     font-weight: 700;
-    padding: clamp(10px, 1.5vw, 12px) clamp(20px, 3vw, 24px);
-    border-radius: 8px;
-    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    padding: 14px 28px;
+    border-radius: 10px;
+    border: none;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.btn-show-more:hover {
-    background-color: #1c1917; /* Đổi nền sang đen khi hover */
-    color: #cca858; /* Chữ vàng */
-    border-color: #1c1917;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+.admin-customer-btn-show-more:hover {
+    background-color: #333333;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-.btn-show-more:active {
-    transform: translateY(0);
+.admin-customer-btn-show-more:active {
+    transform: translateY(-1px);
+}
+
+/* 🚀 7. RESPONSIVE MOBILE */
+@media (max-width: 768px) {
+    .admin-customer-controls {
+        flex-direction: column;
+    }
+    
+    .admin-customer-search-wrapper {
+        max-width: 100%;
+    }
 }

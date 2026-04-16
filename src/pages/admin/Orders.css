@@ -1,55 +1,78 @@
 /* src/pages/admin/Orders.css */
 
-.admin-orders-page-container {
-    padding-bottom: 40px;
-    color: #0f172a;
-    font-family: inherit;
+/* 🚀 1. GLOBAL SCOPE & FONT SETUP */
+.admin-orders-page-container,
+.admin-orders-page-container *,
+.admin-orders-page-container input,
+.admin-orders-page-container select,
+.admin-orders-page-container button {
+    font-family: var(--font-body, 'Inter', sans-serif) !important;
+    box-sizing: border-box;
 }
 
+.admin-orders-page-container {
+    padding-bottom: 40px;
+    color: #1c1917;
+    animation: adminOrderFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes adminOrderFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 🚀 2. HEADER SECTION */
 .admin-orders-page-header {
-    margin-bottom: 24px;
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
 }
 
 .admin-orders-page-title {
     margin: 0;
-    font-size: 24px;
-    font-weight: 600;
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    font-weight: 800;
+    color: #1c1917;
+    letter-spacing: -0.02em;
 }
 
 .admin-orders-page-subtitle {
-    margin: 4px 0 0 0;
+    margin: 6px 0 0 0;
     color: #64748b;
-    font-size: 14px;
+    font-size: 0.95rem;
 }
 
-/* Controls & Search */
+/* 🚀 3. CONTROLS & SEARCH */
 .admin-orders-page-controls {
     margin-bottom: 24px;
 }
 
 .admin-orders-page-search {
     width: 100%;
-    max-width: 400px;
-    padding: 10px 16px;
-    border-radius: 8px;
-    border: 1px solid #cbd5e1;
-    font-size: 14px;
+    max-width: 450px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    border: 1.5px solid #e2e8f0;
+    font-size: 0.95rem;
     outline: none;
+    transition: all 0.3s ease;
+    background-color: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
 }
 
 .admin-orders-page-search:focus {
-    border-color: #94a3b8;
+    border-color: #E6C27A; /* Tông màu chủ đạo Sếp chọn */
+    box-shadow: 0 0 0 4px rgba(230, 194, 122, 0.15);
 }
 
-/* Loading & Error */
+/* 🚀 4. LOADING & ERROR STATES */
 .admin-orders-page-error {
-    padding: 12px 16px;
+    padding: 16px 20px;
     background-color: #fef2f2;
     color: #b91c1c;
     border: 1px solid #fecaca;
-    border-radius: 8px;
+    border-radius: 10px;
     margin-bottom: 24px;
-    font-size: 14px;
+    font-weight: 600;
+    border-left: 5px solid #dc2626;
 }
 
 .admin-orders-page-loading {
@@ -57,117 +80,143 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 60px 0;
+    padding: 80px 0;
     color: #64748b;
 }
 
 .admin-orders-page-spinner {
-    width: 30px;
-    height: 30px;
-    border: 3px solid #e2e8f0;
-    border-top: 3px solid #64748b;
+    width: 40px;
+    height: 40px;
+    border: 3.5px solid #f1f5f9;
+    border-top: 3.5px solid #E6C27A; /* Spinner màu vàng gold */
     border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 12px;
+    animation: adminOrderSpin 1s linear infinite;
+    margin-bottom: 15px;
 }
 
-/* Table Styles */
+@keyframes adminOrderSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 🚀 5. TABLE STYLING */
 .admin-orders-page-table-wrapper {
     background-color: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
+    border: 1px solid #f1f5f9;
+    border-radius: 14px;
     overflow-x: auto;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
 }
 
 .admin-orders-page-table {
     width: 100%;
     border-collapse: collapse;
     text-align: left;
-    font-size: 14px;
-}
-
-.admin-orders-page-table th {
-    background-color: #f8fafc;
-    color: #475569;
-    font-weight: 600;
-    padding: 16px;
-    border-bottom: 1px solid #e2e8f0;
     white-space: nowrap;
 }
 
-.admin-orders-page-table td {
-    padding: 16px;
-    border-bottom: 1px solid #e2e8f0;
-    color: #1e293b;
+.admin-orders-page-table th {
+    background-color: #fafaf9;
+    color: #1c1917;
+    font-weight: 700;
+    padding: 18px 20px;
+    border-bottom: 2px solid #f1f5f9;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-.admin-orders-page-table tr:last-child td {
-    border-bottom: none;
+.admin-orders-page-table td {
+    padding: 18px 20px;
+    border-bottom: 1px solid #f8fafc;
+    color: #334155;
+    font-size: 0.95rem;
+    vertical-align: middle;
 }
 
 .admin-orders-page-table tr:hover td {
-    background-color: #f8fafc;
+    background-color: #fffdf9; /* Hover màu vàng cực nhẹ */
 }
 
 .admin-orders-page-col-id {
-    font-family: monospace;
-    color: #64748b;
-    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace !important;
+    color: #1c1917;
+    font-weight: 700;
 }
 
 .admin-orders-page-col-price {
-    font-weight: 600;
+    font-weight: 800;
+    color: #1c1917;
 }
 
 .admin-orders-page-text-sm {
-    font-size: 12px;
+    font-size: 0.85rem;
     color: #64748b;
 }
 
 .admin-orders-page-empty {
     text-align: center;
-    padding: 40px !important;
-    color: #64748b;
+    padding: 60px !important;
+    color: #94a3b8;
+    font-style: italic;
 }
 
-/* Badges (Payment Status) */
+/* 🚀 6. PAYMENT BADGES (Tình trạng tiền) */
 .admin-orders-page-badge {
-    display: inline-block;
-    padding: 4px 10px;
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
     border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
 }
 
-.payment-paid { background-color: #ecfdf5; color: #10b981; }
-.payment-unpaid { background-color: #fef2f2; color: #ef4444; }
-.payment-pending { background-color: #fffbeb; color: #f59e0b; }
-.payment-refunding { background-color: #eff6ff; color: #3b82f6; }
+.payment-paid { background-color: #dcfce7; color: #166534; }
+.payment-unpaid { background-color: #fee2e2; color: #991b1b; }
+.payment-pending { background-color: #fef3c7; color: #92400e; }
+.payment-refunding { background-color: #dbeafe; color: #1e40af; }
 
-/* Status Select Dropdown (Trạng thái đơn hàng) */
+/* 🚀 7. STATUS SELECT (Trạng thái vận hành) */
 .admin-orders-page-status-select {
-    padding: 6px 12px;
-    border-radius: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
     font-size: 12px;
-    font-weight: 600;
-    border: 1px solid transparent;
+    font-weight: 700;
+    border: 1.5px solid transparent;
     cursor: pointer;
     outline: none;
-    appearance: auto;
+    transition: all 0.2s ease;
+    background-image: none; /* Bỏ icon mặc định nếu cần style riêng */
 }
 
+/* Trạng thái đã hủy (Thường là text hoặc badge xám) */
 .status-cancelled {
     background-color: #f1f5f9;
-    color: #64748b;
-    padding: 6px 12px;
-    border-radius: 6px;
+    color: #475569;
+    padding: 8px 14px;
+    border-radius: 8px;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
+    display: inline-block;
 }
 
-/* Màu sắc thay đổi theo Status được chọn */
-.status-pending { background-color: #fef3c7; color: #d97706; border-color: #fde68a; }
-.status-processing { background-color: #e0f2fe; color: #2563eb; border-color: #bae6fd; }
-.status-shipped { background-color: #f3e8ff; color: #7c3aed; border-color: #e9d5ff; }
-.status-delivered { background-color: #d1fae5; color: #059669; border-color: #a7f3d0; }
+/* Màu sắc cho Select Box theo từng trạng thái */
+.status-pending { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
+.status-processing { background-color: #e0f2fe; color: #1e40af; border-color: #bae6fd; }
+.status-shipped { background-color: #f3e8ff; color: #6b21a8; border-color: #e9d5ff; }
+.status-delivered { background-color: #d1fae5; color: #166534; border-color: #a7f3d0; }
+
+.admin-orders-page-status-select:focus {
+    border-color: #E6C27A;
+}
+
+/* Tối ưu cho Mobile (nếu admin dùng tablet) */
+@media (max-width: 1024px) {
+    .admin-orders-page-table-wrapper {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+}
