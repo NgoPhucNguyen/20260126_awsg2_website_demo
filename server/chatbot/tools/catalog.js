@@ -1,3 +1,4 @@
+// server/chatbot/tools/catalog.js
 // Product tools
 import {
     searchProductsTool,
@@ -28,6 +29,9 @@ import {
     getPromotionsTool,
 } from "./couponTools.js";
 
+
+import { getSalesAnalyticsTool } from "./analyticsTools.js";
+
 const allToolsMap = {
     // Product
     searchProducts: searchProductsTool,
@@ -47,6 +51,7 @@ const allToolsMap = {
     getAvailableCoupons: getAvailableCouponsTool,
     validateCoupon: validateCouponTool,
     getPromotions: getPromotionsTool,
+    getSalesAnalytics: getSalesAnalyticsTool,
 };
 
 const pickToolsMap = (toolNames) => Object.fromEntries(

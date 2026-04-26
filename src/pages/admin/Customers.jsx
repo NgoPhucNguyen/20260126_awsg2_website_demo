@@ -47,61 +47,60 @@ const Customers = () => {
     });
 
     return (
-        <div className="fade-in">
-            <header className="dashboard-header">
-                <h2>{t('customers.title')}</h2> 
-                <p className="admin-subtitle">{t('customers.subtitle')}</p> 
+        <div className="admin-customer-page-container admin-customer-fade-in">
+            <header className="admin-customer-header">
+                <h2 className="admin-customer-title">{t('customers.title')}</h2> 
+                <p className="admin-customer-subtitle">{t('customers.subtitle')}</p> 
             </header>
 
-            {error && <div className="error-banner">⚠️ {error}</div>}
+            {error && <div className="admin-customer-error-banner">{error}</div>}
 
             {isLoading ? (
-                <div className="loading-container"><div className="spinner"></div><p>{t('customers.syncing')}</p></div>
+                <div className="admin-customer-loading-container">
+                    <div className="admin-customer-spinner"></div>
+                    <p className="admin-customer-loading-text">{t('customers.syncing')}</p>
+                </div>
             ) : (
                 <>
-                    <div className="table-controls">
-                        <div className="search-wrapper">
+                    <div className="admin-customer-controls">
+                        <div className="admin-customer-search-wrapper">
                             <input 
                                 type="text" 
                                 placeholder={t('customers.searchPlaceholder')} 
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="search-input"
+                                className="admin-customer-search-input"
                             />
                         </div>
                     </div>
 
-                    <div className="table-responsive">
-                        <table className="customers-table">
-                            <thead>
+                    <div className="admin-customer-table-responsive">
+                        <table className="admin-customer-table">
+                            <thead className="admin-customer-thead">
                                 <tr>
-                                    {/* 🚀 Đổi ID thành STT */}
-                                    <th>STT</th>
-                                    <th><FaUserTag /> {t('customers.colAccount')}</th>
-                                    <th><FaEnvelope /> {t('customers.colEmail')}</th>
-                                    {/* 🚀 Thêm cột Tổng Đơn Hàng */}
-                                    <th>Tổng Đơn</th>
+                                    <th className="admin-customer-th">STT</th>
+                                    <th className="admin-customer-th"><FaUserTag /> {t('customers.colAccount')}</th>
+                                    <th className="admin-customer-th"><FaEnvelope /> {t('customers.colEmail')}</th>
+                                    <th className="admin-customer-th">Tổng Đơn</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody className="admin-customer-tbody">
                                 {filteredCustomers.length > 0 ? (
                                     filteredCustomers.slice(0, visibleCount).map((customer, i) => (
-                                        <tr key={customer.id}>
-                                            {/* 🚀 Dùng index (i) + 1 làm Số thứ tự */}
-                                            <td className="col-id">{i + 1}</td> 
-                                            <td className="col-name">{customer.accountName}</td>
-                                            <td>{customer.mail}</td>
-                                            {/* 🚀 Render số lượng đơn hàng (Đợi Backend trả về) */}
-                                            <td>
-                                                <span className="badge-orders">
+                                        <tr key={customer.id} className="admin-customer-tr">
+                                            <td className="admin-customer-td admin-customer-col-id">{i + 1}</td> 
+                                            <td className="admin-customer-td admin-customer-col-name">{customer.accountName}</td>
+                                            <td className="admin-customer-td admin-customer-col-email">{customer.mail}</td>
+                                            <td className="admin-customer-td">
+                                                <span className="admin-customer-badge-orders">
                                                     {customer._count?.carts || 0} đơn
                                                 </span>
                                             </td>
                                         </tr>
                                     ))
                                 ) : (
-                                    <tr>
-                                        <td colSpan="4" className="empty-state">
+                                    <tr className="admin-customer-tr">
+                                        <td colSpan="4" className="admin-customer-td admin-customer-empty-state">
                                             {searchTerm 
                                                 ? `${t('customers.noMatch')} "${searchTerm}"` 
                                                 : t('customers.noCustomers')}
@@ -111,9 +110,10 @@ const Customers = () => {
                             </tbody>
                         </table>
                     </div>
+
                     {visibleCount < filteredCustomers.length && (
-                        <div className="pagination-container">
-                            <button onClick={handleShowMore} className="btn-show-more">
+                        <div className="admin-customer-pagination-container">
+                            <button onClick={handleShowMore} className="admin-customer-btn-show-more">
                                 {t('customers.showMore')} ({filteredCustomers.length - visibleCount}) <FaArrowRight />
                             </button>
                         </div>

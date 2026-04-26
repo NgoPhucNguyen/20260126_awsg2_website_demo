@@ -120,7 +120,6 @@ class AgentClient {
 				content: typeof toolResult === "string" ? toolResult : JSON.stringify(toolResult),
 			});
 		});
-
 		return Promise.all(tasks);
 	}
 
@@ -132,28 +131,45 @@ class AgentClient {
 		return `[${sanitized.join(",")}]`;
 	}
 
-	//Quan trọng: Hàm này ép định dạng text thuần túy, không RAG, không Score để AI không bị ảo giác và bắt chước format trả về
-	async buildRagSystemMessage(items) {
+	//Quan trọng: Hàm này ép định dạng text thuần túy, không RAG, không Score để AI không bị ảo giác và bắt chước format trả về cho khách. Admin thì khác, có thể trả về format chi tiết hơn để báo cáo.
+  async buildRagSystemMessage(items, authRole) {
+    const isAdmin = Number(authRole) === Number(process.env.ADMIN_ROLE);
+
     if (!Array.isArray(items) || items.length === 0) {
-      // 🚀 NẾU KHÔNG CÓ HÀNG TRONG KHO (RAG rỗng)
-      return "THÔNG BÁO: Hiện tại không có sản phẩm nào khớp với yêu cầu của khách còn hàng trong kho. Hãy xin lỗi và chủ động dùng tool searchProducts hoặc gợi ý khách các dòng sản phẩm tương tự.";
+      // Báo cáo rỗng cho Admin khác với báo cáo cho Khách
+      return isAdmin 
+        ? "BÁO CÁO NỘI BỘ: Không tìm thấy sản phẩm này trong kho dữ liệu."
+        : "THÔNG BÁO: Hiện tại không có sản phẩm nào khớp với yêu cầu của khách. Hãy xin lỗi và chủ động dùng tool searchProducts hoặc gợi ý khách các dòng sản phẩm tương tự.";
     }
 
     const ragInstruction = await this.loadRagMessage();
 
     const lines = items.map((item, index) => {
-      // 🚀 GIỮ NGUYÊN format sạch: Không RAG, không Score để AI không bắt chước
       let content = typeof item?.content === "string" ? item.content.trim() : "";
-      return `### Sản phẩm ${index + 1}:\n${content}`;
+      return `### Sản phẩm ${index + 1} (MÃ ID BẮT BUỘC: ${item.product_id}):\n${content}`;
     });
+    // 🚀 KỊCH BẢN RIÊNG CHO ADMIN: Không xưng khách, nhưng VẪN HIỂN THỊ CARD
+    if (isAdmin) {
+      return [
+        "--- DỮ LIỆU SẢN PHẨM TỪ KHO (DÀNH CHO ADMIN) ---",
+        "LƯU Ý NGHIÊM NGẶT DÀNH CHO BẠN:",
+        "1. Đây là câu hỏi từ Quản trị viên (Sếp). BẠN ĐANG BÁO CÁO, KHÔNG PHẢI BÁN HÀNG.",
+        "2. Không tư vấn, không gợi ý mua thêm, không xưng hô với sếp là 'khách' hay 'quý khách'.",
+        "3. ĐỂ SẾP XEM ĐƯỢC ẢNH SẢN PHẨM: BẮT BUỘC phải thêm cú pháp [ID: X] ngay sau tên sản phẩm. LẤY CHÍNH XÁC X từ 'MÃ ID BẮT BUỘC' bên dưới.",
+        "4. CẤM TUYỆT ĐỐI tự bịa ra số ID. Báo cáo ngắn gọn tình trạng tồn kho.",
+        lines.join("\n\n"),
+      ].join("\n\n");
+    }
 
+    // KỊCH BẢN CHO CUSTOMER/GUEST (Giữ nguyên như cũ)
     return [
       ragInstruction,
-      "⚠️ QUY TẮC SINH TỒN (PHẢI TUÂN THỦ):",
-      "1. CHỈ ĐƯỢC PHÉP xác nhận 'CÒN HÀNG' cho những sản phẩm có tên trong danh sách dưới đây.",
-      "2. NẾU khách hỏi một sản phẩm cụ thể (VD: Kem Vichy ban đêm) mà KHÔNG CÓ trong danh sách này, bạn BẮT BUỘC phải báo là 'Hiện tại sản phẩm này đang tạm hết hàng' và gợi ý sản phẩm khác có trong danh sách.",
-      "3. CÚ PHÁP HIỂN THỊ: Bắt buộc dùng [ID: X] ngay sau tên sản phẩm còn hàng. Tuyệt đối không nhắc đến từ 'RAG', 'hệ thống' hay 'công cụ'.",
-      "--- DANH SÁCH SẢN PHẨM CÒN HÀNG TRONG KHO ---",
+      "⚠️ QUY TẮC SINH TỒN (PHẢI TUÂN THỦ NGHIÊM NGẶT):",
+      "1. CHỈ ĐƯỢC PHÉP tư vấn và nhắc đến CÁC SẢN PHẨM CÓ TÊN TRONG DANH SÁCH BÊN DƯỚI.",
+      "2. TUYỆT ĐỐI KHÔNG sử dụng kiến thức bên ngoài để tự gợi ý thêm sản phẩm (VD: Không tự thêm sản phẩm của hãng nếu danh sách dưới đây không có).",
+      "3. CÚ PHÁP HIỂN THỊ: Bắt buộc dùng [ID: X] ngay sau tên sản phẩm. LẤY CHÍNH XÁC X từ 'MÃ ID BẮT BUỘC' ở bên dưới. CẤM tự sáng tác số ID.",
+      "4. NẾU khách hỏi một sản phẩm cụ thể mà KHÔNG CÓ trong danh sách này, BẮT BUỘC báo là 'Hiện tại sản phẩm này đang tạm hết hàng' hoặc 'Cửa hàng không kinh doanh'.",
+      "--- DANH SÁCH SẢN PHẨM THỰC TẾ TỪ DATABASE ---",
       lines.join("\n\n"),
     ].join("\n\n");
   }
@@ -195,7 +211,8 @@ class AgentClient {
 			const filtered = rows.filter((row) => 
 					Number(row?.score ?? 0) >= ragMinScore && Number(row?.total_stock ?? 0) > 0
 			);
-			return this.buildRagSystemMessage(filtered);
+			// 🚀 Lấy authRole từ options truyền xuống hàm build
+      return this.buildRagSystemMessage(filtered, options.auth?.role);
 		} catch (error) {
 			console.warn("[CHATBOT] RAG retrieval failed. Continuing without RAG context.", error?.message ?? error);
 			return "";
@@ -207,9 +224,14 @@ class AgentClient {
     
     // Danh sách các từ khóa "nhạy cảm" cần xóa sạch
     const technicalTerms = [
-        /getAvailableCoupons/gi, /searchProducts/gi, /getBrands/gi, /getPromotions/gi,
-        /checkInventory/gi, /tool/gi, /công cụ/gi, /hệ thống/gi, /database/gi, /mã lỗi/gi,
-        /JSON/gi, /RAG/gi, /API/gi
+        /theo kết quả từ/gi, /dựa trên kết quả từ /gi, /dựa vào tool /gi,
+        /getAvailableCoupons/gi, /searchProducts/gi, /getBrands/gi, /getPromotions/gi, /getSalesAnalyticsTool/gi,
+        /checkInventory/gi, /getInventoryByWarehouse/gi, /getLowStockItems/gi,
+        /getCouponInfo/gi, /validateCoupon/gi, /getCategories/gi, /getCategoryDetails/gi,
+        /getProductInfo/gi, /getProductVariant/gi,
+        /tool/gi, /công cụ/gi, /hệ thống/gi, /database/gi, /mã lỗi/gi,
+        /JSON/gi, /RAG/gi, /API/gi, /prisma/gi, /"validateCoupon"/gi,
+				/Lệnh cho AI:/gi,
     ];
 
     let cleansedText = text;
@@ -218,50 +240,83 @@ class AgentClient {
     });
 
     // Xử lý các khoảng trắng thừa sau khi xóa
-    return cleansedText.replace(/\s+/g, ' ').trim();
+    return cleansedText.replace(/ +/g, ' ').trim();
   }
 	
 	async run(prompt, options = {}) {
-		const {
-			maxToolCalls = 5,
-			systemPrompt,
-			history = [],
-			auth = {},
-			enableRag = true,
-		} = options;
+    const {
+      maxToolCalls = 5,
+      systemPrompt,
+      // history = [],
+      auth = {},
+      enableRag = true,
+    } = options;
 
-		const { toolsMap, toolEnabledModel } = this.getToolContext(auth.role);
-		const activeSystemMessage = systemPrompt ?? await this.loadSystemMessageByRole(auth.role);
-		const ragContext = enableRag ? await this.retrieveRagContext(prompt, options) : "";
+    const { toolsMap, toolEnabledModel } = this.getToolContext(auth.role);
+    const activeSystemMessage = systemPrompt ?? await this.loadSystemMessageByRole(auth.role);
+    const ragContext = enableRag ? await this.retrieveRagContext(prompt, options) : "";
 
+    const messages = [
+      new SystemMessage(activeSystemMessage),
+      ...(ragContext ? [new SystemMessage(ragContext)] : []),
+      // ...history,
+      // 🚀 GIẢI PHÁP Ở ĐÂY: Chèn một cú "tát" để phá vỡ ảo giác của lịch sử
+      new SystemMessage("HỆ THỐNG NHẮC NHỞ: Các dữ liệu bạn vừa trả lời trong lịch sử là do bạn đã gọi Tool thành công, chứ không phải do bạn tự biết. Với yêu cầu mới dưới đây của Sếp, BẠN BẮT BUỘC PHẢI GỌI TOOL MỚI để lấy dữ liệu thực tế (Mã giảm giá, Khuyến mãi, Doanh thu...). TUYỆT ĐỐI KHÔNG DỰA VÀO TRÍ NHỚ ĐỂ TỰ BỊA!"),
 
-		const messages = [
-			new SystemMessage(activeSystemMessage),
-			...(ragContext ? [new SystemMessage(ragContext)] : []),
-			...history,
-			new HumanMessage(prompt),
-		];
+      new HumanMessage(prompt),
+    ];
 
-		for (let step = 0; step < maxToolCalls; step += 1) {
-			const response = await toolEnabledModel.invoke(messages);
-			messages.push(response);
+    // 🚀 BẮT BUỘC DÙNG "let" ĐỂ CÓ THỂ GÁN LẠI DỮ LIỆU
+    let hiddenChartPayload = ""; 
 
-			const toolCalls = this.llmClient.getToolCalls(response);
+    for (let step = 0; step < maxToolCalls; step += 1) {
+      const response = await toolEnabledModel.invoke(messages);
+      messages.push(response);
 
-			if (toolCalls.length === 0) {
-        const rawContent = this.llmClient.normalizeModelContent(response.content);
+      const toolCalls = this.llmClient.getToolCalls(response);
+      
+      if (toolCalls.length === 0) {
+        // 🚀 BẮT BUỘC DÙNG "let" VÌ LÁT NỮA CHÚNG TA SẼ CỘNG DỒN DỮ LIỆU VÀO ĐÂY
+        let rawContent = this.llmClient.normalizeModelContent(response.content);
         
-        // 🚀 SỬA TẠI ĐÂY: Gọi bộ lọc trước khi trả về cho khách
-        return this.cleanseResponse(rawContent) || "Dạ, em có thể giúp gì thêm cho bạn không ạ?";
+        // 1. DỌN DẸP câu trả lời bằng chữ trước
+        let finalContent = this.cleanseResponse(rawContent);
+        
+        if (hiddenChartPayload) {
+          finalContent += `\n\n${hiddenChartPayload}`;
+        }
+
+        return finalContent || "Dạ, em có thể giúp gì thêm cho bạn không ạ?";
       }
 
-			const toolMessages = await this.invokeToolCallsInParallel(toolCalls, toolsMap, auth);
-			messages.push(...toolMessages);
-		}
+      const toolMessages = await this.invokeToolCallsInParallel(toolCalls, toolsMap, auth);
 
-		throw new Error(`Max tool call iterations reached (${maxToolCalls}).`);
-	}
+      // 🚀 KỸ THUẬT AN TOÀN: Tạo mảng Message mới thay vì sửa trực tiếp object của LangChain
+      const interceptedToolMessages = toolMessages.map(msg => {
+        if (typeof msg.content === 'string') {
+          const match = msg.content.match(/__CHART_DATA_START__([\s\S]*?)__CHART_DATA_END__/);
+          
+          if (match) {
+            hiddenChartPayload = match[0]; // Hứng cục JSON vào biến let
+            
+            // Khởi tạo và trả về một ToolMessage MỚI TOANH để tránh lỗi "Constant variable / Read-only"
+            return new ToolMessage({
+              tool_call_id: msg.tool_call_id,
+              content: msg.content.replace(
+                match[0], 
+                "[HỆ THỐNG: Đã gửi dữ liệu biểu đồ ẩn cho Sếp thành công. Bạn KHÔNG CẦN quan tâm đến biểu đồ nữa, chỉ cần báo cáo ngắn gọn doanh thu bằng chữ]."
+              )
+            });
+          }
+        }
+        return msg; // Trả về nguyên trạng nếu không có biểu đồ
+      });
+
+      messages.push(...interceptedToolMessages);
+    }
+
+    throw new Error(`Max tool call iterations reached (${maxToolCalls}).`);
+  }
 }
 
 export default AgentClient;
-

@@ -87,7 +87,7 @@ const Analytics = () => {
         <div className="admin-analytics-page-container fade-in">
             <header className="admin-analytics-page-header">
                 <div className="admin-analytics-page-title-group">
-                    <h2 className="admin-analytics-page-title">Analytics Dashboard</h2>
+                    <h2 className="admin-analytics-page-title">Thống Kê</h2>
                     <p className="admin-analytics-page-subtitle">Tổng quan tình hình kinh doanh của cửa hàng</p>
                 </div>
                 

@@ -3,13 +3,12 @@
     "add": "Thêm"
   },
   "customers": {
-    "title": "Quản lý Khách hàng",
+    "title": "Quản Lý Khách Hàng",
     "subtitle": "Xem và quản lý tài khoản thành viên",
     "syncing": "Đang đồng bộ dữ liệu...",
     "searchPlaceholder": "Tìm kiếm theo tên hoặc email...",
     "colAccount": "Tài khoản",
     "colEmail": "Email",
-    "colTier": "Hạng",
     "colStatus": "Trạng thái",
     "level": "Cấp",
     "active": "Hoạt động",

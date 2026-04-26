@@ -7,7 +7,8 @@ import "./AdminLayout.css";
 // 🎨 Import FontAwesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
-
+import ScrollToTop from "@/components/ScrollToTop";
+import ChatbotWidget from "@/components/ChatbotWidget/ChatbotWidget";
 const AdminLayout = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -22,7 +23,7 @@ const AdminLayout = () => {
                     <FontAwesomeIcon icon={faBars} />
                 </button>
                 <div className="admin-topbar-brand">
-                    <span>Aphrodite</span> <small>Admin Panel</small>
+                    <span>Aphrodite</span> <small>Admin</small>
                 </div>
             </header>
 
@@ -38,6 +39,8 @@ const AdminLayout = () => {
                     <Outlet />
                 </div>
             </main>
+            <ScrollToTop />
+            <ChatbotWidget />
         </div>
     );
 };

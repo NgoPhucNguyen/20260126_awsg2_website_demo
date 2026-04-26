@@ -1,28 +1,27 @@
-// chatbot/tools/index.js
-import { allToolsMap } from "./catalog.js";
+// server/chatbot/tools/index.js
 import { adminTools, adminToolsMap } from "./adminTools.js";
 import { customerTools, customerToolsMap } from "./customerTools.js";
 
-const allTools = Object.values(allToolsMap);
-
 const getToolsForRole = (role) => {
-    if (Number(role) === Number(process.env.ADMIN_ROLE)) {
+    const roleKey = Number(role);
+    // 1. Nếu là Admin tối cao
+    if (roleKey === Number(process.env.ADMIN_ROLE)) {
         return adminTools;
-    } if (Number(role) === Number(process.env.CUSTOMER_ROLE)) {
-        return customerTools;
-    } if (Number(role) === Number(process.env.EMPLOYEE_ROLE)) {
-        return employeeTools;
-    }
+    } 
+    // 2. Mọi trường hợp còn lại (Customer hoặc Guest)
+    // Lưu ý: Controller của sếp đang mặc định Guest là CUSTOMER_ROLE, 
+    // nên dùng chung bộ customerTools là chuẩn bài.
+    return customerTools;
 };
 
 const getToolsMapForRole = (role) => {
-    if (Number(role) === Number(process.env.ADMIN_ROLE)) {
+    const roleKey = Number(role);
+
+    if (roleKey === Number(process.env.ADMIN_ROLE)) {
         return adminToolsMap;
-    } if (Number(role) === Number(process.env.CUSTOMER_ROLE)) {
-        return customerToolsMap;
-    } if (Number(role) === Number(process.env.EMPLOYEE_ROLE)) {
-        return employeeToolsMap;
-    }
+    } 
+
+    return customerToolsMap;
 };
 
 export {

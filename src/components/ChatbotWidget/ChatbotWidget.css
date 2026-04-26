@@ -38,9 +38,10 @@
 .chatbot-widget-panel {
   position: absolute;
   right: 0;
-  bottom: 72px;
-  width: min(90vw, 380px);
-  height: min(70vh, 580px);
+  bottom: -15px;
+  /* 🚀 Tăng chiều rộng mặc định: Tối thiểu 550px, ưu tiên 90vw, tối đa 420px */
+  width: clamp(550px, 90vw, 420px);
+  height: clamp(600px, 75vh, 700px);
   border-radius: 24px;
   
   /* Frosted Glass Effect */
@@ -72,7 +73,7 @@
 /* 3. HEADER AREA                                            */
 /* ========================================================= */
 .chatbot-widget-header {
-  padding: 1.2rem;
+  padding: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -84,6 +85,45 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+}
+
+
+/* ========================================================= */
+/* 3. HEADER AREA & NÚT PHÂN TÍCH DA                         */
+/* ========================================================= */
+.chatbot-widget-header-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* ========================================================= */
+/* 3. NÚT PHÂN TÍCH DA (Tone màu Vàng Gold của hệ thống)     */
+/* ========================================================= */
+.chatbot-widget-analyze-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    padding: 6px 12px;
+    background: #E6C27A; /* 🚀 Tone màu Sếp yêu cầu */
+    color: #ffffff;      /* 🚀 Chữ trắng nổi bật */
+    font-size: 0.75rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(230, 194, 122, 0.4); /* Đổ bóng cùng tone vàng */
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s;
+}
+
+.chatbot-widget-analyze-badge:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 8px -2px rgba(230, 194, 122, 0.6);
+}
+
+.chatbot-widget-analyze-badge svg {
+    font-size: 0.85rem;
 }
 
 .chatbot-widget-avatar {
@@ -107,23 +147,6 @@
   font-weight: 700;
   color: #1c1917;
   margin: 0;
-}
-
-.chatbot-widget-header-left p {
-  font-size: 0.75rem;
-  color: #16a34a; /* Modern solid green for online status */
-  margin: 2px 0 0 0;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.chatbot-widget-header-left p::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  background: currentColor;
-  border-radius: 50%;
 }
 
 .chatbot-widget-clear-btn {
@@ -314,26 +337,21 @@
   cursor: not-allowed;
 }
 
-/* Screen optimizations for small devices */
-@media (max-width: 640px) {
-  .chatbot-widget-root {
-    right: 1rem;
-    bottom: 1rem;
-  }
-  .chatbot-widget-panel {
-    right: 0;
-    bottom: 68px;
-    width: calc(100vw - 2rem);
-    height: 60vh;
-  }
-}
-
-
-/* Maximize Window State */
+/* 🚀 Áp dụng chung cho CẢ ĐIỆN THOẠI VÀ MÁY TÍNH */
 .chatbot-widget-maximized {
-  width: min(95vw, 600px);
-  height: 85vh;
-  bottom: 80px;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100dvh !important; /* Dùng dvh để fix lỗi lẹm thanh công cụ trên Mobile */
+  max-width: none !important;
+  max-height: none !important;
+  border-radius: 0 !important; /* Xóa bo góc để vuông vức với viền màn hình */
+  margin: 0 !important;
+  z-index: 99999 !important; /* Đẩy lên tầng cao nhất, đè lên cả Header, Footer và nút FAB đã ẩn */
+  animation: none !important;
 }
 
 .chatbot-widget-header-actions {
@@ -416,4 +434,87 @@ body.modal-open .chatbot-widget-root {
     
     transition: all 0.3s ease;
     z-index: 1; /* Hạ thấp z-index xuống mức tối thiểu */
+}
+
+
+/* ========================================================= */
+/* TỐI ƯU HÓA CHO MOBILE (Tự động Fullscreen dưới 768px)     */
+/* ========================================================= */
+@media (max-width: 767px) {
+    .chatbot-widget-root {
+        /* Chỉnh lại vị trí nút tròn trên Mobile cho gọn */
+        right: 1rem;
+        bottom: 1rem;
+    }
+
+    .chatbot-widget-panel {
+        /* 🚀 THÊM DÒNG NÀY ĐỂ FIX LỖI BAY MẤT KHUNG CHAT */
+        position: fixed !important; 
+        
+        /* Ép tràn viền 100% */
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100vw !important;
+        height: 100dvh !important; 
+        
+        max-width: none !important;
+        max-height: none !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+        z-index: 99999 !important;
+    }
+
+    /* Ẩn nút Phóng to/Thu nhỏ vì Mobile mặc định là Fullscreen rồi */
+    .chatbot-widget-header-actions .chatbot-widget-icon-btn[title="Phóng to/Thu nhỏ"] {
+        display: none !important;
+    }
+}
+
+
+/* ========================================================= */
+/* 6. BIỂU ĐỒ RECHARTS TRONG CHATBOT                         */
+/* ========================================================= */
+.chatbot-widget-chart-container {
+    margin-top: 12px;
+    padding: 12px 10px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e7e0d5;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.chatbot-widget-chart-title {
+    margin: 0 0 12px 0;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #57534e; /* Text secondary từ Theme Sếp */
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.chatbot-widget-chart-wrapper {
+    width: 100%;
+    height: 160px; /* Chiều cao vừa vặn cho khung chat */
+}
+
+/* 🎨 Override một số style mặc định của Recharts để đẹp hơn */
+.chatbot-widget-chart-wrapper .recharts-tooltip-cursor {
+    stroke: #e7e0d5; /* Trục dọc khi hover */
+    stroke-width: 1;
+    stroke-dasharray: 4 4;
+}
+
+.chatbot-widget-chart-wrapper .recharts-default-tooltip {
+  border-radius: 8px !important;
+    border: 1px solid #e7e0d5 !important;
+    box-shadow: 0 4px 12px rgba(28, 25, 23, 0.1) !important;
+    font-size: 0.8rem !important;
+    padding: 8px 12px !important;
+}
+
+.chatbot-widget-chart-wrapper .recharts-tooltip-item-name {
+    display: none; /* Ẩn chữ "revenue" dư thừa trong tooltip */
 }

@@ -179,7 +179,6 @@ const Inventory = () => {
                                 <th>Giá Niêm Yết</th>
                                 <th>Tồn Kho</th>
                                 <th>Trạng thái</th>
-                                <th>Sửa</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -204,11 +203,6 @@ const Inventory = () => {
                                         >
                                             <div className="admin-inventory-toggle-thumb"></div>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <button className="admin-inventory-btn-icon" title="Chỉnh sửa">
-                                            <FaPenToSquare />
-                                        </button>
                                     </td>
                                 </tr>
                             )) : (

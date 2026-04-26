@@ -9,7 +9,7 @@ import ProductCard from "@/components/ProductComponents/ProductCard";
 import ProductCardSkeleton from "@/components/Skeleton/ProductCardSkeleton";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import "./Product.css";
-import { faBagShopping, faSpinner, faWandMagicSparkles  } from '@fortawesome/free-solid-svg-icons';
+import { faWandMagicSparkles  } from '@fortawesome/free-solid-svg-icons';
 
 // 🛠️ HELPER: Extract Variant Label
 const getVariantLabel = (variant) => {

@@ -192,6 +192,7 @@ export const checkoutOrder = async (req, res) => {
                 where: { id: currentCart.id },
                 data: {
                     status: 'PENDING',
+                    createdAt: new Date(), // Cập nhật lại thời gian tạo đơn để tính hạn sử dụng khi hủy
                     shippingAddress: shippingAddress,
                     paymentMethod: paymentMethod,
                     paymentStatus: paymentMethod === 'COD' ? 'UNPAID' : 'PENDING',
@@ -264,7 +265,7 @@ export const checkoutOrder = async (req, res) => {
 
             return res.status(200).json({ message: "Đang chuyển hướng sang cổng thanh toán VNPAY...", paymentUrl: vnpUrl });
         } else {
-            return res.status(200).json({ message: "🎉 Đặt hàng thành công!", orderId: currentCart.id });
+            return res.status(200).json({ message: "Đặt hàng thành công!", orderId: currentCart.id });
         }
 
     } catch (error) {

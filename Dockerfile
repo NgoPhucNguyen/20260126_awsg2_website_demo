@@ -3,6 +3,7 @@ FROM node:20-slim
 
 # 2. Cài OpenSSL, Python3, Pip, thư viện OpenCV VÀ tạo bí danh python -> python3
 RUN apt-get update -y && apt-get install -y \
+  tzdata \
   openssl \
   python3 \
   python3-pip \
@@ -13,7 +14,7 @@ RUN apt-get update -y && apt-get install -y \
 
 # 3. Chuyển thư mục làm việc
 WORKDIR /app
-
+ENV TZ="Asia/Ho_Chi_Minh"
 # 4. Dùng pip3 cài thư viện AI (Layer này nặng, để đây để tận dụng Cache)
 RUN pip3 install --no-cache-dir \
   tensorflow==2.15.0 \

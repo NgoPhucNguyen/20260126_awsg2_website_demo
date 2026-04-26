@@ -357,7 +357,6 @@ const Checkout = () => {
 
                 {/* 💳 CỘT PHẢI: TÓM TẮT ĐƠN HÀNG */}
                 <div className="checkout-summary-section">
-                    {/* ... (Phần UI Tóm tắt đơn hàng giữ nguyên như cũ) ... */}
                     <div className="checkout-summary-card">
                         <h3 className="checkout-summary-title">Tóm tắt đơn hàng ({totalItems})</h3>
                         
